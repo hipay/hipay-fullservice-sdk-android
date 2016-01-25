@@ -15,7 +15,11 @@ public class ClientConfig {
     // TODO URLScheme
 
 
-    private ClientConfig() {}
+    private ClientConfig() {
+
+        this.username = "94654727.api.hipay-tpp.com";
+        this.password = "3g4zRCgG2EY9RJHFsQ4cIqAI";
+    }
 
     public static ClientConfig getInstance(){
         if(mInstance == null)

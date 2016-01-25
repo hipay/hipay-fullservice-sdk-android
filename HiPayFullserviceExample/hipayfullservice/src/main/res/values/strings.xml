@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">HiPayFullservice</string>
+    <string name="gateway_client_base_url_stage">https://stage-secure-gateway.hipay-tpp.com/rest/v1/</string>
+    <string name="gateway_client_base_url_production">https://secure-gateway.hipay-tpp.com/rest/v1/</string>
+    <string name="gateway_callback_url_pathname">gateway</string>
 </resources>

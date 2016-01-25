@@ -4,44 +4,75 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.os.Bundle;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
 /**
  * Created by nfillion on 21/01/16.
  */
 
-public abstract class AbstractHttpAsyncLoader extends AsyncTaskLoader<String> {
+public abstract class AbstractHttpAsyncLoader<T> extends AsyncTaskLoader<T> {
 
-    protected String mLastData;
+    protected T mLastData;
 
     public AbstractHttpAsyncLoader(Context context, Bundle bundle) {
         super(context);
-        mLastData = bundle.getString("DATA");
     }
 
-    protected abstract String backgroundOperation() throws IOException;
+    protected abstract HttpURLConnection getHttpURLConnection() throws IOException;
+    protected abstract String getRequestType() throws IOException;
+    protected abstract T buildFromString(String string);
 
-    public HttpURLConnection getHttpConnection(String url, String type) throws IOException {
-        URL uri;
-        HttpURLConnection connection;
-        uri = new URL(url);
-        connection = (HttpURLConnection) uri.openConnection();
-        connection.setRequestMethod(type); //type: POST, PUT, DELETE, GET
-        connection.setDoOutput(true);
-        connection.setDoInput(true);
-        connection.setConnectTimeout(60000); //60 secs
-        connection.setReadTimeout(60000); //60 secs
-        connection.setRequestProperty("Accept", "application/json");
-        connection.setRequestProperty("Content-Type", "application/json");
-        return connection;
+    protected String backgroundOperation() throws IOException {
+
+        String ret = null;
+
+        HttpURLConnection urlConnection = this.getHttpURLConnection();
+
+        try {
+
+            //TODO check the mime type
+            if (urlConnection.getResponseCode() / 100 == 2 /*&& urlConnection.getContent() == ""*/) {
+
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                ret = readStream(in);
+
+            } else {
+
+                //TODO return the right error
+                ret = null;
+            }
+
+        } finally {
+            urlConnection.disconnect();
+            return ret;
+        }
+    }
+
+    protected String readStream(InputStream is) throws IOException {
+
+        if (is == null) return null;
+
+        StringBuilder sb = new StringBuilder();
+        BufferedReader r = new BufferedReader(new InputStreamReader(is),1000);
+        for (String line = r.readLine(); line != null; line =r.readLine()){
+            sb.append(line);
+        }
+        is.close();
+        return sb.toString();
     }
 
     @Override
-    public String loadInBackground() {
+    public T loadInBackground() {
         try {
-            return backgroundOperation();
+
+            mLastData = this.buildFromString(backgroundOperation());
+            return mLastData;
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -49,7 +80,7 @@ public abstract class AbstractHttpAsyncLoader extends AsyncTaskLoader<String> {
     }
 
     @Override
-    public void deliverResult(String data) {
+    public void deliverResult(T data) {
 
         if (isReset()) {
             // An async query came in while the loader is stopped
@@ -57,7 +88,7 @@ public abstract class AbstractHttpAsyncLoader extends AsyncTaskLoader<String> {
             return;
         }
 
-        String oldData = mLastData;
+        T oldData = mLastData;
         mLastData = data;
 
         if (isStarted()) {
@@ -87,7 +118,7 @@ public abstract class AbstractHttpAsyncLoader extends AsyncTaskLoader<String> {
     }
 
     @Override
-    public void onCanceled(String dataList) {
+    public void onCanceled(T dataList) {
         if (dataList != null) {
             onReleaseResources(dataList);
         }
@@ -105,7 +136,9 @@ public abstract class AbstractHttpAsyncLoader extends AsyncTaskLoader<String> {
         }
     }
 
-    protected void onReleaseResources(String data) {
+    protected void onReleaseResources(T data) {
+
+        mLastData = data;
         mLastData = null;
     }
 }
