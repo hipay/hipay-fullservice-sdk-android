@@ -4,6 +4,9 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.os.Bundle;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,31 +28,33 @@ public abstract class AbstractHttpAsyncLoader<T> extends AsyncTaskLoader<T> {
 
     protected abstract HttpURLConnection getHttpURLConnection() throws IOException;
     protected abstract String getRequestType() throws IOException;
-    protected abstract T buildFromString(String string);
+    protected abstract T buildFromHttpResponse(HttpResponse httpResponse);
 
-    protected String backgroundOperation() throws IOException {
+    protected HttpResponse backgroundOperation() {
 
-        String ret = null;
-
-        HttpURLConnection urlConnection = this.getHttpURLConnection();
+        HttpResponse httpResponse = new HttpResponse();
+        HttpURLConnection urlConnection = null;
 
         try {
 
-            //TODO check the mime type
-            if (urlConnection.getResponseCode() / 100 == 2 /*&& urlConnection.getContent() == ""*/) {
+            urlConnection = this.getHttpURLConnection();
 
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                ret = readStream(in);
+            httpResponse.setStatusCode(urlConnection.getResponseCode());
+            httpResponse.setBodyStream(urlConnection.getInputStream());
+            httpResponse.setErrorStream(urlConnection.getErrorStream());
 
-            } else {
+        } catch (IOException exception) {
 
-                //TODO return the right error
-                ret = null;
-            }
+            httpResponse.setIoException(exception);
 
         } finally {
-            urlConnection.disconnect();
-            return ret;
+
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+
+            return httpResponse;
+
         }
     }
 
@@ -68,15 +73,8 @@ public abstract class AbstractHttpAsyncLoader<T> extends AsyncTaskLoader<T> {
 
     @Override
     public T loadInBackground() {
-        try {
-
-            mLastData = this.buildFromString(backgroundOperation());
-            return mLastData;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        mLastData = this.buildFromHttpResponse(backgroundOperation());
+        return mLastData;
     }
 
     @Override

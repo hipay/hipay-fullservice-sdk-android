@@ -46,12 +46,10 @@ public class HttpClientAsyncLoader extends AbstractHttpAsyncLoader<AbstractClien
     }
 
     @Override
-    protected AbstractClient buildFromString(String string) {
-
+    protected AbstractClient buildFromHttpResponse(HttpResponse httpResponse) {
 
         //TODO Mapping Client object
-        AbstractClient client = new AbstractClient();
+        AbstractClient client = new AbstractClient(httpResponse);
         return client;
     }
-
 }
