@@ -7,15 +7,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.hipay.hipayfullservice.core.client.AbstractClient;
-import com.hipay.hipayfullservice.core.network.HttpClientAsyncLoader;
+import com.hipay.hipayfullservice.core.network.HttpClient;
 
-public class HPFActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<AbstractClient> {
+public class HPFActivity extends AppCompatActivity /*implements LoaderManager.LoaderCallbacks<AbstractClient>*/ {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +32,7 @@ public class HPFActivity extends AppCompatActivity implements LoaderManager.Load
             }
         });
 
-        getLoaderManager().initLoader(0, null, this);
+        //getLoaderManager().initLoader(0, null, this);
 
     }
 
@@ -60,18 +59,21 @@ public class HPFActivity extends AppCompatActivity implements LoaderManager.Load
     }
 
 
+    /*
     @Override
     public Loader<AbstractClient> onCreateLoader(int id, Bundle bundle) {
-        return new HttpClientAsyncLoader(this, null);
+        return new HttpClient(this, null);
     }
 
     @Override
     public void onLoadFinished(Loader<AbstractClient> loader, AbstractClient data) {
 
+        AbstractClient
         //User user = new Gson().fromJson(data, User.class);
     }
 
     @Override
     public void onLoaderReset(Loader<AbstractClient> loader) {
     }
+    */
 }

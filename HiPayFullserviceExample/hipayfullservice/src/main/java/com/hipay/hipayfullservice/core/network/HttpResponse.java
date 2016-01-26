@@ -1,8 +1,11 @@
 package com.hipay.hipayfullservice.core.network;
 
 import org.json.JSONException;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Created by nfillion on 25/01/16.
@@ -74,5 +77,17 @@ public class HttpResponse {
         this.errorStream = errorStream;
     }
 
+    public static String readStream(InputStream is) throws IOException {
+
+        if (is == null) return null;
+
+        StringBuilder sb = new StringBuilder();
+        BufferedReader r = new BufferedReader(new InputStreamReader(is), 1000);
+        for (String line = r.readLine(); line != null; line = r.readLine()) {
+            sb.append(line);
+        }
+        is.close();
+        return sb.toString();
+    }
 }
 

@@ -4,25 +4,18 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.os.Bundle;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
 /**
  * Created by nfillion on 21/01/16.
  */
 
-public abstract class AbstractHttpAsyncLoader<T> extends AsyncTaskLoader<T> {
+public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
 
     protected T mLastData;
 
-    public AbstractHttpAsyncLoader(Context context, Bundle bundle) {
+    public AbstractHttpClient(Context context, Bundle bundle) {
         super(context);
     }
 
@@ -54,21 +47,7 @@ public abstract class AbstractHttpAsyncLoader<T> extends AsyncTaskLoader<T> {
             }
 
             return httpResponse;
-
         }
-    }
-
-    protected String readStream(InputStream is) throws IOException {
-
-        if (is == null) return null;
-
-        StringBuilder sb = new StringBuilder();
-        BufferedReader r = new BufferedReader(new InputStreamReader(is),1000);
-        for (String line = r.readLine(); line != null; line =r.readLine()){
-            sb.append(line);
-        }
-        is.close();
-        return sb.toString();
     }
 
     @Override

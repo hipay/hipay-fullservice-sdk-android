@@ -14,14 +14,14 @@ import java.net.URL;
  */
 
 
-public class HttpClientAsyncLoader extends AbstractHttpAsyncLoader<AbstractClient> {
+public class HttpClient extends AbstractHttpClient<AbstractClient> {
 
-    public HttpClientAsyncLoader(Context context, Bundle bundle) {
+    public HttpClient(Context context, Bundle bundle) {
         super(context, bundle);
     }
 
     protected URL getRequestURL() throws IOException {
-        return new URL("http://www.google.com/humans.txt");
+        return new URL("http://www.google.fr/humans.txt");
     }
 
     @Override
@@ -35,8 +35,8 @@ public class HttpClientAsyncLoader extends AbstractHttpAsyncLoader<AbstractClien
         HttpURLConnection urlConnection = (HttpURLConnection) this.getRequestURL().openConnection();
 
         urlConnection.setRequestMethod(this.getRequestType()); //type: POST, PUT, DELETE, GET
-        urlConnection.setDoOutput(true);
-        urlConnection.setDoInput(true);
+        //urlConnection.setDoOutput(true);
+        //urlConnection.setDoInput(true);
         //urlConnection.setConnectTimeout(60000); //60 secs
         //urlConnection.setReadTimeout(60000); //60 secs
         //urlConnection.setRequestProperty("Accept", "application/json");
