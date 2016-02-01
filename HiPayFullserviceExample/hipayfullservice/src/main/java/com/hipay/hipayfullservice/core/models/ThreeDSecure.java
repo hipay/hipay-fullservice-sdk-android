@@ -1,5 +1,8 @@
 package com.hipay.hipayfullservice.core.models;
 
+import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+
 /**
  * Created by nfillion on 25/01/16.
  */
@@ -26,7 +29,39 @@ public class ThreeDSecure {
 
         protected final char status;
         ThreeDSecureEnrollmentStatus(char status) {
+
             this.status = status;
+        }
+
+        public static ThreeDSecureEnrollmentStatus fromStringValue(String value) {
+
+            if (value == null) return null;
+
+            char c = value.charAt(0);
+
+            if (c == ThreeDSecureEnrollmentStatusAuthenticationAvailable.getCharValue()) {
+                return ThreeDSecureEnrollmentStatusAuthenticationAvailable;
+            }
+
+            if (c == ThreeDSecureEnrollmentStatusCardholderNotEnrolled.getCharValue()) {
+                return ThreeDSecureEnrollmentStatusCardholderNotEnrolled;
+            }
+
+            if (c == ThreeDSecureEnrollmentStatusUnableToAuthenticate.getCharValue()) {
+                return ThreeDSecureEnrollmentStatusUnableToAuthenticate;
+            }
+
+            if (c == ThreeDSecureEnrollmentStatusOtherError.getCharValue()) {
+                return ThreeDSecureEnrollmentStatusOtherError;
+            }
+
+            return null;
+        }
+
+
+
+        public char getCharValue() {
+            return this.status;
         }
     }
 
@@ -43,8 +78,41 @@ public class ThreeDSecure {
         ThreeDSecureAuthenticationStatus(char status) {
             this.status = status;
         }
-    }
 
+        public char getCharValue() {
+            return this.status;
+        }
+
+        public static ThreeDSecureAuthenticationStatus fromStringValue(String value) {
+
+            if (value == null) return null;
+
+            char c = value.charAt(0);
+
+            if (c == ThreeDSecureAuthenticationStatusSuccessful.getCharValue()) {
+                return ThreeDSecureAuthenticationStatusSuccessful;
+            }
+
+            if (c == ThreeDSecureAuthenticationStatusAttempted.getCharValue()) {
+                return ThreeDSecureAuthenticationStatusAttempted;
+            }
+
+            if (c == ThreeDSecureAuthenticationStatusCouldNotBePerformed.getCharValue()) {
+                return ThreeDSecureAuthenticationStatusCouldNotBePerformed;
+            }
+
+            if (c == ThreeDSecureAuthenticationStatusAuthenticationFailed.getCharValue()) {
+                return ThreeDSecureAuthenticationStatusAuthenticationFailed;
+            }
+
+            if (c == ThreeDSecureAuthenticationStatusOther.getCharValue()) {
+                return ThreeDSecureAuthenticationStatusOther;
+            }
+
+            return null;
+        }
+
+    }
 
 
     public ThreeDSecureEnrollmentStatus getEnrollmentStatus() {
@@ -93,6 +161,52 @@ public class ThreeDSecure {
 
     public void setXid(String xid) {
         this.xid = xid;
+    }
+
+
+    public static class ThreeDSecureMapper extends AbstractMapper {
+        public ThreeDSecureMapper() {
+            //super();
+        }
+
+        @Override
+        protected boolean isClassValid() {
+
+            if (this.getBehaviour() instanceof MapBehaviour) {
+
+                if (this.getStringForKey("enrollmentStatus") != null) return true;
+            }
+
+            return false;
+        }
+
+        protected Object mappedObject() {
+
+            ThreeDSecure object = new ThreeDSecure();
+
+            object.setEnrollmentMessage(this.getStringForKey("enrollmentMessage"));
+
+            String enrollmentStatus = this.getEnumCharForKey("enrollmentStatus");
+            ThreeDSecureEnrollmentStatus status = ThreeDSecureEnrollmentStatus.fromStringValue(enrollmentStatus);
+            if (status == null) {
+                status = ThreeDSecureEnrollmentStatus.ThreeDSecureEnrollmentStatusUnknown;
+            }
+            object.setEnrollmentStatus(status);
+
+            String authenticationStatus = this.getEnumCharForKey("authenticationStatus");
+            ThreeDSecureAuthenticationStatus authStatus = ThreeDSecureAuthenticationStatus.fromStringValue(authenticationStatus);
+            if (authStatus == null) {
+                authStatus = ThreeDSecureAuthenticationStatus.ThreeDSecureAuthenticationStatusUnknown;
+            }
+            object.setAuthenticationStatus(authStatus);
+
+            object.setAuthenticationMessage(this.getStringForKey("authenticationMessage"));
+            object.setAuthenticationToken(this.getStringForKey("authenticationToken"));
+            object.setXid(this.getStringForKey("xid"));
+
+            return object;
+
+        }
     }
 
 }

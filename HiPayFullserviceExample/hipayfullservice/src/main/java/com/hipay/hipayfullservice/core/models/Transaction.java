@@ -1,5 +1,8 @@
 package com.hipay.hipayfullservice.core.models;
 
+import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -91,8 +94,60 @@ public class Transaction extends TransactionRelatedItem {
 
         protected final char result;
         AVSResult(char result) {
+
             this.result = result;
         }
+
+        public char getCharValue() {
+
+            return this.result;
+        }
+
+        public static AVSResult fromStringValue(String value) {
+
+            if (value == null) return null;
+
+            char c = value.charAt(0);
+
+            if (c == AVSResultExactMatch.getCharValue()) {
+                return AVSResultExactMatch;
+            }
+
+            if (c == AVSResultAddressMatch.getCharValue()) {
+                return AVSResultAddressMatch;
+            }
+
+            if (c == AVSResultPostalCodeMatch.getCharValue()) {
+                return AVSResultPostalCodeMatch;
+            }
+
+            if (c == AVSResultNoMatch.getCharValue()) {
+                return AVSResultNoMatch;
+            }
+
+            if (c == AVSResultNotCompatible.getCharValue()) {
+                return AVSResultNotCompatible;
+            }
+
+            if (c == AVSResultNotAllowed.getCharValue()) {
+                return AVSResultNotAllowed;
+            }
+
+            if (c == AVSResultUnavailable.getCharValue()) {
+                return AVSResultUnavailable;
+            }
+
+            if (c == AVSResultRetry.getCharValue()) {
+                return AVSResultRetry;
+            }
+
+            if (c == AVSResultNotSupported.getCharValue()) {
+                return AVSResultNotSupported;
+            }
+
+            return null;
+        }
+
     }
 
     public enum ECI {
@@ -109,30 +164,112 @@ public class Transaction extends TransactionRelatedItem {
         ECI(int eci) {
             this.eci = eci;
         }
+
+        public Integer getIntegerValue() {
+            return this.eci;
+        }
+
+        public static ECI fromIntegerValue(Integer value) {
+
+            if (value == null) return null;
+
+            if (value == ECIMOTO.getIntegerValue()) {
+                return ECIMOTO;
+            }
+
+            if (value == ECIRecurringMOTO.getIntegerValue()) {
+                return ECIRecurringMOTO;
+            }
+
+            if (value == ECIInstallmentPayment.getIntegerValue()) {
+                return ECIInstallmentPayment;
+            }
+
+            if (value == ECIManuallyKeyedCardPresent.getIntegerValue()) {
+                return ECIManuallyKeyedCardPresent;
+            }
+
+            if (value == ECISecureECommerce.getIntegerValue()) {
+                return ECISecureECommerce;
+            }
+
+            if (value == ECIRecurringECommerce.getIntegerValue()) {
+                return ECIRecurringECommerce;
+            }
+
+            return null;
+        }
     }
 
     public enum CVCResult {
 
-        CVCResultNotApplicable (' '),
-        CVCResultMatch ('M'),
-        CVCResultNoMatch ('N'),
-        CVCResultNotProcessed ('P'),
-        CVCResultMissing ('S'),
-        CVCResultNotSupported ('U');
+        CVCResultNotApplicable(' '),
+        CVCResultMatch('M'),
+        CVCResultNoMatch('N'),
+        CVCResultNotProcessed('P'),
+        CVCResultMissing('S'),
+        CVCResultNotSupported('U');
 
         protected final char result;
+
         CVCResult(char result) {
             this.result = result;
+        }
+
+        public char getCharValue() {
+            return this.result;
+        }
+
+        public static CVCResult fromStringValue(String value) {
+
+            if (value == null) return null;
+
+            char c = value.charAt(0);
+
+            if (c == CVCResultNotApplicable.getCharValue()) {
+                return CVCResultNotApplicable;
+            }
+
+            if (c == CVCResultMatch.getCharValue()) {
+                return CVCResultMatch;
+            }
+
+            if (c == CVCResultNoMatch.getCharValue()) {
+                return CVCResultNoMatch;
+            }
+
+            if (c == CVCResultNotProcessed.getCharValue()) {
+                return CVCResultNotProcessed;
+            }
+
+            if (c == CVCResultMissing.getCharValue()) {
+                return CVCResultMissing;
+            }
+
+            if (c == CVCResultNotSupported.getCharValue()) {
+                return CVCResultNotSupported;
+            }
+
+            return null;
         }
     }
 
     public enum TransactionState {
 
-        TransactionStateError,
-        TransactionStateCompleted,
-        TransactionStateForwarding,
-        TransactionStatePending,
-        TransactionStateDeclined,
+        TransactionStateError (0),
+        TransactionStateCompleted (1),
+        TransactionStateForwarding (2),
+        TransactionStatePending (3),
+        TransactionStateDeclined (4);
+
+        protected final int state;
+        TransactionState(int state) {
+            this.state = state;
+        }
+
+        public Integer getIntegerValue() {
+            return this.state;
+        }
     }
 
     public TransactionState getState() {
@@ -340,7 +477,80 @@ public class Transaction extends TransactionRelatedItem {
     }
 
     public void setCdata10(String cdata10) {
+
         this.cdata10 = cdata10;
+    }
+
+
+    public static class TransactionMapper extends TransactionRelatedItemMapper {
+        public TransactionMapper() {
+            //super();
+        }
+
+        @Override
+        protected boolean isClassValid() {
+
+            if (this.getBehaviour() instanceof MapBehaviour) {
+
+                if (super.isClassValid()) {
+
+                    if (this.getIntegerForKey("state") != null) return true;
+                }
+            }
+
+            return false;
+        }
+
+        protected Object mappedObject() {
+
+            Transaction object = new Transaction();
+
+            object.setCdata1(this.getStringForKey("cdata1"));
+            object.setCdata2(this.getStringForKey("cdata2"));
+            object.setCdata3(this.getStringForKey("cdata3"));
+            object.setCdata4(this.getStringForKey("cdata4"));
+            object.setCdata5(this.getStringForKey("cdata5"));
+            object.setCdata6(this.getStringForKey("cdata6"));
+            object.setCdata7(this.getStringForKey("cdata7"));
+            object.setCdata8(this.getStringForKey("cdata8"));
+            object.setCdata9(this.getStringForKey("cdata9"));
+            object.setCdata10(this.getStringForKey("cdata10"));
+
+            object.setReason(this.getStringForKey("reason"));
+            object.setAttemptId(this.getStringForKey("attemptId"));
+            object.setReferenceToPay(this.getStringForKey("referenceToPay"));
+            object.setIpAddress(this.getStringForKey("ipAddress"));
+            object.setIpCountry(this.getStringForKey("ipCountry"));
+            object.setDeviceId(this.getStringForKey("deviceId"));
+            object.setPaymentProduct(this.getStringForKey("paymentProduct"));
+
+            object.setForwardUrl(this.getURLForKey("forwardUrl"));
+
+
+            String resultString = this.getEnumCharForKey("avsResult");
+            AVSResult result = AVSResult.fromStringValue(resultString);
+            if (result == null) {
+                result = AVSResult.AVSResultNotApplicable;
+            }
+            object.setAvsResult(result);
+
+            String cvcResultString = this.getEnumCharForKey("cvcResult");
+            CVCResult cvcResult = CVCResult.fromStringValue(cvcResultString);
+            if (cvcResult == null) {
+                cvcResult = CVCResult.CVCResultNotApplicable;
+            }
+            object.setCvcResult(cvcResult);
+
+            Integer eciString = this.getIntegerForKey("eci");
+            ECI eci = ECI.fromIntegerValue(eciString);
+            if (eci == null) {
+                eci = ECI.ECIUndefined;
+            }
+            object.setEci(eci);
+
+            return object;
+
+        }
     }
 
 }

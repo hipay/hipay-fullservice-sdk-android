@@ -1,5 +1,8 @@
 package com.hipay.hipayfullservice.core.models;
 
+import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+
 import java.util.Date;
 
 /**
@@ -23,6 +26,7 @@ public class TransactionRelatedItem {
     protected String currency;
 
     public TransactionRelatedItem() {
+
     }
 
     public enum TransactionStatus {
@@ -71,7 +75,176 @@ public class TransactionRelatedItem {
         TransactionStatus(int status) {
             this.status = status;
         }
+
+        public Integer getIntegerValue() {
+            return this.status;
+        }
+
+        public static TransactionStatus fromIntegerValue(Integer value) {
+
+            if (value == null) return null;
+
+            if (value == TransactionStatusUnknown.getIntegerValue()) {
+                return TransactionStatusUnknown;
+            }
+
+            if (value == TransactionStatusCreated.getIntegerValue()) {
+                return TransactionStatusCreated;
+            }
+
+            if (value == TransactionStatusCardholderEnrolled.getIntegerValue()) {
+                return TransactionStatusCardholderEnrolled;
+            }
+
+            if (value == TransactionStatusCardholderNotEnrolled.getIntegerValue()) {
+                return TransactionStatusCardholderNotEnrolled;
+            }
+
+            if (value == TransactionStatusUnableToAuthenticate.getIntegerValue()) {
+                return TransactionStatusUnableToAuthenticate;
+            }
+
+            if (value == TransactionStatusCardholderAuthenticated.getIntegerValue()) {
+                return TransactionStatusCardholderAuthenticated;
+            }
+
+            if (value ==TransactionStatusAuthenticationAttempted.getIntegerValue()) {
+                return TransactionStatusAuthenticationAttempted;
+            }
+
+            if (value == TransactionStatusCouldNotAuthenticate.getIntegerValue()) {
+                return TransactionStatusCouldNotAuthenticate;
+
+            }
+
+            if (value == TransactionStatusAuthenticationFailed.getIntegerValue()) {
+                return TransactionStatusAuthenticationFailed;
+            }
+
+            if (value == TransactionStatusBlocked.getIntegerValue()) {
+                return TransactionStatusBlocked;
+            }
+
+            if (value == TransactionStatusDenied.getIntegerValue()) {
+                return TransactionStatusDenied;
+            }
+
+            if (value == TransactionStatusAuthorizedAndPending.getIntegerValue()) {
+                return TransactionStatusAuthorizedAndPending;
+            }
+
+            if (value == TransactionStatusRefused.getIntegerValue()) {
+                return TransactionStatusRefused;
+            }
+
+            if (value == TransactionStatusExpired.getIntegerValue()) {
+                return TransactionStatusExpired;
+            }
+
+            if (value == TransactionStatusCancelled.getIntegerValue()) {
+                return TransactionStatusCancelled;
+            }
+
+            if (value == TransactionStatusAuthorized.getIntegerValue()) {
+                return TransactionStatusAuthorized;
+            }
+
+            if (value == TransactionStatusCaptureRequested.getIntegerValue()) {
+                return TransactionStatusCaptureRequested;
+            }
+
+            if (value == TransactionStatusCaptured.getIntegerValue()) {
+                return TransactionStatusCaptured;
+            }
+
+            if (value == TransactionStatusPartiallyCaptured.getIntegerValue()) {
+                return TransactionStatusPartiallyCaptured;
+            }
+
+            if (value == TransactionStatusCollected.getIntegerValue()) {
+                return TransactionStatusCollected;
+            }
+
+            if (value == TransactionStatusPartiallyCollected.getIntegerValue()) {
+                return TransactionStatusPartiallyCollected;
+            }
+
+            if (value == TransactionStatusSettled.getIntegerValue()) {
+                return TransactionStatusSettled;
+            }
+
+            if (value == TransactionStatusPartiallySettled.getIntegerValue()) {
+                return TransactionStatusPartiallySettled;
+            }
+
+            if (value == TransactionStatusRefundRequested.getIntegerValue()) {
+                return TransactionStatusRefundRequested;
+            }
+
+            if (value == TransactionStatusRefunded.getIntegerValue()) {
+                return TransactionStatusRefunded;
+            }
+
+            if (value == TransactionStatusPartiallyRefunded.getIntegerValue()) {
+                return TransactionStatusPartiallyRefunded;
+            }
+
+            if (value == TransactionStatusChargedBack.getIntegerValue()) {
+                return TransactionStatusChargedBack;
+            }
+
+            if (value == TransactionStatusDebited.getIntegerValue()) {
+                return TransactionStatusDebited;
+            }
+
+            if (value == TransactionStatusPartiallyDebited.getIntegerValue()) {
+                return TransactionStatusPartiallyDebited;
+            }
+
+            if (value == TransactionStatusAuthenticationRequested.getIntegerValue()) {
+                return TransactionStatusAuthenticationRequested;
+            }
+
+            if (value == TransactionStatusAuthenticated.getIntegerValue()) {
+                return TransactionStatusAuthenticated;
+            }
+
+            if (value == TransactionStatusAuthorizationRequested.getIntegerValue()) {
+                return TransactionStatusAuthorizationRequested;
+            }
+
+            if (value == TransactionStatusAcquirerFound.getIntegerValue()) {
+                return TransactionStatusAcquirerFound;
+            }
+
+            if (value == TransactionStatusAcquirernotFound.getIntegerValue()) {
+                return TransactionStatusAcquirernotFound;
+            }
+
+            if (value == TransactionStatusCardholderEnrollmentUnknown.getIntegerValue()) {
+                return TransactionStatusCardholderEnrollmentUnknown;
+            }
+
+            if (value == TransactionStatusRiskAccepted.getIntegerValue()) {
+                return TransactionStatusRiskAccepted;
+            }
+
+            if (value == TransactionStatusAuthorizationRefused.getIntegerValue()) {
+                return TransactionStatusAuthorizationRefused;
+            }
+
+            if (value == TransactionStatusCaptureRefused.getIntegerValue()) {
+                return TransactionStatusCaptureRefused;
+            }
+
+            if (value == TransactionStatusPendingPayment.getIntegerValue()) {
+                return TransactionStatusPendingPayment;
+            }
+
+            return null;
+        }
     }
+
 
     public String getCurrency() {
         return currency;
@@ -183,6 +356,54 @@ public class TransactionRelatedItem {
 
     public void setDecimals(Number decimals) {
         this.decimals = decimals;
+    }
+
+
+    public static class TransactionRelatedItemMapper extends AbstractMapper {
+        public TransactionRelatedItemMapper() {
+            //super();
+        }
+
+        @Override
+        protected boolean isClassValid() {
+
+            if (this.getBehaviour() instanceof MapBehaviour) {
+
+                if (this.getStringForKey("transactionReference") != null) return true;
+            }
+
+            return false;
+        }
+
+        protected Object mappedObject() {
+
+            TransactionRelatedItem object = new TransactionRelatedItem();
+
+            object.setTest(this.getBoolForKey("test"));
+            object.setMid(this.getStringForKey("mid"));
+            object.setAuthorizationCode(this.getStringForKey("authorizationCode"));
+            object.setTransactionReference(this.getStringForKey("transactionReference"));
+            object.setDateCreated(this.getDateForKey("dateCreated"));
+            object.setDateUpdated(this.getDateForKey("dateUpdated"));
+            object.setDateAuthorized(this.getDateForKey("dateAuthorized"));
+
+            Integer statusInteger = this.getIntegerForKey("status");
+            TransactionStatus status = TransactionStatus.fromIntegerValue(statusInteger);
+            if (status == null) {
+                status = TransactionStatus.TransactionStatusUnknown;
+            }
+            object.setStatus(status);
+
+            object.setMessage(this.getStringForKey("message"));
+            object.setAuthorizedAmount(this.getNumberForKey("authorizedAmount"));
+            object.setAuthorizedAmount(this.getNumberForKey("capturedAmount"));
+            object.setAuthorizedAmount(this.getNumberForKey("refundedAmount"));
+            object.setDecimals(this.getNumberForKey("decimals"));
+            object.setCurrency(this.getStringForKey("currency"));
+
+            return object;
+
+        }
     }
 
 }

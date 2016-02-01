@@ -1,5 +1,8 @@
 package com.hipay.hipayfullservice.core.models;
 
+import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+
 /**
  * Created by nfillion on 25/01/16.
  */
@@ -13,6 +16,8 @@ public class PersonalInformation {
     protected String country;
     protected String msisdn;
     protected String phone;
+    protected String phoneOperator;
+    protected String email;
 
     public PersonalInformation() {
     }
@@ -78,6 +83,62 @@ public class PersonalInformation {
     }
 
     public void setPhone(String phone) {
+
         this.phone = phone;
     }
+
+    public String getPhoneOperator() {
+        return phoneOperator;
+    }
+
+    public void setPhoneOperator(String phoneOperator) {
+        this.phoneOperator = phoneOperator;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public static class PersonalInformationMapper extends AbstractMapper {
+        public PersonalInformationMapper() {
+            //super();
+        }
+
+        @Override
+        protected boolean isClassValid() {
+
+            if (this.getBehaviour() instanceof MapBehaviour) {
+
+                if (this.getStringForKey("email") != null) return true;
+            }
+
+            return false;
+        }
+
+        protected Object mappedObject() {
+
+            //TODO build operation object from transactionRelatedItem
+
+            PersonalInformation object = new PersonalInformation();
+
+            object.setFirstname(this.getStringForKey("firstname"));
+            object.setLastname(this.getStringForKey("lastname"));
+            object.setStreetAddress(this.getStringForKey("streetAddress"));
+            object.setLocality(this.getStringForKey("streetLocality"));
+            object.setPostalCode(this.getStringForKey("postalCode"));
+            object.setCountry(this.getStringForKey("country"));
+            object.setMsisdn(this.getStringForKey("msisdn"));
+            object.setPhone(this.getStringForKey("phone"));
+            object.setPhoneOperator(this.getStringForKey("phoneOperator"));
+            object.setEmail(this.getStringForKey("email"));
+
+            return object;
+
+        }
+    }
+
 }

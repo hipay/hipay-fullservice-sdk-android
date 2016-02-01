@@ -1,13 +1,16 @@
 package com.hipay.hipayfullservice.core.models;
 
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+import java.util.Date;
+
 /**
  * Created by nfillion on 25/01/16.
  */
 public class Order {
 
     protected String orderId;
-    protected String dateCreated;
-    protected Integer attemps;
+    protected Date dateCreated;
+    protected Integer attempts;
     protected Number amount;
     protected Number shipping;
     protected Number tax;
@@ -30,20 +33,20 @@ public class Order {
         this.orderId = orderId;
     }
 
-    public String getDateCreated() {
+    public Date getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
 
     public Integer getAttemps() {
-        return attemps;
+        return attempts;
     }
 
-    public void setAttemps(Integer attemps) {
-        this.attemps = attemps;
+    public void setAttempts(Integer attemps) {
+        this.attempts = attemps;
     }
 
     public Number getAmount() {
@@ -120,16 +123,97 @@ public class Order {
 
     public enum Gender {
 
-        ThreeDSecureEnrollmentStatusUnknown (' '),
-        ThreeDSecureEnrollmentStatusAuthenticationAvailable ('Y'),
-        ThreeDSecureEnrollmentStatusCardholderNotEnrolled ('N'),
-        ThreeDSecureEnrollmentStatusUnableToAuthenticate ('U'),
-        ThreeDSecureEnrollmentStatusOtherError ('E');
+        GenderUndefined (' '),
+        GenderUnknown ('U'),
+        GenderMale ('M'),
+        GenderFemale ('F');
 
         protected final char gender;
         Gender(char gender) {
             this.gender = gender;
         }
+
+        public char getCharValue() {
+
+            return this.gender;
+        }
+
+        public static Gender fromStringValue(String value) {
+
+            if (value == null) return null;
+
+            char c = value.charAt(0);
+
+            if (c == GenderUnknown.getCharValue()) {
+                return GenderUnknown;
+            }
+
+            if (c == GenderMale.getCharValue()) {
+                return GenderMale;
+            }
+
+            if (c == GenderFemale.getCharValue()) {
+                return GenderFemale;
+            }
+
+            return null;
+        }
     }
+
+
+    //TODO don't forget it extends PersonalInformationMapper
+    public static class OrderMapper extends PersonalInformation.PersonalInformationMapper {
+        public OrderMapper() {
+            //super();
+        }
+
+        @Override
+        protected boolean isClassValid() {
+
+            if (this.getBehaviour() instanceof MapBehaviour) {
+
+                if (super.isClassValid()) {
+                    if (this.getStringForKey("id") != null) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        protected Object mappedObject() {
+
+            //TODO build operation object from transactionRelatedItem
+
+            //HPFOrder *object = [self mappedObjectWithPersonalInformation:[[HPFOrder alloc] init]];
+            Order object = new Order();
+
+            object.setCurrency(this.getStringForKey("currency"));
+            object.setCustomerId(this.getStringForKey("customerId"));
+            object.setLanguage(this.getStringForKey("language"));
+            object.setOrderId(this.getStringForKey("id"));
+            object.setAttempts(this.getIntegerForKey("attempts"));
+            object.setAmount(this.getNumberForKey("amount"));
+            object.setShipping(this.getNumberForKey("shipping"));
+            object.setTax(this.getNumberForKey("tax"));
+            object.setDecimals(this.getNumberForKey("decimals"));
+
+            String genderString = this.getEnumCharForKey("gender");
+            Gender gender = Gender.fromStringValue(genderString);
+            if (gender == null) {
+                gender = Gender.GenderUndefined;
+            }
+            object.setGender(gender);
+
+            object.setDateCreated(this.getDateForKey("dateCreated"));
+
+            return object;
+
+        }
+
+    }
+
+
 
 }
