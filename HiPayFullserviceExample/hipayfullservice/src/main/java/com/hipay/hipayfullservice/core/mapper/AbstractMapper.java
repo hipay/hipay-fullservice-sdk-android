@@ -1,17 +1,14 @@
 package com.hipay.hipayfullservice.core.mapper;
 
 import com.hipay.hipayfullservice.core.mapper.interfaces.IBehaviour;
-import com.hipay.hipayfullservice.core.mapper.interfaces.ListBehaviour;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URL;
 import java.security.InvalidParameterException;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by nfillion on 25/01/16.
@@ -102,7 +99,7 @@ public abstract class AbstractMapper {
 
     protected String getEnumCharForKey(String key) {
 
-        return this.getBehaviour().getEnumCharForKey(String key);
+        return this.getBehaviour().getEnumCharForKey(key);
     }
 
     protected Date getDateForKey(String key) {

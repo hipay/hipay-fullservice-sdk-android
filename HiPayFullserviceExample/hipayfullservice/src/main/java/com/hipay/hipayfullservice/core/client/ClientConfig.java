@@ -1,5 +1,8 @@
 package com.hipay.hipayfullservice.core.client;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * Created by nfillion on 21/01/16.
  */
@@ -7,13 +10,20 @@ public class ClientConfig {
 
     private static ClientConfig mInstance = null;
 
-    private String environment;
+    private Environment environment;
     private String username;
     private String password;
     private String userAgent;
+    private URL appRedirectionURL;
+
+    private static final String ClientConfigCallbackURLHost = "hipay-fullservice";
+
+    public static final String GatewayClientBaseURLStage = "https://stage-secure-gateway.hipay-tpp.com/rest/v1/";
+    public static final String GatewayClientBaseURLProduction = "https://secure-gateway.hipay-tpp.com/rest/v1/";
+    public static final String GatewayCallbackURLPathName = "gateway";
+    public static final String GatewayCallbackURLOrderPathName = "gateway";
 
     // TODO URLScheme
-
 
     private ClientConfig() {
 
@@ -29,21 +39,69 @@ public class ClientConfig {
         return mInstance;
     }
 
-    public String getEnvironment() {
+    private URL urlSchemeWithString(String schemeString) {
+
+        StringBuilder appURLSchemeBuilder = new StringBuilder(schemeString);
+        appURLSchemeBuilder.append("://");
+        appURLSchemeBuilder.append(ClientConfigCallbackURLHost);
+
+        try {
+            return new URL(appURLSchemeBuilder.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+
+            return null;
+        }
+    }
+
+    public enum Environment {
+
+        EnvironmentStage (0),
+        EnvironmentProduction (1);
+
+        protected final Integer status;
+        Environment(Integer status) {
+
+            this.status = status;
+        }
+
+        public static Environment fromIntegerValue(Integer value) {
+
+            if (value == EnvironmentStage.getIntegerValue()) {
+                return EnvironmentStage;
+            }
+
+            if (value == EnvironmentProduction.getIntegerValue()) {
+                return EnvironmentProduction;
+            }
+
+            return null;
+        }
+
+        public Integer getIntegerValue() {
+            return this.status;
+        }
+    }
+
+
+    public Environment getEnvironment() {
         return environment;
     }
 
-    public void setEnvironment(String environment, String username, String password, String appURLscheme) {
+
+    public void setConfigEnvironment(Environment environment, String username, String password, String appURLscheme) {
 
         this.setEnvironment(environment);
-        this.setUserAgent(username);
+        this.setUsername(username);
         this.setPassword(password);
+        this.setAppRedirectionURL(this.urlSchemeWithString(appURLscheme));
 
-        // TODO URLSCHEME
+        this.setUserAgent(username);
 
+        //TODO determine useragent
     }
 
-    public void setEnvironment(String environment) {
+    public void setEnvironment(Environment environment) {
         this.environment = environment;
     }
 
@@ -71,4 +129,11 @@ public class ClientConfig {
         this.userAgent = userAgent;
     }
 
+    public URL getAppRedirectionURL() {
+        return appRedirectionURL;
+    }
+
+    public void setAppRedirectionURL(URL appRedirectionURL) {
+        this.appRedirectionURL = appRedirectionURL;
+    }
 }

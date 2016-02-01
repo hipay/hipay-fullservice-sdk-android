@@ -58,8 +58,6 @@ public class ThreeDSecure {
             return null;
         }
 
-
-
         public char getCharValue() {
             return this.status;
         }

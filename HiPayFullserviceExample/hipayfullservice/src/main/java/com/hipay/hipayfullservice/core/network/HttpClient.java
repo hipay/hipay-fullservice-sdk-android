@@ -14,7 +14,7 @@ import java.net.URL;
  */
 
 
-public class HttpClient extends AbstractHttpClient<AbstractClient> {
+public class HttpClient extends AbstractHttpClient<HttpResponse> {
 
     public HttpClient(Context context, Bundle bundle) {
         super(context, bundle);
@@ -46,10 +46,8 @@ public class HttpClient extends AbstractHttpClient<AbstractClient> {
     }
 
     @Override
-    protected AbstractClient buildFromHttpResponse(HttpResponse httpResponse) {
+    protected HttpResponse buildFromHttpResponse(HttpResponse httpResponse) {
 
-        //TODO Mapping Client object
-        AbstractClient client = new AbstractClient(httpResponse);
-        return client;
+        return httpResponse;
     }
 }

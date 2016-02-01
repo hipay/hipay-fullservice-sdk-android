@@ -1,7 +1,5 @@
 package com.hipay.hipayfullservice.core.network;
 
-import org.json.JSONException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

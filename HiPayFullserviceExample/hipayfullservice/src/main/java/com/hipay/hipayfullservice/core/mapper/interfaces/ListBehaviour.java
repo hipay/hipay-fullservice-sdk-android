@@ -20,7 +20,7 @@ public class ListBehaviour implements IBehaviour {
 
     protected JSONObject jsonObject;
 
-    public ListBehaviour (JSONObject jsonObject) {
+    public ListBehaviour(JSONObject jsonObject) {
 
         this.setJsonObject(jsonObject);
     }
@@ -50,8 +50,7 @@ public class ListBehaviour implements IBehaviour {
         String string = this.getStringForKey(key);
         if (string != null && string.length() == 1)  {
 
-            char c = string.charAt(0);
-            return new Integer(Character.getNumericValue(c));
+            return string;
         }
 
         return null;
@@ -74,21 +73,6 @@ public class ListBehaviour implements IBehaviour {
         Number object = this.getNumberForKey(key);
         if (object != null && object instanceof Integer) {
             return (Integer)object;
-        }
-
-        return new Integer(-1);
-    }
-
-    public Integer getIntegerEnumValue(String key, Integer defaultValue, Map<String,Number> values) {
-
-        String string = this.getLowercaseStringForKey(key);
-
-        if (string != null) {
-
-            Number enumValue = values.get(string);
-            if (enumValue != null && enumValue instanceof Integer) {
-                return (Integer)enumValue;
-            }
         }
 
         return null;
