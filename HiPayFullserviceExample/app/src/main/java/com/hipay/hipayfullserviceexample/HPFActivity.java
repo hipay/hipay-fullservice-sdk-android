@@ -12,10 +12,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.network.HttpClient;
 import com.hipay.hipayfullservice.core.network.HttpResponse;
+import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
+import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Locale;
 
 public class HPFActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<HttpResponse> {
@@ -38,13 +42,36 @@ public class HPFActivity extends AppCompatActivity implements LoaderManager.Load
 
         getLoaderManager().initLoader(0, null, this);
 
+        this.testRequests();
+    }
 
-        String locale1 = Locale.getDefault().getDisplayLanguage();
-        String locale2 = Locale.getDefault().toString();
-        String locale3 = Locale.getDefault().getLanguage();
+    private void testRequests() {
 
-        String hello;
+        PaymentPageRequest paymentPageRequest = new PaymentPageRequest();
 
+        paymentPageRequest.setAmount(225);
+        paymentPageRequest.setCurrency("EUR");
+        paymentPageRequest.setOrderId("TEST_SDK_IOS_1454520936");
+        paymentPageRequest.setShortDescription("Outstanding item");
+        paymentPageRequest.getCustomer().setCountry("FR");
+        paymentPageRequest.getCustomer().setFirstname("John");
+        paymentPageRequest.getCustomer().setLastname("Doe");
+        paymentPageRequest.setPaymentCardGroupingEnabled(true);
+        paymentPageRequest.setMultiUse(true);
+        paymentPageRequest.setPaymentProductCategoryList(
+
+                Arrays.asList(
+
+                        PaymentProduct.PaymentProductCodeCB,
+                        PaymentProduct.PaymentProductCodeMasterCard,
+                        PaymentProduct.PaymentProductCodeVisa,
+                        PaymentProduct.PaymentProductCodeAmericanExpress,
+                        PaymentProduct.PaymentProductCodeMaestro,
+                        PaymentProduct.PaymentProductCodeDiners
+                )
+        );
+
+        paymentPageRequest.setAuthenticationIndicator(CardTokenPaymentMethodRequest.AuthenticationIndicator.AuthenticationIndicatorUndefined);
     }
 
     @Override
@@ -80,7 +107,6 @@ public class HPFActivity extends AppCompatActivity implements LoaderManager.Load
 
         Log.i("data", "data : " + data);
         Log.i("data", "data : " + data);
-        //User user = new Gson().fromJson(data, User.class);
 
         String stream = null;
 

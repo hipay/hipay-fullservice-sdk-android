@@ -3,11 +3,13 @@ package com.hipay.hipayfullservice.core.requests.order;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
 
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -21,8 +23,8 @@ public class PaymentPageRequest extends OrderRelatedRequest {
 
     Transaction.ECI eci;
     CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator;
-    boolean multiUse;
-    boolean displaySelector;
+    Boolean multiUse;
+    Boolean displaySelector;
     String templateName;
     URL css;
     boolean paymentCardGroupingEnabled;
@@ -133,5 +135,34 @@ public class PaymentPageRequest extends OrderRelatedRequest {
 
     public void setGroupedPaymentCardProductCodes(Set<String> groupedPaymentCardProductCodes) {
         this.groupedPaymentCardProductCodes = groupedPaymentCardProductCodes;
+    }
+
+    public Boolean getMultiUse() {
+        return multiUse;
+    }
+
+    public void setMultiUse(Boolean multiUse) {
+        this.multiUse = multiUse;
+    }
+
+    public Boolean getDisplaySelector() {
+        return displaySelector;
+    }
+
+    public void setDisplaySelector(Boolean displaySelector) {
+        this.displaySelector = displaySelector;
+    }
+
+    public static class PaymentPageRequestSerializationMapper extends AbstractSerializationMapper {
+
+        public PaymentPageRequestSerializationMapper(PaymentPageRequest request) {
+            super(request);
+        }
+
+        @Override
+        protected Map<String, String> getSerializedObject() {
+
+            return super.getSerializedObject();
+        }
     }
 }

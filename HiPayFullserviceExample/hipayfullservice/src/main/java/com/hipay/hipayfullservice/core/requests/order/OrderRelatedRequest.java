@@ -1,6 +1,7 @@
 package com.hipay.hipayfullservice.core.requests.order;
 
 import com.hipay.hipayfullservice.core.client.ClientConfig;
+import com.hipay.hipayfullservice.core.requests.AbstractRequest;
 import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.hipayfullservice.core.requests.info.PersonalInfoRequest;
 import com.hipay.hipayfullservice.core.utils.Utils;
@@ -14,7 +15,7 @@ import java.util.Map;
 /**
  * Created by nfillion on 02/02/16.
  */
-public class OrderRelatedRequest {
+public class OrderRelatedRequest extends AbstractRequest {
 
     protected String orderId;
 

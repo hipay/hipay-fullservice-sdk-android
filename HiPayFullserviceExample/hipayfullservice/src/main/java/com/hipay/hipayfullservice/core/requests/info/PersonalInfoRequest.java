@@ -1,9 +1,11 @@
 package com.hipay.hipayfullservice.core.requests.info;
 
+import com.hipay.hipayfullservice.core.requests.AbstractRequest;
+
 /**
  * Created by nfillion on 03/02/16.
  */
-public class PersonalInfoRequest {
+public class PersonalInfoRequest extends AbstractRequest {
 
     protected String firstname;
     protected String lastname;
