@@ -40,7 +40,6 @@ public class HPFActivity extends AppCompatActivity implements LoaderManager.Load
             }
         });
 
-
         ClientConfig.Environment environment = ClientConfig.Environment.Stage;
         String username = "94654679.api.hipay-tpp.com";
         String password = "U5hQh4ZT0UyXpYhG8WI4trYQ";
@@ -95,9 +94,6 @@ public class HPFActivity extends AppCompatActivity implements LoaderManager.Load
         paymentPageRequest.setAuthenticationIndicator(CardTokenPaymentMethodRequest.AuthenticationIndicator.AuthenticationIndicatorUndefined);
 
         return paymentPageRequest.getStringParameters();
-
-        // path : payment_products
-
     }
 
     @Override
