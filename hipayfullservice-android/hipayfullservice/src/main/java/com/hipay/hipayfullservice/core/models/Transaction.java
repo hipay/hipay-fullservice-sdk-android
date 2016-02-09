@@ -1,6 +1,5 @@
 package com.hipay.hipayfullservice.core.models;
 
-import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
 
 import java.net.URL;

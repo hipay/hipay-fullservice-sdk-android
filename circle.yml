@@ -1,5 +1,5 @@
 general:
-   build_dir: hipayfullservice-android
+  build_dir: hipayfullservice-android
 
 dependencies:
   pre:
@@ -9,4 +9,3 @@ dependencies:
 test:
   override:
     - ./gradlew build check
-

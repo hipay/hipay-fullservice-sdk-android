@@ -15,7 +15,7 @@ import android.view.View;
 import com.hipay.hipayfullservice.core.client.ClientConfig;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.network.HttpResponse;
-import com.hipay.hipayfullservice.core.network.PaymentPageRequestClient;
+import com.hipay.hipayfullservice.core.client.operations.PaymentPageRequestOperation;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 
@@ -121,7 +121,7 @@ public class HPFActivity extends AppCompatActivity implements LoaderManager.Load
 
     @Override
     public Loader<HttpResponse> onCreateLoader(int id, Bundle bundle) {
-        return new PaymentPageRequestClient(this, bundle);
+        return new PaymentPageRequestOperation(this, bundle);
     }
 
     @Override

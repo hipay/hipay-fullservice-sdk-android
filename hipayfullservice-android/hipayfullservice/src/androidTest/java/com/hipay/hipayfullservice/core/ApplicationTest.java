@@ -1,4 +1,4 @@
-package com.hipay.hipayfullserviceexample;
+package com.hipay.hipayfullservice.core;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

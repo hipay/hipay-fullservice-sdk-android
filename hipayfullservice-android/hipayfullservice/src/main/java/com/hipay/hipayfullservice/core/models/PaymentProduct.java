@@ -33,7 +33,7 @@ public class PaymentProduct {
 
     }
 
-    public SecurityCodeType securityCodeTypeForPaymentProductCode(String paymentProductCode) {
+    public static SecurityCodeType securityCodeTypeForPaymentProductCode(String paymentProductCode) {
 
         if (    paymentProductCode.equalsIgnoreCase(PaymentProductCodeVisa) ||
                 paymentProductCode.equalsIgnoreCase(PaymentProductCodeMasterCard) ||

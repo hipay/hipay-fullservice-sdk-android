@@ -1,4 +1,4 @@
-package com.hipay.hipayfullservice;
+package com.hipay.hipayfullservice.example;
 
 import org.junit.Test;
 

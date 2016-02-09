@@ -119,7 +119,7 @@ public class FraudScreening {
 
     public static class FraudScreeningMapper extends AbstractMapper {
         public FraudScreeningMapper() {
-            //super();
+            super();
         }
 
         @Override
@@ -149,7 +149,6 @@ public class FraudScreening {
                 result = FraudScreeningResult.FraudScreeningResultUnknown;
             }
             object.setResult(result);
-
             String reviewString = this.getLowercaseStringForKey("review");
             FraudScreeningReview review = FraudScreeningReview.fromStringValue(reviewString);
             if (review == null) {

@@ -1,4 +1,4 @@
-package com.hipay.hipayfullservice.core.network;
+package com.hipay.hipayfullservice.core.client.operations;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,9 +14,9 @@ import java.net.URL;
  */
 
 
-public class PaymentPageRequestClient extends GatewayClient {
+public class PaymentPageRequestOperation extends GatewayOperation {
 
-    public PaymentPageRequestClient(Context context, Bundle bundle) {
+    public PaymentPageRequestOperation(Context context, Bundle bundle) {
         super(context, bundle);
     }
 
