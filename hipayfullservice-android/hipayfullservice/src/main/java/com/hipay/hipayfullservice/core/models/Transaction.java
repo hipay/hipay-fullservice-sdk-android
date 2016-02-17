@@ -2,6 +2,8 @@ package com.hipay.hipayfullservice.core.models;
 
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
 
+import org.json.JSONObject;
+
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -51,11 +53,22 @@ public class Transaction extends TransactionRelatedItem {
         this.cvcResult = CVCResult.CVCResultNotApplicable;
     }
 
+    public static Transaction fromJSONObject(JSONObject object) {
+
+        TransactionMapper mapper = new TransactionMapper(object);
+        return mapper.mappedObject();
+
+    }
+
+
+
     public List<Transaction> sortTransactionsByRelevance(List<Transaction> transactions) {
 
         //TODO return comparison
         return null;
+
     }
+
 
     public boolean isMoreRelevantThan(Transaction transaction) {
 
@@ -72,7 +85,8 @@ public class Transaction extends TransactionRelatedItem {
 
     public boolean isHandled() {
 
-        if (this.state.equals(TransactionState.TransactionStatePending) || this.state.equals(TransactionState.TransactionStateCompleted )) {
+        if (this.state.equals(TransactionState.TransactionStatePending) ||
+                this.state.equals(TransactionState.TransactionStateCompleted )) {
             return true;
         }
         return false;
@@ -480,27 +494,27 @@ public class Transaction extends TransactionRelatedItem {
         this.cdata10 = cdata10;
     }
 
-
     public static class TransactionMapper extends TransactionRelatedItemMapper {
-        public TransactionMapper() {
-            //super();
+        public TransactionMapper(JSONObject object) {
+            super(object);
         }
 
         @Override
-        protected boolean isClassValid() {
+        protected boolean isValid() {
 
             if (this.getBehaviour() instanceof MapBehaviour) {
 
-                if (super.isClassValid()) {
+                if (super.isValid()) {
 
-                    if (this.getIntegerForKey("state") != null) return true;
+                    if (this.getIntegerForKey("state") != null)
+                        return true;
                 }
             }
 
             return false;
         }
 
-        protected Object mappedObject() {
+        protected Transaction mappedObject() {
 
             Transaction object = new Transaction();
 

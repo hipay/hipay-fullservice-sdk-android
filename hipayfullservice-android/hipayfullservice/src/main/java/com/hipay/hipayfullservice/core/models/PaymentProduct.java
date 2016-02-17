@@ -3,6 +3,8 @@ package com.hipay.hipayfullservice.core.models;
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
 
+import org.json.JSONObject;
+
 import java.util.Set;
 
 /**
@@ -231,12 +233,12 @@ public class PaymentProduct {
 
 
     public static class PaymentProductMapper extends AbstractMapper {
-        public PaymentProductMapper() {
-            //super();
+        public PaymentProductMapper(JSONObject jsonObject) {
+            super(jsonObject);
         }
 
         @Override
-        protected boolean isClassValid() {
+        protected boolean isValid() {
 
             if (this.getBehaviour() instanceof MapBehaviour) {
 

@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
  */
 
 
-public class GatewayOperation extends AbstractHttpClient<HttpResponse> {
+public abstract class GatewayOperation extends AbstractHttpClient<HttpResponse> {
 
     public GatewayOperation(Context context, Bundle bundle) {
         super(context, bundle);
@@ -47,11 +47,6 @@ public class GatewayOperation extends AbstractHttpClient<HttpResponse> {
         }
 
         return null;
-    }
-
-    @Override
-    protected HttpMethod getRequestType() {
-        return HttpMethod.GET;
     }
 
     @Override

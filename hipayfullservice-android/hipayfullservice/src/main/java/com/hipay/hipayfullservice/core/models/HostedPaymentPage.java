@@ -150,7 +150,7 @@ public class HostedPaymentPage {
         }
 
         @Override
-        protected boolean isClassValid() {
+        protected boolean isValid() {
 
             if (this.getBehaviour() instanceof MapBehaviour) {
 

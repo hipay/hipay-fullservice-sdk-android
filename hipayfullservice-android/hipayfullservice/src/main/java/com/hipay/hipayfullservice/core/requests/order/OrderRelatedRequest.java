@@ -84,6 +84,63 @@ public class OrderRelatedRequest extends AbstractRequest {
         }
     }
 
+    public OrderRelatedRequest(OrderRelatedRequest orderRelatedRequest) {
+
+        this.setLanguage(Locale.getDefault().toString());
+        this.setHTTPUserAgent(ClientConfig.getInstance().getUserAgent());
+
+        this.setCustomer(new CustomerInfoRequest());
+        this.setShippingAddress(new PersonalInfoRequest());
+
+        try {
+            this.initURLParameters();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            //TODO handle exception
+
+        } catch (URISyntaxException e) {
+
+            e.printStackTrace();
+            //TODO handle exception
+        }
+
+        this.setOrderId(orderRelatedRequest.getOrderId());
+        this.setOperation(orderRelatedRequest.getOperation());
+        this.setShortDescription(orderRelatedRequest.getShortDescription());
+        this.setLongDescription(orderRelatedRequest.getLongDescription());
+        this.setCurrency(orderRelatedRequest.getCurrency());
+        this.setAmount(orderRelatedRequest.getAmount());
+        this.setShipping(orderRelatedRequest.getShipping());
+        this.setTax(orderRelatedRequest.getTax());
+        this.setClientId(orderRelatedRequest.getClientId());
+        this.setIpAddress(orderRelatedRequest.getIpAddress());
+        this.setAcceptURL(orderRelatedRequest.getAcceptURL());
+        this.setDeclineURL(orderRelatedRequest.getDeclineURL());
+        this.setPendingURL(orderRelatedRequest.getPendingURL());
+        this.setExceptionURL(orderRelatedRequest.getExceptionURL());
+        this.setCancelURL(orderRelatedRequest.getCancelURL());
+        this.setHTTPUserAgent(orderRelatedRequest.getHTTPUserAgent());
+        this.setDeviceFingerprint(orderRelatedRequest.getDeviceFingerprint());
+        this.setLanguage(orderRelatedRequest.getLanguage());
+
+        this.setCustomer(orderRelatedRequest.getCustomer());
+        this.setShippingAddress(orderRelatedRequest.getShippingAddress());
+
+        this.setCustomData(orderRelatedRequest.getCustomData());
+
+        this.setCdata1(orderRelatedRequest.getCdata1());
+        this.setCdata2(orderRelatedRequest.getCdata2());
+        this.setCdata3(orderRelatedRequest.getCdata3());
+        this.setCdata4(orderRelatedRequest.getCdata4());
+        this.setCdata5(orderRelatedRequest.getCdata5());
+        this.setCdata6(orderRelatedRequest.getCdata6());
+        this.setCdata7(orderRelatedRequest.getCdata7());
+        this.setCdata8(orderRelatedRequest.getCdata8());
+        this.setCdata9(orderRelatedRequest.getCdata9());
+        this.setCdata10(orderRelatedRequest.getCdata10());
+
+    }
+
     private void initURLParameters() throws MalformedURLException, URISyntaxException {
 
         URL appURL = ClientConfig.getInstance().getAppRedirectionURL();

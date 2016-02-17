@@ -3,6 +3,7 @@ package com.hipay.hipayfullservice.core.mapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.IBehaviour;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URL;
@@ -13,21 +14,21 @@ import java.util.List;
 /**
  * Created by nfillion on 25/01/16.
  */
-public abstract class AbstractMapper {
+public abstract class AbstractMapper<T> {
 
-    protected Object rawData;
+    protected T rawData;
     protected IBehaviour behaviour;
 
     protected abstract Object mappedObject();
-    protected abstract boolean isClassValid();
+    protected abstract boolean isValid();
 
-    public AbstractMapper(Object rawData) {
+    public AbstractMapper(T rawData) {
 
         try {
             this.isMapperValid(rawData);
 
         } catch (InvalidParameterException exception) {
-            //TODO handle invalid parameters
+            //TODOoooooooooooooooooooooooooo
 
         } finally {
             //continue
@@ -38,7 +39,7 @@ public abstract class AbstractMapper {
 
     }
 
-    private void isMapperValid(Object rawData) {
+    private void isMapperValid(T rawData) {
 
         this.setRawData(rawData);
 
@@ -52,20 +53,18 @@ public abstract class AbstractMapper {
                 JSONObject map = (JSONObject)this.getRawData();
                 this.setBehaviour(new MapBehaviour(map));
 
-            } else if (this.rawData instanceof List) {
+            } else if (this.rawData instanceof JSONArray) {
 
                 //JSONArray list = (JSONArray)this.getRawData();
                 //this.setBehaviour(new ListBehaviour(list));
             }
         }
 
-        if (!this.isClassValid()) {
+        if (!this.isValid()) {
 
             throw new InvalidParameterException();
         }
     }
-
-    //TODO build custom getters
 
     protected String getStringForKey(String key) {
 
@@ -107,11 +106,11 @@ public abstract class AbstractMapper {
         return this.getBehaviour().getDateForKey(key);
     }
 
-    public Object getRawData() {
+    public T getRawData() {
         return rawData;
     }
 
-    public void setRawData(Object rawData) {
+    public void setRawData(T rawData) {
         this.rawData = rawData;
     }
 

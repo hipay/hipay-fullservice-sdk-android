@@ -9,12 +9,18 @@ import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper
  */
 public class OrderRequest extends OrderRelatedRequest {
 
-    public OrderRequest() {
+    public OrderRequest(OrderRelatedRequest orderRelatedRequest) {
+        super(orderRelatedRequest);
     }
 
     protected String paymentProductCode;
     protected AbstractPaymentMethodRequest paymentMethod;
 
+    public String getStringParameters() {
+
+        OrderRequest.OrderRequestSerializationMapper mapper = new OrderRequest.OrderRequestSerializationMapper(this);
+        return mapper.getQueryString();
+    }
 
     public String getPaymentProductCode() {
         return paymentProductCode;
@@ -24,11 +30,15 @@ public class OrderRequest extends OrderRelatedRequest {
         this.paymentProductCode = paymentProductCode;
     }
 
-
     public static class OrderRequestSerializationMapper extends AbstractSerializationMapper {
 
         public OrderRequestSerializationMapper(AbstractRequest request) {
             super(request);
+        }
+
+        @Override
+        protected String getQueryString() {
+            return super.getQueryString();
         }
 
     }

@@ -2,7 +2,6 @@ package com.hipay.hipayfullservice.core.serialization.interfaces.info;
 
 import com.hipay.hipayfullservice.core.models.Order;
 import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
-import com.hipay.hipayfullservice.core.requests.info.PersonalInfoRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,18 +19,20 @@ public class CustomerInfoRequestSerialization extends PersonalInfoRequestSeriali
 
         CustomerInfoRequest customerInfoRequest = (CustomerInfoRequest)this.getRequest();
 
-        Map<String, String> retMap = new HashMap<>();
+        Map<String, String> personalInfoRequestMap = super.getSerializedRequest();
 
-        retMap.put("email", customerInfoRequest.getEmail());
-        retMap.put("phone", customerInfoRequest.getPhone());
-        retMap.put("birthdate", customerInfoRequest.getBirthDateMonth());
+        //Map<String, String> retMap = new HashMap<>();
+
+        personalInfoRequestMap.put("email", customerInfoRequest.getEmail());
+        personalInfoRequestMap.put("phone", customerInfoRequest.getPhone());
+        personalInfoRequestMap.put("birthdate", customerInfoRequest.getBirthDateMonth());
 
         Order.Gender gender = customerInfoRequest.getGender();
         if (gender != null && gender != Order.Gender.GenderUndefined) {
-            retMap.put("gender", String.valueOf(gender.getCharValue()));
+            personalInfoRequestMap.put("gender", String.valueOf(gender.getCharValue()));
         }
 
-        return retMap;
+        return personalInfoRequestMap;
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.hipay.hipayfullservice.core.serialization.interfaces.order;
 import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.utils.Utils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -18,13 +17,13 @@ public class OrderRequestSerialization extends OrderRelatedRequestSerialization 
 
     public Map<String, String> getSerializedRequest() {
 
-        Map<String, String> retMap = new HashMap<>();
-
         Map<String, String> relatedRequestMap = super.getSerializedRequest();
 
-        //TODO merge maps
+        OrderRequest orderRequest = (OrderRequest)this.getRequest();
 
-        return retMap;
+        relatedRequestMap.put("payment_product", orderRequest.getPaymentProductCode());
+
+        return relatedRequestMap;
     }
 
     public String getQueryString() {

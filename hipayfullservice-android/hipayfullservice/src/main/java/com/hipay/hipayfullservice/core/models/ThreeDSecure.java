@@ -3,6 +3,8 @@ package com.hipay.hipayfullservice.core.models;
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
 
+import org.json.JSONObject;
+
 /**
  * Created by nfillion on 25/01/16.
  */
@@ -163,12 +165,12 @@ public class ThreeDSecure {
 
 
     public static class ThreeDSecureMapper extends AbstractMapper {
-        public ThreeDSecureMapper() {
-            //super();
+        public ThreeDSecureMapper(JSONObject jsonObject) {
+            super(jsonObject);
         }
 
         @Override
-        protected boolean isClassValid() {
+        protected boolean isValid() {
 
             if (this.getBehaviour() instanceof MapBehaviour) {
 

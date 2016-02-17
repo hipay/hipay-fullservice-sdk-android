@@ -50,15 +50,16 @@ public abstract class AbstractSerializationMapper {
             OrderRequest orderRequest = (OrderRequest)this.getRequest();
             this.setSerialization(new OrderRequestSerialization(orderRequest));
 
+        } else if (this.getRequest() instanceof CustomerInfoRequest) {
+
+            CustomerInfoRequest customerInfoRequest = (CustomerInfoRequest)this.getRequest();
+            this.setSerialization(new CustomerInfoRequestSerialization(customerInfoRequest));
+
         } else if (this.getRequest() instanceof PersonalInfoRequest) {
 
             PersonalInfoRequest personalInfoRequest = (PersonalInfoRequest)this.getRequest();
             this.setSerialization(new PersonalInfoRequestSerialization(personalInfoRequest));
 
-        } else if (this.getRequest() instanceof CustomerInfoRequest) {
-
-            CustomerInfoRequest customerInfoRequest = (CustomerInfoRequest)this.getRequest();
-            this.setSerialization(new CustomerInfoRequestSerialization(customerInfoRequest));
         }
     }
 

@@ -3,6 +3,8 @@ package com.hipay.hipayfullservice.core.models;
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
 
+import org.json.JSONObject;
+
 /**
  * Created by nfillion on 25/01/16.
  */
@@ -103,13 +105,13 @@ public class PersonalInformation {
         this.email = email;
     }
 
-    public static class PersonalInformationMapper extends AbstractMapper {
-        public PersonalInformationMapper() {
-            //super();
+    public static class PersonalInformationMapper extends AbstractMapper<JSONObject> {
+        public PersonalInformationMapper(JSONObject object) {
+            super(object);
         }
 
         @Override
-        protected boolean isClassValid() {
+        protected boolean isValid() {
 
             if (this.getBehaviour() instanceof MapBehaviour) {
 

@@ -1,7 +1,6 @@
 package com.hipay.hipayfullservice.core.serialization.interfaces.order;
 
 import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
-import com.hipay.hipayfullservice.core.requests.info.PersonalInfoRequest;
 import com.hipay.hipayfullservice.core.requests.order.OrderRelatedRequest;
 import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractRequestSerialization;
 
@@ -34,8 +33,8 @@ public abstract class OrderRelatedRequestSerialization extends AbstractRequestSe
         retMap.put("long_description", orderRelatedRequest.getLongDescription());
         retMap.put("currency", orderRelatedRequest.getCurrency());
         retMap.put("amount", String.valueOf(orderRelatedRequest.getAmount()));
-        retMap.put("shipping", String.valueOf(orderRelatedRequest.getShipping()));
-        retMap.put("tax", String.valueOf(orderRelatedRequest.getTax()));
+        //retMap.put("shipping", String.valueOf(orderRelatedRequest.getShipping()));
+        //retMap.put("tax", String.valueOf(orderRelatedRequest.getTax()));
         retMap.put("cid", orderRelatedRequest.getClientId());
         retMap.put("ipaddr", orderRelatedRequest.getIpAddress());
 
@@ -88,9 +87,11 @@ public abstract class OrderRelatedRequestSerialization extends AbstractRequestSe
 
         //TODO check about personal info prefix.
 
+        /*
         PersonalInfoRequest personalInfoRequest = orderRelatedRequest.getShippingAddress();
         Map<String, String> personalInfoMap = personalInfoRequest.getSerializedObject();
         retMap.putAll(personalInfoMap);
+        */
 
         //TODO check if objects are removed
         while (retMap.values().remove(null));

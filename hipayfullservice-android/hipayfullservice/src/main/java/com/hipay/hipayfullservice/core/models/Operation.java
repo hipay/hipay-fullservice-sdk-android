@@ -2,6 +2,8 @@ package com.hipay.hipayfullservice.core.models;
 
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
 
+import org.json.JSONObject;
+
 /**
  * Created by nfillion on 25/01/16.
  */
@@ -68,17 +70,17 @@ public class Operation {
 
     //TODO don't forget it extends TransactionRelatedItem
     public static class HostedPaymentPageMapper extends TransactionRelatedItem.TransactionRelatedItemMapper {
-        public HostedPaymentPageMapper() {
-            //super();
+        public HostedPaymentPageMapper(JSONObject jsonObject) {
+            super(jsonObject);
         }
 
         @Override
-        protected boolean isClassValid() {
+        protected boolean isValid() {
 
             if (this.getBehaviour() instanceof MapBehaviour) {
 
                 // it extends from TransactionRelated.
-                if (super.isClassValid()) {
+                if (super.isValid()) {
                     if (this.getStringForKey("operation") != null) {
                         return true;
                     }

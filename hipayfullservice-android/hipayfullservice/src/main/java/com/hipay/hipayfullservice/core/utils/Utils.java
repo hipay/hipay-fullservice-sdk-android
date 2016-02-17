@@ -57,13 +57,13 @@ public class Utils {
 
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT){
                     // Do something for lollipop and above versions
-                    encodedKey = URLEncoder.encode(entry.getKey(),StandardCharsets.UTF_8.name());
-                    encodedValue = URLEncoder.encode(entry.getValue(),StandardCharsets.UTF_8.name());
+                    encodedKey = URLEncoder.encode(entry.getKey(),StandardCharsets.UTF_8.name()).replaceAll("\\+", "%20");
+                    encodedValue = URLEncoder.encode(entry.getValue(),StandardCharsets.UTF_8.name()).replaceAll("\\+", "%20");
 
                 } else {
 
-                    encodedKey = URLEncoder.encode(entry.getKey(),"UTF-8");
-                    encodedValue = URLEncoder.encode(entry.getValue(), "UTF-8");
+                    encodedKey = URLEncoder.encode(entry.getKey(),"UTF-8").replaceAll("\\+", "%20");
+                    encodedValue = URLEncoder.encode(entry.getValue(), "UTF-8").replaceAll("\\+", "%20");
                 }
 
                 String part = new StringBuilder(encodedKey).append("=").append(encodedValue).toString();

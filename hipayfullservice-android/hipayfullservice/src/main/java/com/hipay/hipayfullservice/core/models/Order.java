@@ -1,6 +1,10 @@
 package com.hipay.hipayfullservice.core.models;
 
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
+
+import org.json.JSONObject;
+
 import java.util.Date;
 
 /**
@@ -23,6 +27,12 @@ public class Order {
     protected PersonalInformation shippingAddress;
 
     public Order() {
+    }
+
+    public static Order fromJSONObject(JSONObject object) {
+
+        OrderMapper mapper = new OrderMapper(object);
+        return mapper.mappedObject();
     }
 
     public String getOrderId() {
@@ -163,16 +173,16 @@ public class Order {
 
     //TODO don't forget it extends PersonalInformationMapper
     public static class OrderMapper extends PersonalInformation.PersonalInformationMapper {
-        public OrderMapper() {
-            //super();
+        public OrderMapper(JSONObject object) {
+            super(object);
         }
 
         @Override
-        protected boolean isClassValid() {
+        protected boolean isValid() {
 
             if (this.getBehaviour() instanceof MapBehaviour) {
 
-                if (super.isClassValid()) {
+                if (super.isValid()) {
                     if (this.getStringForKey("id") != null) {
                         return true;
                     }
@@ -182,7 +192,7 @@ public class Order {
             return false;
         }
 
-        protected Object mappedObject() {
+        protected Order mappedObject() {
 
             //TODO build operation object from transactionRelatedItem
 

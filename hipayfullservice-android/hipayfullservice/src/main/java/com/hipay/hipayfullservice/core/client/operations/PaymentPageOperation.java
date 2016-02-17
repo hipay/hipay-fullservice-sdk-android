@@ -13,10 +13,9 @@ import java.net.URL;
  * Created by nfillion on 22/01/16.
  */
 
+public class PaymentPageOperation extends GatewayOperation {
 
-public class PaymentPageRequestOperation extends GatewayOperation {
-
-    public PaymentPageRequestOperation(Context context, Bundle bundle) {
+    public PaymentPageOperation(Context context, Bundle bundle) {
         super(context, bundle);
     }
 
@@ -49,6 +48,10 @@ public class PaymentPageRequestOperation extends GatewayOperation {
 
         return requestURL;
     }
+
+
+    @Override
+    protected HttpMethod getRequestType() {
+        return HttpMethod.GET;
+    }
 }
-
-

@@ -4,7 +4,6 @@ import com.hipay.hipayfullservice.core.mapper.interfaces.ListBehaviour;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -16,7 +15,7 @@ public class ArrayMapper extends AbstractMapper {
     }
 
     @Override
-    protected boolean isClassValid() {
+    protected boolean isValid() {
         return  this.getBehaviour() instanceof MapBehaviour ||
                 this.getBehaviour() instanceof ListBehaviour;
     }
@@ -30,5 +29,4 @@ public class ArrayMapper extends AbstractMapper {
 
         return result;
     }
-
 }

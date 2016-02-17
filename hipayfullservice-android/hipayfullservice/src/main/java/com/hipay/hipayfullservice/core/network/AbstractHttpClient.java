@@ -90,7 +90,6 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
         }
     }
 
-
     @Override
     protected void onStopLoading() {
         // Attempt to cancel the current load task if possible.
@@ -121,7 +120,6 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
         mLastData = data;
         mLastData = null;
     }
-
 
     protected enum HttpMethod {
 

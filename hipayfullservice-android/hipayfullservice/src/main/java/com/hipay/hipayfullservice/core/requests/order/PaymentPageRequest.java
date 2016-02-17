@@ -16,7 +16,6 @@ import java.util.Set;
  */
 public class PaymentPageRequest extends OrderRelatedRequest {
 
-
     List paymentProductList;
     List paymentProductCategoryList;
 

@@ -21,9 +21,7 @@ public class ClientConfig {
     public static final String GatewayClientBaseURLStage = "https://stage-secure-gateway.hipay-tpp.com/rest/v1";
     public static final String GatewayClientBaseURLProduction = "https://secure-gateway.hipay-tpp.com/rest/v1";
     public static final String GatewayCallbackURLPathName = "gateway";
-    public static final String GatewayCallbackURLOrderPathName = "gateway";
-
-    // TODO URLScheme
+    public static final String GatewayCallbackURLOrderPathName = "order";
 
     private ClientConfig() {
     }
@@ -37,6 +35,9 @@ public class ClientConfig {
     }
 
     private URL urlSchemeWithString(String schemeString) {
+
+        //TODO remove that after we got the real scheme
+        schemeString = "http";
 
         StringBuilder appURLSchemeBuilder = new StringBuilder(schemeString);
         appURLSchemeBuilder.append("://");
@@ -92,12 +93,10 @@ public class ClientConfig {
         this.setUsername(username);
         this.setPassword(password);
 
-        //TODO handle redirect URL
-        //this.setAppRedirectionURL(this.urlSchemeWithString(appURLscheme));
-
-        this.setUserAgent(username);
+        this.setAppRedirectionURL(this.urlSchemeWithString(appURLscheme));
 
         //TODO determine useragent
+        this.setUserAgent(null);
     }
 
     public void setEnvironment(Environment environment) {

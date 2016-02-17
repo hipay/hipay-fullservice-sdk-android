@@ -3,6 +3,8 @@ package com.hipay.hipayfullservice.core.models;
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
 
+import org.json.JSONObject;
+
 import java.util.Date;
 
 /**
@@ -114,7 +116,6 @@ public class TransactionRelatedItem {
 
             if (value == TransactionStatusCouldNotAuthenticate.getIntegerValue()) {
                 return TransactionStatusCouldNotAuthenticate;
-
             }
 
             if (value == TransactionStatusAuthenticationFailed.getIntegerValue()) {
@@ -360,12 +361,12 @@ public class TransactionRelatedItem {
 
 
     public static class TransactionRelatedItemMapper extends AbstractMapper {
-        public TransactionRelatedItemMapper() {
-            //super();
+        public TransactionRelatedItemMapper(JSONObject jsonObject) {
+            super(jsonObject);
         }
 
         @Override
-        protected boolean isClassValid() {
+        protected boolean isValid() {
 
             if (this.getBehaviour() instanceof MapBehaviour) {
 
@@ -405,5 +406,4 @@ public class TransactionRelatedItem {
 
         }
     }
-
 }
