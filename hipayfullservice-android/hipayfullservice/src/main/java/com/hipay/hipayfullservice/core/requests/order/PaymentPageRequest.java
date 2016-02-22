@@ -29,7 +29,6 @@ public class PaymentPageRequest extends OrderRelatedRequest {
 
     Set<String> groupedPaymentCardProductCodes;
 
-
     public final static String PaymentPageRequestTemplateNameBasic = "basic-js";
     public final static String PaymentPageRequestTemplateNameFrame = "iframe-js";
 
