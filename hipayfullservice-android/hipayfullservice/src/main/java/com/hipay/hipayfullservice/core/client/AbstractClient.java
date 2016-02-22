@@ -1,72 +1,102 @@
 package com.hipay.hipayfullservice.core.client;
 
-import com.hipay.hipayfullservice.core.network.HttpResponse;
+import android.content.Context;
+import android.os.Bundle;
+
+import com.hipay.hipayfullservice.core.client.interfaces.IReqHandler;
+import com.hipay.hipayfullservice.core.client.interfaces.OrderReqHandler;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
+import com.hipay.hipayfullservice.core.network.HttpResult;
+import com.hipay.hipayfullservice.core.operations.GatewayOperation;
+import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
+import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 
 /**
  * Created by nfillion on 21/01/16.
  */
-public class AbstractClient {
+public abstract class AbstractClient<T1, T2> {
 
-    public AbstractClient(HttpResponse httpResponse) {
+    private T1 request;
+    private T2 callback;
 
+    private IReqHandler reqHandler;
 
+    //TODO set it weakreference
+    private Context context;
 
-        /*
-        InputStream in = httpResponse.getBodyStream();
+    public AbstractClient(Context ctx) {
+        context = ctx;
+    }
 
-        try {
+    public void createOrderRequest(T1 request, T2 callback) {
 
+        this.initReqHandler(request, callback);
+    }
 
-        } catch () {
+    private void initReqHandler(T1 request, T2 callback) {
 
-        } finally {
+        this.setRequest(request);
+        this.setCallback(callback);
 
+        if (this.getRequest() instanceof PaymentPageRequest) {
+
+            //TODO paymentPage
+
+        } else if (this.getRequest() instanceof OrderRequest
+                && callback instanceof OrderRequestCallback) {
+
+            OrderRequest orderRequest = (OrderRequest) this.getRequest();
+            OrderRequestCallback orderRequestCallback = (OrderRequestCallback)this.getCallback();
+
+            this.setReqHandler(new OrderReqHandler(orderRequest, orderRequestCallback));
         }
+    }
 
-        String bodyString = HttpResponse.
-        ret = readStream(in);
+    protected void handleCallbackResult(HttpResult result) {
 
-        // let's parse in JSON now.
+        this.getReqHandler().handleCallback(result);
+    }
 
-        try {
-            JSONObject body = new JSONObject(ret);
+    protected String getQueryParams() {
 
-        } catch (JSONException exception) {
+        return this.getReqHandler().getReqQueryString();
+    }
 
-        }
+    protected GatewayOperation getOperation(Context context, Bundle bundle) {
 
-        String body =
+        return this.getReqHandler().getReqOperation(context, bundle);
+    }
 
+    protected T1 getRequest() {
+        return request;
+    }
 
-                */
+    protected void setRequest(T1 request) {
+        this.request = request;
+    }
 
-        /*
-        try {
+    protected Context getContext() {
+        return context;
+    }
 
-            if (urlConnection.getResponseCode() / 100 == 2 urlConnection.getContent() ==) {
+    protected void setContext(Context context) {
 
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                ret = readStream(in);
+        this.context = context;
+    }
 
-                // let's parse in JSON now.
+    private IReqHandler getReqHandler() {
+        return reqHandler;
+    }
 
-                try {
-                    JSONObject body = new JSONObject(ret);
+    private void setReqHandler(IReqHandler reqHandler) {
+        this.reqHandler = reqHandler;
+    }
 
-                } catch (JSONException exception) {
+    protected T2 getCallback() {
+        return callback;
+    }
 
-                }
-                //urlConnection.
-
-            } else {
-
-                ret = null;
-            }
-
-        } finally {
-            urlConnection.disconnect();
-            return ret;
-        }
-        */
+    protected void setCallback(T2 callback) {
+        this.callback = callback;
     }
 }

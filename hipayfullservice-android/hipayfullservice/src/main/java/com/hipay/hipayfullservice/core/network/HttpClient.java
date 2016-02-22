@@ -3,8 +3,6 @@ package com.hipay.hipayfullservice.core.network;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.hipay.hipayfullservice.core.client.AbstractClient;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -14,7 +12,7 @@ import java.net.URL;
  */
 
 
-public class HttpClient extends AbstractHttpClient<HttpResponse> {
+public class HttpClient extends AbstractHttpClient<HttpResult> {
 
     public HttpClient(Context context, Bundle bundle) {
         super(context, bundle);
@@ -48,8 +46,8 @@ public class HttpClient extends AbstractHttpClient<HttpResponse> {
     }
 
     @Override
-    protected HttpResponse buildFromHttpResponse(HttpResponse httpResponse) {
+    protected HttpResult buildFromHttpResponse(HttpResult httpResult) {
 
-        return httpResponse;
+        return httpResult;
     }
 }

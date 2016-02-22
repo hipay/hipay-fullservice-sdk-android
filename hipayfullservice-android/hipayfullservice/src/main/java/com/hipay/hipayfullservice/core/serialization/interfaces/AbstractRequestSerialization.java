@@ -2,7 +2,6 @@ package com.hipay.hipayfullservice.core.serialization.interfaces;
 
 import com.hipay.hipayfullservice.core.requests.AbstractRequest;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

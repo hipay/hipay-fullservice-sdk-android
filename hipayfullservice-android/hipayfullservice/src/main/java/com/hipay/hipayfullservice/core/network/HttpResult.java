@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 /**
  * Created by nfillion on 25/01/16.
  */
-public class HttpResponse {
+public class HttpResult {
 
     private int statusCode;
     private String responseMessage;
@@ -16,7 +16,7 @@ public class HttpResponse {
     private InputStream errorStream;
     private IOException ioException;
 
-    public HttpResponse (int statusCode, InputStream bodyStream, IOException ioException) {
+    public HttpResult(int statusCode, InputStream bodyStream, IOException ioException) {
 
         this.setStatusCode(statusCode);
         this.setBodyStream(bodyStream);
@@ -24,7 +24,7 @@ public class HttpResponse {
         //this.setJsonException(jsonException);
     }
 
-    public HttpResponse() {}
+    public HttpResult() {}
 
     public int getStatusCode() {
         return statusCode;

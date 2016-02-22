@@ -1,6 +1,6 @@
 package com.hipay.hipayfullservice.core.requests.order;
 
-import com.hipay.hipayfullservice.core.client.ClientConfig;
+import com.hipay.hipayfullservice.core.client.config.ClientConfig;
 import com.hipay.hipayfullservice.core.requests.AbstractRequest;
 import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.hipayfullservice.core.requests.info.PersonalInfoRequest;

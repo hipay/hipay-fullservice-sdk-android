@@ -5,12 +5,22 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.hipay.hipayfullservice.core.client.ClientConfig;
-import com.hipay.hipayfullservice.core.client.GatewayClient;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
+import com.hipay.hipayfullservice.core.client.config.ClientConfig;
+import com.hipay.hipayfullservice.core.client.OrderClient;
+import com.hipay.hipayfullservice.core.models.PaymentProduct;
+import com.hipay.hipayfullservice.core.models.Transaction;
+import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
+import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
+import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+
+import java.util.Arrays;
+import java.util.Calendar;
 
 public class HPFActivity extends AppCompatActivity {
 
@@ -42,10 +52,61 @@ public class HPFActivity extends AppCompatActivity {
                 appURLScheme
         );
 
-        //TODO check about weak references
-        GatewayClient gatewayClient = new GatewayClient(this);
+        OrderRequest orderRequest = hardOrderRequest();
+        new OrderClient(this).createOrderRequest(orderRequest, new OrderRequestCallback() {
+            @Override
+            public void onSuccess(Transaction transaction) {
+                Log.i("transaction success", transaction.toString());
+            }
 
+            @Override
+            public void onError(Exception error) {
+                Log.i("transaction failed", error.getLocalizedMessage());
+            }
+        });
     }
+
+    protected OrderRequest hardOrderRequest() {
+
+        PaymentPageRequest paymentPageRequest = new PaymentPageRequest();
+
+        paymentPageRequest.setAmount(225);
+        paymentPageRequest.setCurrency("EUR");
+
+        StringBuilder stringBuilder = new StringBuilder("TEST_SDK_IOS_").append(Calendar.getInstance().getTimeInMillis()/1000);
+
+        paymentPageRequest.setOrderId(stringBuilder.toString());
+        paymentPageRequest.setShortDescription("Outstanding item");
+        paymentPageRequest.getCustomer().setCountry("FR");
+        paymentPageRequest.getCustomer().setFirstname("John");
+        paymentPageRequest.getCustomer().setLastname("Doe");
+        paymentPageRequest.setPaymentCardGroupingEnabled(true);
+        paymentPageRequest.setMultiUse(true);
+        paymentPageRequest.setPaymentProductCategoryList(
+
+                Arrays.asList(
+
+                        PaymentProduct.PaymentProductCodeCB,
+                        PaymentProduct.PaymentProductCodeMasterCard,
+                        PaymentProduct.PaymentProductCodeVisa,
+                        PaymentProduct.PaymentProductCodeAmericanExpress,
+                        PaymentProduct.PaymentProductCodeMaestro,
+                        PaymentProduct.PaymentProductCodeDiners
+                )
+        );
+
+        paymentPageRequest.getCustomer().setEmail("nfillion@hipay.com");
+
+        paymentPageRequest.setAuthenticationIndicator(CardTokenPaymentMethodRequest.AuthenticationIndicator.AuthenticationIndicatorUndefined);
+
+        OrderRequest orderRequest = new OrderRequest(paymentPageRequest);
+
+        //TODO
+        orderRequest.setPaymentProductCode("bcmc-mobile");
+
+        return orderRequest;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

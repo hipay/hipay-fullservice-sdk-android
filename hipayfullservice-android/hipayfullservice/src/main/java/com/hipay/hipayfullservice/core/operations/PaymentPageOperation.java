@@ -1,4 +1,4 @@
-package com.hipay.hipayfullservice.core.client.operations;
+package com.hipay.hipayfullservice.core.operations;
 
 import android.content.Context;
 import android.os.Bundle;

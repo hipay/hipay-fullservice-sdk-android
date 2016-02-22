@@ -24,24 +24,24 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
 
     protected abstract HttpURLConnection getHttpURLConnection() throws IOException;
     protected abstract HttpMethod getRequestType() throws IOException;
-    protected abstract T buildFromHttpResponse(HttpResponse httpResponse);
+    protected abstract T buildFromHttpResponse(HttpResult httpResult);
 
-    protected HttpResponse backgroundOperation() {
+    protected HttpResult backgroundOperation() {
 
-        HttpResponse httpResponse = new HttpResponse();
+        HttpResult httpResult = new HttpResult();
         HttpURLConnection urlConnection = null;
 
         try {
 
             urlConnection = this.getHttpURLConnection();
 
-            httpResponse.setStatusCode(urlConnection.getResponseCode());
-            httpResponse.setBodyStream(urlConnection.getInputStream());
-            httpResponse.setErrorStream(urlConnection.getErrorStream());
+            httpResult.setStatusCode(urlConnection.getResponseCode());
+            httpResult.setBodyStream(urlConnection.getInputStream());
+            httpResult.setErrorStream(urlConnection.getErrorStream());
 
         } catch (IOException exception) {
 
-            httpResponse.setIoException(exception);
+            httpResult.setIoException(exception);
 
         } finally {
 
@@ -49,7 +49,7 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
                 urlConnection.disconnect();
             }
 
-            return httpResponse;
+            return httpResult;
         }
     }
 

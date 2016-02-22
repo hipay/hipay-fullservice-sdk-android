@@ -37,7 +37,7 @@ public class OrderRequest extends OrderRelatedRequest {
         }
 
         @Override
-        protected String getQueryString() {
+        public String getQueryString() {
             return super.getQueryString();
         }
 

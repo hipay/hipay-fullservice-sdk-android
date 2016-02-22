@@ -1,12 +1,12 @@
-package com.hipay.hipayfullservice.core.client.operations;
+package com.hipay.hipayfullservice.core.operations;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Base64;
 
-import com.hipay.hipayfullservice.core.client.ClientConfig;
+import com.hipay.hipayfullservice.core.client.config.ClientConfig;
 import com.hipay.hipayfullservice.core.network.AbstractHttpClient;
-import com.hipay.hipayfullservice.core.network.HttpResponse;
+import com.hipay.hipayfullservice.core.network.HttpResult;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
  */
 
 
-public abstract class GatewayOperation extends AbstractHttpClient<HttpResponse> {
+public abstract class GatewayOperation extends AbstractHttpClient<HttpResult> {
 
     public GatewayOperation(Context context, Bundle bundle) {
         super(context, bundle);
@@ -95,8 +95,8 @@ public abstract class GatewayOperation extends AbstractHttpClient<HttpResponse> 
     }
 
     @Override
-    protected HttpResponse buildFromHttpResponse(HttpResponse httpResponse) {
+    protected HttpResult buildFromHttpResponse(HttpResult httpResult) {
 
-        return httpResponse;
+        return httpResult;
     }
 }

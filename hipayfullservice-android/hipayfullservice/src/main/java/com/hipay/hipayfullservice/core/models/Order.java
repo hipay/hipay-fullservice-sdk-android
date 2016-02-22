@@ -171,7 +171,6 @@ public class Order {
     }
 
 
-    //TODO don't forget it extends PersonalInformationMapper
     public static class OrderMapper extends PersonalInformation.PersonalInformationMapper {
         public OrderMapper(JSONObject object) {
             super(object);
