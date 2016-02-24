@@ -18,9 +18,9 @@ public abstract class GatewayClient<T1, T2> extends AbstractClient<T1, T2> imple
         super(context);
     }
 
-    public void createOrderRequest(T1 request, T2 callback) {
+    public void createRequest(T1 request, T2 callback) {
 
-        super.createOrderRequest(request, callback);
+        super.createRequest(request, callback);
 
         Bundle queryBundle = new Bundle();
         queryBundle.putString("queryParams", this.getQueryParams());

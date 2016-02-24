@@ -52,19 +52,26 @@ public class HPFActivity extends AppCompatActivity {
                 appURLScheme
         );
 
-        OrderRequest orderRequest = hardOrderRequest();
-        new OrderClient(this).createOrderRequest(orderRequest, new OrderRequestCallback() {
-            @Override
-            public void onSuccess(Transaction transaction) {
-                Log.i("transaction success", transaction.toString());
-            }
 
-            @Override
-            public void onError(Exception error) {
-                Log.i("transaction failed", error.getLocalizedMessage());
-            }
-        });
+
+
+        OrderRequest orderRequest = hardOrderRequest();
+
+        new OrderClient(this)
+                .createRequest(orderRequest, new OrderRequestCallback() {
+
+                    @Override
+                    public void onSuccess(Transaction transaction) {
+                        Log.i("transaction success", transaction.toString());
+                    }
+
+                    @Override
+                    public void onError(Exception error) {
+                        Log.i("transaction failed", error.getLocalizedMessage());
+                    }
+                });
     }
+
 
     protected OrderRequest hardOrderRequest() {
 

@@ -14,7 +14,7 @@ public class OrderClient extends GatewayClient<OrderRequest, OrderRequestCallbac
         super(context);
     }
 
-    public void createOrderRequest(OrderRequest request, OrderRequestCallback callback) {
-        super.createOrderRequest(request, callback);
+    public void createRequest(OrderRequest request, OrderRequestCallback callback) {
+        super.createRequest(request, callback);
     }
 }

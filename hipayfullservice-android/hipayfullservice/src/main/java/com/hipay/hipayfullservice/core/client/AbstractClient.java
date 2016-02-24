@@ -28,7 +28,7 @@ public abstract class AbstractClient<T1, T2> {
         context = ctx;
     }
 
-    public void createOrderRequest(T1 request, T2 callback) {
+    public void createRequest(T1 request, T2 callback) {
 
         this.initReqHandler(request, callback);
     }
