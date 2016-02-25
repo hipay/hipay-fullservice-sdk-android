@@ -1,5 +1,6 @@
 package com.hipay.hipayfullservice.example;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,6 +19,7 @@ import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.hipayfullservice.example.activity.PaymentScreenActivity;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -52,24 +54,26 @@ public class HPFActivity extends AppCompatActivity {
                 appURLScheme
         );
 
+        PaymentScreenActivity.start(this);
+        //activity.finish();
 
+        //return;
 
+        //OrderRequest orderRequest = hardOrderRequest();
 
-        OrderRequest orderRequest = hardOrderRequest();
+        //new OrderClient(this)
+                //.createRequest(orderRequest, new OrderRequestCallback() {
 
-        new OrderClient(this)
-                .createRequest(orderRequest, new OrderRequestCallback() {
+                    //@Override
+                    //public void onSuccess(Transaction transaction) {
+                        //Log.i("transaction success", transaction.toString());
+                    //}
 
-                    @Override
-                    public void onSuccess(Transaction transaction) {
-                        Log.i("transaction success", transaction.toString());
-                    }
-
-                    @Override
-                    public void onError(Exception error) {
-                        Log.i("transaction failed", error.getLocalizedMessage());
-                    }
-                });
+                    //@Override
+                    //public void onError(Exception error) {
+                        //Log.i("transaction failed", error.getLocalizedMessage());
+                    //}
+                //});
     }
 
 
