@@ -1,4 +1,4 @@
-package com.hipay.hipayfullservice.example.widget;
+package com.hipay.hipayfullservice.screen.widget;
 
 /**
  * Created by nfillion on 29/02/16.

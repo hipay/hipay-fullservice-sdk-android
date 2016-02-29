@@ -4,6 +4,7 @@
     android:id="@+id/category_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:foreground="@drawable/selector_subtle"
     tools:ignore="UseCompoundDrawables">
 
     <ImageView
@@ -18,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:textAppearance="@style/PaymentScreens.TextAppearance.PaymentProductItem"
         android:padding="@dimen/spacing_double" />
 
 </FrameLayout>

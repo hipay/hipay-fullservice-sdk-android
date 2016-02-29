@@ -1,4 +1,4 @@
-package com.hipay.hipayfullservice.example.activity;
+package com.hipay.hipayfullservice.screen.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,16 +9,18 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
-import com.hipay.hipayfullservice.example.R;
-import com.hipay.hipayfullservice.example.fragment.PaymentScreenFragment;
+import com.hipay.hipayfullservice.R;
+import com.hipay.hipayfullservice.screen.fragment.PaymentProductsFragment;
 
 /**
  * Created by nfillion on 25/02/16.
  */
-public class PaymentScreenActivity extends FragmentActivity {
+public class PaymentProductsActivity extends AppCompatActivity {
 
     //TODO handle extra user
     private static final String EXTRA_USER = "user";
@@ -33,9 +35,15 @@ public class PaymentScreenActivity extends FragmentActivity {
         context.startActivity(starter);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //no-op
+    }
+
     @NonNull
     static Intent getStartIntent(Context context) {
-        Intent starter = new Intent(context, PaymentScreenActivity.class);
+        Intent starter = new Intent(context, PaymentProductsActivity.class);
         //starter.putExtra(EXTRA_USER, player);
         return starter;
     }
@@ -43,35 +51,40 @@ public class PaymentScreenActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment_screen);
-        //final boolean edit = isInEditMode();
+
+        setContentView(R.layout.activity_payment_products);
+
+        setUpToolbar();
         if (savedInstanceState == null) {
 
             attachCategoryGridFragment();
-            // getFragmentManager().beginTransaction()
-                    //.replace(R.id.sign_in_container, SignInFragment.newInstance(edit)).commit();
+
         } else {
 
-            // setProgressBarVisibility(View.GONE)
-            // the fragment is loaded already, then remove the loading
+            setProgressBarVisibility(View.GONE);
+            //the fragment is loaded already, then remove the loading
         }
 
         //TODO useful if this activity is called with makeTransition
         supportPostponeEnterTransition();
-        //postponeEnterTransition();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //no-op
+    private void setUpToolbar() {
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_payment_products);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        //noinspection PrivateResource
+        ((TextView) toolbar.findViewById(R.id.title)).setText(R.string.paiment_products_title);
     }
 
     private void attachCategoryGridFragment() {
         FragmentManager supportFragmentManager = getSupportFragmentManager();
         Fragment fragment = supportFragmentManager.findFragmentById(R.id.category_container);
-        if (!(fragment instanceof PaymentScreenFragment)) {
-            fragment = PaymentScreenFragment.newInstance();
+        if (!(fragment instanceof PaymentProductsFragment)) {
+            fragment = PaymentProductsFragment.newInstance();
         }
         supportFragmentManager.beginTransaction()
                 .replace(R.id.category_container, fragment)

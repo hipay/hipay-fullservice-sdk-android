@@ -1,25 +1,20 @@
 package com.hipay.hipayfullservice.example;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
 import com.hipay.hipayfullservice.core.client.config.ClientConfig;
-import com.hipay.hipayfullservice.core.client.OrderClient;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
-import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
-import com.hipay.hipayfullservice.example.activity.PaymentScreenActivity;
+import com.hipay.hipayfullservice.screen.activity.PaymentProductsActivity;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -54,7 +49,7 @@ public class HPFActivity extends AppCompatActivity {
                 appURLScheme
         );
 
-        PaymentScreenActivity.start(this);
+        PaymentProductsActivity.start(this);
         //activity.finish();
 
         //return;

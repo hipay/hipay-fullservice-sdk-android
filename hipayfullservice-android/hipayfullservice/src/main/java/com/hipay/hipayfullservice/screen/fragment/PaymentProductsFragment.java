@@ -1,30 +1,35 @@
-package com.hipay.hipayfullservice.example.fragment;
+package com.hipay.hipayfullservice.screen.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
-import com.hipay.hipayfullservice.example.R;
-import com.hipay.hipayfullservice.example.adapter.PaymentProductAdapter;
-import com.hipay.hipayfullservice.example.widget.OffsetDecoration;
+import com.hipay.hipayfullservice.screen.activity.PaymentFormActivity;
+import com.hipay.hipayfullservice.screen.adapter.PaymentProductsAdapter;
+import com.hipay.hipayfullservice.screen.helper.TransitionHelper;
+import com.hipay.hipayfullservice.screen.widget.OffsetDecoration;
 
 /**
  * Created by nfillion on 26/02/16.
  */
 
-public class PaymentScreenFragment extends Fragment {
+public class PaymentProductsFragment extends Fragment {
 
-    private PaymentProductAdapter mAdapter;
+    private PaymentProductsAdapter mAdapter;
     private static final int REQUEST_CATEGORY = 0x2300;
 
-    public static Fragment newInstance() {
-        return new PaymentScreenFragment();
+    public static PaymentProductsFragment newInstance() {
+        return new PaymentProductsFragment();
     }
 
     @Override
@@ -41,15 +46,13 @@ public class PaymentScreenFragment extends Fragment {
 
     private void setUpQuizGrid(RecyclerView categoriesView) {
 
-        //TODO do nothing
-
         final int spacing = getContext().getResources()
                 .getDimensionPixelSize(R.dimen.spacing_nano);
         categoriesView.addItemDecoration(new OffsetDecoration(spacing));
 
-        mAdapter = new PaymentProductAdapter(getActivity());
+        mAdapter = new PaymentProductsAdapter(getActivity());
         mAdapter.setOnItemClickListener(
-                new PaymentProductAdapter.OnItemClickListener() {
+                new PaymentProductsAdapter.OnItemClickListener() {
                     @Override
                     public void onClick(View v, int position) {
                         Activity activity = getActivity();
@@ -60,7 +63,6 @@ public class PaymentScreenFragment extends Fragment {
                 });
 
         categoriesView.setAdapter(mAdapter);
-
     }
 
     @Override
@@ -79,27 +81,25 @@ public class PaymentScreenFragment extends Fragment {
         //if (requestCode == REQUEST_CATEGORY && resultCode == R.id.solved) {
             //mAdapter.notifyItemChanged(data.getStringExtra(JsonAttributes.ID));
         //}
-        //super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void startQuizActivityWithTransition(Activity activity, View toolbar,
                                                  PaymentProduct category) {
 
-        // do nothing here
+        final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
+                new Pair<>(toolbar, activity.getString(R.string.transition_toolbar)));
+        @SuppressWarnings("unchecked")
+        ActivityOptionsCompat sceneTransitionAnimation = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(activity, pairs);
 
-        //final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
-                //new Pair<>(toolbar, activity.getString(R.string.transition_toolbar)));
-        //@SuppressWarnings("unchecked")
-        //ActivityOptionsCompat sceneTransitionAnimation = ActivityOptionsCompat
-                //.makeSceneTransitionAnimation(activity, pairs);
-
-        // Start the activity with the participants, animating from one to the other.
-        //final Bundle transitionBundle = sceneTransitionAnimation.toBundle();
-        //Intent startIntent = QuizActivity.getStartIntent(activity, category);
-        //ActivityCompat.startActivityForResult(activity,
-                //startIntent,
-                //REQUEST_CATEGORY,
-                //transitionBundle);
+         //Start the activity with the participants, animating from one to the other.
+        final Bundle transitionBundle = sceneTransitionAnimation.toBundle();
+        Intent startIntent = PaymentFormActivity.getStartIntent(activity, category);
+        ActivityCompat.startActivityForResult(activity,
+                startIntent,
+                REQUEST_CATEGORY,
+                transitionBundle);
     }
 
 }
