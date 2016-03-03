@@ -157,8 +157,8 @@ public class PaymentFormAdapter extends RecyclerView.Adapter<PaymentFormAdapter.
 
         public ViewHolder(View container) {
             super(container);
-            icon = (ImageView) container.findViewById(R.id.category_icon);
-            title = (TextView) container.findViewById(R.id.category_title);
+            icon = (ImageView) container.findViewById(R.id.payment_product_icon);
+            title = (TextView) container.findViewById(R.id.payment_product_title);
         }
     }
 }

@@ -23,7 +23,7 @@
     <arcMotion android:maximumAngle="50"/>
     <transition class="com.hipay.hipayfullservice.screen.widget.TextResizeTransition">
         <targets>
-            <target android:targetId="@id/category_title"/>
+            <target android:targetId="@id/payment_product_title"/>
         </targets>
     </transition>
 </transitionSet>

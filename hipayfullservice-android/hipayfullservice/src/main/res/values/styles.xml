@@ -8,18 +8,16 @@
         <item name="colorPrimaryDark">@color/hpf_primary_dark</item>
         <item name="colorAccent">@color/hpf_accent</item>
         <item name="android:textColorPrimary">@android:color/black</item>
-        <item name="android:textColorPrimaryInverse">@color/text_light</item>
+        <item name="android:textColorPrimaryInverse">@color/hpf_light</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/hpf_primary_dark</item>
-        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:textColor">@color/hpf_dark</item>
 
         <item name="android:windowBackground">@color/light_grey</item>
         <item name="android:colorBackground">@color/light_grey</item>
     </style>
 
-    <!--
     <style name="PaymentScreens.PaymentProductsActivity" />
     <style name="PaymentScreens.PaymentFormActivity" />
-    -->
 
     <style name="PaymentScreens.Blue">
         <item name="colorPrimary">@color/theme_blue_primary</item>
@@ -76,7 +74,7 @@
     <style name="PaymentScreens.TextAppearance" />
 
     <style name="PaymentScreens.TextAppearance.PaymentProductItem" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textSize">@dimen/category_item_text_size</item>
+        <item name="android:textSize">@dimen/payment_product_item_text_size</item>
     </style>
 
     <style name="PaymentScreens.TextAppearance.Title" parent="TextAppearance.AppCompat.Title">
@@ -84,7 +82,7 @@
     </style>
 
     <style name="PaymentScreens.TextAppearance.Title.Inverse" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/hpf_light</item>
     </style>
 
     <style name="PaymentScreens.TextAppearance.Title.Picker" parent="PaymentScreens.TextAppearance.Title">

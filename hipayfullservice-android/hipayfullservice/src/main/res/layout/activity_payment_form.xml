@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/quiz_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,15 +16,15 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TextView android:id="@+id/category_title"
+            <TextView android:id="@+id/payment_product_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/spacing_huge"
                 android:paddingLeft="@dimen/spacing_huge"
                 android:paddingTop="@dimen/spacing_micro"
                 android:paddingBottom="@dimen/spacing_micro"
+                style="@style/PaymentScreens.TextAppearance.Title"
                 android:minHeight="?actionBarSize"
-                android:background="?colorPrimary"
                 android:textAppearance="@style/PaymentScreens.TextAppearance.Title"
                 android:gravity="center_vertical"
                 android:transitionName="@string/transition_toolbar"
@@ -37,7 +35,6 @@
                 android:padding="@dimen/spacing_double"
                 android:contentDescription="@string/back"
                 android:src="@drawable/ic_arrow_back"
-                android:tint="?android:textColorPrimary"
                 android:layout_gravity="start|center_vertical"
                 android:background="@drawable/selector_subtle"/>
         </FrameLayout>
@@ -46,38 +43,13 @@
             android:layout_height="match_parent"
             android:layout_gravity="center">
 
-            <!-- Alpha and scales are being used during entry animation -->
-            <ImageView android:id="@+id/icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:ignore="PrivateResource"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/spacing_double"
-                android:contentDescription="@null"
-                android:padding="@dimen/spacing_double"
-                android:scaleType="centerInside"
-                android:alpha="0"
-                android:scaleX="0.7"
-                android:scaleY="0.7"/>
-
-            <FrameLayout android:id="@+id/quiz_fragment_container"
+            <FrameLayout android:id="@+id/form_fragment_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:visibility="invisible"/>
+                android:visibility="visible"/>
         </FrameLayout>
     </LinearLayout>
 
-    <!-- Scale is being used during entry animation -->
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_quiz"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:fabSize="normal"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="@dimen/spacing_double"
-        android:layout_marginEnd="@dimen/spacing_double"
-        android:layout_marginRight="@dimen/spacing_double"
-        tools:ignore="UnusedAttribute" />
 </merge>
 

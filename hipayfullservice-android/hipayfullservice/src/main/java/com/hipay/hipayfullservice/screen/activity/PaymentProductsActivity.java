@@ -41,6 +41,12 @@ public class PaymentProductsActivity extends AppCompatActivity {
         //no-op
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //no-op
+    }
+
     @NonNull
     static Intent getStartIntent(Context context) {
         Intent starter = new Intent(context, PaymentProductsActivity.class);
@@ -65,7 +71,8 @@ public class PaymentProductsActivity extends AppCompatActivity {
             //the fragment is loaded already, then remove the loading
         }
 
-        //TODO useful if this activity is called with makeTransition
+        //TODO useful when this activity is gonna be called with makeTransition
+
         supportPostponeEnterTransition();
     }
 
@@ -76,18 +83,20 @@ public class PaymentProductsActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        //TODO handle the price (montant)
+
         //noinspection PrivateResource
         ((TextView) toolbar.findViewById(R.id.title)).setText(R.string.paiment_products_title);
     }
 
     private void attachCategoryGridFragment() {
         FragmentManager supportFragmentManager = getSupportFragmentManager();
-        Fragment fragment = supportFragmentManager.findFragmentById(R.id.category_container);
+        Fragment fragment = supportFragmentManager.findFragmentById(R.id.payment_products_container);
         if (!(fragment instanceof PaymentProductsFragment)) {
             fragment = PaymentProductsFragment.newInstance();
         }
         supportFragmentManager.beginTransaction()
-                .replace(R.id.category_container, fragment)
+                .replace(R.id.payment_products_container, fragment)
                 .commit();
         setProgressBarVisibility(View.GONE);
     }
@@ -96,10 +105,5 @@ public class PaymentProductsActivity extends AppCompatActivity {
         findViewById(R.id.progress).setVisibility(visibility);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        //no-op
-    }
 }
 

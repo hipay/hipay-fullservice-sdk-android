@@ -25,7 +25,7 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <FrameLayout android:id="@+id/category_container"
+    <FrameLayout android:id="@+id/payment_products_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".screen.activity.PaymentProductsActivity"

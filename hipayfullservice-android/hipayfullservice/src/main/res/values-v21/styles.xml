@@ -7,19 +7,15 @@
 
     <style name="PaymentScreens.PaymentProductsActivity">
 
-        <item name="android:windowSharedElementEnterTransition">
-            @transition/category_shared_enter
-        </item>
-        <item name="android:windowEnterTransition">@transition/category_enter</item>
-        <item name="android:windowExitTransition">@transition/category_exit</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/products_shared_enter</item>
+        <item name="android:windowEnterTransition">@transition/products_enter</item>
+        <item name="android:windowExitTransition">@transition/products_exit</item>
         <item name="android:windowBackground">@color/hpf_blank</item>
 
     </style>
 
     <style name="PaymentScreens.PaymentFormActivity">
-        <item name="android:windowSharedElementEnterTransition">
-            @transition/quiz_shared_enter
-        </item>
+        <item name="android:windowSharedElementEnterTransition">@transition/form_shared_enter</item>
     </style>
 
     <style name="PaymentScreens.ActionButton" parent="Widget.AppCompat.ActionButton.Overflow">

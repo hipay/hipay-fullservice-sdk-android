@@ -26,7 +26,7 @@ import com.hipay.hipayfullservice.screen.widget.OffsetDecoration;
 public class PaymentProductsFragment extends Fragment {
 
     private PaymentProductsAdapter mAdapter;
-    private static final int REQUEST_CATEGORY = 0x2300;
+    private static final int REQUEST_PAYMENT_PRODUCT = 0x2300;
 
     public static PaymentProductsFragment newInstance() {
         return new PaymentProductsFragment();
@@ -56,8 +56,8 @@ public class PaymentProductsFragment extends Fragment {
                     @Override
                     public void onClick(View v, int position) {
                         Activity activity = getActivity();
-                        startQuizActivityWithTransition(activity,
-                                v.findViewById(R.id.category_title),
+                        startPaymentProductsActivityWithTransition(activity,
+                                v.findViewById(R.id.payment_product_title),
                                 mAdapter.getItem(position));
                     }
                 });
@@ -69,23 +69,18 @@ public class PaymentProductsFragment extends Fragment {
     public void onResume() {
 
         getActivity().supportStartPostponedEnterTransition();
-
         super.onResume();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        //TODO nothing
-
-        //if (requestCode == REQUEST_CATEGORY && resultCode == R.id.solved) {
-            //mAdapter.notifyItemChanged(data.getStringExtra(JsonAttributes.ID));
-        //}
         super.onActivityResult(requestCode, resultCode, data);
+        //TODO nothing for now
     }
 
-    private void startQuizActivityWithTransition(Activity activity, View toolbar,
-                                                 PaymentProduct category) {
+    private void startPaymentProductsActivityWithTransition(Activity activity, View toolbar,
+                                                 PaymentProduct paymentProduct) {
 
         final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
                 new Pair<>(toolbar, activity.getString(R.string.transition_toolbar)));
@@ -95,10 +90,10 @@ public class PaymentProductsFragment extends Fragment {
 
          //Start the activity with the participants, animating from one to the other.
         final Bundle transitionBundle = sceneTransitionAnimation.toBundle();
-        Intent startIntent = PaymentFormActivity.getStartIntent(activity, category);
+        Intent startIntent = PaymentFormActivity.getStartIntent(activity, paymentProduct);
         ActivityCompat.startActivityForResult(activity,
                 startIntent,
-                REQUEST_CATEGORY,
+                REQUEST_PAYMENT_PRODUCT,
                 transitionBundle);
     }
 

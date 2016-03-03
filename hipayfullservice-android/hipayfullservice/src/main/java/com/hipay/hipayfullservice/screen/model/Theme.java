@@ -7,7 +7,7 @@ import com.hipay.hipayfullservice.R;
 
 /**
  * Usually this should be done via attributes and {@link android.view.ContextThemeWrapper}s.
- * In one case in Topeka it is more performant to work like this.
+ * In one case it is more performant to work like this.
  * This case involves a trade-off between statically loading these themes versus inflation
  * in an adapter backed view without recycling.
  */

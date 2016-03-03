@@ -28,12 +28,12 @@ import java.util.List;
 public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProductsAdapter.ViewHolder> {
 
     public static final String DRAWABLE = "drawable";
-    private static final String ICON_CATEGORY = "icon_category_";
+    private static final String ICON_PAYMENT_PRODUCTS = "icon_product_";
     private final Resources mResources;
     private final String mPackageName;
     private LayoutInflater mLayoutInflater;
     private Activity mActivity;
-    private List<PaymentProduct> mCategories;
+    private List<PaymentProduct> mPaymentProducts;
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -46,7 +46,7 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
         mResources = mActivity.getResources();
         mPackageName = mActivity.getPackageName();
         mLayoutInflater = LayoutInflater.from(activity.getApplicationContext());
-        updateCategories(activity);
+        updatePaymentProducts(activity);
     }
 
     @Override
@@ -57,24 +57,14 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        PaymentProduct paymentProduct = mCategories.get(position);
-        //Theme theme = category.getTheme();
+
+        PaymentProduct paymentProduct = mPaymentProducts.get(position);
         setCategoryIcon(paymentProduct, holder.icon);
-
-        //holder.itemView.setBackgroundColor(getColor(R.color.cardview_dark_background));
-
-        // put there a normal color
-        //holder.itemView.setBackgroundColor(getColor(Theme.topeka.getWindowBackgroundColor()));
-        //holder.title.setText("hello world");
-        //holder.title.setTextColor(getColor(Theme.topeka.getTextPrimaryColor()));
-        //holder.title.setBackgroundColor(getColor(Theme.topeka.getPrimaryColor()));
-
 
         Theme theme = Theme.blue;
-        setCategoryIcon(paymentProduct, holder.icon);
 
         holder.itemView.setBackgroundColor(getColor(theme.getWindowBackgroundColor()));
-        holder.title.setText("hello world");
+        holder.title.setText("Mastercard");
         holder.title.setTextColor(getColor(theme.getTextPrimaryColor()));
         holder.title.setBackgroundColor(getColor(theme.getPrimaryColor()));
 
@@ -91,17 +81,18 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
     @Override
     public long getItemId(int position) {
 
+        //TODO not useful for now
         return -1;
-        //return mCategories.get(position).getId().hashCode();
+        //return mPaymentProducts.get(position).getId().hashCode();
     }
 
     @Override
     public int getItemCount() {
-        return mCategories.size();
+        return mPaymentProducts.size();
     }
 
     public PaymentProduct getItem(int position) {
-        return mCategories.get(position);
+        return mPaymentProducts.get(position);
     }
 
     /**
@@ -109,7 +100,7 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
      * @param id Id of changed category.
      */
     public final void notifyItemChanged(String id) {
-        updateCategories(mActivity);
+        updatePaymentProducts(mActivity);
         notifyItemChanged(getItemPositionById(id));
     }
 
@@ -118,8 +109,8 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
         //TODO not useful
         return -1;
 
-        //for (int i = 0; i < mCategories.size(); i++) {
-            //if (mCategories.get(i).getId().equals(id)) {
+        //for (int i = 0; i < mPaymentProducts.size(); i++) {
+            //if (mPaymentProducts.get(i).getId().equals(id)) {
                 //return i;
             //}
         //}
@@ -130,24 +121,18 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
         mOnItemClickListener = onItemClickListener;
     }
 
-    private void setCategoryIcon(PaymentProduct category, ImageView icon) {
-        //final int categoryImageResourIce = mResources.getIdentifier(
-                //ICON_CATEGORY + category.getId(), DRAWABLE, mPackageName);
-        //final boolean solved = category.isSolved();
-
+    private void setCategoryIcon(PaymentProduct paymentProduct, ImageView icon) {
 
         final int categoryImageResource = mResources.getIdentifier(
-                ICON_CATEGORY + "sports", DRAWABLE, mPackageName);
+                ICON_PAYMENT_PRODUCTS + "mastercard", DRAWABLE, mPackageName);
 
-        //icon.setImageResource(R.drawable.payment_card);
         icon.setImageResource(categoryImageResource);
     }
 
-    private void updateCategories(Activity activity) {
+    private void updatePaymentProducts(Activity activity) {
 
-        //TODO check later
-        //mCategories = TopekaDatabaseHelper.getCategories(activity, true);
-        mCategories = new ArrayList<>(Arrays.asList(
+        //TODO check later how to get products
+        mPaymentProducts = new ArrayList<>(Arrays.asList(
                 new PaymentProduct(),
                 new PaymentProduct(),
                 new PaymentProduct(),
@@ -156,51 +141,6 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
                 new PaymentProduct(),
                 new PaymentProduct()
                 ));
-    }
-
-    /**
-     * Loads an icon that indicates that a category has already been solved.
-     *
-     * @param category The solved category to display.
-     * @param categoryImageResource The category's identifying image.
-     * @return The icon indicating that the category has been solved.
-     */
-    //private Drawable loadSolvedIcon(PaymentProduct category, int categoryImageResource) {
-
-        ////TODO check later what happens there
-        //return null;
-
-        //if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.LOLLIPOP)) {
-            //return loadSolvedIconLollipop(category, categoryImageResource);
-        //}
-        //return loadSolvedIconPreLollipop(category, categoryImageResource);
-
-    //}
-
-    private Drawable loadSolvedIconPreLollipop(PaymentProduct category, int categoryImageResource) {
-        return loadTintedCategoryDrawable(category, categoryImageResource);
-    }
-
-    /**
-     * Loads and tints a drawable.
-     *
-     * @param category The category providing the tint color
-     * @param categoryImageResource The image resource to tint
-     * @return The tinted resource
-     */
-    private Drawable loadTintedCategoryDrawable(PaymentProduct category, int categoryImageResource) {
-
-        //final Drawable categoryIcon = ContextCompat
-                //.getDrawable(mActivity, categoryImageResource).mutate();
-        //return wrapAndTint(categoryIcon, category.getTheme().getPrimaryColor());
-
-        return null;
-    }
-
-    private Drawable wrapAndTint(Drawable done, @ColorRes int color) {
-        Drawable compatDrawable = DrawableCompat.wrap(done);
-        DrawableCompat.setTint(compatDrawable, getColor(color));
-        return compatDrawable;
     }
 
     /**
@@ -220,8 +160,8 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
 
         public ViewHolder(View container) {
             super(container);
-            icon = (ImageView) container.findViewById(R.id.category_icon);
-            title = (TextView) container.findViewById(R.id.category_title);
+            icon = (ImageView) container.findViewById(R.id.payment_product_icon);
+            title = (TextView) container.findViewById(R.id.payment_product_title);
         }
     }
 }
