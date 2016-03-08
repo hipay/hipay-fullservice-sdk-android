@@ -68,7 +68,7 @@ public class ListBehaviour implements IBehaviour {
         return null;
     }
 
-    public Integer getIntergerForKey(String key) {
+    public Integer getIntegerForKey(String key) {
 
         Number object = this.getNumberForKey(key);
         if (object != null && object instanceof Integer) {

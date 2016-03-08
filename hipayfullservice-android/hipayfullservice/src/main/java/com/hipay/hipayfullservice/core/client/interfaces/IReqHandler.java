@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.hipay.hipayfullservice.core.network.HttpResult;
+import com.hipay.hipayfullservice.core.operations.AbstractOperation;
 import com.hipay.hipayfullservice.core.operations.GatewayOperation;
 
 /**
@@ -12,6 +13,7 @@ import com.hipay.hipayfullservice.core.operations.GatewayOperation;
 public interface IReqHandler {
 
     String getReqQueryString();
-    GatewayOperation getReqOperation(Context context, Bundle bundle);
+    AbstractOperation getReqOperation(Context context, Bundle bundle);
     void handleCallback(HttpResult result);
+    int getLoaderId();
 }

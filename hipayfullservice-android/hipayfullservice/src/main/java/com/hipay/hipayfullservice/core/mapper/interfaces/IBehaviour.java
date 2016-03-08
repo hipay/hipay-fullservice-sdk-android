@@ -17,7 +17,7 @@ public interface IBehaviour {
     String getStringForKey(String key);
     String getLowercaseStringForKey(String key);
     Number getNumberForKey(String key);
-    Integer getIntergerForKey(String key);
+    Integer getIntegerForKey(String key);
 
     Date getDateISO8601ForKey(String key);
     Date getDateBasicForKey(String key);

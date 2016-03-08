@@ -5,11 +5,15 @@ import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.hipayfullservice.core.requests.info.PersonalInfoRequest;
 import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
+import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.hipayfullservice.core.requests.securevault.SecureVaultRequest;
 import com.hipay.hipayfullservice.core.serialization.interfaces.ISerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.info.CustomerInfoRequestSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.info.PersonalInfoRequestSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.order.OrderRequestSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.order.PaymentPageRequestSerialization;
+import com.hipay.hipayfullservice.core.serialization.interfaces.payment.CardTokenPaymentMethodRequestSerialization;
+import com.hipay.hipayfullservice.core.serialization.interfaces.securevault.SecureVaultRequestSerialization;
 
 import java.util.Map;
 
@@ -60,6 +64,15 @@ public abstract class AbstractSerializationMapper {
             PersonalInfoRequest personalInfoRequest = (PersonalInfoRequest)this.getRequest();
             this.setSerialization(new PersonalInfoRequestSerialization(personalInfoRequest));
 
+        } else if (this.getRequest() instanceof SecureVaultRequest) {
+
+            SecureVaultRequest secureVaultRequest = (SecureVaultRequest)this.getRequest();
+            this.setSerialization(new SecureVaultRequestSerialization(secureVaultRequest));
+
+        } else if (this.getRequest() instanceof CardTokenPaymentMethodRequest) {
+
+            CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest = (CardTokenPaymentMethodRequest)this.getRequest();
+            this.setSerialization(new CardTokenPaymentMethodRequestSerialization(cardTokenPaymentMethodRequest));
         }
     }
 

@@ -30,6 +30,14 @@ public class OrderRequest extends OrderRelatedRequest {
         this.paymentProductCode = paymentProductCode;
     }
 
+    public AbstractPaymentMethodRequest getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(AbstractPaymentMethodRequest paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
     public static class OrderRequestSerializationMapper extends AbstractSerializationMapper {
 
         public OrderRequestSerializationMapper(AbstractRequest request) {
@@ -40,7 +48,6 @@ public class OrderRequest extends OrderRelatedRequest {
         public String getQueryString() {
             return super.getQueryString();
         }
-
     }
 
 }

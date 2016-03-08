@@ -2,7 +2,6 @@ package com.hipay.hipayfullservice.example;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -33,7 +32,7 @@ public class HPFActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        //.setAction("Action", null).show();
+                //.setAction("Action", null).show();
                 PaymentProductsActivity.start(HPFActivity.this);
             }
         });
@@ -50,29 +49,72 @@ public class HPFActivity extends AppCompatActivity {
                 appURLScheme
         );
 
+        return;
+
+        /*
+        new SecureVaultClient(this).createTokenRequest(
+                "4111111111111111",
+                "12",
+                "2019",
+                "John Doe",
+                "123",
+                false,
+
+                new SecureVaultRequestCallback() {
+                    @Override
+                    public void onSuccess(PaymentCardToken paymentCardToken) {
+
+                        Log.i(paymentCardToken.toString(), paymentCardToken.toString());
+
+                        PaymentPageRequest paymentPageRequest = HPFActivity.this.hardPageRequest();
+
+                        OrderRequest orderRequest = HPFActivity.this.hardOrderRequest(paymentPageRequest);
+                        orderRequest.setPaymentProductCode("visa");
+
+                        CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest = new CardTokenPaymentMethodRequest(paymentCardToken.getToken(), paymentPageRequest.getEci(), paymentPageRequest.getAuthenticationIndicator());
+                        orderRequest.setPaymentMethod(cardTokenPaymentMethodRequest);
+
+                        new GatewayClient(HPFActivity.this)
+                                .createOrderRequest(orderRequest, new OrderRequestCallback() {
+
+                                    @Override
+                                    public void onSuccess(Transaction transaction) {
+                                        Log.i("transaction success", transaction.toString());
+                                    }
+
+                                    @Override
+                                    public void onError(Exception error) {
+                                        Log.i("transaction failed", error.getLocalizedMessage());
+                                    }
+                                });
+
+                    }
+
+                    @Override
+                    public void onError(Exception error) {
+
+                    }
+                }
+        );
+        */
+
         //activity.finish();
 
         //return;
 
-        //OrderRequest orderRequest = hardOrderRequest();
-
-        //new OrderClient(this)
-                //.createRequest(orderRequest, new OrderRequestCallback() {
-
-                    //@Override
-                    //public void onSuccess(Transaction transaction) {
-                        //Log.i("transaction success", transaction.toString());
-                    //}
-
-                    //@Override
-                    //public void onError(Exception error) {
-                        //Log.i("transaction failed", error.getLocalizedMessage());
-                    //}
-                //});
     }
 
+    protected OrderRequest hardOrderRequest(PaymentPageRequest paymentPageRequest) {
 
-    protected OrderRequest hardOrderRequest() {
+        OrderRequest orderRequest = new OrderRequest(paymentPageRequest);
+
+        //TODO
+        orderRequest.setPaymentProductCode("bcmc-mobile");
+
+        return orderRequest;
+    }
+
+    protected PaymentPageRequest hardPageRequest() {
 
         PaymentPageRequest paymentPageRequest = new PaymentPageRequest();
 
@@ -105,12 +147,7 @@ public class HPFActivity extends AppCompatActivity {
 
         paymentPageRequest.setAuthenticationIndicator(CardTokenPaymentMethodRequest.AuthenticationIndicator.AuthenticationIndicatorUndefined);
 
-        OrderRequest orderRequest = new OrderRequest(paymentPageRequest);
-
-        //TODO
-        orderRequest.setPaymentProductCode("bcmc-mobile");
-
-        return orderRequest;
+        return paymentPageRequest;
     }
 
     @Override

@@ -1,5 +1,8 @@
 package com.hipay.hipayfullservice.core.mapper.interfaces;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.hipay.hipayfullservice.core.utils.DataExtractor;
 
 import org.json.JSONObject;
@@ -59,20 +62,35 @@ public class MapBehaviour implements IBehaviour {
     public Number getNumberForKey(String key) {
 
         Object object = this.getObjectForKey(key);
-        if (object instanceof Number) {
+        if (object != null ) {
+            if (object instanceof String) {
 
-            //TODO check about decimal format
-            return (Number)object;
+                String digits = (String)object;
+                if (TextUtils.isDigitsOnly(digits)) {
+
+                    //TODO Number is abstract
+
+                    Number number = Integer.parseInt(digits);
+                    return number;
+                }
+            }
         }
 
         return null;
     }
 
-    public Integer getIntergerForKey(String key) {
+    public Integer getIntegerForKey(String key) {
 
-        Number object = this.getNumberForKey(key);
-        if (object != null && object instanceof Integer) {
-            return (Integer)object;
+        Object object = this.getObjectForKey(key);
+        if (object != null ) {
+            if (object instanceof String) {
+
+                String digits = (String)object;
+                if (TextUtils.isDigitsOnly(digits)) {
+
+                    return Integer.parseInt(digits);
+                }
+            }
         }
 
         return null;

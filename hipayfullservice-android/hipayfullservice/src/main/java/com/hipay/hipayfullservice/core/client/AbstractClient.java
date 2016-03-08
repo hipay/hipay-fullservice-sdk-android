@@ -1,20 +1,26 @@
 package com.hipay.hipayfullservice.core.client;
 
+import android.app.Activity;
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Loader;
 import android.os.Bundle;
 
 import com.hipay.hipayfullservice.core.client.interfaces.IReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.OrderReqHandler;
+import com.hipay.hipayfullservice.core.client.interfaces.SecureVaultReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
 import com.hipay.hipayfullservice.core.network.HttpResult;
-import com.hipay.hipayfullservice.core.operations.GatewayOperation;
+import com.hipay.hipayfullservice.core.operations.AbstractOperation;
 import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
+import com.hipay.hipayfullservice.core.requests.securevault.SecureVaultRequest;
 
 /**
  * Created by nfillion on 21/01/16.
  */
-public abstract class AbstractClient<T1, T2> {
+public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCallbacks<HttpResult>{
 
     private T1 request;
     private T2 callback;
@@ -28,9 +34,19 @@ public abstract class AbstractClient<T1, T2> {
         context = ctx;
     }
 
-    public void createRequest(T1 request, T2 callback) {
+    protected void createRequest(T1 request, T2 callback) {
 
         this.initReqHandler(request, callback);
+        this.launchOperation();
+    }
+
+    protected void launchOperation() {
+
+        Bundle queryBundle = new Bundle();
+        queryBundle.putString("queryParams", this.getQueryParams());
+
+        Activity activity = (Activity)this.getContext();
+        activity.getLoaderManager().initLoader(this.getLoaderId(), queryBundle, this);
     }
 
     private void initReqHandler(T1 request, T2 callback) {
@@ -49,12 +65,33 @@ public abstract class AbstractClient<T1, T2> {
             OrderRequestCallback orderRequestCallback = (OrderRequestCallback)this.getCallback();
 
             this.setReqHandler(new OrderReqHandler(orderRequest, orderRequestCallback));
+
+        } else if (this.getRequest() instanceof SecureVaultRequest
+                && callback instanceof SecureVaultRequestCallback) {
+
+            SecureVaultRequest secureVaultRequest = (SecureVaultRequest) this.getRequest();
+            SecureVaultRequestCallback secureVaultRequestCallback = (SecureVaultRequestCallback) this.getCallback();
+
+            this.setReqHandler(new SecureVaultReqHandler(secureVaultRequest, secureVaultRequestCallback));
+
         }
     }
 
-    protected void handleCallbackResult(HttpResult result) {
+    @Override
+    public Loader<HttpResult> onCreateLoader(int id, Bundle bundle) {
 
-        this.getReqHandler().handleCallback(result);
+        AbstractOperation operation = this.getOperation(this.getContext(), bundle);
+        return operation;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<HttpResult> loader, HttpResult data) {
+
+        this.getReqHandler().handleCallback(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<HttpResult> loader) {
     }
 
     protected String getQueryParams() {
@@ -62,10 +99,16 @@ public abstract class AbstractClient<T1, T2> {
         return this.getReqHandler().getReqQueryString();
     }
 
-    protected GatewayOperation getOperation(Context context, Bundle bundle) {
+    protected AbstractOperation getOperation(Context context, Bundle bundle) {
 
         return this.getReqHandler().getReqOperation(context, bundle);
     }
+
+    protected int getLoaderId() {
+
+        return this.getReqHandler().getLoaderId();
+    }
+
 
     protected T1 getRequest() {
         return request;

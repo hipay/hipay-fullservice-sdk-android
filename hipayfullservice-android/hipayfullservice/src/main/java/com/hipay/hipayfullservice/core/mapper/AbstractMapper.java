@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.security.InvalidParameterException;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by nfillion on 25/01/16.
@@ -73,7 +72,7 @@ public abstract class AbstractMapper<T> {
 
     protected Integer getIntegerForKey(String key) {
 
-        return this.getBehaviour().getIntergerForKey(key);
+        return this.getBehaviour().getIntegerForKey(key);
     }
 
     protected String getLowercaseStringForKey(String key) {

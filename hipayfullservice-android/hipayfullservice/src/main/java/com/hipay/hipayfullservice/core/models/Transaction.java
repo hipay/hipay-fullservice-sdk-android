@@ -57,10 +57,7 @@ public class Transaction extends TransactionRelatedItem {
 
         TransactionMapper mapper = new TransactionMapper(object);
         return mapper.mappedObject();
-
     }
-
-
 
     public List<Transaction> sortTransactionsByRelevance(List<Transaction> transactions) {
 
@@ -565,5 +562,4 @@ public class Transaction extends TransactionRelatedItem {
 
         }
     }
-
 }
