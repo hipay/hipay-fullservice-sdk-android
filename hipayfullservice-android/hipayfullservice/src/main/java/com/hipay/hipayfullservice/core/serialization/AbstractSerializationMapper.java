@@ -1,5 +1,9 @@
 package com.hipay.hipayfullservice.core.serialization;
 
+import android.os.Bundle;
+
+import com.hipay.hipayfullservice.core.models.AbstractModel;
+import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.requests.AbstractRequest;
 import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.hipayfullservice.core.requests.info.PersonalInfoRequest;
@@ -22,7 +26,6 @@ import java.util.Map;
  */
 public abstract class AbstractSerializationMapper {
 
-    protected AbstractRequest request;
     ISerialization serialization;
 
     protected String getQueryString() {
@@ -35,43 +38,63 @@ public abstract class AbstractSerializationMapper {
         return this.getSerialization().getSerializedRequest();
     }
 
+    protected Bundle getSerializedBundle() {
+
+        return this.getSerialization().getSerializedBundle();
+    }
+
     public AbstractSerializationMapper(AbstractRequest request) {
 
         this.initSerializing(request);
     }
 
+    public AbstractSerializationMapper(AbstractModel model) {
+
+        this.initSerializing(model);
+    }
+
+
+    private void initSerializing(AbstractModel model) {
+
+
+        if (model instanceof PaymentProduct) {
+
+            PaymentProduct paymentProduct = (PaymentProduct) model;
+            this.setSerialization(new PaymentProduct.PaymentProductSerialization(paymentProduct));
+        }
+    }
+
     private void initSerializing(AbstractRequest request) {
 
-        this.setRequest(request);
 
-        if (this.getRequest() instanceof PaymentPageRequest) {
+        if (request instanceof PaymentPageRequest) {
 
-            PaymentPageRequest paymentPageRequest = (PaymentPageRequest)this.getRequest();
+            PaymentPageRequest paymentPageRequest = (PaymentPageRequest)request;
             this.setSerialization(new PaymentPageRequestSerialization(paymentPageRequest));
 
-        } else if (this.getRequest() instanceof OrderRequest) {
+        } else if (request instanceof OrderRequest) {
 
-            OrderRequest orderRequest = (OrderRequest)this.getRequest();
+            OrderRequest orderRequest = (OrderRequest)request;
             this.setSerialization(new OrderRequestSerialization(orderRequest));
 
-        } else if (this.getRequest() instanceof CustomerInfoRequest) {
+        } else if (request instanceof CustomerInfoRequest) {
 
-            CustomerInfoRequest customerInfoRequest = (CustomerInfoRequest)this.getRequest();
+            CustomerInfoRequest customerInfoRequest = (CustomerInfoRequest)request;
             this.setSerialization(new CustomerInfoRequestSerialization(customerInfoRequest));
 
-        } else if (this.getRequest() instanceof PersonalInfoRequest) {
+        } else if (request instanceof PersonalInfoRequest) {
 
-            PersonalInfoRequest personalInfoRequest = (PersonalInfoRequest)this.getRequest();
+            PersonalInfoRequest personalInfoRequest = (PersonalInfoRequest)request;
             this.setSerialization(new PersonalInfoRequestSerialization(personalInfoRequest));
 
-        } else if (this.getRequest() instanceof SecureVaultRequest) {
+        } else if (request instanceof SecureVaultRequest) {
 
-            SecureVaultRequest secureVaultRequest = (SecureVaultRequest)this.getRequest();
+            SecureVaultRequest secureVaultRequest = (SecureVaultRequest)request;
             this.setSerialization(new SecureVaultRequestSerialization(secureVaultRequest));
 
-        } else if (this.getRequest() instanceof CardTokenPaymentMethodRequest) {
+        } else if (request instanceof CardTokenPaymentMethodRequest) {
 
-            CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest = (CardTokenPaymentMethodRequest)this.getRequest();
+            CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest = (CardTokenPaymentMethodRequest)request;
             this.setSerialization(new CardTokenPaymentMethodRequestSerialization(cardTokenPaymentMethodRequest));
         }
     }
@@ -82,14 +105,6 @@ public abstract class AbstractSerializationMapper {
 
     public void setSerialization(ISerialization serialization) {
         this.serialization = serialization;
-    }
-
-    public AbstractRequest getRequest() {
-        return request;
-    }
-
-    public void setRequest(AbstractRequest request) {
-        this.request = request;
     }
 
 }

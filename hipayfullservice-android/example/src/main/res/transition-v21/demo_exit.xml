@@ -1,0 +1,10 @@
+
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
+    <fade>
+        <targets>
+            <target android:targetId="@id/fragment_demo_content" />
+            <target android:excludeId="@android:id/statusBarBackground" />
+            <target android:excludeId="@android:id/navigationBarBackground" />
+        </targets>
+    </fade>
+</transitionSet>

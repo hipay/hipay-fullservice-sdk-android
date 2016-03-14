@@ -1,6 +1,6 @@
 package com.hipay.hipayfullservice.core.models;
 
-import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 
 import org.json.JSONObject;
 
@@ -12,6 +12,8 @@ import java.util.Map;
  * Created by nfillion on 25/01/16.
  */
 public class Transaction extends TransactionRelatedItem {
+
+    public static final String TAG = "Transaction";
 
     protected TransactionState state;
     protected String reason;
@@ -491,7 +493,7 @@ public class Transaction extends TransactionRelatedItem {
         this.cdata10 = cdata10;
     }
 
-    public static class TransactionMapper extends TransactionRelatedItemMapper {
+    protected static class TransactionMapper extends TransactionRelatedItemMapper {
         public TransactionMapper(JSONObject object) {
             super(object);
         }
@@ -499,7 +501,7 @@ public class Transaction extends TransactionRelatedItem {
         @Override
         protected boolean isValid() {
 
-            if (this.getBehaviour() instanceof MapBehaviour) {
+            if (this.getBehaviour() instanceof MapMapper) {
 
                 if (super.isValid()) {
 
@@ -512,6 +514,8 @@ public class Transaction extends TransactionRelatedItem {
         }
 
         protected Transaction mappedObject() {
+
+            //TODO get mapped object from transactionRelatedItem superclass
 
             Transaction object = new Transaction();
 

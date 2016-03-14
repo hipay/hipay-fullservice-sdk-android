@@ -1,13 +1,13 @@
 package com.hipay.hipayfullservice.core.models;
 
-import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 
 import org.json.JSONObject;
 
 /**
  * Created by nfillion on 25/01/16.
  */
-public class Operation {
+public class Operation extends AbstractModel {
 
     protected OperationType operation;
 
@@ -77,7 +77,7 @@ public class Operation {
         @Override
         protected boolean isValid() {
 
-            if (this.getBehaviour() instanceof MapBehaviour) {
+            if (this.getBehaviour() instanceof MapMapper) {
 
                 // it extends from TransactionRelated.
                 if (super.isValid()) {

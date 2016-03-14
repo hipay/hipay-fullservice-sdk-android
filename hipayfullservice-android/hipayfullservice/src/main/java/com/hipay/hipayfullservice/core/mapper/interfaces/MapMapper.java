@@ -1,5 +1,7 @@
 package com.hipay.hipayfullservice.core.mapper.interfaces;
 
+import android.text.TextUtils;
+
 import com.hipay.hipayfullservice.core.utils.DataExtractor;
 
 import org.json.JSONObject;
@@ -16,11 +18,11 @@ import java.util.Map;
 /**
  * Created by nfillion on 28/01/16.
  */
-public class ListBehaviour implements IBehaviour {
+public class MapMapper implements IBehaviour {
 
     protected JSONObject jsonObject;
 
-    public ListBehaviour(JSONObject jsonObject) {
+    public MapMapper(JSONObject jsonObject) {
 
         this.setJsonObject(jsonObject);
     }
@@ -33,6 +35,11 @@ public class ListBehaviour implements IBehaviour {
     public String getStringForKey(String key) {
 
         return DataExtractor.getStringFromField(this.getJsonObject(), key);
+    }
+
+    @Override
+    public Float getFloatForKey(String key) {
+        return null;
     }
 
     public String getLowercaseStringForKey(String key) {
@@ -59,10 +66,18 @@ public class ListBehaviour implements IBehaviour {
     public Number getNumberForKey(String key) {
 
         Object object = this.getObjectForKey(key);
-        if (object instanceof Number) {
+        if (object != null ) {
+            if (object instanceof String) {
 
-            //TODO check about decimal format
-            return (Number)object;
+                String digits = (String)object;
+                if (TextUtils.isDigitsOnly(digits)) {
+
+                    //TODO Number is abstract
+
+                    Number number = Integer.parseInt(digits);
+                    return number;
+                }
+            }
         }
 
         return null;
@@ -70,9 +85,16 @@ public class ListBehaviour implements IBehaviour {
 
     public Integer getIntegerForKey(String key) {
 
-        Number object = this.getNumberForKey(key);
-        if (object != null && object instanceof Integer) {
-            return (Integer)object;
+        Object object = this.getObjectForKey(key);
+        if (object != null ) {
+            if (object instanceof String) {
+
+                String digits = (String)object;
+                if (TextUtils.isDigitsOnly(digits)) {
+
+                    return Integer.parseInt(digits);
+                }
+            }
         }
 
         return null;
@@ -198,8 +220,8 @@ public class ListBehaviour implements IBehaviour {
         }
 
         return null;
-
     }
+
     public List getArrayFromObject(Object object) {
 
         //TODO tricky getter

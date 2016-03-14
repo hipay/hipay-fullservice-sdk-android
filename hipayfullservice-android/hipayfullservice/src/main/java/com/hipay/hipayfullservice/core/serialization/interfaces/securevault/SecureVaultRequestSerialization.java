@@ -1,7 +1,9 @@
 package com.hipay.hipayfullservice.core.serialization.interfaces.securevault;
 
+import android.os.Bundle;
+
 import com.hipay.hipayfullservice.core.requests.securevault.SecureVaultRequest;
-import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractRequestSerialization;
+import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 import com.hipay.hipayfullservice.core.utils.Utils;
 
 import java.util.HashMap;
@@ -10,7 +12,7 @@ import java.util.Map;
 /**
  * Created by nfillion on 09/03/16.
  */
-public class SecureVaultRequestSerialization extends AbstractRequestSerialization {
+public class SecureVaultRequestSerialization extends AbstractSerialization {
 
     public SecureVaultRequestSerialization(SecureVaultRequest secureVaultRequest) {
 
@@ -30,6 +32,11 @@ public class SecureVaultRequestSerialization extends AbstractRequestSerializatio
         retMap.put("multi_use", String.valueOf(secureVaultRequest.getMultiUse() ? 1 : 0) );
 
         return retMap;
+    }
+
+    @Override
+    public Bundle getSerializedBundle() {
+        return null;
     }
 
     public String getQueryString() {

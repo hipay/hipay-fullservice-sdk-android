@@ -1,8 +1,6 @@
-package com.hipay.hipayfullservice.core.mapper.interfaces;
+package com.hipay.hipayfullservice.core.mapper;
 
-import android.text.TextUtils;
-import android.util.Log;
-
+import com.hipay.hipayfullservice.core.mapper.interfaces.IBehaviour;
 import com.hipay.hipayfullservice.core.utils.DataExtractor;
 
 import org.json.JSONObject;
@@ -19,11 +17,11 @@ import java.util.Map;
 /**
  * Created by nfillion on 28/01/16.
  */
-public class MapBehaviour implements IBehaviour {
+public class ListMapper implements IBehaviour {
 
     protected JSONObject jsonObject;
 
-    public MapBehaviour(JSONObject jsonObject) {
+    public ListMapper(JSONObject jsonObject) {
 
         this.setJsonObject(jsonObject);
     }
@@ -36,6 +34,12 @@ public class MapBehaviour implements IBehaviour {
     public String getStringForKey(String key) {
 
         return DataExtractor.getStringFromField(this.getJsonObject(), key);
+    }
+
+    @Override
+    public Float getFloatForKey(String key) {
+        //TODO get float
+        return null;
     }
 
     public String getLowercaseStringForKey(String key) {
@@ -62,18 +66,10 @@ public class MapBehaviour implements IBehaviour {
     public Number getNumberForKey(String key) {
 
         Object object = this.getObjectForKey(key);
-        if (object != null ) {
-            if (object instanceof String) {
+        if (object instanceof Number) {
 
-                String digits = (String)object;
-                if (TextUtils.isDigitsOnly(digits)) {
-
-                    //TODO Number is abstract
-
-                    Number number = Integer.parseInt(digits);
-                    return number;
-                }
-            }
+            //TODO check about decimal format
+            return (Number)object;
         }
 
         return null;
@@ -81,16 +77,9 @@ public class MapBehaviour implements IBehaviour {
 
     public Integer getIntegerForKey(String key) {
 
-        Object object = this.getObjectForKey(key);
-        if (object != null ) {
-            if (object instanceof String) {
-
-                String digits = (String)object;
-                if (TextUtils.isDigitsOnly(digits)) {
-
-                    return Integer.parseInt(digits);
-                }
-            }
+        Number object = this.getNumberForKey(key);
+        if (object != null && object instanceof Integer) {
+            return (Integer)object;
         }
 
         return null;
@@ -216,8 +205,8 @@ public class MapBehaviour implements IBehaviour {
         }
 
         return null;
-
     }
+
     public List getArrayFromObject(Object object) {
 
         //TODO tricky getter

@@ -1,7 +1,10 @@
 package com.hipay.hipayfullservice.core.mapper;
 
+import android.os.Bundle;
+
+import com.hipay.hipayfullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.IBehaviour;
-import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,6 +22,7 @@ public abstract class AbstractMapper<T> {
     protected IBehaviour behaviour;
 
     protected abstract Object mappedObject();
+    protected abstract Object mappedObjectFromBundle();
     protected abstract boolean isValid();
 
     public AbstractMapper(T rawData) {
@@ -50,12 +54,19 @@ public abstract class AbstractMapper<T> {
             if (this.rawData instanceof JSONObject) {
 
                 JSONObject map = (JSONObject)this.getRawData();
-                this.setBehaviour(new MapBehaviour(map));
+                this.setBehaviour(new MapMapper(map));
 
             } else if (this.rawData instanceof JSONArray) {
 
+                //TODO not using JSONArray for now
+
                 //JSONArray list = (JSONArray)this.getRawData();
-                //this.setBehaviour(new ListBehaviour(list));
+                //this.setBehaviour(new ListMapper(list));
+
+            } else if (this.rawData instanceof Bundle) {
+
+                Bundle bundle = (Bundle)this.getRawData();
+                this.setBehaviour(new BundleMapper(bundle));
             }
         }
 
@@ -70,6 +81,10 @@ public abstract class AbstractMapper<T> {
         return this.getBehaviour().getStringForKey(key);
     }
 
+    protected Float getFloatForKey(String key) {
+
+        return this.getBehaviour().getFloatForKey(key);
+    }
     protected Integer getIntegerForKey(String key) {
 
         return this.getBehaviour().getIntegerForKey(key);

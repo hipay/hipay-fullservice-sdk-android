@@ -6,22 +6,20 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Interpolator;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
+import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.screen.fragment.PaymentFormFragment;
 import com.hipay.hipayfullservice.screen.helper.ApiLevelHelper;
 import com.hipay.hipayfullservice.screen.model.Theme;
@@ -47,10 +45,16 @@ private static final String TAG = "PaymentProductsActivity";
     private boolean mSavedStateIsPlaying;
     private ImageButton mToolbarBack;
 
-    public static Intent getStartIntent(Context context, PaymentProduct paymentProduct) {
+    public static Intent getStartIntent(Context context, Bundle paymentPageRequestBundle, PaymentProduct paymentProduct) {
+
+
         Intent starter = new Intent(context, PaymentFormActivity.class);
-        //TODO nothing for now
-        //starter.putExtra(Category.TAG, category.getId());
+
+        starter.putExtra(PaymentPageRequest.TAG, paymentPageRequestBundle);
+
+        Bundle productBundle = paymentProduct.toBundle();
+        starter.putExtra(PaymentProduct.TAG, productBundle);
+
         return starter;
     }
 
@@ -106,11 +110,13 @@ private static final String TAG = "PaymentProductsActivity";
                     }
                 });
 
-
-
         if (savedInstanceState == null) {
+
+            Bundle paymentPageRequestBundle = getIntent().getBundleExtra(PaymentPageRequest.TAG);
+            Bundle paymentProductBundle = getIntent().getBundleExtra(PaymentProduct.TAG);
+
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.form_fragment_container, PaymentFormFragment.newInstance()).commit();
+                    .replace(R.id.form_fragment_container, PaymentFormFragment.newInstance(paymentPageRequestBundle, paymentProductBundle)).commit();
         }
     }
 
@@ -120,16 +126,17 @@ private static final String TAG = "PaymentProductsActivity";
         //mToolbarBack.setBackgroundTintList(ContextCompat.getColor(this,
                 //Theme.blue.getTextPrimaryColor()));
 
+        //this.setToolbarElevation(true);
         mToolbarBack.setColorFilter((ContextCompat.getColor(this,
                 Theme.blue.getTextPrimaryColor())));
-
-
 
         mToolbarBack.setOnClickListener(mOnClickListener);
         TextView titleView = (TextView) findViewById(R.id.payment_product_title);
 
-        //titleView.setText(paymentProduct.getCode());
-        titleView.setText("Mastercard");
+        Bundle paymentProductBundle = getIntent().getBundleExtra(PaymentProduct.TAG);
+        PaymentProduct paymentProduct = PaymentProduct.fromBundle(paymentProductBundle);
+
+        titleView.setText(paymentProduct.getCode());
         //TODO set the right color
         titleView.setTextColor(ContextCompat.getColor(this,
                 Theme.blue.getTextPrimaryColor()));

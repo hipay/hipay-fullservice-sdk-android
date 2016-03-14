@@ -1,7 +1,5 @@
 package com.hipay.hipayfullservice.screen.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -9,18 +7,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.text.Editable;
-import android.text.InputFilter;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.hipay.hipayfullservice.R;
+import com.hipay.hipayfullservice.core.models.PaymentProduct;
+import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.screen.helper.FormHelper;
 
 /**
@@ -31,7 +27,7 @@ public class PaymentFormFragment extends Fragment {
 
     private static final String ARG_EDIT = "EDIT";
     private static final String KEY_SELECTED_AVATAR_INDEX = "selectedAvatarIndex";
-    //private Player mPlayer;
+
     private EditText mCardOwner;
     private EditText mCardNumber;
     private EditText mCardExpiration;
@@ -39,10 +35,16 @@ public class PaymentFormFragment extends Fragment {
 
     private FloatingActionButton mDoneFab;
 
-    public static PaymentFormFragment newInstance() {
-        Bundle args = new Bundle();
+    public static PaymentFormFragment newInstance(Bundle paymentPageRequestBundle, Bundle paymentProductBundle) {
+
         PaymentFormFragment fragment = new PaymentFormFragment();
+
+        Bundle args = new Bundle();
+        args.putBundle(PaymentPageRequest.TAG, paymentPageRequestBundle);
+        args.putBundle(PaymentProduct.TAG, paymentProductBundle);
+
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -55,6 +57,7 @@ public class PaymentFormFragment extends Fragment {
         //        mSelectedAvatar = Avatar.values()[savedAvatarIndex];
         //    }
         //}
+
     }
 
     @Override
@@ -97,9 +100,19 @@ public class PaymentFormFragment extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
         initContentViews(view);
+
+        //TODO put this paymentPageRequest as args to get it.
+
+
     }
 
     private void initContentViews(View view) {
+
+        Bundle args = getArguments();
+
+        PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
+
+        PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
 
 
         //TextWatcher textWatcher = new TextWatcher() {
@@ -346,7 +359,6 @@ public class PaymentFormFragment extends Fragment {
             }
         });
 
-
         mDoneFab = (FloatingActionButton) view.findViewById(R.id.done);
         mDoneFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -389,6 +401,3 @@ public class PaymentFormFragment extends Fragment {
         return FormHelper.isInputDataValid(mCardNumber.getText(), mCardExpiration.getText(), mCardCVV.getText(), mCardOwner.getText());
     }
  }
-
-
-

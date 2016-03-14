@@ -1,7 +1,6 @@
 package com.hipay.hipayfullservice.core.mapper.interfaces;
 
 import java.net.URL;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +12,9 @@ public interface IBehaviour {
 
     // Object?
     Object getObjectForKey(String key);
-
     String getStringForKey(String key);
+    Float getFloatForKey(String key);
+
     String getLowercaseStringForKey(String key);
     Number getNumberForKey(String key);
     Integer getIntegerForKey(String key);

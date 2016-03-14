@@ -1,7 +1,6 @@
 package com.hipay.hipayfullservice.core.models;
 
-import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
-import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 
 import org.json.JSONObject;
 
@@ -10,7 +9,7 @@ import java.util.Date;
 /**
  * Created by nfillion on 25/01/16.
  */
-public class Order {
+public class Order extends AbstractModel {
 
     protected String orderId;
     protected Date dateCreated;
@@ -179,7 +178,7 @@ public class Order {
         @Override
         protected boolean isValid() {
 
-            if (this.getBehaviour() instanceof MapBehaviour) {
+            if (this.getBehaviour() instanceof MapMapper) {
 
                 if (super.isValid()) {
                     if (this.getStringForKey("id") != null) {

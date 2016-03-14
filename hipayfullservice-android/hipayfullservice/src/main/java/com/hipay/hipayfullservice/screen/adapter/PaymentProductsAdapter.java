@@ -64,7 +64,7 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
         Theme theme = Theme.blue;
 
         holder.itemView.setBackgroundColor(getColor(theme.getWindowBackgroundColor()));
-        holder.title.setText("Mastercard");
+        holder.title.setText(paymentProduct.getCode());
         holder.title.setTextColor(getColor(theme.getTextPrimaryColor()));
         holder.title.setBackgroundColor(getColor(theme.getPrimaryColor()));
 
@@ -131,15 +131,20 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
 
     private void updatePaymentProducts(Activity activity) {
 
+        PaymentProduct paymentProduct = new PaymentProduct();
+        paymentProduct.setCode("VISA");
+
+        PaymentProduct paymentProduct2 = new PaymentProduct();
+        paymentProduct2.setCode("MASTERCARD");
+
+        PaymentProduct paymentProduct3 = new PaymentProduct();
+        paymentProduct3.setCode("PAYPAL");
+
         //TODO check later how to get products
         mPaymentProducts = new ArrayList<>(Arrays.asList(
-                new PaymentProduct(),
-                new PaymentProduct(),
-                new PaymentProduct(),
-                new PaymentProduct(),
-                new PaymentProduct(),
-                new PaymentProduct(),
-                new PaymentProduct()
+                paymentProduct,
+                paymentProduct2,
+                paymentProduct3
                 ));
     }
 

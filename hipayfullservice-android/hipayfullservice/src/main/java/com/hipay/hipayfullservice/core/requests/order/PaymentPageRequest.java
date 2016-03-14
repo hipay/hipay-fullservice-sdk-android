@@ -1,5 +1,8 @@
 package com.hipay.hipayfullservice.core.requests.order;
 
+import android.os.Bundle;
+
+import com.hipay.hipayfullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
@@ -15,6 +18,9 @@ import java.util.Set;
  * Created by nfillion on 03/02/16.
  */
 public class PaymentPageRequest extends OrderRelatedRequest {
+
+    public static final String TAG = "Payment_page_request";
+    public static final int REQUEST_ORDER = 0x2300;
 
     List paymentProductList;
     List paymentProductCategoryList;
@@ -51,6 +57,18 @@ public class PaymentPageRequest extends OrderRelatedRequest {
         ));
 
         this.setGroupedPaymentCardProductCodes(s);
+    }
+
+    public static PaymentPageRequest fromBundle(Bundle bundle) {
+
+        PaymentPageRequestMapper mapper = new PaymentPageRequestMapper(bundle);
+        return mapper.mappedObjectFromBundle();
+    }
+
+    public Bundle toBundle() {
+
+        PaymentPageRequest.PaymentPageRequestSerializationMapper mapper = new PaymentPageRequest.PaymentPageRequestSerializationMapper(this);
+        return mapper.getSerializedBundle();
     }
 
     public String getStringParameters() {
@@ -155,7 +173,7 @@ public class PaymentPageRequest extends OrderRelatedRequest {
         this.displaySelector = displaySelector;
     }
 
-    public static class PaymentPageRequestSerializationMapper extends AbstractSerializationMapper {
+    protected static class PaymentPageRequestSerializationMapper extends AbstractSerializationMapper {
 
         protected PaymentPageRequestSerializationMapper(PaymentPageRequest request) {
             super(request);
@@ -165,6 +183,109 @@ public class PaymentPageRequest extends OrderRelatedRequest {
         protected String getQueryString() {
 
             return super.getQueryString();
+        }
+
+        @Override
+        protected Bundle getSerializedBundle() {
+
+            return super.getSerializedBundle();
+        }
+    }
+
+    protected static class PaymentPageRequestMapper extends OrderRelatedRequestMapper {
+        public PaymentPageRequestMapper(Bundle object) {
+            super(object);
+        }
+
+        @Override
+        protected boolean isValid() {
+
+            if (this.getBehaviour() instanceof BundleMapper) {
+
+                //TODO add more validation
+                return true;
+            }
+
+            return true;
+        }
+
+        @Override
+        protected PaymentPageRequest mappedObject() {
+
+            return null;
+        }
+
+        @Override
+        protected PaymentPageRequest mappedObjectFromBundle() {
+            //TODO get mapped object from transactionRelatedItem superclass
+
+            //PaymentPageRequest paymentPageRequest = (PaymentPageRequest)super.mappedObject();
+            PaymentPageRequest paymentPageRequest = this.pageRequestFromRelatedRequest(super.mappedObjectFromBundle());
+
+            //TODO handle this
+            //relatedRequestMap.put("payment_product_list", null);
+            //relatedRequestMap.put("payment_product_category_list", null);
+
+            //relatedRequestMap.put("eci", null);
+            //relatedRequestMap.put("authentication_indicator", null);
+
+            //TODO check what multiUse returns
+
+            paymentPageRequest.setMultiUse(this.getBoolForKey("multi_use"));
+            paymentPageRequest.setDisplaySelector(this.getBoolForKey("display_selector"));
+            paymentPageRequest.setTemplateName(this.getStringForKey("template"));
+
+            return paymentPageRequest;
+        }
+
+        private PaymentPageRequest pageRequestFromRelatedRequest(OrderRelatedRequest orderRelatedRequest) {
+
+            PaymentPageRequest paymentPageRequest = new PaymentPageRequest();
+
+            //TODO handle this
+            //relatedRequestMap.put("payment_product_list", null);
+            //relatedRequestMap.put("payment_product_category_list", null);
+
+            //relatedRequestMap.put("eci", null);
+            //relatedRequestMap.put("authentication_indicator", null);
+
+            //TODO check what multiUse returns
+            //TODO get tax
+
+            paymentPageRequest.setOrderId(orderRelatedRequest.getOrderId());
+
+            paymentPageRequest.setOperation(orderRelatedRequest.getOperation());
+
+            paymentPageRequest.setShortDescription(orderRelatedRequest.getShortDescription());
+            paymentPageRequest.setLongDescription(orderRelatedRequest.getLongDescription());
+            paymentPageRequest.setCurrency(orderRelatedRequest.getCurrency());
+            paymentPageRequest.setAmount(orderRelatedRequest.getAmount());
+
+            paymentPageRequest.setClientId(orderRelatedRequest.getClientId());
+            paymentPageRequest.setIpAddress(orderRelatedRequest.getIpAddress());
+            paymentPageRequest.setHTTPAccept(orderRelatedRequest.getHTTPUserAgent());
+            paymentPageRequest.setHTTPUserAgent(orderRelatedRequest.getHTTPUserAgent());
+            paymentPageRequest.setDeviceFingerprint(orderRelatedRequest.getDeviceFingerprint());
+            paymentPageRequest.setLanguage(orderRelatedRequest.getLanguage());
+
+            paymentPageRequest.setAcceptURL(orderRelatedRequest.getAcceptURL());
+            paymentPageRequest.setDeclineURL(orderRelatedRequest.getDeclineURL());
+            paymentPageRequest.setPendingURL(orderRelatedRequest.getPendingURL());
+            paymentPageRequest.setExceptionURL(orderRelatedRequest.getExceptionURL());
+            paymentPageRequest.setCancelURL(orderRelatedRequest.getCancelURL());
+
+            paymentPageRequest.setCdata1(orderRelatedRequest.getCdata1());
+            paymentPageRequest.setCdata2(orderRelatedRequest.getCdata2());
+            paymentPageRequest.setCdata3(orderRelatedRequest.getCdata3());
+            paymentPageRequest.setCdata4(orderRelatedRequest.getCdata4());
+            paymentPageRequest.setCdata5(orderRelatedRequest.getCdata5());
+            paymentPageRequest.setCdata6(orderRelatedRequest.getCdata6());
+            paymentPageRequest.setCdata7(orderRelatedRequest.getCdata7());
+            paymentPageRequest.setCdata8(orderRelatedRequest.getCdata8());
+            paymentPageRequest.setCdata9(orderRelatedRequest.getCdata9());
+            paymentPageRequest.setCdata10(orderRelatedRequest.getCdata10());
+
+            return paymentPageRequest;
         }
     }
 }

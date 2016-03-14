@@ -1,7 +1,7 @@
 package com.hipay.hipayfullservice.core.models;
 
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
-import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 
 import org.json.JSONObject;
 
@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  * Created by nfillion on 25/01/16.
  */
-public class TransactionRelatedItem {
+public class TransactionRelatedItem extends AbstractModel {
 
     protected Boolean test;
     protected String mid;
@@ -368,7 +368,7 @@ public class TransactionRelatedItem {
         @Override
         protected boolean isValid() {
 
-            if (this.getBehaviour() instanceof MapBehaviour) {
+            if (this.getBehaviour() instanceof MapMapper) {
 
                 if (this.getStringForKey("transactionReference") != null) return true;
             }
@@ -404,6 +404,11 @@ public class TransactionRelatedItem {
 
             return object;
 
+        }
+
+        @Override
+        protected Object mappedObjectFromBundle() {
+            return null;
         }
     }
 }

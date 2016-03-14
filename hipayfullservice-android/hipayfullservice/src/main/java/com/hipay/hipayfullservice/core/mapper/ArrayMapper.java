@@ -1,7 +1,6 @@
 package com.hipay.hipayfullservice.core.mapper;
 
-import com.hipay.hipayfullservice.core.mapper.interfaces.ListBehaviour;
-import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +15,8 @@ public class ArrayMapper extends AbstractMapper {
 
     @Override
     protected boolean isValid() {
-        return  this.getBehaviour() instanceof MapBehaviour ||
-                this.getBehaviour() instanceof ListBehaviour;
+        return  this.getBehaviour() instanceof MapMapper ||
+                this.getBehaviour() instanceof ListMapper;
     }
 
     @Override
@@ -28,5 +27,10 @@ public class ArrayMapper extends AbstractMapper {
         //TODO handle this one
 
         return result;
+    }
+
+    @Override
+    protected Object mappedObjectFromBundle() {
+        return null;
     }
 }

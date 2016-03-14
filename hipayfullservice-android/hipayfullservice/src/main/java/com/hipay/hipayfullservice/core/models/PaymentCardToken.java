@@ -1,7 +1,7 @@
 package com.hipay.hipayfullservice.core.models;
 
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
-import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 
 import org.json.JSONObject;
 
@@ -127,7 +127,7 @@ public class PaymentCardToken extends PaymentMethod {
         @Override
         protected boolean isValid() {
 
-            if (this.getBehaviour() instanceof MapBehaviour) {
+            if (this.getBehaviour() instanceof MapMapper) {
 
                 if (this.getStringForKey("token") != null) return true;
             }
@@ -151,6 +151,11 @@ public class PaymentCardToken extends PaymentMethod {
             object.setDomesticNetwork(this.getStringForKey("domesticNetwork"));
 
             return object;
+        }
+
+        @Override
+        protected Object mappedObjectFromBundle() {
+            return null;
         }
     }
 }

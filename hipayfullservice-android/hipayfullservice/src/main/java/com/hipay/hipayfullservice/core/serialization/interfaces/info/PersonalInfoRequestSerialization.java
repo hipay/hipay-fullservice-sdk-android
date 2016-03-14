@@ -1,7 +1,9 @@
 package com.hipay.hipayfullservice.core.serialization.interfaces.info;
 
+import android.os.Bundle;
+
 import com.hipay.hipayfullservice.core.requests.info.PersonalInfoRequest;
-import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractRequestSerialization;
+import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 import com.hipay.hipayfullservice.core.utils.Utils;
 
 import java.util.HashMap;
@@ -11,7 +13,7 @@ import java.util.Map;
  * Created by nfillion on 07/02/16.
  */
 
-public class PersonalInfoRequestSerialization extends AbstractRequestSerialization {
+public class PersonalInfoRequestSerialization extends AbstractSerialization {
 
     public PersonalInfoRequestSerialization(PersonalInfoRequest personalInfoRequest) {
 
@@ -36,6 +38,11 @@ public class PersonalInfoRequestSerialization extends AbstractRequestSerializati
         retMap.put("country", personalInfoRequest.getCountry());
 
         return retMap;
+    }
+
+    @Override
+    public Bundle getSerializedBundle() {
+        return null;
     }
 
     @Override

@@ -1,8 +1,10 @@
 package com.hipay.hipayfullservice.core.serialization.interfaces.payment;
 
+import android.os.Bundle;
+
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
-import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractRequestSerialization;
+import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 import com.hipay.hipayfullservice.core.utils.Utils;
 
 import java.util.HashMap;
@@ -11,7 +13,7 @@ import java.util.Map;
 /**
  * Created by nfillion on 11/03/16.
  */
-public class CardTokenPaymentMethodRequestSerialization extends AbstractRequestSerialization {
+public class CardTokenPaymentMethodRequestSerialization extends AbstractSerialization {
 
     public CardTokenPaymentMethodRequestSerialization(CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest) {
 
@@ -36,6 +38,11 @@ public class CardTokenPaymentMethodRequestSerialization extends AbstractRequestS
         }
 
         return retMap;
+    }
+
+    @Override
+    public Bundle getSerializedBundle() {
+        return null;
     }
 
     public String getQueryString() {
