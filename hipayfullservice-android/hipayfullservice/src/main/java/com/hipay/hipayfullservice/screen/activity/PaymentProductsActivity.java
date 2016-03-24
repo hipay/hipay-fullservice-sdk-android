@@ -11,19 +11,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
-import com.hipay.hipayfullservice.core.client.GatewayClient;
-import com.hipay.hipayfullservice.core.client.SecureVaultClient;
-import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
-import com.hipay.hipayfullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
-import com.hipay.hipayfullservice.core.models.PaymentCardToken;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
-import com.hipay.hipayfullservice.core.models.Transaction;
-import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.hipayfullservice.screen.fragment.PaymentProductsFragment;
@@ -38,9 +30,13 @@ public class PaymentProductsActivity extends AppCompatActivity {
 
     //TODO handle extra user
 
-    public static void start(Activity activity, PaymentPageRequest paymentPageRequest, ActivityOptionsCompat options) {
+    public static void start(Activity activity, PaymentPageRequest paymentPageRequest) {
         Intent starter = getStartIntent(activity, paymentPageRequest);
-        ActivityCompat.startActivityForResult(activity, starter, PaymentPageRequest.REQUEST_ORDER, options.toBundle());
+
+        ActivityOptionsCompat activityOptions = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(activity, null);
+
+        ActivityCompat.startActivityForResult(activity, starter, PaymentPageRequest.REQUEST_ORDER, activityOptions.toBundle());
     }
 
     @Override
@@ -67,6 +63,14 @@ public class PaymentProductsActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        setResultSucceed(null);
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -90,63 +94,6 @@ public class PaymentProductsActivity extends AppCompatActivity {
         supportPostponeEnterTransition();
     }
 
-    private void goRequest() {
-
-        new SecureVaultClient(this).createTokenRequest(
-                "4111111111111111",
-                "12",
-                "2019",
-                "John Doe",
-                "123",
-                false,
-
-                new SecureVaultRequestCallback() {
-                    @Override
-                    public void onSuccess(PaymentCardToken paymentCardToken) {
-
-                        Log.i(paymentCardToken.toString(), paymentCardToken.toString());
-
-                        //final PaymentPageRequest paymentPageRequest = PaymentProductsActivity.this.hardPageRequest();
-
-
-                        //Bundle bundle = getIntent().getExtras(EXTRA_USER);
-                        Bundle bundle = getIntent().getBundleExtra(PaymentPageRequest.TAG);
-
-                        PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(bundle);
-                        OrderRequest orderRequest = PaymentProductsActivity.this.hardOrderRequest(paymentPageRequest);
-                        orderRequest.setPaymentProductCode("visa");
-
-                        CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest = new CardTokenPaymentMethodRequest(paymentCardToken.getToken(), paymentPageRequest.getEci(), paymentPageRequest.getAuthenticationIndicator());
-                        orderRequest.setPaymentMethod(cardTokenPaymentMethodRequest);
-
-                        new GatewayClient(PaymentProductsActivity.this)
-                                .createOrderRequest(orderRequest, new OrderRequestCallback() {
-
-                                    @Override
-                                    public void onSuccess(Transaction transaction) {
-                                        Log.i("transaction success", transaction.toString());
-
-                                        //Bundle bundle = paymentPageRequest.toBundle();
-
-                                        setResultSucceed(null);
-                                    }
-
-                                    @Override
-                                    public void onError(Exception error) {
-                                        Log.i("transaction failed", error.getLocalizedMessage());
-                                    }
-                                });
-
-                    }
-
-                    @Override
-                    public void onError(Exception error) {
-
-                    }
-                }
-        );
-    }
-
     private void setResultSucceed(Bundle bundle) {
 
         Intent intent = new Intent();
@@ -154,17 +101,10 @@ public class PaymentProductsActivity extends AppCompatActivity {
         //intent.putExtra("hello", bundle);
 
         setResult(R.id.transaction_failed, intent);
-        ActivityCompat.finishAfterTransition(this);
-    }
-
-    protected OrderRequest hardOrderRequest(PaymentPageRequest paymentPageRequest) {
-
-        OrderRequest orderRequest = new OrderRequest(paymentPageRequest);
-
-        //TODO
-        orderRequest.setPaymentProductCode("bcmc-mobile");
-
-        return orderRequest;
+        //ActivityCompat.finishAfterTransition(this);
+        finish();
+        //overridePendingTransition(0, 0);
+        //overridePendingTransition(0,0);
     }
 
     protected PaymentPageRequest hardPageRequest() {

@@ -31,6 +31,6 @@
         </LinearLayout>
         <include
             layout="@layout/fab_done"
-            android:visibility="invisible" />
+            android:visibility="visible" />
     </FrameLayout>
 </FrameLayout>

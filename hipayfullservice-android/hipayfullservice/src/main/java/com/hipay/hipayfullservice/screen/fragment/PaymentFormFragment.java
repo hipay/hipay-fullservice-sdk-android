@@ -3,9 +3,11 @@ package com.hipay.hipayfullservice.screen.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -15,8 +17,16 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.hipay.hipayfullservice.R;
+import com.hipay.hipayfullservice.core.client.GatewayClient;
+import com.hipay.hipayfullservice.core.client.SecureVaultClient;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
+import com.hipay.hipayfullservice.core.models.PaymentCardToken;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
+import com.hipay.hipayfullservice.core.models.Transaction;
+import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
+import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.hipayfullservice.screen.helper.FormHelper;
 
 /**
@@ -108,12 +118,27 @@ public class PaymentFormFragment extends Fragment {
 
     private void initContentViews(View view) {
 
-        Bundle args = getArguments();
-
-        PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
-
-        PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
-
+        //mDoneFab = (FloatingActionButton) view.findViewById(R.id.done);
+        //mDoneFab.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View v) {
+        //        switch (v.getId()) {
+        //            case R.id.done:
+        //                removeDoneFab(new Runnable() {
+        //                    @Override
+        //                    public void run() {
+        //                        validateCartWithTransition();
+        //                        mDoneFab.setVisibility(View.INVISIBLE);
+        //                    }
+        //                });
+        //                break;
+        //            default:
+        //                throw new UnsupportedOperationException(
+        //                        "The onClick method has not been implemented for " + getResources()
+        //                                .getResourceEntryName(v.getId()));
+        //        }
+        //    }
+        //});
 
         //TextWatcher textWatcher = new TextWatcher() {
         //    @Override
@@ -363,28 +388,95 @@ public class PaymentFormFragment extends Fragment {
         mDoneFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()) {
-                    //case R.id.done:
-                    //    savePlayer(getActivity());
-                    //    removeDoneFab(new Runnable() {
-                    //        @Override
-                    //        public void run() {
-                    //            if (null == mSelectedAvatarView) {
-                    //                performSignInWithTransition(mAvatarGrid.getChildAt(
-                    //                        mSelectedAvatar.ordinal()));
-                    //            } else {
-                    //                performSignInWithTransition(mSelectedAvatarView);
-                    //            }
-                    //        }
-                    //    });
-                    //    break;
-                    default:
-                        throw new UnsupportedOperationException(
-                                "The onClick method has not been implemented for " + getResources()
-                                        .getResourceEntryName(v.getId()));
+                int i = v.getId();
+                if (i == R.id.done) {
+                    removeDoneFab(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            //TODO do request
+
+                            //ActivityCompat.finishAfterTransition(getActivity());
+                            getActivity().finish();
+
+                        }
+                    });
+
+                } else {
+                    throw new UnsupportedOperationException(
+                            "The onClick method has not been implemented for " + getResources()
+                                    .getResourceEntryName(v.getId()));
                 }
             }
         });
+    }
+
+
+    private void goRequest() {
+
+        Bundle args = getArguments();
+
+        final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
+        final PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
+
+        new SecureVaultClient(getActivity()).createTokenRequest(
+                "4111111111111111",
+                "12",
+                "2019",
+                "John Doe",
+                "123",
+                false,
+
+                new SecureVaultRequestCallback() {
+                    @Override
+                    public void onSuccess(PaymentCardToken paymentCardToken) {
+
+                        Log.i(paymentCardToken.toString(), paymentCardToken.toString());
+
+                        OrderRequest orderRequest = new OrderRequest(paymentPageRequest);
+                        orderRequest.setPaymentProductCode(paymentProduct.getCode());
+
+                        //TODO
+                        //orderRequest.setPaymentProductCode("bcmc-mobile");
+
+                        //OrderRequest orderRequest = PaymentProductsActivity.this.hardOrderRequest(paymentPageRequest);
+
+                        CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest =
+                                new CardTokenPaymentMethodRequest(
+                                        paymentCardToken.getToken(),
+                                        paymentPageRequest.getEci(),
+                                        paymentPageRequest.getAuthenticationIndicator());
+
+                        orderRequest.setPaymentMethod(cardTokenPaymentMethodRequest);
+
+                        new GatewayClient(getActivity())
+                                .createOrderRequest(orderRequest, new OrderRequestCallback() {
+
+                                    @Override
+                                    public void onSuccess(Transaction transaction) {
+                                        Log.i("transaction success", transaction.toString());
+
+                                        //Bundle bundle = paymentPageRequest.toBundle();
+                                        //setResultSucceed(null);
+
+                                        //ActivityCompat.finishAfterTransition(getActivity());
+                                        getActivity().finish();
+                                    }
+
+                                    @Override
+                                    public void onError(Exception error) {
+                                        Log.i("transaction failed", error.getLocalizedMessage());
+                                    }
+                                });
+
+                    }
+
+                    @Override
+                    public void onError(Exception error) {
+
+                    }
+                }
+        );
     }
 
     private void removeDoneFab(@Nullable Runnable endAction) {
