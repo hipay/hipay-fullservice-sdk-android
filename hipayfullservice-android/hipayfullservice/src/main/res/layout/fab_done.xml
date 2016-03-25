@@ -28,4 +28,4 @@
     android:layout_marginLeft="@dimen/spacing_double"
 
     android:src="@drawable/ic_tick"
-    app:backgroundTint="@color/hpf_accent" />
+    />

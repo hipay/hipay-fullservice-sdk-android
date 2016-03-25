@@ -25,12 +25,21 @@
             android:layout_gravity="center"
             android:orientation="vertical">
 
-            <include
-                layout="@layout/payment_form_card_info" />
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    layout="@layout/payment_form_card_info"
+                    />
+            </ScrollView>
 
         </LinearLayout>
         <include
             layout="@layout/fab_done"
             android:visibility="visible" />
+
     </FrameLayout>
 </FrameLayout>

@@ -361,8 +361,8 @@ public class TransactionRelatedItem extends AbstractModel {
 
 
     public static class TransactionRelatedItemMapper extends AbstractMapper {
-        public TransactionRelatedItemMapper(JSONObject jsonObject) {
-            super(jsonObject);
+        public TransactionRelatedItemMapper(Object rawData) {
+            super(rawData);
         }
 
         @Override

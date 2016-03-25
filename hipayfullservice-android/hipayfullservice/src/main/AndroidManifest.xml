@@ -9,6 +9,7 @@
 
         <activity android:name=".screen.activity.PaymentFormActivity"
             android:theme="@style/PaymentScreens.PaymentFormActivity"
+            android:windowSoftInputMode="adjustPan"
             />
 
     </application>

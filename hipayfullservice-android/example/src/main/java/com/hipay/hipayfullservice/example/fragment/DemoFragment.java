@@ -1,32 +1,41 @@
 package com.hipay.hipayfullservice.example.fragment;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
+import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.hipayfullservice.example.DemoActivity;
 import com.hipay.hipayfullservice.example.R;
 import com.hipay.hipayfullservice.screen.activity.PaymentProductsActivity;
-import com.hipay.hipayfullservice.screen.model.Theme;
+import com.hipay.hipayfullservice.screen.helper.ApiLevelHelper;
+import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -40,6 +49,7 @@ public class DemoFragment extends Fragment {
     private static final String ARG_EDIT = "EDIT";
     private FloatingActionButton mDoneFab;
     private EditText mAmount;
+    private CustomTheme customTheme;
 
     public static DemoFragment newInstance(boolean edit) {
         Bundle args = new Bundle();
@@ -52,32 +62,56 @@ public class DemoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
+
         }
+
+        CustomTheme theme = new CustomTheme(
+                R.color.hpf_primary,
+                R.color.hpf_primary_dark,
+                R.color.theme_blue_text);
+
+        this.setCustomTheme(theme);
+
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Snackbar snackbar = Snackbar.make(mDoneFab, "Transaction succeed",
-                Snackbar.LENGTH_INDEFINITE);
-        View snackBarView = snackbar.getView();
-        snackBarView.setBackgroundColor((ContextCompat.getColor(getActivity(),
-                Theme.blue.getPrimaryColor())));
-        snackbar.show();
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PaymentPageRequest.REQUEST_ORDER) {
 
-        if (requestCode == PaymentPageRequest.REQUEST_ORDER && resultCode == R.id.transaction_succeed) {
-            //TODO let's find transaction
+            if (resultCode == R.id.transaction_succeed) {
 
-            Bundle bundle = data.getBundleExtra("hello");
-            PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(bundle);
+                //TODO let's find transaction
 
-            //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-            //.setAction("Action", null).(Color.GREEN).show();
+                Bundle transactionBundle = data.getBundleExtra(Transaction.TAG);
+                Transaction transaction = Transaction.fromBundle(transactionBundle);
+
+
+                Snackbar snackbar = Snackbar.make(mDoneFab, "Transaction succeed",
+                        Snackbar.LENGTH_INDEFINITE);
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackgroundColor((ContextCompat.getColor(getActivity(),
+                        R.color.colorAccent)));
+                snackbar.show();
+
+            } else if (resultCode == R.id.transaction_failed) {
+
+                //TODO let's find transaction
+
+                Snackbar snackbar = Snackbar.make(mDoneFab, "Transaction succeed",
+                        Snackbar.LENGTH_INDEFINITE);
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackgroundColor((ContextCompat.getColor(getActivity(),
+                        R.color.colorAccent)));
+                snackbar.show();
+
+            } else {
+
+            }
 
         }
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -102,6 +136,73 @@ public class DemoFragment extends Fragment {
                 R.array.array_colors_theme, android.R.layout.simple_spinner_dropdown_item);
         adapterColorSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         colorSpinner.setAdapter(adapterColorSpinner);
+        colorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0: {
+
+                        CustomTheme theme = new CustomTheme(
+                                R.color.hpf_primary,
+                                R.color.hpf_primary_dark,
+                                R.color.theme_blue_text);
+
+                        switchTheme(theme);
+                        DemoFragment.this.setCustomTheme(theme);
+                    }
+                    break;
+
+                    case 1: {
+
+                        // CustomTheme theme = new CustomTheme(
+                        //         R.color.theme_yellow_primary,
+                        //         R.color.theme_yellow_primary_dark,
+                        //         R.color.theme_yellow_background,
+                        //         R.color.theme_yellow_text,
+                        //         R.color.theme_yellow_accent);
+                        // switchTheme(theme);
+                        // DemoFragment.this.setCustomTheme(theme);
+
+                        CustomTheme theme = new CustomTheme(
+                                R.color.theme_red_primary,
+                                R.color.theme_red_primary_dark,
+                                R.color.theme_red_text);
+                        switchTheme(theme);
+                        DemoFragment.this.setCustomTheme(theme);
+                    }
+                    break;
+
+                    case 3: {
+
+                        CustomTheme theme = new CustomTheme(
+                                R.color.theme_green_primary,
+                                R.color.theme_green_primary_dark,
+                                R.color.theme_green_text);
+
+                        switchTheme(theme);
+                        DemoFragment.this.setCustomTheme(theme);
+                    } break;
+
+                    case 2: {
+
+                        CustomTheme theme = new CustomTheme(
+                                R.color.theme_purple_primary,
+                                R.color.theme_purple_primary_dark,
+                                R.color.theme_purple_text);
+
+                        switchTheme(theme);
+                        DemoFragment.this.setCustomTheme(theme);
+
+                    } break;
+
+                }
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+                // do nothing
+            }
+
+        });
 
         return contentView;
     }
@@ -175,7 +276,7 @@ public class DemoFragment extends Fragment {
     private void validateCartWithTransition() {
 
         final Activity activity = getActivity();
-        PaymentProductsActivity.start(activity, hardPageRequest());
+        PaymentProductsActivity.start(activity, hardPageRequest(), this.getCustomTheme());
     }
 
     protected PaymentPageRequest hardPageRequest() {
@@ -214,6 +315,31 @@ public class DemoFragment extends Fragment {
         return paymentPageRequest;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void switchTheme(CustomTheme customTheme) {
+
+        DemoActivity demoActivity = (DemoActivity) getActivity();
+
+        if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.LOLLIPOP)) {
+
+            Window window = demoActivity.getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(demoActivity,
+                    customTheme.getColorPrimaryDarkId()));
+        }
+
+        Toolbar toolbar = (Toolbar) demoActivity.findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryId()));
+        toolbar.setTitleTextColor(ContextCompat.getColor(demoActivity, customTheme.getTextColorPrimaryId()));
+
+        ((TextView) demoActivity.findViewById(R.id.generate_payment_textview)).setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
+        ((TextView) demoActivity.findViewById(R.id.amount_currency_textview)).setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
+        ((TextView) demoActivity.findViewById(R.id.threeds_textview)).setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
+        ((TextView) demoActivity.findViewById(R.id.color_textview)).setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
+
+        ((Switch) demoActivity.findViewById(R.id.group_card_switch)).setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
+        ((Switch) demoActivity.findViewById(R.id.reusable_token_switch)).setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
+
+    }
 
     private void removeDoneFab(@Nullable Runnable endAction) {
         ViewCompat.animate(mDoneFab)
@@ -242,5 +368,13 @@ public class DemoFragment extends Fragment {
     private boolean isInputDataValid() {
 
         return !TextUtils.isEmpty(mAmount.getText());
+    }
+
+    public CustomTheme getCustomTheme() {
+        return customTheme;
+    }
+
+    public void setCustomTheme(CustomTheme customTheme) {
+        this.customTheme = customTheme;
     }
 }

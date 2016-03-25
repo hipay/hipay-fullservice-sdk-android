@@ -33,7 +33,7 @@
     <string name="line_2">line_2</string>
 
     <!-- drawing -->
-    <color name="tick_cross_stroke_color">@android:color/black</color>
+    <color name="tick_cross_stroke_color">@android:color/white</color>
 
     <!-- timing -->
     <integer name="tick_cross_duration">450</integer>

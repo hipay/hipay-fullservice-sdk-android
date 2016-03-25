@@ -5,12 +5,12 @@
     <string name="gateway_callback_url_pathname">gateway</string>
     <string name="payment_product_group_payment_card">Carte</string>
 
-    <string name="paiment_products_title">Paiement</string>
+    <string name="paiment_products_title">Moyens de paiement</string>
 
     <string name="card_owner">Nom du titulaire</string>
     <string name="card_number">Numéro de carte</string>
 
-    <string name="card_expiration">MM/AA</string>
+    <string name="card_expiration">Expiry date</string>
     <string name="card_cvv">Code de sécurité</string>
 
     <string name="amount">MONTANT TOTAL : $225,00</string>

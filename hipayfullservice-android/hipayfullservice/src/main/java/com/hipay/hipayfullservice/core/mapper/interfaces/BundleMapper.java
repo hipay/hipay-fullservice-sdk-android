@@ -2,6 +2,7 @@ package com.hipay.hipayfullservice.core.mapper.interfaces;
 
 import android.os.Bundle;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -52,6 +53,40 @@ public class BundleMapper implements IBehaviour {
     }
 
     @Override
+    public URL getURLForKey(String key) {
+
+        String string = this.getStringForKey(key);
+        if (string != null && !string.isEmpty()) {
+
+            URL url = null;
+            try {
+                url = new URL(string);
+                return new URL(string);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                url = null;
+
+            } finally {
+                return url;
+            }
+        }
+
+        return null;
+    }
+
+    public String getEnumCharForKey(String key) {
+
+        String string = this.getStringForKey(key);
+        if (string != null && string.length() == 1)  {
+
+            return string;
+        }
+
+        return null;
+    }
+
+    @Override
     public String getLowercaseStringForKey(String key) {
         return null;
     }
@@ -77,22 +112,12 @@ public class BundleMapper implements IBehaviour {
     }
 
     @Override
-    public String getEnumCharForKey(String key) {
-        return null;
-    }
-
-    @Override
     public Boolean getBoolNumberForKey(String key) {
         return null;
     }
 
     @Override
     public Map getMapForKey(String key) {
-        return null;
-    }
-
-    @Override
-    public URL getURLForKey(String key) {
         return null;
     }
 

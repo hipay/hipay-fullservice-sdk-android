@@ -1,27 +1,28 @@
 package com.hipay.hipayfullservice.screen.activity;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
-import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
-import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.hipayfullservice.screen.fragment.PaymentProductsFragment;
-
-import java.util.Arrays;
-import java.util.Calendar;
+import com.hipay.hipayfullservice.screen.helper.ApiLevelHelper;
+import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
 /**
  * Created by nfillion on 25/02/16.
@@ -30,8 +31,10 @@ public class PaymentProductsActivity extends AppCompatActivity {
 
     //TODO handle extra user
 
-    public static void start(Activity activity, PaymentPageRequest paymentPageRequest) {
-        Intent starter = getStartIntent(activity, paymentPageRequest);
+    private CustomTheme customTheme;
+
+    public static void start(Activity activity, PaymentPageRequest paymentPageRequest, CustomTheme theme) {
+        Intent starter = getStartIntent(activity, paymentPageRequest, theme);
 
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat
                 .makeSceneTransitionAnimation(activity, null);
@@ -52,12 +55,14 @@ public class PaymentProductsActivity extends AppCompatActivity {
     }
 
     @NonNull
-    static Intent getStartIntent(Context context, PaymentPageRequest paymentPageRequest) {
+    static Intent getStartIntent(Context context, PaymentPageRequest paymentPageRequest, CustomTheme theme) {
 
         Intent starter = new Intent(context, PaymentProductsActivity.class);
 
         Bundle bundle = paymentPageRequest.toBundle();
         starter.putExtra(PaymentPageRequest.TAG, bundle);
+
+        starter.putExtra(CustomTheme.TAG, theme.toBundle());
 
         return starter;
     }
@@ -65,7 +70,25 @@ public class PaymentProductsActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        setResultSucceed(null);
+        if (requestCode == PaymentPageRequest.REQUEST_ORDER) {
+
+            if (resultCode == R.id.transaction_succeed) {
+
+                setResult(R.id.transaction_succeed, data);
+                finish();
+
+            } else if (resultCode == R.id.transaction_failed) {
+
+                //TODO put exception in there
+                setResult(R.id.transaction_failed, null);
+                finish();
+
+                //ActivityCompat.finishAfterTransition(this);
+                //overridePendingTransition(0, 0);
+            }
+
+            // if resultCode == 0, do nothing
+        }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -76,7 +99,11 @@ public class PaymentProductsActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_payment_products);
 
-        //goRequest();
+        Bundle customThemeBundle = getIntent().getBundleExtra(CustomTheme.TAG);
+        CustomTheme customTheme = CustomTheme.fromBundle(customThemeBundle);
+
+        this.setCustomTheme(customTheme);
+
 
         setUpToolbar();
         if (savedInstanceState == null) {
@@ -94,58 +121,18 @@ public class PaymentProductsActivity extends AppCompatActivity {
         supportPostponeEnterTransition();
     }
 
-    private void setResultSucceed(Bundle bundle) {
-
-        Intent intent = new Intent();
-
-        //intent.putExtra("hello", bundle);
-
-        setResult(R.id.transaction_failed, intent);
-        //ActivityCompat.finishAfterTransition(this);
-        finish();
-        //overridePendingTransition(0, 0);
-        //overridePendingTransition(0,0);
-    }
-
-    protected PaymentPageRequest hardPageRequest() {
-
-        PaymentPageRequest paymentPageRequest = new PaymentPageRequest();
-
-        paymentPageRequest.setAmount(225.f);
-        paymentPageRequest.setCurrency("EUR");
-
-        StringBuilder stringBuilder = new StringBuilder("TEST_SDK_IOS_").append(Calendar.getInstance().getTimeInMillis()/1000);
-
-        paymentPageRequest.setOrderId(stringBuilder.toString());
-        paymentPageRequest.setShortDescription("Outstanding item");
-        paymentPageRequest.getCustomer().setCountry("FR");
-        paymentPageRequest.getCustomer().setFirstname("John");
-        paymentPageRequest.getCustomer().setLastname("Doe");
-        paymentPageRequest.setPaymentCardGroupingEnabled(true);
-        paymentPageRequest.setMultiUse(true);
-        paymentPageRequest.setPaymentProductCategoryList(
-
-                Arrays.asList(
-
-                        PaymentProduct.PaymentProductCodeCB,
-                        PaymentProduct.PaymentProductCodeMasterCard,
-                        PaymentProduct.PaymentProductCodeVisa,
-                        PaymentProduct.PaymentProductCodeAmericanExpress,
-                        PaymentProduct.PaymentProductCodeMaestro,
-                        PaymentProduct.PaymentProductCodeDiners
-                )
-        );
-
-        paymentPageRequest.getCustomer().setEmail("nfillion@hipay.com");
-
-        paymentPageRequest.setAuthenticationIndicator(CardTokenPaymentMethodRequest.AuthenticationIndicator.AuthenticationIndicatorUndefined);
-
-        return paymentPageRequest;
-    }
-
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setUpToolbar() {
 
+        if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.LOLLIPOP)) {
+
+            Window window = getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(this,
+                    this.getCustomTheme().getColorPrimaryDarkId()));
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_payment_products);
+        toolbar.setBackgroundColor(ContextCompat.getColor(this, this.getCustomTheme().getColorPrimaryId()));
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -153,7 +140,10 @@ public class PaymentProductsActivity extends AppCompatActivity {
         //TODO handle the price (montant)
 
         //noinspection PrivateResource
-        ((TextView) toolbar.findViewById(R.id.title)).setText(R.string.paiment_products_title);
+
+        TextView textView = (TextView) toolbar.findViewById(R.id.title);
+        textView.setText(R.string.paiment_products_title);
+        textView.setTextColor(ContextCompat.getColor(this, this.getCustomTheme().getTextColorPrimaryId()));
     }
 
     private void attachProductGridFragment() {
@@ -163,7 +153,10 @@ public class PaymentProductsActivity extends AppCompatActivity {
         if (!(fragment instanceof PaymentProductsFragment)) {
 
             Bundle paymentPageRequestBundle = getIntent().getBundleExtra(PaymentPageRequest.TAG);
-            fragment = PaymentProductsFragment.newInstance(paymentPageRequestBundle);
+
+            Bundle customThemeBundle = getIntent().getBundleExtra(CustomTheme.TAG);
+
+            fragment = PaymentProductsFragment.newInstance(paymentPageRequestBundle, customThemeBundle);
 
             //fragment.setArguments(paymentPageRequestBundle);
         }
@@ -179,5 +172,12 @@ public class PaymentProductsActivity extends AppCompatActivity {
         findViewById(R.id.progress).setVisibility(visibility);
     }
 
+    public CustomTheme getCustomTheme() {
+        return customTheme;
+    }
+
+    public void setCustomTheme(CustomTheme customTheme) {
+        this.customTheme = customTheme;
+    }
 }
 

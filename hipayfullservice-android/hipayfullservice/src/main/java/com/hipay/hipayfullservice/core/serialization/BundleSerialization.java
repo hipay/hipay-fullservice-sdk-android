@@ -2,6 +2,8 @@ package com.hipay.hipayfullservice.core.serialization;
 
 import android.os.Bundle;
 
+import java.net.URL;
+
 /**
  * Created by nfillion on 18/03/16.
  */
@@ -59,6 +61,15 @@ public class BundleSerialization implements IBundle {
             //this.getBundle().putBoolean(key, false);
         }
     }
+
+    @Override
+    public void putUrl(String key, URL url) {
+
+        if (url != null) {
+            this.getBundle().putString(key, url.toString());
+        }
+    }
+
     @Override
     public Bundle getBundle() {
         return bundle;

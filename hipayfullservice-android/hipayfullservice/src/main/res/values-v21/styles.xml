@@ -3,6 +3,8 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:actionOverflowButtonStyle">@style/PaymentScreens.ActionButton</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:spinnerStyle">@style/Base.Widget.AppCompat.Spinner.Underlined</item>
+
     </style>
 
     <style name="PaymentScreens.PaymentProductsActivity">

@@ -10,7 +10,7 @@
         <item name="android:textColorPrimary">@android:color/black</item>
         <item name="android:textColorPrimaryInverse">@color/hpf_light</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/hpf_primary_dark</item>
-        <item name="android:textColor">@color/hpf_dark</item>
+        <item name="android:textColor">@color/hpf_text</item>
 
         <item name="android:windowBackground">@color/light_grey</item>
         <item name="android:colorBackground">@color/light_grey</item>
@@ -21,7 +21,7 @@
 
     <style name="PaymentScreens.Blue">
         <item name="colorPrimary">@color/theme_blue_primary</item>
-        <item name="colorPrimaryDark">@color/theme_blue_primary</item>
+        <item name="colorPrimaryDark">@color/theme_blue_primary_dark</item>
         <item name="android:textColorPrimary">@color/theme_blue_text</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">
             @color/theme_blue_primary_dark
@@ -93,6 +93,5 @@
 
     <style name="PaymentScreens.TextAppearance.ListItem" parent="TextAppearance.AppCompat.Subhead" />
     <style name="PaymentScreens.TextAppearance.ListItemSecondary" parent="TextAppearance.AppCompat.Body1" />
-
 
 </resources>

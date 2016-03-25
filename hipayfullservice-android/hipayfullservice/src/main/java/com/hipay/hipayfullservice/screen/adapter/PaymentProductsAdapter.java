@@ -2,10 +2,8 @@ package com.hipay.hipayfullservice.screen.adapter;
 
 import android.app.Activity;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +13,8 @@ import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
-import com.hipay.hipayfullservice.screen.model.Theme;
+import com.hipay.hipayfullservice.screen.activity.PaymentProductsActivity;
+import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,12 +60,14 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
         PaymentProduct paymentProduct = mPaymentProducts.get(position);
         setCategoryIcon(paymentProduct, holder.icon);
 
-        Theme theme = Theme.blue;
+        PaymentProductsActivity activity = (PaymentProductsActivity)mActivity;
+        CustomTheme theme = activity.getCustomTheme();
 
-        holder.itemView.setBackgroundColor(getColor(theme.getWindowBackgroundColor()));
+        holder.itemView.setBackgroundColor(getColor(android.R.color.background_light));
+        //holder.itemView.setBackgroundColor(getColor(R.color.hpf_blank));
         holder.title.setText(paymentProduct.getCode());
-        holder.title.setTextColor(getColor(theme.getTextPrimaryColor()));
-        holder.title.setBackgroundColor(getColor(theme.getPrimaryColor()));
+        holder.title.setTextColor(getColor(theme.getTextColorPrimaryId()));
+        holder.title.setBackgroundColor(getColor(theme.getColorPrimaryId()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

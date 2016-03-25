@@ -1,13 +1,12 @@
 package com.hipay.hipayfullservice.screen.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -27,6 +26,7 @@ import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.hipayfullservice.screen.activity.PaymentFormActivity;
 import com.hipay.hipayfullservice.screen.helper.FormHelper;
 
 /**
@@ -34,6 +34,13 @@ import com.hipay.hipayfullservice.screen.helper.FormHelper;
  */
 
 public class PaymentFormFragment extends Fragment {
+
+    OnCallbackOrderListener mCallback;
+
+    public interface OnCallbackOrderListener {
+        /** Called by HeadlinesFragment when a list item is selected */
+        public void onCallbackOrderReceived(Transaction transaction, Exception exception);
+    }
 
     private static final String ARG_EDIT = "EDIT";
     private static final String KEY_SELECTED_AVATAR_INDEX = "selectedAvatarIndex";
@@ -56,6 +63,18 @@ public class PaymentFormFragment extends Fragment {
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mCallback = (OnCallbackOrderListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+            + " must implement OnCallbackOrderListener");
+        }
     }
 
     @Override
@@ -112,7 +131,6 @@ public class PaymentFormFragment extends Fragment {
         initContentViews(view);
 
         //TODO put this paymentPageRequest as args to get it.
-
 
     }
 
@@ -385,6 +403,7 @@ public class PaymentFormFragment extends Fragment {
         });
 
         mDoneFab = (FloatingActionButton) view.findViewById(R.id.done);
+
         mDoneFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -396,8 +415,10 @@ public class PaymentFormFragment extends Fragment {
 
                             //TODO do request
 
-                            //ActivityCompat.finishAfterTransition(getActivity());
-                            getActivity().finish();
+                            //getActivity().setResult(R.id.transaction_succeed);
+                            //getActivity().finish();
+
+                            goRequest();
 
                         }
                     });
@@ -436,11 +457,6 @@ public class PaymentFormFragment extends Fragment {
                         OrderRequest orderRequest = new OrderRequest(paymentPageRequest);
                         orderRequest.setPaymentProductCode(paymentProduct.getCode());
 
-                        //TODO
-                        //orderRequest.setPaymentProductCode("bcmc-mobile");
-
-                        //OrderRequest orderRequest = PaymentProductsActivity.this.hardOrderRequest(paymentPageRequest);
-
                         CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest =
                                 new CardTokenPaymentMethodRequest(
                                         paymentCardToken.getToken(),
@@ -449,31 +465,39 @@ public class PaymentFormFragment extends Fragment {
 
                         orderRequest.setPaymentMethod(cardTokenPaymentMethodRequest);
 
-                        new GatewayClient(getActivity())
-                                .createOrderRequest(orderRequest, new OrderRequestCallback() {
+                        //check if activity is still available
+                        if (getActivity() != null) {
 
-                                    @Override
-                                    public void onSuccess(Transaction transaction) {
-                                        Log.i("transaction success", transaction.toString());
+                            new GatewayClient(getActivity())
+                                    .createOrderRequest(orderRequest, new OrderRequestCallback() {
 
-                                        //Bundle bundle = paymentPageRequest.toBundle();
-                                        //setResultSucceed(null);
+                                        @Override
+                                        public void onSuccess(Transaction transaction) {
+                                            Log.i("transaction success", transaction.toString());
 
-                                        //ActivityCompat.finishAfterTransition(getActivity());
-                                        getActivity().finish();
-                                    }
+                                            //Bundle bundle = paymentPageRequest.toBundle();
+                                            //setResultSucceed(null);
 
-                                    @Override
-                                    public void onError(Exception error) {
-                                        Log.i("transaction failed", error.getLocalizedMessage());
-                                    }
-                                });
+                                            //ActivityCompat.finishAfterTransition(getActivity());
+                                            if (mCallback != null) {
 
+                                                mCallback.onCallbackOrderReceived(transaction, null);
+
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onError(Exception error) {
+                                            Log.i("transaction failed", error.getLocalizedMessage());
+                                        }
+                                    });
+                        }
                     }
 
                     @Override
                     public void onError(Exception error) {
 
+                        //TODO handle token request failed
                     }
                 }
         );
@@ -492,4 +516,5 @@ public class PaymentFormFragment extends Fragment {
 
         return FormHelper.isInputDataValid(mCardNumber.getText(), mCardExpiration.getText(), mCardCVV.getText(), mCardOwner.getText());
     }
+
  }

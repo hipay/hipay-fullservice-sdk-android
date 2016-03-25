@@ -6,6 +6,7 @@ import com.hipay.hipayfullservice.core.models.AbstractModel;
 import com.hipay.hipayfullservice.core.requests.AbstractRequest;
 import com.hipay.hipayfullservice.core.serialization.IBundle;
 
+import java.net.URL;
 import java.util.Map;
 
 /**
@@ -52,6 +53,10 @@ public abstract class AbstractSerialization implements ISerialization {
 
     protected void putStringForKey(String key, String string) {
         this.getBundleBehaviour().putString(key, string);
+    }
+
+    protected void putUrlForKey(String key, URL url) {
+        this.getBundleBehaviour().putUrl(key, url);
     }
 
     protected void putIntForKey(String key, Integer integer) {

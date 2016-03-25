@@ -18,6 +18,7 @@ import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.screen.activity.PaymentFormActivity;
 import com.hipay.hipayfullservice.screen.adapter.PaymentProductsAdapter;
 import com.hipay.hipayfullservice.screen.helper.TransitionHelper;
+import com.hipay.hipayfullservice.screen.model.CustomTheme;
 import com.hipay.hipayfullservice.screen.widget.OffsetDecoration;
 
 /**
@@ -28,10 +29,16 @@ public class PaymentProductsFragment extends Fragment {
 
     private PaymentProductsAdapter mAdapter;
 
-    public static PaymentProductsFragment newInstance(Bundle paymentPageRequestBundle) {
+    public static PaymentProductsFragment newInstance(Bundle paymentPageRequestBundle, Bundle customTheme) {
 
         PaymentProductsFragment fragment = new PaymentProductsFragment();
-        fragment.setArguments(paymentPageRequestBundle);
+
+        Bundle bundle = new Bundle();
+        bundle.putBundle(PaymentPageRequest.TAG, paymentPageRequestBundle);
+
+        bundle.putBundle(CustomTheme.TAG, customTheme);
+
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -53,6 +60,10 @@ public class PaymentProductsFragment extends Fragment {
                 .getDimensionPixelSize(R.dimen.spacing_nano);
         categoriesView.addItemDecoration(new OffsetDecoration(spacing));
 
+        final Bundle paymentPageRequestBundle = getArguments().getBundle(PaymentPageRequest.TAG);
+        final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
+
+
         mAdapter = new PaymentProductsAdapter(getActivity());
         mAdapter.setOnItemClickListener(
                 new PaymentProductsAdapter.OnItemClickListener() {
@@ -61,7 +72,8 @@ public class PaymentProductsFragment extends Fragment {
                         Activity activity = getActivity();
                         startPaymentFormActivityWithTransition(activity,
                                 v.findViewById(R.id.payment_product_title),
-                                getArguments(),
+                                paymentPageRequestBundle,
+                                customThemeBundle,
                                 mAdapter.getItem(position));
                     }
                 });
@@ -83,7 +95,7 @@ public class PaymentProductsFragment extends Fragment {
         //TODO nothing for now
     }
 
-    private void startPaymentFormActivityWithTransition(Activity activity, View toolbar, Bundle paymentPageRequestBundle,
+    private void startPaymentFormActivityWithTransition(Activity activity, View toolbar, Bundle paymentPageRequestBundle, Bundle customThemeBundle,
                                                         PaymentProduct paymentProduct) {
 
         final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
@@ -95,7 +107,7 @@ public class PaymentProductsFragment extends Fragment {
          //Start the activity with the participants, animating from one to the other.
         final Bundle transitionBundle = sceneTransitionAnimation.toBundle();
 
-        Intent startIntent = PaymentFormActivity.getStartIntent(activity, paymentPageRequestBundle, paymentProduct);
+        Intent startIntent = PaymentFormActivity.getStartIntent(activity, paymentPageRequestBundle, customThemeBundle, paymentProduct);
         ActivityCompat.startActivityForResult(activity,
                 startIntent,
                 PaymentPageRequest.REQUEST_ORDER,

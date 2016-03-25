@@ -12,177 +12,128 @@
     tools:showIn="@layout/fragment_demo">
 
     <TextView
-        android:id="@+id/toolbar_sign_in"
+        android:id="@+id/generate_payment_textview"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        style="@style/PaymentScreens.TextAppearance.Title"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/colorPrimaryDark"
         android:elevation="@dimen/elevation_header"
         android:gravity="center_vertical"
         android:text="@string/generate_payment_screen"
         android:clipToPadding="false"
         tools:ignore="UnusedAttribute,NewApi" />
 
-    <Switch
+    <TextView
+        android:id="@+id/amount_currency_textview"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/colorPrimaryDark"
+        android:elevation="@dimen/elevation_header"
+        android:gravity="center_vertical"
+        android:text="@string/amount_and_currency"
+        android:clipToPadding="false"
+        tools:ignore="UnusedAttribute,NewApi" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
-        android:textAppearance="@style/PaymentScreens.TextAppearance.ListItem"
-        android:text="@string/group_cards"
-        />
+        android:orientation="horizontal">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="?android:attr/actionBarSize"
-        android:orientation="horizontal"
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/PaymentScreens.TextAppearance.ListItem"
-            android:elevation="@dimen/elevation_header"
-            android:gravity="center_vertical"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="@string/amount"
-            android:clipToPadding="false"
-            tools:ignore="UnusedAttribute,NewApi" />
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="?android:attr/actionBarSize"
-            android:minWidth="@dimen/spacing_huge"
-            android:clipToPadding="false"
-            android:transitionGroup="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            tools:ignore="UnusedAttribute,NewApi">
-
-            <EditText
-                android:id="@+id/amountEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/amount"
-                android:imeOptions="actionNext"
-                android:inputType="numberDecimal"
-                android:digits="0123456789.,"
-                android:maxLength="5"
-                android:textSize="@dimen/size_edit_text" />
-        </android.support.design.widget.TextInputLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="?android:attr/actionBarSize"
-        android:orientation="horizontal"
-        >
-
-        <TextView
-            android:id="@+id/fdjkdjks"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/PaymentScreens.TextAppearance.ListItem"
-            android:elevation="@dimen/elevation_header"
-            android:gravity="center_vertical"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="@string/currency"
-            android:clipToPadding="false"
-            tools:ignore="UnusedAttribute,NewApi" />
+        <EditText
+            android:id="@+id/amountEditText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:hint="225,00"
+            android:imeOptions="actionNext"
+            android:inputType="numberDecimal"
+            android:digits="0123456789.,"
+            android:maxLength="5"
+            android:textSize="@dimen/size_edit_text" />
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/currency_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:minHeight="?android:attr/actionBarSize"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
             />
-        <!--
-        style="@style/Base.Widget.AppCompat.Spinner.Underlined"
-        -->
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <Switch
+        android:id="@+id/group_card_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?android:attr/actionBarSize"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="@string/group_cards"
+        />
+
+    <Switch
+
+        android:id="@+id/reusable_token_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
         android:text="@string/reusable_token"
-        android:textAppearance="@style/PaymentScreens.TextAppearance.ListItem"
+        android:textColor="@color/colorPrimaryDark"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         />
 
-    <RelativeLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
-        android:orientation="horizontal"
-        >
-
+        android:orientation="horizontal">
         <TextView
-            android:id="@+id/hffdhj"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/threeds_textview"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@color/colorPrimaryDark"
             android:elevation="@dimen/elevation_header"
             android:gravity="center_vertical"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="@string/three_ds"
-            style="@style/PaymentScreens.TextAppearance.ListItem"
+            android:text="3DS Authentication"
             android:clipToPadding="false"
             tools:ignore="UnusedAttribute,NewApi" />
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/threeds_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:minHeight="?android:attr/actionBarSize"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
             />
-        <!--
-        style="@style/Base.Widget.AppCompat.Spinner.Underlined"
-        -->
+    </LinearLayout>
 
-    </RelativeLayout>
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/fhddhj"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/PaymentScreens.TextAppearance.ListItem"
+            android:id="@+id/color_textview"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@color/colorPrimaryDark"
             android:elevation="@dimen/elevation_header"
             android:gravity="center_vertical"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="@string/color"
-            android:clipToPadding="false"
+            android:text="Color"
             tools:ignore="UnusedAttribute,NewApi" />
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/color_spinner"
-            android:layout_width="wrap_content"
-            android:minWidth="@dimen/spacing_huge"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:minHeight="?android:attr/actionBarSize"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
             />
-            <!--
-            style="@style/Base.Widget.AppCompat.Spinner.Underlined"
-            -->
 
-    </RelativeLayout>
-
+    </LinearLayout>
 </LinearLayout>

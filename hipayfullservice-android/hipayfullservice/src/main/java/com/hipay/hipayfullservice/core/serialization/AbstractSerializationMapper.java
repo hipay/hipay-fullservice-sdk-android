@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.hipay.hipayfullservice.core.models.AbstractModel;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
+import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.AbstractRequest;
 import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.hipayfullservice.core.requests.info.PersonalInfoRequest;
@@ -18,6 +19,7 @@ import com.hipay.hipayfullservice.core.serialization.interfaces.order.OrderReque
 import com.hipay.hipayfullservice.core.serialization.interfaces.order.PaymentPageRequestSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.payment.CardTokenPaymentMethodRequestSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.securevault.SecureVaultRequestSerialization;
+import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
 import java.util.Map;
 
@@ -56,11 +58,20 @@ public abstract class AbstractSerializationMapper {
 
     private void initSerializing(AbstractModel model) {
 
-
         if (model instanceof PaymentProduct) {
 
             PaymentProduct paymentProduct = (PaymentProduct) model;
             this.setSerialization(new PaymentProduct.PaymentProductSerialization(paymentProduct));
+
+        } else if (model instanceof CustomTheme) {
+
+            CustomTheme customTheme = (CustomTheme) model;
+            this.setSerialization(new CustomTheme.CustomThemeSerialization(customTheme));
+
+        } else if (model instanceof Transaction) {
+
+            Transaction transaction = (Transaction) model;
+            this.setSerialization(new Transaction.TransactionSerialization(transaction));
         }
     }
 

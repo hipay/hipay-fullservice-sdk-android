@@ -53,7 +53,7 @@
         android:layout_marginRight="@dimen/spacing_double"
         android:layout_marginLeft="@dimen/spacing_double"
         android:src="@drawable/ic_tick"
-        app:backgroundTint="@color/hpf_accent"
+        app:backgroundTint="@color/colorAccent" />
         android:visibility="visible" />
 
 </android.support.design.widget.CoordinatorLayout>

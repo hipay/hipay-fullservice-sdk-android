@@ -1,6 +1,7 @@
 package com.hipay.hipayfullservice.screen.activity;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -9,20 +10,20 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.animation.Interpolator;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
+import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.screen.fragment.PaymentFormFragment;
 import com.hipay.hipayfullservice.screen.helper.ApiLevelHelper;
-import com.hipay.hipayfullservice.screen.model.Theme;
+import com.hipay.hipayfullservice.screen.model.CustomTheme;
 import com.hipay.hipayfullservice.screen.widget.TextSharedElementCallback;
 
 import java.util.List;
@@ -30,23 +31,23 @@ import java.util.List;
 /**
  * Created by nfillion on 29/02/16.
  */
-public class PaymentFormActivity extends AppCompatActivity {
+public class PaymentFormActivity extends AppCompatActivity implements PaymentFormFragment.OnCallbackOrderListener {
 
 private static final String TAG = "PaymentProductsActivity";
 
     private static final String FRAGMENT_TAG = "PaymentForm";
 
-    private Interpolator mInterpolator;
-    private PaymentProduct mPaymentProduct;
-    private PaymentFormFragment mPaymentFormFragment;
+    //private Interpolator mInterpolator;
+    //private PaymentProduct mPaymentProduct;
+    //private PaymentFormFragment mPaymentFormFragment;
     //private FloatingActionButton mFormFab;
     //private ImageView mIcon;
 
+    private CustomTheme customTheme;
     private boolean mSavedStateIsPlaying;
     private ImageButton mToolbarBack;
 
-    public static Intent getStartIntent(Context context, Bundle paymentPageRequestBundle, PaymentProduct paymentProduct) {
-
+    public static Intent getStartIntent(Context context, Bundle paymentPageRequestBundle, Bundle themeBundle, PaymentProduct paymentProduct) {
 
         Intent starter = new Intent(context, PaymentFormActivity.class);
 
@@ -55,7 +56,27 @@ private static final String TAG = "PaymentProductsActivity";
         Bundle productBundle = paymentProduct.toBundle();
         starter.putExtra(PaymentProduct.TAG, productBundle);
 
+        starter.putExtra(CustomTheme.TAG, themeBundle);
+
         return starter;
+    }
+
+    @Override
+    public void onCallbackOrderReceived(Transaction transaction, Exception exception) {
+
+        if (transaction != null) {
+
+            Intent intent = getIntent();
+            intent.putExtra(Transaction.TAG, transaction.toBundle());
+
+            setResult(R.id.transaction_succeed, intent);
+
+        } else {
+
+            //TODO handle exception
+        }
+
+        finish();
     }
 
     @Override
@@ -63,17 +84,16 @@ private static final String TAG = "PaymentProductsActivity";
 
         super.onCreate(savedInstanceState);
 
+        Bundle customThemeBundle = getIntent().getBundleExtra(CustomTheme.TAG);
+        CustomTheme customTheme = CustomTheme.fromBundle(customThemeBundle);
+
+        this.setCustomTheme(customTheme);
+
+        //this.setTheme(this.getCustomTheme().getStyleId());
         setContentView(R.layout.activity_payment_form);
 
-        mInterpolator = new FastOutSlowInInterpolator();
+        //mInterpolator = new FastOutSlowInInterpolator();
 
-        if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.LOLLIPOP)) {
-
-            Theme theme = Theme.blue;
-            Window window = getWindow();
-            window.setStatusBarColor(ContextCompat.getColor(this,
-                    theme.getPrimaryDarkColor()));
-        }
 
         initToolbar();
 
@@ -120,15 +140,25 @@ private static final String TAG = "PaymentProductsActivity";
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void initToolbar() {
+
+        if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.LOLLIPOP)) {
+
+            Window window = getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(this,
+                    this.getCustomTheme().getColorPrimaryDarkId()));
+        }
 
         mToolbarBack = (ImageButton) findViewById(R.id.back);
         //mToolbarBack.setBackgroundTintList(ContextCompat.getColor(this,
                 //Theme.blue.getTextPrimaryColor()));
 
+        //this.setTheme(Theme.red);
+
         //this.setToolbarElevation(true);
         mToolbarBack.setColorFilter((ContextCompat.getColor(this,
-                Theme.blue.getTextPrimaryColor())));
+                getCustomTheme().getTextColorPrimaryId())));
 
         mToolbarBack.setOnClickListener(mOnClickListener);
         TextView titleView = (TextView) findViewById(R.id.payment_product_title);
@@ -137,12 +167,11 @@ private static final String TAG = "PaymentProductsActivity";
         PaymentProduct paymentProduct = PaymentProduct.fromBundle(paymentProductBundle);
 
         titleView.setText(paymentProduct.getCode());
-        //TODO set the right color
         titleView.setTextColor(ContextCompat.getColor(this,
-                Theme.blue.getTextPrimaryColor()));
+                getCustomTheme().getTextColorPrimaryId()));
 
         titleView.setBackgroundColor(ContextCompat.getColor(this,
-                Theme.blue.getPrimaryColor()));
+                getCustomTheme().getColorPrimaryId()));
 
         //if (mSavedStateIsPlaying) {
         //// the toolbar should not have more elevation than the content while playing
@@ -205,25 +234,26 @@ private static final String TAG = "PaymentProductsActivity";
             //return;
         //}
 
-        ViewCompat.animate(mToolbarBack)
-                .scaleX(0f)
-                .scaleY(0f)
-                .alpha(0f)
-                .setDuration(100)
-               // .setListener(new ViewPropertyAnimatorListenerAdapter() {
-               //     @SuppressLint("NewApi")
-               //     @Override
-               //     public void onAnimationEnd(View view) {
-               //         //if (isFinishing() ||
-               //                 //(ApiLevelHelper.isAtLeast(Build.VERSION_CODES.JELLY_BEAN_MR1)
-               //                         //&& isDestroyed())) {
-               //             //return;
-               //         //}
-               //     }
-               // })
-                .start();
+        super.onBackPressed();
 
-        PaymentFormActivity.super.onBackPressed();
+        //ViewCompat.animate(mToolbarBack)
+                //.scaleX(0f)
+                //.scaleY(0f)
+                //.alpha(0f)
+                //.setDuration(100)
+                //.setListener(new ViewPropertyAnimatorListenerAdapter() {
+                //    @SuppressLint("NewApi")
+                //    @Override
+                //    public void onAnimationEnd(View view) {
+                //        //if (isFinishing() ||
+                //                //(ApiLevelHelper.isAtLeast(Build.VERSION_CODES.JELLY_BEAN_MR1)
+                //                        //&& isDestroyed())) {
+                //            //return;
+                //        //}
+                //    }
+                //})
+                //.start();
+
 
 
         // Scale the icon and fab to 0 size before calling onBackPressed if it exists.
@@ -253,4 +283,13 @@ private static final String TAG = "PaymentProductsActivity";
                 //})
                 //.start();
     }
+
+    public CustomTheme getCustomTheme() {
+        return customTheme;
+    }
+
+    public void setCustomTheme(CustomTheme customTheme) {
+        this.customTheme = customTheme;
+    }
+
 }
