@@ -2,6 +2,7 @@ package com.hipay.hipayfullservice.core.network;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
 import java.io.IOException;
@@ -28,29 +29,38 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
 
     protected HttpResult backgroundOperation() {
 
+
         HttpResult httpResult = new HttpResult();
         HttpURLConnection urlConnection = null;
 
-        try {
-
-            urlConnection = this.getHttpURLConnection();
-
-            httpResult.setStatusCode(urlConnection.getResponseCode());
-            httpResult.setBodyStream(urlConnection.getInputStream());
-            httpResult.setErrorStream(urlConnection.getErrorStream());
-
-        } catch (IOException exception) {
-
-            httpResult.setIoException(exception);
-
-        } finally {
-
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-
-            return httpResult;
+        boolean isCanceled = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            isCanceled = this.isLoadInBackgroundCanceled();
         }
+
+        if (!isCanceled) {
+
+            try {
+
+                urlConnection = this.getHttpURLConnection();
+
+                httpResult.setStatusCode(urlConnection.getResponseCode());
+                httpResult.setBodyStream(urlConnection.getInputStream());
+                httpResult.setErrorStream(urlConnection.getErrorStream());
+
+            } catch (IOException exception) {
+
+                httpResult.setIoException(exception);
+
+            } finally {
+
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+        }
+
+        return httpResult;
     }
 
     @Override

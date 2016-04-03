@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -24,7 +25,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
@@ -46,24 +46,20 @@ import java.util.Calendar;
 
 public class DemoFragment extends Fragment {
 
-    private static final String ARG_EDIT = "EDIT";
     private FloatingActionButton mDoneFab;
     private EditText mAmount;
     private CustomTheme customTheme;
 
-    public static DemoFragment newInstance(boolean edit) {
-        Bundle args = new Bundle();
-        args.putBoolean(ARG_EDIT, edit);
+    public static DemoFragment newInstance() {
+
         DemoFragment fragment = new DemoFragment();
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
 
-        }
+        super.onCreate(savedInstanceState);
 
         CustomTheme theme = new CustomTheme(
                 R.color.hpf_primary,
@@ -71,8 +67,6 @@ public class DemoFragment extends Fragment {
                 R.color.theme_blue_text);
 
         this.setCustomTheme(theme);
-
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -87,7 +81,6 @@ public class DemoFragment extends Fragment {
 
                 Bundle transactionBundle = data.getBundleExtra(Transaction.TAG);
                 Transaction transaction = Transaction.fromBundle(transactionBundle);
-
 
                 Snackbar snackbar = Snackbar.make(mDoneFab, "Transaction succeed",
                         Snackbar.LENGTH_INDEFINITE);
@@ -117,6 +110,7 @@ public class DemoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         final View contentView = inflater.inflate(R.layout.fragment_demo, container, false);
 
         AppCompatSpinner spinner = (AppCompatSpinner) contentView.findViewById(R.id.currency_spinner);
@@ -286,7 +280,7 @@ public class DemoFragment extends Fragment {
         paymentPageRequest.setAmount(225.f);
         paymentPageRequest.setCurrency("EUR");
 
-        StringBuilder stringBuilder = new StringBuilder("TEST_SDK_IOS_").append(Calendar.getInstance().getTimeInMillis()/1000);
+        StringBuilder stringBuilder = new StringBuilder("TEST_SDK_Android_").append(Calendar.getInstance().getTimeInMillis()/1000);
 
         paymentPageRequest.setOrderId(stringBuilder.toString());
         paymentPageRequest.setShortDescription("Outstanding item");
@@ -336,8 +330,8 @@ public class DemoFragment extends Fragment {
         ((TextView) demoActivity.findViewById(R.id.threeds_textview)).setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
         ((TextView) demoActivity.findViewById(R.id.color_textview)).setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
 
-        ((Switch) demoActivity.findViewById(R.id.group_card_switch)).setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
-        ((Switch) demoActivity.findViewById(R.id.reusable_token_switch)).setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
+        ((SwitchCompat) demoActivity.findViewById(R.id.group_card_switch)).setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
+        ((SwitchCompat) demoActivity.findViewById(R.id.reusable_token_switch)).setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
 
     }
 

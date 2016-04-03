@@ -32,7 +32,7 @@ public class DemoActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.demo_container, DemoFragment.newInstance(false)).commit();
+                    .replace(R.id.demo_container, DemoFragment.newInstance()).commit();
         }
     }
 

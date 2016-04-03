@@ -1,10 +1,13 @@
 package com.hipay.hipayfullservice.core.client;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Loader;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.hipay.hipayfullservice.core.client.interfaces.IReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.OrderReqHandler;
@@ -29,6 +32,7 @@ public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCall
 
     //TODO set it weakreference
     private Context context;
+    private AbstractOperation operation;
 
     public AbstractClient(Context ctx) {
         context = ctx;
@@ -38,6 +42,19 @@ public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCall
 
         this.initReqHandler(request, callback);
         this.launchOperation();
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void cancelOperation() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+
+            AbstractOperation operation = this.getOperation();
+            if (operation != null) {
+
+                operation.cancelLoad();
+            }
+        }
     }
 
     protected void launchOperation() {
@@ -80,8 +97,8 @@ public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCall
     @Override
     public Loader<HttpResult> onCreateLoader(int id, Bundle bundle) {
 
-        AbstractOperation operation = this.getOperation(this.getContext(), bundle);
-        return operation;
+        this.setOperation(this.getOperation(this.getContext(), bundle));
+        return this.getOperation();
     }
 
     @Override
@@ -141,5 +158,13 @@ public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCall
 
     protected void setCallback(T2 callback) {
         this.callback = callback;
+    }
+
+    public AbstractOperation getOperation() {
+        return operation;
+    }
+
+    public void setOperation(AbstractOperation operation) {
+        this.operation = operation;
     }
 }
