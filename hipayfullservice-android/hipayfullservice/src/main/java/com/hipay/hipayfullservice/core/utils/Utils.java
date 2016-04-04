@@ -1,5 +1,6 @@
 package com.hipay.hipayfullservice.core.utils;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -77,5 +78,17 @@ public class Utils {
         }
 
         return TextUtils.join("&", parameters);
+    }
+
+    public static String bundleToString(Bundle bundle) {
+        if (bundle == null) {
+            return null;
+        }
+        String string = "Bundle{";
+        for (String key : bundle.keySet()) {
+            string += " " + key + " => " + bundle.get(key) + ";";
+        }
+        string += " }Bundle";
+        return string;
     }
 }

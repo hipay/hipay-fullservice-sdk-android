@@ -1,16 +1,25 @@
 package com.hipay.hipayfullservice.core.models;
 
+import android.os.Bundle;
+
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
-import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+import com.hipay.hipayfullservice.core.mapper.interfaces.BundleMapper;
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
+import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.hipayfullservice.core.serialization.BundleSerialization;
+import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
 import org.json.JSONObject;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
  * Created by nfillion on 25/01/16.
  */
-public class PaymentProduct {
+public class PaymentProduct extends AbstractModel {
+
+    public static final String TAG = "Payment_product";
 
     protected String code;
     protected String paymentProductId;
@@ -33,6 +42,18 @@ public class PaymentProduct {
 
     public PaymentProduct() {
 
+    }
+
+    public static PaymentProduct fromBundle(Bundle bundle) {
+
+        PaymentProductMapper mapper = new PaymentProductMapper(bundle);
+        return mapper.mappedObjectFromBundle();
+    }
+
+    public Bundle toBundle() {
+
+        PaymentProduct.PaymentProductSerializationMapper mapper = new PaymentProduct.PaymentProductSerializationMapper(this);
+        return mapper.getSerializedBundle();
     }
 
     public static SecurityCodeType securityCodeTypeForPaymentProductCode(String paymentProductCode) {
@@ -231,24 +252,47 @@ public class PaymentProduct {
         this.tokenizable = tokenizable;
     }
 
+    protected static class PaymentProductSerializationMapper extends AbstractSerializationMapper {
+
+        protected PaymentProductSerializationMapper(PaymentProduct paymentProduct) {
+            super(paymentProduct);
+        }
+
+        @Override
+        protected String getQueryString() {
+
+            return super.getQueryString();
+        }
+
+        @Override
+        protected Bundle getSerializedBundle() {
+
+            return super.getSerializedBundle();
+        }
+    }
 
     public static class PaymentProductMapper extends AbstractMapper {
-        public PaymentProductMapper(JSONObject jsonObject) {
-            super(jsonObject);
+
+        public PaymentProductMapper(Object rawData) {
+            super(rawData);
         }
 
         @Override
         protected boolean isValid() {
 
-            if (this.getBehaviour() instanceof MapBehaviour) {
+            if (this.getBehaviour() instanceof MapMapper) {
 
                 if (this.getStringForKey("code") != null) return true;
+
+            } else if (getBehaviour() instanceof BundleMapper) {
+
+                return true;
             }
 
-            return false;
+            return true;
         }
 
-        protected Object mappedObject() {
+        protected PaymentProduct mappedObject() {
 
             //TODO build operation object from transactionRelatedItem
 
@@ -261,8 +305,48 @@ public class PaymentProduct {
             object.setTokenizable(this.getBoolForKey("tokenizable"));
 
             return object;
-
         }
 
+        @Override
+        protected PaymentProduct mappedObjectFromBundle() {
+
+            //TODO same method as mappedObject
+            return this.mappedObject();
+        }
+    }
+
+
+    public static class PaymentProductSerialization extends AbstractSerialization {
+
+        //TODO time to put a rawData instead of model/request in initializer
+        public PaymentProductSerialization(PaymentProduct paymentProduct) {
+            this.setModel(paymentProduct);
+        }
+
+        @Override
+        public Map<String, String> getSerializedRequest() {
+            return null;
+        }
+
+        @Override
+        public Bundle getSerializedBundle() {
+
+            this.setBundleBehaviour(new BundleSerialization());
+
+            PaymentProduct paymentProduct = (PaymentProduct)this.getModel();
+
+            this.putStringForKey("code", paymentProduct.getCode());
+            this.putStringForKey("description", paymentProduct.getPaymentProductDescription());
+            this.putStringForKey("paymentProductId", paymentProduct.getPaymentProductId());
+            this.putStringForKey("paymentProductCategoryCode", paymentProduct.getPaymentProductCategoryCode());
+            this.putBoolForKey("tokenizable", paymentProduct.isTokenizable());
+
+            return this.getBundle();
+        }
+
+        @Override
+        public String getQueryString() {
+            return null;
+        }
     }
 }

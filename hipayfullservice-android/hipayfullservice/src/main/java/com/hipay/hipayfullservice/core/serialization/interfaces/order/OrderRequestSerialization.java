@@ -1,6 +1,8 @@
 package com.hipay.hipayfullservice.core.serialization.interfaces.order;
 
 import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
+import com.hipay.hipayfullservice.core.requests.payment.AbstractPaymentMethodRequest;
+import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.hipayfullservice.core.utils.Utils;
 
 import java.util.Map;
@@ -22,6 +24,19 @@ public class OrderRequestSerialization extends OrderRelatedRequestSerialization 
         OrderRequest orderRequest = (OrderRequest)this.getRequest();
 
         relatedRequestMap.put("payment_product", orderRequest.getPaymentProductCode());
+
+        //TODO add payment method
+
+        AbstractPaymentMethodRequest paymentMethodRequest = orderRequest.getPaymentMethod();
+
+        //TODO the handling better
+        if (paymentMethodRequest instanceof CardTokenPaymentMethodRequest) {
+
+            CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest = (CardTokenPaymentMethodRequest)paymentMethodRequest;
+            Map<String, String> cardTokenSerializedObject = cardTokenPaymentMethodRequest.getSerializedObject();
+
+            relatedRequestMap.putAll(cardTokenSerializedObject);
+        }
 
         return relatedRequestMap;
     }

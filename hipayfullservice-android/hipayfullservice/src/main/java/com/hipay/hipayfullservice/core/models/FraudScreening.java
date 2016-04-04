@@ -1,12 +1,12 @@
 package com.hipay.hipayfullservice.core.models;
 
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
-import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 
 /**
  * Created by nfillion on 25/01/16.
  */
-public class FraudScreening {
+public class FraudScreening extends AbstractModel {
 
     protected Integer scoring;
     protected FraudScreeningResult result;
@@ -118,14 +118,11 @@ public class FraudScreening {
     }
 
     public static class FraudScreeningMapper extends AbstractMapper {
-        public FraudScreeningMapper() {
-            super();
-        }
 
         @Override
         protected boolean isValid() {
 
-            if (this.getBehaviour() instanceof MapBehaviour) {
+            if (this.getBehaviour() instanceof MapMapper) {
 
                 if (    this.getStringForKey("result") != null &&
                         this.getIntegerForKey("scoring") != null) {
@@ -158,6 +155,11 @@ public class FraudScreening {
 
             return object;
 
+        }
+
+        @Override
+        protected Object mappedObjectFromBundle() {
+            return null;
         }
     }
 }

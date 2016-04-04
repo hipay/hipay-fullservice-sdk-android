@@ -1,8 +1,10 @@
 package com.hipay.hipayfullservice.core.serialization.interfaces.order;
 
+import android.os.Bundle;
+
 import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.hipayfullservice.core.requests.order.OrderRelatedRequest;
-import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractRequestSerialization;
+import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -11,8 +13,9 @@ import java.util.Map;
 /**
  * Created by nfillion on 04/02/16.
  */
-public abstract class OrderRelatedRequestSerialization extends AbstractRequestSerialization {
+public abstract class OrderRelatedRequestSerialization extends AbstractSerialization {
 
+    @Override
     public Map<String, String> getSerializedRequest() {
 
         OrderRelatedRequest orderRelatedRequest = (OrderRelatedRequest)this.getRequest();
@@ -97,5 +100,91 @@ public abstract class OrderRelatedRequestSerialization extends AbstractRequestSe
         while (retMap.values().remove(null));
 
         return retMap;
+    }
+
+    @Override
+    public Bundle getSerializedBundle() {
+
+        OrderRelatedRequest orderRelatedRequest = (OrderRelatedRequest)this.getRequest();
+
+        //TODO the bundle is set in concrete class in paymentPageRequestSerialization (setBehaviour)
+        //Bundle bundle = new Bundle();
+
+        this.putStringForKey("orderid", orderRelatedRequest.getOrderId());
+
+        OrderRelatedRequest.OrderRequestOperation operation = orderRelatedRequest.getOperation();
+        if (operation != null) {
+            this.putIntForKey("operation", operation.getIntegerValue());
+        }
+
+        this.putStringForKey("description", orderRelatedRequest.getShortDescription());
+        this.putStringForKey("long_description", orderRelatedRequest.getLongDescription());
+        this.putStringForKey("currency", orderRelatedRequest.getCurrency());
+        this.putFloatForKey("amount",orderRelatedRequest.getAmount());
+
+        //retMap.put("shipping", String.valueOf(orderRelatedRequest.getShipping()));
+        //retMap.put("tax", String.valueOf(orderRelatedRequest.getTax()));
+
+        this.putStringForKey("cid", orderRelatedRequest.getClientId());
+        this.putStringForKey("ipaddr", orderRelatedRequest.getIpAddress());
+        this.putStringForKey("http_accept", orderRelatedRequest.getHTTPAccept());
+        this.putStringForKey("http_user_agent", orderRelatedRequest.getHTTPUserAgent());
+        this.putStringForKey("device_fingerprint", orderRelatedRequest.getDeviceFingerprint());
+        this.putStringForKey("language", orderRelatedRequest.getLanguage());
+
+        URL acceptUrl = orderRelatedRequest.getAcceptURL();
+        if (acceptUrl != null) {
+            this.putStringForKey("accept_url", acceptUrl.toString());
+        }
+
+        URL declineUrl = orderRelatedRequest.getDeclineURL();
+        if (declineUrl != null) {
+            //retMap.put("decline_url",(declineUrl.toString()));
+            this.putStringForKey("decline_url", declineUrl.toString());
+        }
+
+        URL pendingUrl = orderRelatedRequest.getPendingURL();
+        if (pendingUrl != null) {
+            this.putStringForKey("pending_url", pendingUrl.toString());
+        }
+
+        URL exceptionUrl = orderRelatedRequest.getExceptionURL();
+        if (exceptionUrl != null) {
+            this.putStringForKey("exception_url", exceptionUrl.toString());
+        }
+
+        URL cancelUrl = orderRelatedRequest.getCancelURL();
+        if (cancelUrl != null) {
+            this.putStringForKey("cancel_url", cancelUrl.toString());
+        }
+
+        //TODO custom data json object
+
+        this.putStringForKey("cdata1", orderRelatedRequest.getCdata1());
+        this.putStringForKey("cdata2", orderRelatedRequest.getCdata2());
+        this.putStringForKey("cdata3", orderRelatedRequest.getCdata3());
+        this.putStringForKey("cdata4", orderRelatedRequest.getCdata4());
+        this.putStringForKey("cdata5", orderRelatedRequest.getCdata5());
+        this.putStringForKey("cdata6", orderRelatedRequest.getCdata6());
+        this.putStringForKey("cdata7", orderRelatedRequest.getCdata7());
+        this.putStringForKey("cdata8", orderRelatedRequest.getCdata8());
+        this.putStringForKey("cdata9", orderRelatedRequest.getCdata9());
+        this.putStringForKey("cdata10", orderRelatedRequest.getCdata10());
+
+
+        //TODO handle customerInfoRequest
+        //CustomerInfoRequest customerInfoRequest = orderRelatedRequest.getCustomer();
+
+        //Map<String, String> customerInfoMap = customerInfoRequest.getSerializedObject();
+        //retMap.putAll(customerInfoMap);
+
+        //TODO check about personal info prefix.
+
+        /*
+        PersonalInfoRequest personalInfoRequest = orderRelatedRequest.getShippingAddress();
+        Map<String, String> personalInfoMap = personalInfoRequest.getSerializedObject();
+        retMap.putAll(personalInfoMap);
+        */
+        return this.getBundle();
     }
 }

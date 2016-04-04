@@ -1,6 +1,10 @@
 package com.hipay.hipayfullservice.core.requests.order;
 
+import android.os.Bundle;
+
 import com.hipay.hipayfullservice.core.client.config.ClientConfig;
+import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
+import com.hipay.hipayfullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.hipayfullservice.core.requests.AbstractRequest;
 import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.hipayfullservice.core.requests.info.PersonalInfoRequest;
@@ -24,9 +28,9 @@ public class OrderRelatedRequest extends AbstractRequest {
     protected String shortDescription;
     protected String longDescription;
     protected String currency;
-    protected Number amount;
-    protected Number shipping;
-    protected Number tax;
+    protected Float amount;
+    protected Float shipping;
+    protected Float tax;
     protected String clientId;
     protected String ipAddress;
 
@@ -240,27 +244,27 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.currency = currency;
     }
 
-    public Number getAmount() {
+    public Float getAmount() {
         return amount;
     }
 
-    public void setAmount(Number amount) {
+    public void setAmount(Float amount) {
         this.amount = amount;
     }
 
-    public Number getShipping() {
+    public Float getShipping() {
         return shipping;
     }
 
-    public void setShipping(Number shipping) {
+    public void setShipping(Float shipping) {
         this.shipping = shipping;
     }
 
-    public Number getTax() {
+    public Float getTax() {
         return tax;
     }
 
-    public void setTax(Number tax) {
+    public void setTax(Float tax) {
         this.tax = tax;
     }
 
@@ -455,5 +459,140 @@ public class OrderRelatedRequest extends AbstractRequest {
 
     public void setShippingAddress(PersonalInfoRequest shippingAddress) {
         this.shippingAddress = shippingAddress;
+    }
+
+    protected static class OrderRelatedRequestMapper extends AbstractMapper {
+        public OrderRelatedRequestMapper(Bundle object) {
+            super(object);
+        }
+
+        @Override
+        protected boolean isValid() {
+
+            if (this.getBehaviour() instanceof BundleMapper) {
+
+                //TODO add more validation
+                return true;
+            }
+
+            return false;
+        }
+
+        protected OrderRelatedRequest mappedObjectFromBundle() {
+
+            //TODO get mapped object from transactionRelatedItem superclass
+
+            //OrderRelatedRequest orderRelatedRequest = super.mappedObject();
+
+            OrderRelatedRequest orderRelatedRequest = new OrderRelatedRequest();
+
+            //TODO handle this
+            //relatedRequestMap.put("payment_product_list", null);
+            //relatedRequestMap.put("payment_product_category_list", null);
+
+            //relatedRequestMap.put("eci", null);
+            //relatedRequestMap.put("authentication_indicator", null);
+
+            //TODO check what multiUse returns
+
+            orderRelatedRequest.setOrderId(this.getStringForKey("orderid"));
+
+            Integer operationValue = this.getIntegerForKey("operation");
+            if (operationValue != null) {
+                orderRelatedRequest.setOperation(OrderRequestOperation.fromIntegerValue(operationValue));
+            }
+
+            orderRelatedRequest.setShortDescription(this.getStringForKey("description"));
+            orderRelatedRequest.setLongDescription(this.getStringForKey("long_description"));
+            orderRelatedRequest.setCurrency(this.getStringForKey("currency"));
+            orderRelatedRequest.setAmount(this.getFloatForKey("amount"));
+
+            //retMap.put("tax", String.valueOf(orderRelatedRequest.getTax()));
+
+            orderRelatedRequest.setClientId(this.getStringForKey("cid"));
+            orderRelatedRequest.setIpAddress(this.getStringForKey("ipaddr"));
+            orderRelatedRequest.setHTTPAccept(this.getStringForKey("http_accept"));
+            orderRelatedRequest.setHTTPUserAgent(this.getStringForKey("http_user_agent"));
+            orderRelatedRequest.setDeviceFingerprint(this.getStringForKey("device_fingerprint"));
+            orderRelatedRequest.setLanguage(this.getStringForKey("language"));
+
+            String acceptUrlValue = this.getStringForKey("accept_url");
+            if (acceptUrlValue != null) {
+
+                try {
+                    URL acceptUrl = new URL(acceptUrlValue);
+                    orderRelatedRequest.setAcceptURL(acceptUrl);
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String declineUrlValue = this.getStringForKey("decline_url");
+            if (declineUrlValue != null) {
+
+                try {
+                    URL declineUrl = new URL(declineUrlValue);
+                    orderRelatedRequest.setDeclineURL(declineUrl);
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String pendingUrlValue = this.getStringForKey("pending_url");
+            if (pendingUrlValue != null) {
+
+                try {
+                    URL pendingUrl = new URL(pendingUrlValue);
+                    orderRelatedRequest.setPendingURL(pendingUrl);
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String exceptionUrlValue = this.getStringForKey("exception_url");
+            if (exceptionUrlValue != null) {
+
+                try {
+                    URL exceptionUrl = new URL(exceptionUrlValue);
+                    orderRelatedRequest.setExceptionURL(exceptionUrl);
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String cancelUrlValue = this.getStringForKey("cancel_url");
+            if (cancelUrlValue != null) {
+
+                try {
+                    URL cancelUrl = new URL(cancelUrlValue);
+                    orderRelatedRequest.setCancelURL(cancelUrl);
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            orderRelatedRequest.setCdata1(this.getStringForKey("cdata1"));
+            orderRelatedRequest.setCdata2(this.getStringForKey("cdata2"));
+            orderRelatedRequest.setCdata3(this.getStringForKey("cdata3"));
+            orderRelatedRequest.setCdata4(this.getStringForKey("cdata4"));
+            orderRelatedRequest.setCdata5(this.getStringForKey("cdata5"));
+            orderRelatedRequest.setCdata6(this.getStringForKey("cdata6"));
+            orderRelatedRequest.setCdata7(this.getStringForKey("cdata7"));
+            orderRelatedRequest.setCdata8(this.getStringForKey("cdata8"));
+            orderRelatedRequest.setCdata9(this.getStringForKey("cdata9"));
+            orderRelatedRequest.setCdata10(this.getStringForKey("cdata10"));
+
+            return orderRelatedRequest;
+        }
+
+        @Override
+        protected OrderRelatedRequest mappedObject() {
+            return null;
+        }
     }
 }

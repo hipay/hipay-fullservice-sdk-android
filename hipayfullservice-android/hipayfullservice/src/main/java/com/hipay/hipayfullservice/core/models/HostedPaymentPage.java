@@ -1,14 +1,14 @@
 package com.hipay.hipayfullservice.core.models;
 
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
-import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 
 import java.net.URL;
 
 /**
  * Created by nfillion on 25/01/16.
  */
-public class HostedPaymentPage {
+public class HostedPaymentPage extends AbstractModel {
 
     protected Boolean test;
     protected String mid;
@@ -152,7 +152,7 @@ public class HostedPaymentPage {
         @Override
         protected boolean isValid() {
 
-            if (this.getBehaviour() instanceof MapBehaviour) {
+            if (this.getBehaviour() instanceof MapMapper) {
 
                 if (this.getURLForKey("forwardUrl") != null) {
                     return true;
@@ -186,6 +186,11 @@ public class HostedPaymentPage {
 
             return object;
 
+        }
+
+        @Override
+        protected Object mappedObjectFromBundle() {
+            return null;
         }
     }
 

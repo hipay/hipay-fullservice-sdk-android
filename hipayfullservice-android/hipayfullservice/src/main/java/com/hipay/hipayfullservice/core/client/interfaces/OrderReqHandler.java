@@ -55,7 +55,6 @@ public class OrderReqHandler extends AbstractReqHandler {
                 OrderRequestCallback orderRequestCallback = (OrderRequestCallback)this.getCallback();
                 orderRequestCallback.onSuccess(transaction);
 
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -64,5 +63,10 @@ public class OrderReqHandler extends AbstractReqHandler {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public int getLoaderId() {
+        return 0;
     }
 }

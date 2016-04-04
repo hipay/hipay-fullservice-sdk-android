@@ -23,6 +23,10 @@ public class ClientConfig {
     public static final String GatewayCallbackURLPathName = "gateway";
     public static final String GatewayCallbackURLOrderPathName = "order";
 
+    public static final String SecureVaultClientBaseURLStage = "https://stage-secure-vault.hipay-tpp.com/rest/v1";
+    public static final String SecureVaultClientBaseURLProduction = "https://secure-vault.hipay-tpp.com/rest/v1";
+
+
     private ClientConfig() {
     }
 

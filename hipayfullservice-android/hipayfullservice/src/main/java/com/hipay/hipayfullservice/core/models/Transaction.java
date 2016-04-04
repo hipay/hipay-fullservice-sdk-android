@@ -1,6 +1,11 @@
 package com.hipay.hipayfullservice.core.models;
 
-import com.hipay.hipayfullservice.core.mapper.interfaces.MapBehaviour;
+import android.os.Bundle;
+
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
+import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.hipayfullservice.core.serialization.BundleSerialization;
+import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
 import org.json.JSONObject;
 
@@ -12,6 +17,8 @@ import java.util.Map;
  * Created by nfillion on 25/01/16.
  */
 public class Transaction extends TransactionRelatedItem {
+
+    public static final String TAG = "Transaction";
 
     protected TransactionState state;
     protected String reason;
@@ -57,10 +64,19 @@ public class Transaction extends TransactionRelatedItem {
 
         TransactionMapper mapper = new TransactionMapper(object);
         return mapper.mappedObject();
-
     }
 
+    public static Transaction fromBundle(Bundle bundle) {
 
+        TransactionMapper mapper = new TransactionMapper(bundle);
+        return mapper.mappedObjectFromBundle();
+    }
+
+    public Bundle toBundle() {
+
+        Transaction.TransactionSerializationMapper mapper = new Transaction.TransactionSerializationMapper(this);
+        return mapper.getSerializedBundle();
+    }
 
     public List<Transaction> sortTransactionsByRelevance(List<Transaction> transactions) {
 
@@ -494,15 +510,101 @@ public class Transaction extends TransactionRelatedItem {
         this.cdata10 = cdata10;
     }
 
-    public static class TransactionMapper extends TransactionRelatedItemMapper {
-        public TransactionMapper(JSONObject object) {
+    protected static class TransactionSerializationMapper extends AbstractSerializationMapper {
+
+        protected TransactionSerializationMapper(Transaction transaction) {
+            super(transaction);
+        }
+
+        @Override
+        protected String getQueryString() {
+
+            return super.getQueryString();
+        }
+
+        @Override
+        protected Bundle getSerializedBundle() {
+
+            return super.getSerializedBundle();
+        }
+    }
+
+    public static class TransactionSerialization extends AbstractSerialization {
+
+        //TODO time to put a rawData instead of model/request in initializer
+        public TransactionSerialization(Transaction transaction) {
+            this.setModel(transaction);
+        }
+
+        @Override
+        public Map<String, String> getSerializedRequest() {
+            return null;
+        }
+
+        @Override
+        public Bundle getSerializedBundle() {
+
+            this.setBundleBehaviour(new BundleSerialization());
+
+            Transaction transaction = (Transaction)this.getModel();
+
+            //TODO get mapped object from transactionRelatedItem superclass
+
+            this.putStringForKey("cdata1", transaction.getCdata1());
+            this.putStringForKey("cdata2", transaction.getCdata2());
+            this.putStringForKey("cdata3", transaction.getCdata3());
+            this.putStringForKey("cdata4", transaction.getCdata4());
+            this.putStringForKey("cdata5", transaction.getCdata5());
+            this.putStringForKey("cdata6", transaction.getCdata6());
+            this.putStringForKey("cdata7", transaction.getCdata7());
+            this.putStringForKey("cdata8", transaction.getCdata8());
+            this.putStringForKey("cdata9", transaction.getCdata9());
+            this.putStringForKey("cdata10", transaction.getCdata10());
+
+            this.putStringForKey("reason", transaction.getReason());
+            this.putStringForKey("attemptId", transaction.getAttemptId());
+            this.putStringForKey("referenceToPay", transaction.getReferenceToPay());
+            this.putStringForKey("ipAddress", transaction.getIpAddress());
+            this.putStringForKey("ipCountry", transaction.getIpCountry());
+            this.putStringForKey("deviceId", transaction.getDeviceId());
+            this.putStringForKey("paymentProduct", transaction.getPaymentProduct());
+
+            this.putUrlForKey("forwardUrl", transaction.getForwardUrl());
+
+            AVSResult avsResult = transaction.getAvsResult();
+            if (avsResult != null) {
+                this.putStringForKey("avsResult", Character.toString(avsResult.getCharValue()));
+            }
+
+            CVCResult cvcResult = transaction.getCvcResult();
+            if (cvcResult != null) {
+                this.putStringForKey("cvcResult", Character.toString(cvcResult.getCharValue()));
+            }
+
+            ECI eci = transaction.getEci();
+            if (eci != null) {
+                this.putIntForKey("eci", eci.getIntegerValue());
+            }
+
+            return this.getBundle();
+        }
+
+        @Override
+        public String getQueryString() {
+            return null;
+        }
+    }
+
+
+    protected static class TransactionMapper extends TransactionRelatedItemMapper {
+        public TransactionMapper(Object object) {
             super(object);
         }
 
         @Override
         protected boolean isValid() {
 
-            if (this.getBehaviour() instanceof MapBehaviour) {
+            if (this.getBehaviour() instanceof MapMapper) {
 
                 if (super.isValid()) {
 
@@ -514,7 +616,10 @@ public class Transaction extends TransactionRelatedItem {
             return false;
         }
 
-        protected Transaction mappedObject() {
+        @Override
+        protected Transaction mappedObjectFromBundle() {
+
+            //TODO pour l'instant on s'occupe pas de la superclass
 
             Transaction object = new Transaction();
 
@@ -562,8 +667,59 @@ public class Transaction extends TransactionRelatedItem {
             object.setEci(eci);
 
             return object;
+        }
+
+        @Override
+        protected Transaction mappedObject() {
+
+            //TODO get mapped object from transactionRelatedItem superclass
+
+            Transaction object = new Transaction();
+
+            object.setCdata1(this.getStringForKey("cdata1"));
+            object.setCdata2(this.getStringForKey("cdata2"));
+            object.setCdata3(this.getStringForKey("cdata3"));
+            object.setCdata4(this.getStringForKey("cdata4"));
+            object.setCdata5(this.getStringForKey("cdata5"));
+            object.setCdata6(this.getStringForKey("cdata6"));
+            object.setCdata7(this.getStringForKey("cdata7"));
+            object.setCdata8(this.getStringForKey("cdata8"));
+            object.setCdata9(this.getStringForKey("cdata9"));
+            object.setCdata10(this.getStringForKey("cdata10"));
+
+            object.setReason(this.getStringForKey("reason"));
+            object.setAttemptId(this.getStringForKey("attemptId"));
+            object.setReferenceToPay(this.getStringForKey("referenceToPay"));
+            object.setIpAddress(this.getStringForKey("ipAddress"));
+            object.setIpCountry(this.getStringForKey("ipCountry"));
+            object.setDeviceId(this.getStringForKey("deviceId"));
+            object.setPaymentProduct(this.getStringForKey("paymentProduct"));
+
+            object.setForwardUrl(this.getURLForKey("forwardUrl"));
+
+            String resultString = this.getEnumCharForKey("avsResult");
+            AVSResult result = AVSResult.fromStringValue(resultString);
+            if (result == null) {
+                result = AVSResult.AVSResultNotApplicable;
+            }
+            object.setAvsResult(result);
+
+            String cvcResultString = this.getEnumCharForKey("cvcResult");
+            CVCResult cvcResult = CVCResult.fromStringValue(cvcResultString);
+            if (cvcResult == null) {
+                cvcResult = CVCResult.CVCResultNotApplicable;
+            }
+            object.setCvcResult(cvcResult);
+
+            Integer eciString = this.getIntegerForKey("eci");
+            ECI eci = ECI.fromIntegerValue(eciString);
+            if (eci == null) {
+                eci = ECI.ECIUndefined;
+            }
+            object.setEci(eci);
+
+            return object;
 
         }
     }
-
 }

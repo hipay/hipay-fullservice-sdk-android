@@ -1,5 +1,7 @@
 package com.hipay.hipayfullservice.core.serialization.interfaces;
 
+import android.os.Bundle;
+
 import java.util.Map;
 
 /**
@@ -9,4 +11,5 @@ public interface ISerialization {
 
     String getQueryString();
     Map<String,String> getSerializedRequest();
+    Bundle getSerializedBundle();
 }
