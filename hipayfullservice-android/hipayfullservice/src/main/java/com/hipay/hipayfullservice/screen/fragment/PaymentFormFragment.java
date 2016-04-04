@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.client.GatewayClient;
@@ -35,15 +36,13 @@ import com.hipay.hipayfullservice.screen.helper.FormHelper;
 
 public class PaymentFormFragment extends Fragment {
 
+    private ProgressBar mProgressBar;
     OnCallbackOrderListener mCallback;
 
     public interface OnCallbackOrderListener {
-        /** Called by HeadlinesFragment when a list item is selected */
-        public void onCallbackOrderReceived(Transaction transaction, Exception exception);
-    }
 
-    private static final String ARG_EDIT = "EDIT";
-    private static final String KEY_SELECTED_AVATAR_INDEX = "selectedAvatarIndex";
+        void onCallbackOrderReceived(Transaction transaction, Exception exception);
+    }
 
     private EditText mCardOwner;
     private EditText mCardNumber;
@@ -92,14 +91,8 @@ public class PaymentFormFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         final View contentView = inflater.inflate(R.layout.fragment_payment_form, container, false);
-        //contentView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            //@Override
-            //public void onLayoutChange(View v, int left, int top, int right, int bottom,
-                                       //int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                //v.removeOnLayoutChangeListener(this);
-            //}
-        //});
         return contentView;
     }
 
@@ -135,6 +128,8 @@ public class PaymentFormFragment extends Fragment {
     }
 
     private void initContentViews(View view) {
+
+        mProgressBar = (ProgressBar) view.findViewById(R.id.empty);
 
         //mDoneFab = (FloatingActionButton) view.findViewById(R.id.done);
         //mDoneFab.setOnClickListener(new View.OnClickListener() {
@@ -418,7 +413,11 @@ public class PaymentFormFragment extends Fragment {
                             //getActivity().setResult(R.id.transaction_succeed);
                             //getActivity().finish();
 
+                            mProgressBar.setVisibility(View.VISIBLE);
                             goRequest();
+                            getActivity().onBackPressed();
+
+
 
                         }
                     });
@@ -440,7 +439,8 @@ public class PaymentFormFragment extends Fragment {
         final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
         final PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
 
-        new SecureVaultClient(getActivity()).createTokenRequest(
+        SecureVaultClient client = new SecureVaultClient(getActivity());
+        client.createTokenRequest(
                 "4111111111111111",
                 "12",
                 "2019",
@@ -472,7 +472,7 @@ public class PaymentFormFragment extends Fragment {
                                     .createOrderRequest(orderRequest, new OrderRequestCallback() {
 
                                         @Override
-                                        public void onSuccess(Transaction transaction) {
+                                        public void onSuccess(final Transaction transaction) {
                                             Log.i("transaction success", transaction.toString());
 
                                             //Bundle bundle = paymentPageRequest.toBundle();
@@ -481,7 +481,20 @@ public class PaymentFormFragment extends Fragment {
                                             //ActivityCompat.finishAfterTransition(getActivity());
                                             if (mCallback != null) {
 
+                                                mProgressBar.setVisibility(View.GONE);
                                                 mCallback.onCallbackOrderReceived(transaction, null);
+
+                                                showDoneFab(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+
+                                                        //TODO do request
+
+                                                        //getActivity().setResult(R.id.transaction_succeed);
+                                                        //getActivity().finish();
+
+                                                    }
+                                                });
 
                                             }
                                         }
@@ -501,12 +514,23 @@ public class PaymentFormFragment extends Fragment {
                     }
                 }
         );
+
+        //client.cancelOperation();
     }
 
     private void removeDoneFab(@Nullable Runnable endAction) {
         ViewCompat.animate(mDoneFab)
                 .scaleX(0)
                 .scaleY(0)
+                .setInterpolator(new FastOutSlowInInterpolator())
+                .withEndAction(endAction)
+                .start();
+    }
+
+    private void showDoneFab(@Nullable Runnable endAction) {
+        ViewCompat.animate(mDoneFab)
+                .scaleX(1)
+                .scaleY(1)
                 .setInterpolator(new FastOutSlowInInterpolator())
                 .withEndAction(endAction)
                 .start();
