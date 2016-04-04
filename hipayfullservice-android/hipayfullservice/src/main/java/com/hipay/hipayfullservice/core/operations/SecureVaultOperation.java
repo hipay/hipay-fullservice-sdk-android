@@ -35,16 +35,6 @@ public class SecureVaultOperation extends AbstractOperation {
             default: baseURL = null; break;
         }
 
-        //if (baseURL != null) {
-            //try {
-                //return new URL(baseURL);
-            //} catch (MalformedURLException e) {
-                //e.printStackTrace();
-                //return null;
-            //}Maxime Vachier Lagrave
-        //}
-
-
         URL requestURL;
 
         try {

@@ -415,9 +415,6 @@ public class PaymentFormFragment extends Fragment {
 
                             mProgressBar.setVisibility(View.VISIBLE);
                             goRequest();
-                            getActivity().onBackPressed();
-
-
 
                         }
                     });
@@ -495,7 +492,6 @@ public class PaymentFormFragment extends Fragment {
 
                                                     }
                                                 });
-
                                             }
                                         }
 
@@ -510,7 +506,7 @@ public class PaymentFormFragment extends Fragment {
                     @Override
                     public void onError(Exception error) {
 
-                        //TODO handle token request failed
+                        //TODO handle token request failed, an API Exception
                     }
                 }
         );

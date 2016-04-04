@@ -596,7 +596,7 @@ public class Transaction extends TransactionRelatedItem {
     }
 
 
-    protected static class TransactionMapper extends TransactionRelatedItemMapper {
+    private static class TransactionMapper extends TransactionRelatedItemMapper {
         public TransactionMapper(Object object) {
             super(object);
         }
