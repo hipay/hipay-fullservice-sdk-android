@@ -1,5 +1,7 @@
 package com.hipay.hipayfullservice.core.mapper.interfaces;
 
+import android.os.Bundle;
+
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +27,7 @@ public interface IBehaviour {
     Date getDateForKey(String key);
     String getEnumCharForKey(String key);
 
+    Bundle getBundleForKey(String key);
     Boolean getBoolNumberForKey(String key);
 
     Boolean getBoolForKey(String key);

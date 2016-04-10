@@ -14,6 +14,7 @@ public interface IBundle {
     void putInt(String key, Integer integer);
     void putBool(String key, Boolean bool);
     void putUrl(String key, URL url);
+    void putBundle(String key, Bundle bundle);
     Bundle getBundle();
 
 }

@@ -19,7 +19,7 @@ public interface IReqHandler {
     AbstractOperation getReqOperation(Context context, Bundle bundle);
     void handleCallback(HttpResult result);
     int getLoaderId();
-    void onError(HttpException exception);
+    void onError(Exception exception);
     void onSuccess(JSONObject jsonObject);
 
 }

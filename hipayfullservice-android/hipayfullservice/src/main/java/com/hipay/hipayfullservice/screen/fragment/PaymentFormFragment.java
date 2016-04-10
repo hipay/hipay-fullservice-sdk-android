@@ -21,6 +21,7 @@ import com.hipay.hipayfullservice.core.client.GatewayClient;
 import com.hipay.hipayfullservice.core.client.SecureVaultClient;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
+import com.hipay.hipayfullservice.core.errors.exceptions.ApiException;
 import com.hipay.hipayfullservice.core.models.PaymentCardToken;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.models.Transaction;
@@ -438,7 +439,7 @@ public class PaymentFormFragment extends Fragment {
 
         SecureVaultClient client = new SecureVaultClient(getActivity());
         client.createTokenRequest(
-                "4111111111111111",
+                "4111111111111111o",
                 "12",
                 "2019",
                 "John Doe",
@@ -505,6 +506,18 @@ public class PaymentFormFragment extends Fragment {
 
                     @Override
                     public void onError(Exception error) {
+
+                        Log.i(error.toString(), error.toString());
+                        Log.i(error.toString(), error.toString());
+
+                        ApiException exception = (ApiException)error;
+
+                        Bundle bundle = exception.toBundle();
+
+                        ApiException newException = ApiException.fromBundle(bundle);
+
+                        Log.i(error.toString(), error.toString());
+                        Log.i(error.toString(), error.toString());
 
                         //TODO handle token request failed, an API Exception
                     }

@@ -35,10 +35,11 @@ public class SecureVaultReqHandler extends AbstractReqHandler {
     }
 
     @Override
-    public void onError(HttpException httpException) {
+    public void onError(Exception apiException) {
 
-        Log.i(httpException.toString(), httpException.toString());
-        //TODO transform it to an API Exception
+        SecureVaultRequestCallback orderRequestCallback = (SecureVaultRequestCallback)this.getCallback();
+        orderRequestCallback.onError(apiException);
+
     }
 
     @Override

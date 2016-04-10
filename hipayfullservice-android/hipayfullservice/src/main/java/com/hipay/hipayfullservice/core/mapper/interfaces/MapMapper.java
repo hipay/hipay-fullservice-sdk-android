@@ -1,5 +1,6 @@
 package com.hipay.hipayfullservice.core.mapper.interfaces;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.hipay.hipayfullservice.core.utils.DataExtractor;
@@ -60,6 +61,11 @@ public class MapMapper implements IBehaviour {
             return string;
         }
 
+        return null;
+    }
+
+    @Override
+    public Bundle getBundleForKey(String key) {
         return null;
     }
 

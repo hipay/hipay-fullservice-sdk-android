@@ -2,6 +2,8 @@ package com.hipay.hipayfullservice.core.serialization;
 
 import android.os.Bundle;
 
+import com.hipay.hipayfullservice.core.errors.exceptions.ApiException;
+import com.hipay.hipayfullservice.core.errors.exceptions.HttpException;
 import com.hipay.hipayfullservice.core.models.AbstractModel;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.models.Transaction;
@@ -55,6 +57,24 @@ public abstract class AbstractSerializationMapper {
         this.initSerializing(model);
     }
 
+    public AbstractSerializationMapper(Exception exception) {
+
+        this.initSerializing(exception);
+    }
+
+    private void initSerializing(Exception exception) {
+
+        if (exception instanceof ApiException) {
+
+            ApiException apiException = (ApiException)exception;
+            this.setSerialization(new ApiException.ApiExceptionSerialization(apiException));
+
+        } else if (exception instanceof HttpException) {
+
+            HttpException httpException = (HttpException)exception;
+            this.setSerialization(new HttpException.HttpExceptionSerialization(httpException));
+        }
+    }
 
     private void initSerializing(AbstractModel model) {
 

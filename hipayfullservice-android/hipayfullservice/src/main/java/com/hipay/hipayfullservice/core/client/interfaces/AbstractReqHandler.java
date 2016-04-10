@@ -4,13 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.AbstractRequestCallback;
-import com.hipay.hipayfullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
 import com.hipay.hipayfullservice.core.errors.Errors;
+import com.hipay.hipayfullservice.core.errors.exceptions.ApiException;
 import com.hipay.hipayfullservice.core.errors.exceptions.HttpException;
-import com.hipay.hipayfullservice.core.models.PaymentCardToken;
 import com.hipay.hipayfullservice.core.network.HttpResult;
 import com.hipay.hipayfullservice.core.operations.AbstractOperation;
 import com.hipay.hipayfullservice.core.requests.AbstractRequest;
+import com.hipay.hipayfullservice.core.utils.DataExtractor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +46,7 @@ public abstract class AbstractReqHandler implements IReqHandler {
     public abstract int getLoaderId();
 
     //TODO abstract class with handle callback
-    public abstract void onError(HttpException httpException);
+    public abstract void onError(Exception exception);
     public abstract void onSuccess(JSONObject jsonObject);
 
     @Override
@@ -93,12 +93,11 @@ public abstract class AbstractReqHandler implements IReqHandler {
 
             //TODO typically a 400/500 client/server error
 
-            JSONObject object;
             try {
-                object = new JSONObject(errorStream);
+                jsonObject = new JSONObject(errorStream);
 
             } catch (JSONException e) {
-                object = null;
+                jsonObject = null;
 
                 httpException = new HttpException(
                         Errors.HTTPServerDescription,
@@ -106,7 +105,7 @@ public abstract class AbstractReqHandler implements IReqHandler {
                         new HttpException(e));
             }
 
-            if (object != null) {
+            if (jsonObject != null) {
 
                 //on check les codes d'erreurs
 
@@ -159,17 +158,87 @@ public abstract class AbstractReqHandler implements IReqHandler {
             );
         }
 
-        if (jsonObject != null) {
+        //TODO first on check si l'exception existe
+
+        if (httpException != null) {
+
+            ApiException apiException = this.getApiException(httpException, jsonObject);
+            onError(apiException);
+
+        } else if (jsonObject != null) {
+
             onSuccess(jsonObject);
 
-        } else if (httpException != null) {
-           onError(httpException);
-
         } else {
+
             //no-op
         }
-
     }
-    //TODO concrete classes will get json object or HTTPException
 
+    private ApiException getApiException(HttpException httpException, JSONObject jsonObject) {
+
+        String code = DataExtractor.getStringFromField(jsonObject, "code");
+        String message = DataExtractor.getStringFromField(jsonObject, "message");
+        //String description = DataExtractor.getStringFromField(jsonObject, "description");
+
+        Errors.Code errorCode = this.errorCodeForNumber(code);
+        return new ApiException(message, errorCode.getIntegerValue(), httpException);
+    }
+
+    Errors.Code errorCodeForNumber(String codeNumber)
+    {
+
+        if (codeNumber == null || (codeNumber.length() != 3 && codeNumber.length() != 7)) {
+            return Errors.Code.APIOther;
+        }
+
+        String substring = codeNumber.substring(0, 3);
+
+        if (substring.equalsIgnoreCase("100")) {
+            return Errors.Code.APIConfiguration;
+        }
+
+        else if (substring.equalsIgnoreCase("101")) {
+            return Errors.Code.APIValidation;
+        }
+
+        else if (substring.equalsIgnoreCase("102")) {
+            return Errors.Code.APICheckout;
+        }
+
+        else if (substring.equalsIgnoreCase("300")) {
+            return Errors.Code.APICheckout;
+        }
+
+        else if (substring.equalsIgnoreCase("301")) {
+            return Errors.Code.APICheckout;
+        }
+
+        else if (substring.equalsIgnoreCase("302")) {
+            return Errors.Code.APIMaintenance;
+        }
+
+        else if (substring.equalsIgnoreCase("303")) {
+            return Errors.Code.APICheckout;
+        }
+
+        else if (substring.equalsIgnoreCase("304")) {
+            return Errors.Code.APICheckout;
+        }
+
+        else if (substring.equalsIgnoreCase("400")) {
+            return Errors.Code.APIAcquirer;
+        }
+
+        else if (substring.equalsIgnoreCase("401")) {
+            return Errors.Code.APIAcquirer;
+        }
+
+        //Luhn check
+        if (codeNumber.equalsIgnoreCase("409")) {
+            return Errors.Code.APIValidation;
+        }
+
+        return Errors.Code.APIOther;
+    }
 }

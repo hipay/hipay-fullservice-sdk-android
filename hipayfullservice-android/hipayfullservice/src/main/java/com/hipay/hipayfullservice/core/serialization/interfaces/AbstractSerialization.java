@@ -16,6 +16,8 @@ public abstract class AbstractSerialization implements ISerialization {
 
     protected AbstractRequest request;
     protected AbstractModel model;
+    protected Exception exception;
+
     IBundle bundleBehaviour;
 
     public abstract Map<String, String> getSerializedRequest();
@@ -47,6 +49,14 @@ public abstract class AbstractSerialization implements ISerialization {
         this.model = model;
     }
 
+    public Exception getException() {
+        return exception;
+    }
+
+    public void setException(Exception exception) {
+        this.exception = exception;
+    }
+
     protected void putFloatForKey(String key, Float floatNumber) {
         this.getBundleBehaviour().putFloat(key, floatNumber);
     }
@@ -65,6 +75,10 @@ public abstract class AbstractSerialization implements ISerialization {
 
     protected void putBoolForKey(String key, Boolean bool) {
         this.getBundleBehaviour().putBool(key, bool);
+    }
+
+    protected void putBundleForKey(String key, Bundle bundle) {
+        this.getBundleBehaviour().putBundle(key, bundle);
     }
 
     protected Bundle getBundle() {

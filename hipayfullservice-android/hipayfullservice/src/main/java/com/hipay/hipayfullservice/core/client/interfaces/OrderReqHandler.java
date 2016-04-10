@@ -64,12 +64,20 @@ public class OrderReqHandler extends AbstractReqHandler {
     }
 
     @Override
-    public void onError(HttpException httpException) {
+    public void onSuccess(JSONObject jsonObject) {
+
+        Transaction transaction = Transaction.fromJSONObject(jsonObject);
+
+        OrderRequestCallback orderRequestCallback = (OrderRequestCallback)this.getCallback();
+        orderRequestCallback.onSuccess(transaction);
 
     }
 
     @Override
-    public void onSuccess(JSONObject jsonObject) {
+    public void onError(Exception apiException) {
+
+        OrderRequestCallback orderRequestCallback = (OrderRequestCallback)this.getCallback();
+        orderRequestCallback.onError(apiException);
 
     }
 }

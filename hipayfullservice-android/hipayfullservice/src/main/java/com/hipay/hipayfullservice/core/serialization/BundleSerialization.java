@@ -63,6 +63,19 @@ public class BundleSerialization implements IBundle {
     }
 
     @Override
+    public void putBundle(String key, Bundle bundle) {
+
+        if (bundle != null) {
+            this.getBundle().putBundle(key, bundle);
+
+        } else {
+
+            //TODO don't put anything if bool is null
+            //this.getBundle().putBoolean(key, false);
+        }
+    }
+
+    @Override
     public void putUrl(String key, URL url) {
 
         if (url != null) {
