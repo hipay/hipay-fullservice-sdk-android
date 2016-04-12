@@ -50,5 +50,4 @@ public abstract class AbstractOperation extends AbstractHttpClient<HttpResult> {
                 .append(Base64.encodeToString(b, Base64.DEFAULT))
                 .toString();
     }
-
 }

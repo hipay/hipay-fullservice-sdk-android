@@ -40,7 +40,6 @@ public class PaymentPageRequest extends OrderRelatedRequest {
 
     public PaymentPageRequest() {
 
-        this.setAuthenticationIndicator(CardTokenPaymentMethodRequest.AuthenticationIndicator.AuthenticationIndicatorUndefined);
         this.setEci(Transaction.ECI.ECIUndefined);
         this.setMultiUse(false);
         this.setDisplaySelector(false);
@@ -57,6 +56,10 @@ public class PaymentPageRequest extends OrderRelatedRequest {
         ));
 
         this.setGroupedPaymentCardProductCodes(s);
+    }
+
+    public PaymentPageRequest(PaymentPageRequest paymentPageRequest) {
+        super(paymentPageRequest);
     }
 
     public static PaymentPageRequest fromBundle(Bundle bundle) {
@@ -103,10 +106,6 @@ public class PaymentPageRequest extends OrderRelatedRequest {
 
     public boolean isDisplaySelector() {
         return displaySelector;
-    }
-
-    public void setDisplaySelector(boolean displaySelector) {
-        this.displaySelector = displaySelector;
     }
 
     public List getPaymentProductList() {
@@ -261,6 +260,8 @@ public class PaymentPageRequest extends OrderRelatedRequest {
             paymentPageRequest.setCurrency(orderRelatedRequest.getCurrency());
             paymentPageRequest.setAmount(orderRelatedRequest.getAmount());
 
+            //TODO amount, shipping, tax
+
             paymentPageRequest.setClientId(orderRelatedRequest.getClientId());
             paymentPageRequest.setIpAddress(orderRelatedRequest.getIpAddress());
             paymentPageRequest.setHTTPAccept(orderRelatedRequest.getHTTPUserAgent());
@@ -268,11 +269,11 @@ public class PaymentPageRequest extends OrderRelatedRequest {
             paymentPageRequest.setDeviceFingerprint(orderRelatedRequest.getDeviceFingerprint());
             paymentPageRequest.setLanguage(orderRelatedRequest.getLanguage());
 
-            paymentPageRequest.setAcceptURL(orderRelatedRequest.getAcceptURL());
-            paymentPageRequest.setDeclineURL(orderRelatedRequest.getDeclineURL());
-            paymentPageRequest.setPendingURL(orderRelatedRequest.getPendingURL());
-            paymentPageRequest.setExceptionURL(orderRelatedRequest.getExceptionURL());
-            paymentPageRequest.setCancelURL(orderRelatedRequest.getCancelURL());
+            paymentPageRequest.setAcceptScheme(orderRelatedRequest.getAcceptScheme());
+            paymentPageRequest.setDeclineScheme(orderRelatedRequest.getDeclineScheme());
+            paymentPageRequest.setPendingScheme(orderRelatedRequest.getPendingScheme());
+            paymentPageRequest.setExceptionScheme(orderRelatedRequest.getExceptionScheme());
+            paymentPageRequest.setCancelScheme(orderRelatedRequest.getCancelScheme());
 
             paymentPageRequest.setCdata1(orderRelatedRequest.getCdata1());
             paymentPageRequest.setCdata2(orderRelatedRequest.getCdata2());

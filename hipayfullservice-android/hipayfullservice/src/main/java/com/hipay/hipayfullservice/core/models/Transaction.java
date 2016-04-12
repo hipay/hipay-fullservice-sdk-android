@@ -285,19 +285,46 @@ public class Transaction extends TransactionRelatedItem {
 
     public enum TransactionState {
 
-        TransactionStateError (0),
-        TransactionStateCompleted (1),
-        TransactionStateForwarding (2),
-        TransactionStatePending (3),
-        TransactionStateDeclined (4);
+        TransactionStateError ("error"),
+        TransactionStateCompleted ("completed"),
+        TransactionStateForwarding ("forwarding"),
+        TransactionStatePending ("pending"),
+        TransactionStateDeclined ("declined");
 
-        protected final int state;
-        TransactionState(int state) {
+        protected final String state;
+        TransactionState(String state) {
             this.state = state;
         }
 
-        public Integer getIntegerValue() {
+        public String getStringValue() {
             return this.state;
+        }
+
+        public static TransactionState fromStringValue(String value) {
+
+            if (value == null) return null;
+
+            if (value.equalsIgnoreCase(TransactionStateError.getStringValue())) {
+                return TransactionStateError;
+            }
+
+            if (value.equalsIgnoreCase(TransactionStateCompleted.getStringValue())) {
+                return TransactionStateCompleted;
+            }
+
+            if (value.equalsIgnoreCase(TransactionStateForwarding.getStringValue())) {
+                return TransactionStateForwarding;
+            }
+
+            if (value.equalsIgnoreCase(TransactionStatePending.getStringValue())) {
+                return TransactionStatePending;
+            }
+
+            if (value.equalsIgnoreCase(TransactionStateDeclined.getStringValue())) {
+                return TransactionStateDeclined;
+            }
+
+            return null;
         }
     }
 
@@ -586,6 +613,11 @@ public class Transaction extends TransactionRelatedItem {
                 this.putIntForKey("eci", eci.getIntegerValue());
             }
 
+            TransactionState state = transaction.getState();
+            if (state != null) {
+                this.putStringForKey("state", state.getStringValue());
+            }
+
             return this.getBundle();
         }
 
@@ -608,7 +640,7 @@ public class Transaction extends TransactionRelatedItem {
 
                 if (super.isValid()) {
 
-                    if (this.getIntegerForKey("state") != null)
+                    if (this.getStringForKey("state") != null)
                         return true;
                 }
             }
@@ -666,6 +698,12 @@ public class Transaction extends TransactionRelatedItem {
             }
             object.setEci(eci);
 
+            String stateString = this.getStringForKey("state");
+            TransactionState state = TransactionState.fromStringValue(stateString);
+            if (state == null) {
+                state = TransactionState.TransactionStateError;
+            }
+            object.setState(state);
             return object;
         }
 
@@ -717,6 +755,24 @@ public class Transaction extends TransactionRelatedItem {
                 eci = ECI.ECIUndefined;
             }
             object.setEci(eci);
+
+            String stateString = this.getStringForKey("state");
+            TransactionState state = TransactionState.fromStringValue(stateString);
+            if (state == null) {
+                state = TransactionState.TransactionStateError;
+            }
+            object.setState(state);
+
+            /*
+            Integer transactionStateString = this.getIntegerForKey("");
+
+            protected TransactionState state;
+            protected ThreeDSecure threeDSecure;
+            protected FraudScreening fraudScreening;
+            protected Order order;
+            protected Map debitAgreement;
+
+            */
 
             return object;
 

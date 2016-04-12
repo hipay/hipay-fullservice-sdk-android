@@ -62,6 +62,9 @@ public class PaymentProductsActivity extends AppCompatActivity {
         Bundle bundle = paymentPageRequest.toBundle();
         starter.putExtra(PaymentPageRequest.TAG, bundle);
 
+        if (theme == null) {
+            theme = new CustomTheme(R.color.hpf_primary,R.color.hpf_primary_dark,R.color.hpf_light);
+        }
         starter.putExtra(CustomTheme.TAG, theme.toBundle());
 
         return starter;
@@ -80,7 +83,13 @@ public class PaymentProductsActivity extends AppCompatActivity {
             } else if (resultCode == R.id.transaction_failed) {
 
                 //TODO put exception in there
-                setResult(R.id.transaction_failed, null);
+                setResult(R.id.transaction_failed, data);
+                finish();
+            }
+            else if (resultCode == R.id.transaction_unknown_error) {
+
+                //TODO put exception in there
+                setResult(R.id.transaction_unknown_error, null);
                 finish();
 
                 //ActivityCompat.finishAfterTransition(this);

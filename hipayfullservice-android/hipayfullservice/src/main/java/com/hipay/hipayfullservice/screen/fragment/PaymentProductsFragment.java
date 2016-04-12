@@ -3,6 +3,7 @@ package com.hipay.hipayfullservice.screen.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -54,7 +55,7 @@ public class PaymentProductsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void setUpProductGrid(RecyclerView categoriesView) {
+    private void setUpProductGrid(final RecyclerView categoriesView) {
 
         final int spacing = getContext().getResources()
                 .getDimensionPixelSize(R.dimen.spacing_nano);
@@ -62,7 +63,6 @@ public class PaymentProductsFragment extends Fragment {
 
         final Bundle paymentPageRequestBundle = getArguments().getBundle(PaymentPageRequest.TAG);
         final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
-
 
         mAdapter = new PaymentProductsAdapter(getActivity());
         mAdapter.setOnItemClickListener(
@@ -78,7 +78,14 @@ public class PaymentProductsFragment extends Fragment {
                     }
                 });
 
-        categoriesView.setAdapter(mAdapter);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                categoriesView.setAdapter(mAdapter);
+            }
+        }, 1000);
     }
 
     @Override

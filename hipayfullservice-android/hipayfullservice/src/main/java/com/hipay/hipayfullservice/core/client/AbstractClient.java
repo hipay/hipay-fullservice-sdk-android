@@ -10,34 +10,45 @@ import android.os.Bundle;
 
 import com.hipay.hipayfullservice.core.client.interfaces.IReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.OrderReqHandler;
+import com.hipay.hipayfullservice.core.client.interfaces.PaymentPageReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.SecureVaultReqHandler;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.AbstractRequestCallback;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.PaymentPageRequestCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
 import com.hipay.hipayfullservice.core.network.HttpResult;
 import com.hipay.hipayfullservice.core.operations.AbstractOperation;
+import com.hipay.hipayfullservice.core.requests.AbstractRequest;
 import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.securevault.SecureVaultRequest;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by nfillion on 21/01/16.
  */
-public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCallbacks<HttpResult>{
+public abstract class AbstractClient implements LoaderManager.LoaderCallbacks<HttpResult>{
 
     private IReqHandler reqHandler;
 
     //TODO set it weakreference
-    private Context context;
+    protected WeakReference<Context> contextWeakReference = null;
     private AbstractOperation operation;
 
     public AbstractClient(Context ctx) {
-        context = ctx;
+
+        contextWeakReference = new WeakReference<>(ctx);
     }
 
-    protected void createRequest(T1 request, T2 callback) {
+    protected void createRequest(AbstractRequest request, AbstractRequestCallback callback) {
 
-        this.initReqHandler(request, callback);
-        this.launchOperation();
+        if (this.initReqHandler(request, callback)) {
+            this.launchOperation();
+
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -45,11 +56,17 @@ public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCall
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 
+            //it cancels the loading
             AbstractOperation operation = this.getOperation();
             if (operation != null) {
-
                 operation.cancelLoad();
             }
+        }
+
+        //...and it actually brutally destroys the loader
+        if (this.getContext() != null) {
+            Activity activity = (Activity)this.getContext();
+            activity.getLoaderManager().destroyLoader(this.getLoaderId());
         }
     }
 
@@ -62,14 +79,17 @@ public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCall
         activity.getLoaderManager().initLoader(this.getLoaderId(), queryBundle, this);
     }
 
-    private void initReqHandler(T1 request, T2 callback) {
+    private boolean initReqHandler(AbstractRequest request, AbstractRequestCallback callback) {
 
-        //this.setRequest(request);
-        //this.setCallback(callback);
+        if (request instanceof PaymentPageRequest
+                && callback instanceof PaymentPageRequestCallback) {
 
-        if (request instanceof PaymentPageRequest) {
+            PaymentPageRequest paymentPageRequest = (PaymentPageRequest)request;
+            PaymentPageRequestCallback paymentPageRequestCallback = (PaymentPageRequestCallback)callback;
 
-            //TODO paymentPage
+            this.setReqHandler(new PaymentPageReqHandler(paymentPageRequest, paymentPageRequestCallback));
+
+            return true;
 
         } else if (request instanceof OrderRequest
                 && callback instanceof OrderRequestCallback) {
@@ -79,6 +99,8 @@ public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCall
 
             this.setReqHandler(new OrderReqHandler(orderRequest, orderRequestCallback));
 
+            return true;
+
         } else if (request instanceof SecureVaultRequest
                 && callback instanceof SecureVaultRequestCallback) {
 
@@ -86,20 +108,31 @@ public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCall
             SecureVaultRequestCallback secureVaultRequestCallback = (SecureVaultRequestCallback)callback;
 
             this.setReqHandler(new SecureVaultReqHandler(secureVaultRequest, secureVaultRequestCallback));
+
+            return true;
         }
+
+        return false;
     }
 
     @Override
     public Loader<HttpResult> onCreateLoader(int id, Bundle bundle) {
 
-        this.setOperation(this.getOperation(this.getContext(), bundle));
-        return this.getOperation();
+        if (this.getContext() != null) {
+
+            this.setOperation(this.getOperation(this.getContext(), bundle));
+            return this.getOperation();
+        }
+
+        return null;
     }
 
     @Override
     public void onLoadFinished(Loader<HttpResult> loader, HttpResult data) {
 
-        this.getReqHandler().handleCallback(data);
+        if (this.getContext() != null) {
+            this.getReqHandler().handleCallback(data);
+        }
     }
 
     @Override
@@ -122,12 +155,7 @@ public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCall
     }
 
     protected Context getContext() {
-        return context;
-    }
-
-    protected void setContext(Context context) {
-
-        this.context = context;
+        return contextWeakReference.get();
     }
 
     private IReqHandler getReqHandler() {

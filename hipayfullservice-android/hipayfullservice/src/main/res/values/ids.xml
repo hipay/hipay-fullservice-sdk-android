@@ -15,7 +15,8 @@
   -->
 
 <resources>
-    <item name="transaction_succeed" type="id" />
-    <item name="transaction_failed" type="id" />
+  <item name="transaction_succeed" type="id" />
+  <item name="transaction_failed" type="id" />
+  <item name="transaction_unknown_error" type="id" />
 
 </resources>

@@ -3,6 +3,8 @@ package com.hipay.hipayfullservice.core.models;
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 
+import org.json.JSONObject;
+
 import java.net.URL;
 
 /**
@@ -28,6 +30,12 @@ public class HostedPaymentPage extends AbstractModel {
     protected String cdata10;
 
     public HostedPaymentPage() {
+    }
+
+    public static HostedPaymentPage fromJSONObject(JSONObject object) {
+
+        HostedPaymentPageMapper mapper = new HostedPaymentPageMapper(object);
+        return mapper.mappedObject();
     }
 
     public Boolean getTest() {
@@ -145,8 +153,8 @@ public class HostedPaymentPage extends AbstractModel {
 
 
     public static class HostedPaymentPageMapper extends AbstractMapper {
-        public HostedPaymentPageMapper() {
-            //super();
+        public HostedPaymentPageMapper(Object rawdata) {
+            super(rawdata);
         }
 
         @Override
@@ -162,7 +170,7 @@ public class HostedPaymentPage extends AbstractModel {
             return false;
         }
 
-        protected Object mappedObject() {
+        protected HostedPaymentPage mappedObject() {
 
             HostedPaymentPage object = new HostedPaymentPage();
 
