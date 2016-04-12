@@ -2,18 +2,15 @@ package com.hipay.hipayfullservice.core.client.interfaces;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
+import com.hipay.hipayfullservice.core.errors.exceptions.HttpException;
 import com.hipay.hipayfullservice.core.models.PaymentCardToken;
-import com.hipay.hipayfullservice.core.network.HttpResult;
 import com.hipay.hipayfullservice.core.operations.SecureVaultOperation;
 import com.hipay.hipayfullservice.core.requests.securevault.SecureVaultRequest;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by nfillion on 09/03/16.
@@ -25,6 +22,23 @@ public class SecureVaultReqHandler extends AbstractReqHandler {
 
         this.setRequest(secureVaultRequest);
         this.setCallback(callback);
+    }
+
+    @Override
+    public void onSuccess(JSONObject jsonObject) {
+
+        //TODO on traite le JSON
+        PaymentCardToken paymentCardToken = PaymentCardToken.fromJSONObject(jsonObject);
+
+        SecureVaultRequestCallback orderRequestCallback = (SecureVaultRequestCallback)this.getCallback();
+        orderRequestCallback.onSuccess(paymentCardToken);
+    }
+
+    @Override
+    public void onError(HttpException httpException) {
+
+        Log.i(httpException.toString(), httpException.toString());
+        //TODO transform it to an API Exception
     }
 
     @Override
@@ -40,32 +54,8 @@ public class SecureVaultReqHandler extends AbstractReqHandler {
     }
 
     @Override
-    public void handleCallback(HttpResult data) {
-
-        InputStream stream = data.getBodyStream();
-
-        try {
-            String response = data.readStream(stream);
-
-            try {
-                JSONObject object = new JSONObject(response);
-
-                PaymentCardToken paymentCardToken = PaymentCardToken.fromJSONObject(object);
-
-                SecureVaultRequestCallback orderRequestCallback = (SecureVaultRequestCallback)this.getCallback();
-                orderRequestCallback.onSuccess(paymentCardToken);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public int getLoaderId() {
         return 1;
     }
+
 }

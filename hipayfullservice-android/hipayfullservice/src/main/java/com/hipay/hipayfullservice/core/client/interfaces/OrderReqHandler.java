@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
+import com.hipay.hipayfullservice.core.errors.exceptions.HttpException;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.network.HttpResult;
 import com.hipay.hipayfullservice.core.operations.GatewayOperation;
@@ -42,31 +43,33 @@ public class OrderReqHandler extends AbstractReqHandler {
     @Override
     public void handleCallback(HttpResult data) {
 
-        InputStream stream = data.getBodyStream();
+        String bodyStream = data.getBodyStream();
 
         try {
-            String response = data.readStream(stream);
+            JSONObject object = new JSONObject(bodyStream);
 
-            try {
-                JSONObject object = new JSONObject(response);
+            Transaction transaction = Transaction.fromJSONObject(object);
 
-                Transaction transaction = Transaction.fromJSONObject(object);
+            OrderRequestCallback orderRequestCallback = (OrderRequestCallback)this.getCallback();
+            orderRequestCallback.onSuccess(transaction);
 
-                OrderRequestCallback orderRequestCallback = (OrderRequestCallback)this.getCallback();
-                orderRequestCallback.onSuccess(transaction);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        } catch (IOException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
     public int getLoaderId() {
         return 0;
+    }
+
+    @Override
+    public void onError(HttpException httpException) {
+
+    }
+
+    @Override
+    public void onSuccess(JSONObject jsonObject) {
+
     }
 }

@@ -3,6 +3,10 @@ package com.hipay.hipayfullservice.core.utils;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -89,6 +93,34 @@ public class Utils {
             string += " " + key + " => " + bundle.get(key) + ";";
         }
         string += " }Bundle";
+        return string;
+    }
+
+    public static String readStream(InputStream is) {
+
+        if (is == null) return null;
+
+        String string = null;
+
+        StringBuilder sb = new StringBuilder();
+        BufferedReader r = new BufferedReader(new InputStreamReader(is), 1000);
+        try {
+            for (String line = r.readLine(); line != null; line = r.readLine()) {
+                sb.append(line);
+            }
+
+            is.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return null;
+        }
+
+        if (!sb.toString().isEmpty()) {
+            string = sb.toString();
+        }
+
         return string;
     }
 }

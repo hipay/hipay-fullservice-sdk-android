@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Loader;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.hipay.hipayfullservice.core.client.interfaces.IReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.OrderReqHandler;
@@ -24,9 +23,6 @@ import com.hipay.hipayfullservice.core.requests.securevault.SecureVaultRequest;
  * Created by nfillion on 21/01/16.
  */
 public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCallbacks<HttpResult>{
-
-    private T1 request;
-    private T2 callback;
 
     private IReqHandler reqHandler;
 
@@ -68,29 +64,28 @@ public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCall
 
     private void initReqHandler(T1 request, T2 callback) {
 
-        this.setRequest(request);
-        this.setCallback(callback);
+        //this.setRequest(request);
+        //this.setCallback(callback);
 
-        if (this.getRequest() instanceof PaymentPageRequest) {
+        if (request instanceof PaymentPageRequest) {
 
             //TODO paymentPage
 
-        } else if (this.getRequest() instanceof OrderRequest
+        } else if (request instanceof OrderRequest
                 && callback instanceof OrderRequestCallback) {
 
-            OrderRequest orderRequest = (OrderRequest) this.getRequest();
-            OrderRequestCallback orderRequestCallback = (OrderRequestCallback)this.getCallback();
+            OrderRequest orderRequest = (OrderRequest) request;
+            OrderRequestCallback orderRequestCallback = (OrderRequestCallback)callback;
 
             this.setReqHandler(new OrderReqHandler(orderRequest, orderRequestCallback));
 
-        } else if (this.getRequest() instanceof SecureVaultRequest
+        } else if (request instanceof SecureVaultRequest
                 && callback instanceof SecureVaultRequestCallback) {
 
-            SecureVaultRequest secureVaultRequest = (SecureVaultRequest) this.getRequest();
-            SecureVaultRequestCallback secureVaultRequestCallback = (SecureVaultRequestCallback) this.getCallback();
+            SecureVaultRequest secureVaultRequest = (SecureVaultRequest) request;
+            SecureVaultRequestCallback secureVaultRequestCallback = (SecureVaultRequestCallback)callback;
 
             this.setReqHandler(new SecureVaultReqHandler(secureVaultRequest, secureVaultRequestCallback));
-
         }
     }
 
@@ -126,15 +121,6 @@ public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCall
         return this.getReqHandler().getLoaderId();
     }
 
-
-    protected T1 getRequest() {
-        return request;
-    }
-
-    protected void setRequest(T1 request) {
-        this.request = request;
-    }
-
     protected Context getContext() {
         return context;
     }
@@ -150,14 +136,6 @@ public abstract class AbstractClient<T1, T2> implements LoaderManager.LoaderCall
 
     private void setReqHandler(IReqHandler reqHandler) {
         this.reqHandler = reqHandler;
-    }
-
-    protected T2 getCallback() {
-        return callback;
-    }
-
-    protected void setCallback(T2 callback) {
-        this.callback = callback;
     }
 
     public AbstractOperation getOperation() {

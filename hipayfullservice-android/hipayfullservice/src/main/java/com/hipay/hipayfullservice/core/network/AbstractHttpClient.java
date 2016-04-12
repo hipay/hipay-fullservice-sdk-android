@@ -5,7 +5,10 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.hipay.hipayfullservice.core.utils.Utils;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 
 /**
@@ -29,9 +32,7 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
 
     protected HttpResult backgroundOperation() {
 
-
         HttpResult httpResult = new HttpResult();
-        HttpURLConnection urlConnection = null;
 
         boolean isCanceled = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -40,24 +41,32 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
 
         if (!isCanceled) {
 
+            HttpURLConnection urlConnection;
             try {
-
                 urlConnection = this.getHttpURLConnection();
-
-                httpResult.setStatusCode(urlConnection.getResponseCode());
-                httpResult.setBodyStream(urlConnection.getInputStream());
-                httpResult.setErrorStream(urlConnection.getErrorStream());
-
             } catch (IOException exception) {
-
                 httpResult.setIoException(exception);
-
-            } finally {
-
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
+                return httpResult;
             }
+
+            try {
+                httpResult.setStatusCode(urlConnection.getResponseCode());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                httpResult.setBodyStream(Utils.readStream(urlConnection.getInputStream()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            httpResult.setErrorStream(Utils.readStream(urlConnection.getErrorStream()));
+
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+
         }
 
         return httpResult;
