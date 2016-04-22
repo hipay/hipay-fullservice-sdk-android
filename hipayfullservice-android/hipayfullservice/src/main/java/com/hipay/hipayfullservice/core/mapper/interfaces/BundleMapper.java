@@ -87,6 +87,11 @@ public class BundleMapper implements IBehaviour {
     }
 
     @Override
+    public Bundle getBundleForKey(String key) {
+        return this.getBundleObject().getBundle(key);
+    }
+
+    @Override
     public String getLowercaseStringForKey(String key) {
         return null;
     }

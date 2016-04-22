@@ -120,6 +120,11 @@ public abstract class AbstractMapper<T> {
         return this.getBehaviour().getDateForKey(key);
     }
 
+    protected Bundle getBundleForKey(String key) {
+
+        return this.getBehaviour().getBundleForKey(key);
+    }
+
     public T getRawData() {
         return rawData;
     }

@@ -9,8 +9,6 @@ import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper
 import com.hipay.hipayfullservice.core.serialization.BundleSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
-import org.json.JSONObject;
-
 import java.util.Map;
 import java.util.Set;
 

@@ -1,5 +1,7 @@
 package com.hipay.hipayfullservice.core.mapper;
 
+import android.os.Bundle;
+
 import com.hipay.hipayfullservice.core.mapper.interfaces.IBehaviour;
 import com.hipay.hipayfullservice.core.utils.DataExtractor;
 
@@ -26,11 +28,13 @@ public class ListMapper implements IBehaviour {
         this.setJsonObject(jsonObject);
     }
 
+    @Override
     public Object getObjectForKey(String key) {
 
         return DataExtractor.getObjectFromField(this.getJsonObject(), key);
     }
 
+    @Override
     public String getStringForKey(String key) {
 
         return DataExtractor.getStringFromField(this.getJsonObject(), key);
@@ -42,6 +46,7 @@ public class ListMapper implements IBehaviour {
         return null;
     }
 
+    @Override
     public String getLowercaseStringForKey(String key) {
 
         String string = this.getStringForKey(key);
@@ -52,6 +57,7 @@ public class ListMapper implements IBehaviour {
         return null;
     }
 
+    @Override
     public String getEnumCharForKey(String key) {
 
         String string = this.getStringForKey(key);
@@ -63,6 +69,12 @@ public class ListMapper implements IBehaviour {
         return null;
     }
 
+    @Override
+    public Bundle getBundleForKey(String key) {
+        return null;
+    }
+
+    @Override
     public Number getNumberForKey(String key) {
 
         Object object = this.getObjectForKey(key);
@@ -75,6 +87,7 @@ public class ListMapper implements IBehaviour {
         return null;
     }
 
+    @Override
     public Integer getIntegerForKey(String key) {
 
         Number object = this.getNumberForKey(key);
@@ -85,6 +98,7 @@ public class ListMapper implements IBehaviour {
         return null;
     }
 
+    @Override
     public Date getDateISO8601ForKey(String key) {
 
         String stringDate = this.getStringForKey(key);
@@ -108,6 +122,7 @@ public class ListMapper implements IBehaviour {
         }
     }
 
+    @Override
     public Date getDateBasicForKey(String key) {
 
         String stringDate = this.getStringForKey(key);
@@ -132,6 +147,7 @@ public class ListMapper implements IBehaviour {
 
     }
 
+    @Override
     public Date getDateForKey(String key) {
 
         Date date = this.getDateBasicForKey(key);
@@ -142,6 +158,7 @@ public class ListMapper implements IBehaviour {
         return this.getDateISO8601ForKey(key);
     }
 
+    @Override
     public Boolean getBoolForKey(String key) {
 
         Boolean number = this.getBoolNumberForKey(key);
@@ -152,6 +169,7 @@ public class ListMapper implements IBehaviour {
         return null;
     }
 
+    @Override
     public Boolean getBoolNumberForKey(String key) {
 
         Object object = this.getObjectForKey(key);
@@ -175,6 +193,7 @@ public class ListMapper implements IBehaviour {
     }
 
 
+    @Override
     public Map getMapForKey(String key) {
 
         Object object = this.getObjectForKey(key);
@@ -185,6 +204,7 @@ public class ListMapper implements IBehaviour {
     }
 
 
+    @Override
     public URL getURLForKey(String key) {
 
         String string = this.getStringForKey(key);
@@ -207,6 +227,7 @@ public class ListMapper implements IBehaviour {
         return null;
     }
 
+    @Override
     public List getArrayFromObject(Object object) {
 
         //TODO tricky getter
