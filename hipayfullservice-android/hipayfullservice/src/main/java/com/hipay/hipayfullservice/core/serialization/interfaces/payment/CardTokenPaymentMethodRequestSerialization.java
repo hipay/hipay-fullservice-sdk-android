@@ -33,7 +33,7 @@ public class CardTokenPaymentMethodRequestSerialization extends AbstractSerializ
         }
 
         CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator = cardTokenPaymentMethodRequest.getAuthenticationIndicator();
-        if (authenticationIndicator != null && authenticationIndicator != CardTokenPaymentMethodRequest.AuthenticationIndicator.AuthenticationIndicatorUndefined) {
+        if (authenticationIndicator != null) {
             retMap.put("authentication_indicator", String.valueOf(authenticationIndicator.getIntegerValue()));
         }
 

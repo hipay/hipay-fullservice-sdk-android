@@ -8,43 +8,37 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
+import com.hipay.hipayfullservice.core.errors.Errors;
+import com.hipay.hipayfullservice.core.errors.exceptions.ApiException;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
-import com.hipay.hipayfullservice.screen.fragment.PaymentFormFragment;
+import com.hipay.hipayfullservice.screen.fragment.AbstractPaymentFormFragment;
 import com.hipay.hipayfullservice.screen.helper.ApiLevelHelper;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 import com.hipay.hipayfullservice.screen.widget.TextSharedElementCallback;
 
+import java.net.URL;
 import java.util.List;
 
 /**
  * Created by nfillion on 29/02/16.
  */
-public class PaymentFormActivity extends AppCompatActivity implements PaymentFormFragment.OnCallbackOrderListener {
+public class PaymentFormActivity extends AppCompatActivity implements AbstractPaymentFormFragment.OnCallbackOrderListener {
 
-private static final String TAG = "PaymentProductsActivity";
-
-    private static final String FRAGMENT_TAG = "PaymentForm";
-
-    //private Interpolator mInterpolator;
-    //private PaymentProduct mPaymentProduct;
-    //private PaymentFormFragment mPaymentFormFragment;
-    //private FloatingActionButton mFormFab;
-    //private ImageView mIcon;
+    private static final String TAG = "PaymentProductsActivity";
 
     private CustomTheme customTheme;
-    private boolean mSavedStateIsPlaying;
     private ImageButton mToolbarBack;
 
     public static Intent getStartIntent(Context context, Bundle paymentPageRequestBundle, Bundle themeBundle, PaymentProduct paymentProduct) {
@@ -61,23 +55,104 @@ private static final String TAG = "PaymentProductsActivity";
         return starter;
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        //TODO handle the 3DS or other situation
+
+        if (requestCode == PaymentPageRequest.REQUEST_ORDER) {
+
+            if (resultCode == R.id.transaction_succeed) {
+
+                setResult(R.id.transaction_succeed, data);
+                finish();
+
+            } else if (resultCode == R.id.transaction_failed) {
+
+                //TODO put exception in there
+                setResult(R.id.transaction_failed, null);
+                finish();
+
+                //ActivityCompat.finishAfterTransition(this);
+                //overridePendingTransition(0, 0);
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void manageTransactionStatus(Transaction transaction) {
+
+        switch (transaction.getState()) {
+
+            case TransactionStateCompleted:
+            case TransactionStatePending: {
+
+                Intent intent = getIntent();
+                intent.putExtra(Transaction.TAG, transaction.toBundle());
+
+                setResult(R.id.transaction_succeed, intent);
+                finish();
+
+            } break;
+
+            case TransactionStateDeclined: {
+
+                //TODO failed, he has to retry that.
+                //TODO reset the form
+                //TODO important to handle.
+
+            } break;
+
+            case TransactionStateForwarding: {
+
+                //TODO handled with forwardUrl
+                URL forwardUrl = transaction.getForwardUrl();
+
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
+                if (fragment != null) {
+
+                    AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
+                    abstractPaymentFormFragment.launchHostedPaymentPage(forwardUrl.toString());
+                }
+
+            } break;
+
+            case TransactionStateError: {
+
+                //TODO finally useless. better create an API error
+
+                ApiException exception = new ApiException(getString(R.string.unknown_error),Errors.Code.APIOther.getIntegerValue(), null);
+                Intent intent = getIntent();
+                intent.putExtra(Errors.TAG, exception.toBundle());
+                setResult(R.id.transaction_failed, null);
+                finish();
+
+            } break;
+        }
+    }
+
     @Override
     public void onCallbackOrderReceived(Transaction transaction, Exception exception) {
 
         if (transaction != null) {
 
-            Intent intent = getIntent();
-            intent.putExtra(Transaction.TAG, transaction.toBundle());
-
-            setResult(R.id.transaction_succeed, intent);
+            this.manageTransactionStatus(transaction);
 
         } else {
 
             //TODO handle exception
-        }
+            Intent intent = getIntent();
+            ApiException apiException = (ApiException)exception;
+            intent.putExtra(Errors.TAG, apiException.toBundle());
+            setResult(R.id.transaction_failed, intent);
 
-        finish();
+            finish();
+
+        }
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +169,9 @@ private static final String TAG = "PaymentProductsActivity";
 
         //mInterpolator = new FastOutSlowInInterpolator();
 
-
-        initToolbar();
+        Bundle paymentProductBundle = getIntent().getBundleExtra(PaymentProduct.TAG);
+        PaymentProduct paymentProduct = PaymentProduct.fromBundle(paymentProductBundle);
+        initToolbar(paymentProduct);
 
         int categoryNameTextSize = getResources()
                 .getDimensionPixelSize(R.dimen.payment_product_item_text_size);
@@ -133,15 +209,15 @@ private static final String TAG = "PaymentProductsActivity";
         if (savedInstanceState == null) {
 
             Bundle paymentPageRequestBundle = getIntent().getBundleExtra(PaymentPageRequest.TAG);
-            Bundle paymentProductBundle = getIntent().getBundleExtra(PaymentProduct.TAG);
+            //Bundle paymentProductBundle = getIntent().getBundleExtra(PaymentProduct.TAG);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.form_fragment_container, PaymentFormFragment.newInstance(paymentPageRequestBundle, paymentProductBundle)).commit();
+                    .replace(R.id.form_fragment_container, AbstractPaymentFormFragment.newInstance(paymentPageRequestBundle, paymentProduct, customThemeBundle)).commit();
         }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void initToolbar() {
+    private void initToolbar(PaymentProduct paymentProduct) {
 
         if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.LOLLIPOP)) {
 
@@ -151,20 +227,12 @@ private static final String TAG = "PaymentProductsActivity";
         }
 
         mToolbarBack = (ImageButton) findViewById(R.id.back);
-        //mToolbarBack.setBackgroundTintList(ContextCompat.getColor(this,
-                //Theme.blue.getTextPrimaryColor()));
-
-        //this.setTheme(Theme.red);
-
-        //this.setToolbarElevation(true);
         mToolbarBack.setColorFilter((ContextCompat.getColor(this,
                 getCustomTheme().getTextColorPrimaryId())));
 
         mToolbarBack.setOnClickListener(mOnClickListener);
         TextView titleView = (TextView) findViewById(R.id.payment_product_title);
 
-        Bundle paymentProductBundle = getIntent().getBundleExtra(PaymentProduct.TAG);
-        PaymentProduct paymentProduct = PaymentProduct.fromBundle(paymentProductBundle);
 
         titleView.setText(paymentProduct.getCode());
         titleView.setTextColor(ContextCompat.getColor(this,
@@ -189,20 +257,6 @@ private static final String TAG = "PaymentProductsActivity";
 
     @Override
     protected void onResume() {
-        //if (mSavedStateIsPlaying) {
-            //mQuizFragment = (QuizFragment) getSupportFragmentManager().findFragmentByTag(
-                    //FRAGMENT_TAG);
-            //if (!mQuizFragment.hasSolvedStateListener()) {
-                //mQuizFragment.setSolvedStateListener(getSolvedStateListener());
-            //}
-            //findViewById(R.id.quiz_fragment_container).setVisibility(View.VISIBLE);
-            //mFormFab.hide();
-        //} else {
-            //initQuizFragment();
-        //}
-
-        //TODO initialize content fragment
-
         super.onResume();
 
     }
@@ -210,7 +264,7 @@ private static final String TAG = "PaymentProductsActivity";
         @Override
         public void onClick(final View v) {
             int i = v.getId();
-             if (i == R.id.back) {
+            if (i == R.id.back) {
                 onBackPressed();
 
             } else {
@@ -228,60 +282,7 @@ private static final String TAG = "PaymentProductsActivity";
 
     @Override
     public void onBackPressed() {
-        //if (mIcon == null || mFormFab == null) {
-            //// Skip the animation if icon or fab are not initialized.
-            //super.onBackPressed();
-            //return;
-        //}
-
         super.onBackPressed();
-
-        //ViewCompat.animate(mToolbarBack)
-                //.scaleX(0f)
-                //.scaleY(0f)
-                //.alpha(0f)
-                //.setDuration(100)
-                //.setListener(new ViewPropertyAnimatorListenerAdapter() {
-                //    @SuppressLint("NewApi")
-                //    @Override
-                //    public void onAnimationEnd(View view) {
-                //        //if (isFinishing() ||
-                //                //(ApiLevelHelper.isAtLeast(Build.VERSION_CODES.JELLY_BEAN_MR1)
-                //                        //&& isDestroyed())) {
-                //            //return;
-                //        //}
-                //    }
-                //})
-                //.start();
-
-
-
-        // Scale the icon and fab to 0 size before calling onBackPressed if it exists.
-        //ViewCompat.animate(mIcon)
-                //.scaleX(.7f)
-                //.scaleY(.7f)
-                //.alpha(0f)
-                //.setInterpolator(mInterpolator)
-                //.start();
-
-        //ViewCompat.animate(mFormFab)
-                //.scaleX(0f)
-                //.scaleY(0f)
-                //.setInterpolator(mInterpolator)
-                //.setStartDelay(100)
-                //.setListener(new ViewPropertyAnimatorListenerAdapter() {
-                    //@SuppressLint("NewApi")
-                    //@Override
-                    //public void onAnimationEnd(View view) {
-                        //if (isFinishing() ||
-                                //(ApiLevelHelper.isAtLeast(Build.VERSION_CODES.JELLY_BEAN_MR1)
-                                        //&& isDestroyed())) {
-                            //return;
-                        //}
-                        //PaymentFormActivity.super.onBackPressed();
-                    //}
-                //})
-                //.start();
     }
 
     public CustomTheme getCustomTheme() {

@@ -24,17 +24,14 @@ public class MapMapper implements IBehaviour {
     protected JSONObject jsonObject;
 
     public MapMapper(JSONObject jsonObject) {
-
         this.setJsonObject(jsonObject);
     }
 
     public Object getObjectForKey(String key) {
-
         return DataExtractor.getObjectFromField(this.getJsonObject(), key);
     }
 
     public String getStringForKey(String key) {
-
         return DataExtractor.getStringFromField(this.getJsonObject(), key);
     }
 

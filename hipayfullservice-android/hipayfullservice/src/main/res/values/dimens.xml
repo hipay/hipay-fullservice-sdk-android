@@ -10,16 +10,13 @@
     <dimen name="spacing_huge">72dp</dimen>
 
     <dimen name="size_fab">56dp</dimen>
-    <dimen name="size_avatar_toolbar">40dp</dimen>
-    <dimen name="size_score_mark">24dp</dimen>
 
     <dimen name="elevation_header">4dp</dimen>
 
     <dimen name="min_height_touch_target">48dp</dimen>
-    <dimen name="min_height_question">144dp</dimen>
-
-    <dimen name="stroke_width_avatar">4dp</dimen>
+    <dimen name="amount_button">54dp</dimen>
 
     <dimen name="size_edit_text">18sp</dimen>
     <dimen name="payment_product_item_text_size">14sp</dimen>
+    <dimen name="amount_item_text_size">18sp</dimen>
 </resources>

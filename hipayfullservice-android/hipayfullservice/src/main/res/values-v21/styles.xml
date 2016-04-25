@@ -1,7 +1,6 @@
 <resources>
     <style name="PaymentScreens" parent="PaymentScreens.Base">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:actionOverflowButtonStyle">@style/PaymentScreens.ActionButton</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:spinnerStyle">@style/Base.Widget.AppCompat.Spinner.Underlined</item>
 
@@ -18,10 +17,7 @@
 
     <style name="PaymentScreens.PaymentFormActivity">
         <item name="android:windowSharedElementEnterTransition">@transition/form_shared_enter</item>
-    </style>
-
-    <style name="PaymentScreens.ActionButton" parent="Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:tint">@color/light_grey</item>
+        <item name="android:windowBackground">@color/hpf_light</item>
     </style>
 
 </resources>

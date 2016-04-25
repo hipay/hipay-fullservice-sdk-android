@@ -8,11 +8,7 @@ import com.hipay.hipayfullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.hipayfullservice.core.requests.AbstractRequest;
 import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.hipayfullservice.core.requests.info.PersonalInfoRequest;
-import com.hipay.hipayfullservice.core.utils.Utils;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 
@@ -34,11 +30,11 @@ public class OrderRelatedRequest extends AbstractRequest {
     protected String clientId;
     protected String ipAddress;
 
-    protected URL acceptURL;
-    protected URL declineURL;
-    protected URL pendingURL;
-    protected URL exceptionURL;
-    protected URL cancelURL;
+    protected String acceptScheme;
+    protected String declineScheme;
+    protected String pendingScheme;
+    protected String exceptionScheme;
+    protected String cancelScheme;
 
     protected String HTTPAccept;
     protected String HTTPUserAgent;
@@ -61,11 +57,14 @@ public class OrderRelatedRequest extends AbstractRequest {
     protected String cdata9;
     protected String cdata10;
 
-    private static final String OrderRelatedRequestRedirectPathAccept = "accept";
-    private static final String OrderRelatedRequestRedirectPathDecline = "decline";
-    private static final String OrderRelatedRequestRedirectPathPending = "pending";
-    private static final String OrderRelatedRequestRedirectPathException = "exception";
-    private static final String OrderRelatedRequestRedirectPathCancel = "cancel";
+    public static final String OrderRelatedRequestRedirectPathAccept = "accept";
+    public static final String OrderRelatedRequestRedirectPathDecline = "decline";
+    public static final String OrderRelatedRequestRedirectPathPending = "pending";
+    public static final String OrderRelatedRequestRedirectPathException = "exception";
+    public static final String OrderRelatedRequestRedirectPathCancel = "cancel";
+
+    public static final String GatewayCallbackURLPathName = "gateway";
+    public static final String GatewayCallbackURLOrderPathName = "orders";
 
     public OrderRelatedRequest() {
 
@@ -75,38 +74,20 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.setCustomer(new CustomerInfoRequest());
         this.setShippingAddress(new PersonalInfoRequest());
 
-        try {
-            this.initURLParameters();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            //TODO handle exception
+        //TODO init after orderId is not null
+        //this.initURLParameters();
 
-        } catch (URISyntaxException e) {
-
-            e.printStackTrace();
-            //TODO handle exception
-        }
     }
 
     public OrderRelatedRequest(OrderRelatedRequest orderRelatedRequest) {
+
+        //TODO stop duplicate constructors
 
         this.setLanguage(Locale.getDefault().toString());
         this.setHTTPUserAgent(ClientConfig.getInstance().getUserAgent());
 
         this.setCustomer(new CustomerInfoRequest());
         this.setShippingAddress(new PersonalInfoRequest());
-
-        try {
-            this.initURLParameters();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            //TODO handle exception
-
-        } catch (URISyntaxException e) {
-
-            e.printStackTrace();
-            //TODO handle exception
-        }
 
         this.setOrderId(orderRelatedRequest.getOrderId());
         this.setOperation(orderRelatedRequest.getOperation());
@@ -118,11 +99,11 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.setTax(orderRelatedRequest.getTax());
         this.setClientId(orderRelatedRequest.getClientId());
         this.setIpAddress(orderRelatedRequest.getIpAddress());
-        this.setAcceptURL(orderRelatedRequest.getAcceptURL());
-        this.setDeclineURL(orderRelatedRequest.getDeclineURL());
-        this.setPendingURL(orderRelatedRequest.getPendingURL());
-        this.setExceptionURL(orderRelatedRequest.getExceptionURL());
-        this.setCancelURL(orderRelatedRequest.getCancelURL());
+        this.setAcceptScheme(orderRelatedRequest.getAcceptScheme());
+        this.setDeclineScheme(orderRelatedRequest.getDeclineScheme());
+        this.setPendingScheme(orderRelatedRequest.getPendingScheme());
+        this.setExceptionScheme(orderRelatedRequest.getExceptionScheme());
+        this.setCancelScheme(orderRelatedRequest.getCancelScheme());
         this.setHTTPUserAgent(orderRelatedRequest.getHTTPUserAgent());
         this.setDeviceFingerprint(orderRelatedRequest.getDeviceFingerprint());
         this.setLanguage(orderRelatedRequest.getLanguage());
@@ -143,31 +124,33 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.setCdata9(orderRelatedRequest.getCdata9());
         this.setCdata10(orderRelatedRequest.getCdata10());
 
+        //TODO init after orderId is not null
+        //this.initURLParameters();
     }
 
-    private void initURLParameters() throws MalformedURLException, URISyntaxException {
+    private static final String ClientConfigCallbackURLHost = "hipay-fullservice";
 
-        URL appURL = ClientConfig.getInstance().getAppRedirectionURL();
+    private void initURLParameters() {
 
-        StringBuilder stringBuilder = new StringBuilder("/")
-                .append(ClientConfig.GatewayCallbackURLPathName)
+        StringBuilder appSchemeBuilder = new StringBuilder("hipay")
+                .append("://")
+                .append(ClientConfigCallbackURLHost)
+
                 .append("/")
-                .append(ClientConfig.GatewayCallbackURLOrderPathName);
+                .append(GatewayCallbackURLPathName)
+                .append("/")
+                .append(GatewayCallbackURLOrderPathName)
+                .append("/");
 
         if (this.getOrderId() != null) {
-            stringBuilder.append("/").append(this.getOrderId());
+            appSchemeBuilder.append(this.getOrderId()).append("/");
         }
 
-        Utils.concatenatePath(appURL, stringBuilder.toString());
-
-        if (appURL != null) {
-
-            this.setAcceptURL(Utils.concatenatePath(appURL, OrderRelatedRequestRedirectPathAccept));
-            this.setDeclineURL(Utils.concatenatePath(appURL, OrderRelatedRequestRedirectPathDecline));
-            this.setPendingURL(Utils.concatenatePath(appURL, OrderRelatedRequestRedirectPathPending));
-            this.setCancelURL(Utils.concatenatePath(appURL, OrderRelatedRequestRedirectPathCancel));
-            this.setExceptionURL(Utils.concatenatePath(appURL, OrderRelatedRequestRedirectPathException));
-        }
+        this.setAcceptScheme(appSchemeBuilder.toString().concat(OrderRelatedRequestRedirectPathAccept));
+        this.setDeclineScheme(appSchemeBuilder.toString().concat(OrderRelatedRequestRedirectPathDecline));
+        this.setPendingScheme(appSchemeBuilder.toString().concat(OrderRelatedRequestRedirectPathPending));
+        this.setCancelScheme(appSchemeBuilder.toString().concat(OrderRelatedRequestRedirectPathCancel));
+        this.setExceptionScheme(appSchemeBuilder.toString().concat(OrderRelatedRequestRedirectPathException));
 
     }
 
@@ -210,6 +193,7 @@ public class OrderRelatedRequest extends AbstractRequest {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+        this.initURLParameters();
     }
 
     public OrderRequestOperation getOperation() {
@@ -284,44 +268,44 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.ipAddress = ipAddress;
     }
 
-    public URL getAcceptURL() {
-        return acceptURL;
+    public String getAcceptScheme() {
+        return acceptScheme;
     }
 
-    public void setAcceptURL(URL acceptURL) {
-        this.acceptURL = acceptURL;
+    public void setAcceptScheme(String acceptScheme) {
+        this.acceptScheme = acceptScheme;
     }
 
-    public URL getDeclineURL() {
-        return declineURL;
+    public String getDeclineScheme() {
+        return declineScheme;
     }
 
-    public void setDeclineURL(URL declineURL) {
-        this.declineURL = declineURL;
+    public void setDeclineScheme(String declineScheme) {
+        this.declineScheme = declineScheme;
     }
 
-    public URL getPendingURL() {
-        return pendingURL;
+    public String getPendingScheme() {
+        return pendingScheme;
     }
 
-    public void setPendingURL(URL pendingURL) {
-        this.pendingURL = pendingURL;
+    public void setPendingScheme(String pendingScheme) {
+        this.pendingScheme = pendingScheme;
     }
 
-    public URL getExceptionURL() {
-        return exceptionURL;
+    public String getExceptionScheme() {
+        return exceptionScheme;
     }
 
-    public void setExceptionURL(URL exceptionURL) {
-        this.exceptionURL = exceptionURL;
+    public void setExceptionScheme(String exceptionScheme) {
+        this.exceptionScheme = exceptionScheme;
     }
 
-    public URL getCancelURL() {
-        return cancelURL;
+    public String getCancelScheme() {
+        return cancelScheme;
     }
 
-    public void setCancelURL(URL cancelURL) {
-        this.cancelURL = cancelURL;
+    public void setCancelScheme(String cancelScheme) {
+        this.cancelScheme = cancelScheme;
     }
 
     public String getHTTPAccept() {
@@ -516,65 +500,11 @@ public class OrderRelatedRequest extends AbstractRequest {
             orderRelatedRequest.setDeviceFingerprint(this.getStringForKey("device_fingerprint"));
             orderRelatedRequest.setLanguage(this.getStringForKey("language"));
 
-            String acceptUrlValue = this.getStringForKey("accept_url");
-            if (acceptUrlValue != null) {
-
-                try {
-                    URL acceptUrl = new URL(acceptUrlValue);
-                    orderRelatedRequest.setAcceptURL(acceptUrl);
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            String declineUrlValue = this.getStringForKey("decline_url");
-            if (declineUrlValue != null) {
-
-                try {
-                    URL declineUrl = new URL(declineUrlValue);
-                    orderRelatedRequest.setDeclineURL(declineUrl);
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            String pendingUrlValue = this.getStringForKey("pending_url");
-            if (pendingUrlValue != null) {
-
-                try {
-                    URL pendingUrl = new URL(pendingUrlValue);
-                    orderRelatedRequest.setPendingURL(pendingUrl);
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            String exceptionUrlValue = this.getStringForKey("exception_url");
-            if (exceptionUrlValue != null) {
-
-                try {
-                    URL exceptionUrl = new URL(exceptionUrlValue);
-                    orderRelatedRequest.setExceptionURL(exceptionUrl);
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            String cancelUrlValue = this.getStringForKey("cancel_url");
-            if (cancelUrlValue != null) {
-
-                try {
-                    URL cancelUrl = new URL(cancelUrlValue);
-                    orderRelatedRequest.setCancelURL(cancelUrl);
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-            }
+            orderRelatedRequest.setAcceptScheme(this.getStringForKey("accept_url"));
+            orderRelatedRequest.setDeclineScheme(this.getStringForKey("decline_url"));
+            orderRelatedRequest.setPendingScheme(this.getStringForKey("pending_url"));
+            orderRelatedRequest.setExceptionScheme(this.getStringForKey("exception_url"));
+            orderRelatedRequest.setCancelScheme(this.getStringForKey("cancel_url"));
 
             orderRelatedRequest.setCdata1(this.getStringForKey("cdata1"));
             orderRelatedRequest.setCdata2(this.getStringForKey("cdata2"));

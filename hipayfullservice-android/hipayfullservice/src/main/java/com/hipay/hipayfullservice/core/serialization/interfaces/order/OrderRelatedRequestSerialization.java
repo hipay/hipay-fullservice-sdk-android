@@ -6,7 +6,6 @@ import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.hipayfullservice.core.requests.order.OrderRelatedRequest;
 import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,30 +45,11 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         retMap.put("device_fingerprint", orderRelatedRequest.getDeviceFingerprint());
         retMap.put("language", orderRelatedRequest.getLanguage());
 
-        URL acceptUrl = orderRelatedRequest.getAcceptURL();
-        if (acceptUrl != null) {
-            retMap.put("accept_url",(acceptUrl.toString()));
-        }
-
-        URL declineUrl = orderRelatedRequest.getDeclineURL();
-        if (declineUrl != null) {
-            retMap.put("decline_url",(declineUrl.toString()));
-        }
-
-        URL pendingUrl = orderRelatedRequest.getPendingURL();
-        if (pendingUrl != null) {
-            retMap.put("pending_url",(pendingUrl.toString()));
-        }
-
-        URL exceptionUrl = orderRelatedRequest.getExceptionURL();
-        if (exceptionUrl != null) {
-            retMap.put("exception_url", (exceptionUrl.toString()));
-        }
-
-        URL cancelUrl = orderRelatedRequest.getCancelURL();
-        if (cancelUrl != null) {
-            retMap.put("cancel_url", (cancelUrl.toString()));
-        }
+        retMap.put("accept_url", orderRelatedRequest.getAcceptScheme());
+        retMap.put("decline_url", orderRelatedRequest.getDeclineScheme());
+        retMap.put("pending_url", orderRelatedRequest.getPendingScheme());
+        retMap.put("exception_url", orderRelatedRequest.getExceptionScheme());
+        retMap.put("cancel_url", orderRelatedRequest.getCancelScheme());
 
         //TODO custom data json object
 
@@ -132,31 +112,11 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         this.putStringForKey("device_fingerprint", orderRelatedRequest.getDeviceFingerprint());
         this.putStringForKey("language", orderRelatedRequest.getLanguage());
 
-        URL acceptUrl = orderRelatedRequest.getAcceptURL();
-        if (acceptUrl != null) {
-            this.putStringForKey("accept_url", acceptUrl.toString());
-        }
-
-        URL declineUrl = orderRelatedRequest.getDeclineURL();
-        if (declineUrl != null) {
-            //retMap.put("decline_url",(declineUrl.toString()));
-            this.putStringForKey("decline_url", declineUrl.toString());
-        }
-
-        URL pendingUrl = orderRelatedRequest.getPendingURL();
-        if (pendingUrl != null) {
-            this.putStringForKey("pending_url", pendingUrl.toString());
-        }
-
-        URL exceptionUrl = orderRelatedRequest.getExceptionURL();
-        if (exceptionUrl != null) {
-            this.putStringForKey("exception_url", exceptionUrl.toString());
-        }
-
-        URL cancelUrl = orderRelatedRequest.getCancelURL();
-        if (cancelUrl != null) {
-            this.putStringForKey("cancel_url", cancelUrl.toString());
-        }
+        this.putStringForKey("accept_url", orderRelatedRequest.getAcceptScheme());
+        this.putStringForKey("decline_url", orderRelatedRequest.getDeclineScheme());
+        this.putStringForKey("pending_url", orderRelatedRequest.getPendingScheme());
+        this.putStringForKey("exception_url", orderRelatedRequest.getExceptionScheme());
+        this.putStringForKey("cancel_url", orderRelatedRequest.getCancelScheme());
 
         //TODO custom data json object
 
@@ -170,7 +130,6 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         this.putStringForKey("cdata8", orderRelatedRequest.getCdata8());
         this.putStringForKey("cdata9", orderRelatedRequest.getCdata9());
         this.putStringForKey("cdata10", orderRelatedRequest.getCdata10());
-
 
         //TODO handle customerInfoRequest
         //CustomerInfoRequest customerInfoRequest = orderRelatedRequest.getCustomer();

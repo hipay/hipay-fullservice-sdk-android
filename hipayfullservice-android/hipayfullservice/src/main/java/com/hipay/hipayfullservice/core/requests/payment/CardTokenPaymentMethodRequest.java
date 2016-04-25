@@ -17,7 +17,6 @@ public class CardTokenPaymentMethodRequest extends AbstractPaymentMethodRequest 
 
     public CardTokenPaymentMethodRequest() {
 
-        this.setAuthenticationIndicator(AuthenticationIndicator.AuthenticationIndicatorUndefined);
         this.setEci(Transaction.ECI.ECIUndefined);
     }
 
@@ -35,7 +34,7 @@ public class CardTokenPaymentMethodRequest extends AbstractPaymentMethodRequest 
 
     public enum AuthenticationIndicator {
 
-        AuthenticationIndicatorUndefined (Integer.MAX_VALUE),
+        //AuthenticationIndicatorUndefined (-1),
         AuthenticationIndicatorBypass (0),
         AuthenticationIndicatorIfAvailable (1),
         AuthenticationIndicatorMandatory (2);

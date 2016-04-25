@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HiPayFullservice</string>
+
+    <string name="paiment_products_title">Moyens de paiement</string>
+
+    <string name="card_owner">Nom du titulaire</string>
+    <string name="card_number">Numéro de carte</string>
+    <string name="card_expiration">Date d\'expiration</string>
+    <string name="card_cvv">Code de sécurité</string>
+
+
+    <string name="unknown_error">Erreur inconnue</string>
+</resources>

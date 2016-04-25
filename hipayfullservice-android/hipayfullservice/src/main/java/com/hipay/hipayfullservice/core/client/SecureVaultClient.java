@@ -8,7 +8,7 @@ import com.hipay.hipayfullservice.core.requests.securevault.SecureVaultRequest;
 /**
  * Created by nfillion on 08/03/16.
  */
-public class SecureVaultClient extends AbstractClient<SecureVaultRequest, SecureVaultRequestCallback> {
+public class SecureVaultClient extends AbstractClient {
 
     public SecureVaultClient(Context context) {
         super(context);

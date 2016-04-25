@@ -4,18 +4,12 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
-import com.hipay.hipayfullservice.core.errors.exceptions.HttpException;
 import com.hipay.hipayfullservice.core.models.Transaction;
-import com.hipay.hipayfullservice.core.network.HttpResult;
 import com.hipay.hipayfullservice.core.operations.GatewayOperation;
 import com.hipay.hipayfullservice.core.operations.OrderOperation;
 import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by nfillion on 22/02/16.
@@ -40,23 +34,23 @@ public class OrderReqHandler extends AbstractReqHandler {
         return new OrderOperation(context, bundle);
     }
 
-    @Override
-    public void handleCallback(HttpResult data) {
+    //@Override
+    //public void handleCallback(HttpResult data) {
 
-        String bodyStream = data.getBodyStream();
+    //    String bodyStream = data.getBodyStream();
 
-        try {
-            JSONObject object = new JSONObject(bodyStream);
+    //    try {
+    //        JSONObject object = new JSONObject(bodyStream);
 
-            Transaction transaction = Transaction.fromJSONObject(object);
+    //        Transaction transaction = Transaction.fromJSONObject(object);
 
-            OrderRequestCallback orderRequestCallback = (OrderRequestCallback)this.getCallback();
-            orderRequestCallback.onSuccess(transaction);
+    //        OrderRequestCallback orderRequestCallback = (OrderRequestCallback)this.getCallback();
+    //        orderRequestCallback.onSuccess(transaction);
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+        //} catch (JSONException e) {
+            //e.printStackTrace();
+        //}
+    //}
 
     @Override
     public int getLoaderId() {

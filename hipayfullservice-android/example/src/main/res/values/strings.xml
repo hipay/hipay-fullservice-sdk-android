@@ -20,15 +20,18 @@
 
     <string-array name="array_threeds">
         <item>Default</item>
+        <item>None</item>
         <item>If avail.</item>
         <item>Oblig.</item>
-        <item>None</item>
     </string-array>
 
     <string-array name="array_colors_theme">
         <item>Default</item>
-        <item>Red</item>
+        <item>Blue</item>
+        <item>Green</item>
         <item>Purple</item>
+        <item>Red</item>
+        <item>Yellow</item>
     </string-array>
 
 </resources>

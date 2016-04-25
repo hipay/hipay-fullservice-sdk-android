@@ -1,45 +1,44 @@
 package com.hipay.hipayfullservice.screen.fragment;
 
 import android.app.Activity;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.client.GatewayClient;
-import com.hipay.hipayfullservice.core.client.SecureVaultClient;
-import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
-import com.hipay.hipayfullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
-import com.hipay.hipayfullservice.core.errors.exceptions.ApiException;
-import com.hipay.hipayfullservice.core.models.PaymentCardToken;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.models.Transaction;
-import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
-import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
-import com.hipay.hipayfullservice.screen.activity.PaymentFormActivity;
+import com.hipay.hipayfullservice.screen.activity.ForwardWebViewActivity;
 import com.hipay.hipayfullservice.screen.helper.FormHelper;
+import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
 /**
  * Created by nfillion on 29/02/16.
  */
 
-public class PaymentFormFragment extends Fragment {
+public abstract class AbstractPaymentFormFragment extends Fragment {
 
     private ProgressBar mProgressBar;
     OnCallbackOrderListener mCallback;
+    protected LinearLayout mCardInfoLayout;
 
+    protected abstract void launchRequest();
     public interface OnCallbackOrderListener {
 
         void onCallbackOrderReceived(Transaction transaction, Exception exception);
@@ -49,16 +48,28 @@ public class PaymentFormFragment extends Fragment {
     private EditText mCardNumber;
     private EditText mCardExpiration;
     private EditText mCardCVV;
+    private Button mPayButton;
 
-    private FloatingActionButton mDoneFab;
+    protected GatewayClient mGatewayClient;
 
-    public static PaymentFormFragment newInstance(Bundle paymentPageRequestBundle, Bundle paymentProductBundle) {
+    public static AbstractPaymentFormFragment newInstance(Bundle paymentPageRequestBundle, PaymentProduct paymentProduct, Bundle customTheme) {
 
-        PaymentFormFragment fragment = new PaymentFormFragment();
+        AbstractPaymentFormFragment fragment;
+
+        Boolean isTokenizable = paymentProduct.isTokenizable();
+        if (isTokenizable != null && isTokenizable == true) {
+
+            fragment = new TokenizableCardPaymentFormFragment();
+
+        } else {
+
+            fragment = new UnsupportedPaymentFormFragment();
+        }
 
         Bundle args = new Bundle();
         args.putBundle(PaymentPageRequest.TAG, paymentPageRequestBundle);
-        args.putBundle(PaymentProduct.TAG, paymentProductBundle);
+        args.putBundle(PaymentProduct.TAG, paymentProduct.toBundle());
+        args.putBundle(CustomTheme.TAG, customTheme);
 
         fragment.setArguments(args);
 
@@ -86,7 +97,16 @@ public class PaymentFormFragment extends Fragment {
         //        mSelectedAvatar = Avatar.values()[savedAvatarIndex];
         //    }
         //}
+    }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mPayButton.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.GONE);
+        //TODO reinit button to pay
     }
 
     @Override
@@ -95,6 +115,12 @@ public class PaymentFormFragment extends Fragment {
 
         final View contentView = inflater.inflate(R.layout.fragment_payment_form, container, false);
         return contentView;
+    }
+
+    public void launchHostedPaymentPage(String forwardURLString) {
+
+        final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
+        ForwardWebViewActivity.start(getActivity(), forwardURLString, customThemeBundle);
     }
 
     @Override
@@ -128,10 +154,40 @@ public class PaymentFormFragment extends Fragment {
 
     }
 
+    private StateListDrawable makeSelector(CustomTheme theme) {
+        StateListDrawable res = new StateListDrawable();
+        res.addState(new int[]{android.R.attr.state_pressed}, new ColorDrawable(ContextCompat.getColor(getActivity(), theme.getColorPrimaryDarkId())));
+        res.addState(new int[]{}, new ColorDrawable(ContextCompat.getColor(getActivity(), theme.getColorPrimaryId())));
+        return res;
+    }
+
     private void initContentViews(View view) {
+
+        final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
+
+        CustomTheme theme = CustomTheme.fromBundle(customThemeBundle);
+
+        mPayButton = (Button) view.findViewById(R.id.pay_button);
+        mPayButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mPayButton.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.VISIBLE);
+
+                launchRequest();
+            }
+        });
+
+        mPayButton.setTextColor(ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mPayButton.setBackground(makeSelector(theme));
+        }
 
         mProgressBar = (ProgressBar) view.findViewById(R.id.empty);
 
+        mCardInfoLayout = (LinearLayout) view.findViewById(R.id.card_info_layout);
         //mDoneFab = (FloatingActionButton) view.findViewById(R.id.done);
         //mDoneFab.setOnClickListener(new View.OnClickListener() {
         //    @Override
@@ -188,7 +244,7 @@ public class PaymentFormFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // hiding the floating action button if text is empty
                 if (s.length() == 0) {
-                    mDoneFab.hide();
+                    //mDoneFab.hide();
                 }
             }
 
@@ -196,7 +252,7 @@ public class PaymentFormFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 // showing the floating action button if avatar is selected and input data is valid
                 if (isInputDataValid()) {
-                    mDoneFab.show();
+                    //mDoneFab.show();
                 }
           }
         });
@@ -232,7 +288,7 @@ public class PaymentFormFragment extends Fragment {
                 /* no-op */
 
                 if (s.length() == 0) {
-                    mDoneFab.hide();
+                    //mDoneFab.hide();
                 }
 
                 if (start == 4 && count == 0 && after == 1 && s.length() == 4) {
@@ -253,7 +309,7 @@ public class PaymentFormFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // hiding the floating action button if text is empty
                 if (s.length() == 0) {
-                    mDoneFab.hide();
+                    //mDoneFab.hide();
                 }
 
                 if (start == 4 && before == 0 && count == 1 && s.length() == 5) {
@@ -270,7 +326,7 @@ public class PaymentFormFragment extends Fragment {
             public void afterTextChanged(Editable s) {
 
                 if (isInputDataValid()) {
-                    mDoneFab.show();
+                    //mDoneFab.show();
                 }
 
                 if (addSlash == true) {
@@ -307,7 +363,7 @@ public class PaymentFormFragment extends Fragment {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
                 if (s.length() == 0) {
-                    mDoneFab.hide();
+                    //mDoneFab.hide();
                 }
 
                 StringBuilder stringBuilder = new StringBuilder("beforeText").append("\n");
@@ -330,7 +386,7 @@ public class PaymentFormFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 if (s.length() == 0) {
-                    mDoneFab.hide();
+                    //mDoneFab.hide();
                 }
 
                 StringBuilder stringBuilder = new StringBuilder("onTextChanged").append("\n");
@@ -352,7 +408,7 @@ public class PaymentFormFragment extends Fragment {
             public void afterTextChanged(Editable s) {
 
                 if (isInputDataValid()) {
-                    mDoneFab.show();
+                    //mDoneFab.show();
                 }
 
                 Log.i("go", s.toString());
@@ -384,7 +440,7 @@ public class PaymentFormFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 if (s.length() == 0) {
-                    mDoneFab.hide();
+                    //mDoneFab.hide();
                 }
             }
 
@@ -392,162 +448,29 @@ public class PaymentFormFragment extends Fragment {
             public void afterTextChanged(Editable s) {
 
                 if (isInputDataValid()) {
-                    mDoneFab.show();
+                    //mDoneFab.show();
                 }
 
             }
         });
-
-        mDoneFab = (FloatingActionButton) view.findViewById(R.id.done);
-
-        mDoneFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int i = v.getId();
-                if (i == R.id.done) {
-                    removeDoneFab(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            //TODO do request
-
-                            //getActivity().setResult(R.id.transaction_succeed);
-                            //getActivity().finish();
-
-                            mProgressBar.setVisibility(View.VISIBLE);
-                            goRequest();
-
-                        }
-                    });
-
-                } else {
-                    throw new UnsupportedOperationException(
-                            "The onClick method has not been implemented for " + getResources()
-                                    .getResourceEntryName(v.getId()));
-                }
-            }
-        });
     }
 
 
-    private void goRequest() {
+    protected void cancelOperation() {
 
-        Bundle args = getArguments();
-
-        final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
-        final PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
-
-        SecureVaultClient client = new SecureVaultClient(getActivity());
-        client.createTokenRequest(
-                "4111111111111111o",
-                "12",
-                "2019",
-                "John Doe",
-                "123",
-                false,
-
-                new SecureVaultRequestCallback() {
-                    @Override
-                    public void onSuccess(PaymentCardToken paymentCardToken) {
-
-                        Log.i(paymentCardToken.toString(), paymentCardToken.toString());
-
-                        OrderRequest orderRequest = new OrderRequest(paymentPageRequest);
-                        orderRequest.setPaymentProductCode(paymentProduct.getCode());
-
-                        CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest =
-                                new CardTokenPaymentMethodRequest(
-                                        paymentCardToken.getToken(),
-                                        paymentPageRequest.getEci(),
-                                        paymentPageRequest.getAuthenticationIndicator());
-
-                        orderRequest.setPaymentMethod(cardTokenPaymentMethodRequest);
-
-                        //check if activity is still available
-                        if (getActivity() != null) {
-
-                            new GatewayClient(getActivity())
-                                    .createOrderRequest(orderRequest, new OrderRequestCallback() {
-
-                                        @Override
-                                        public void onSuccess(final Transaction transaction) {
-                                            Log.i("transaction success", transaction.toString());
-
-                                            //Bundle bundle = paymentPageRequest.toBundle();
-                                            //setResultSucceed(null);
-
-                                            //ActivityCompat.finishAfterTransition(getActivity());
-                                            if (mCallback != null) {
-
-                                                mProgressBar.setVisibility(View.GONE);
-                                                mCallback.onCallbackOrderReceived(transaction, null);
-
-                                                showDoneFab(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-
-                                                        //TODO do request
-
-                                                        //getActivity().setResult(R.id.transaction_succeed);
-                                                        //getActivity().finish();
-
-                                                    }
-                                                });
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onError(Exception error) {
-                                            Log.i("transaction failed", error.getLocalizedMessage());
-                                        }
-                                    });
-                        }
-                    }
-
-                    @Override
-                    public void onError(Exception error) {
-
-                        Log.i(error.toString(), error.toString());
-                        Log.i(error.toString(), error.toString());
-
-                        ApiException exception = (ApiException)error;
-
-                        Bundle bundle = exception.toBundle();
-
-                        ApiException newException = ApiException.fromBundle(bundle);
-
-                        Log.i(error.toString(), error.toString());
-                        Log.i(error.toString(), error.toString());
-
-                        //TODO handle token request failed, an API Exception
-                    }
-                }
-        );
-
-        //client.cancelOperation();
+        if (mGatewayClient != null) {
+            mGatewayClient.cancelOperation();
+            mGatewayClient = null;
+        }
     }
 
-    private void removeDoneFab(@Nullable Runnable endAction) {
-        ViewCompat.animate(mDoneFab)
-                .scaleX(0)
-                .scaleY(0)
-                .setInterpolator(new FastOutSlowInInterpolator())
-                .withEndAction(endAction)
-                .start();
-    }
-
-    private void showDoneFab(@Nullable Runnable endAction) {
-        ViewCompat.animate(mDoneFab)
-                .scaleX(1)
-                .scaleY(1)
-                .setInterpolator(new FastOutSlowInInterpolator())
-                .withEndAction(endAction)
-                .start();
+    @Override
+    public void onPause() {
+        super.onPause();
+        cancelOperation();
     }
 
     private boolean isInputDataValid() {
-
         return FormHelper.isInputDataValid(mCardNumber.getText(), mCardExpiration.getText(), mCardCVV.getText(), mCardOwner.getText());
     }
-
  }

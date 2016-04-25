@@ -57,6 +57,10 @@
         <item name="android:button">@null</item>
     </style>
 
+    <style name="PaymentScreens.Button" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@drawable/selector_button</item>
+        <item name="android:button">@null</item>
+    </style>
     <style name="PaymentScreens.CompoundButton.Radio" parent="PaymentScreens.CompoundButton">
         <item name="android:background">@drawable/selector_checkable</item>
     </style>
@@ -73,6 +77,10 @@
 
     <style name="PaymentScreens.TextAppearance.PaymentProductItem" parent="TextAppearance.AppCompat.Small">
         <item name="android:textSize">@dimen/payment_product_item_text_size</item>
+    </style>
+
+    <style name="PaymentScreens.TextAppearance.AmountItem" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">@dimen/amount_item_text_size</item>
     </style>
 
     <style name="PaymentScreens.TextAppearance.Title" parent="TextAppearance.AppCompat.Title">

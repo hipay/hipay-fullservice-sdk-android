@@ -58,14 +58,15 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
         PaymentProduct paymentProduct = mPaymentProducts.get(position);
-        setCategoryIcon(paymentProduct, holder.icon);
 
         PaymentProductsActivity activity = (PaymentProductsActivity)mActivity;
         CustomTheme theme = activity.getCustomTheme();
 
+        setCategoryIcon(paymentProduct, holder.icon);
+
         holder.itemView.setBackgroundColor(getColor(android.R.color.background_light));
-        //holder.itemView.setBackgroundColor(getColor(R.color.hpf_blank));
         holder.title.setText(paymentProduct.getCode());
+
         holder.title.setTextColor(getColor(theme.getTextColorPrimaryId()));
         holder.title.setBackgroundColor(getColor(theme.getColorPrimaryId()));
 
@@ -75,7 +76,6 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
                 mOnItemClickListener.onClick(v, position);
             }
         });
-
 
     }
 
@@ -125,7 +125,7 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
     private void setCategoryIcon(PaymentProduct paymentProduct, ImageView icon) {
 
         final int categoryImageResource = mResources.getIdentifier(
-                ICON_PAYMENT_PRODUCTS + "mastercard", DRAWABLE, mPackageName);
+                ICON_PAYMENT_PRODUCTS + paymentProduct.getCode(), DRAWABLE, mPackageName);
 
         icon.setImageResource(categoryImageResource);
     }
@@ -133,13 +133,16 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
     private void updatePaymentProducts(Activity activity) {
 
         PaymentProduct paymentProduct = new PaymentProduct();
-        paymentProduct.setCode("VISA");
+        paymentProduct.setCode("visa");
+        paymentProduct.setTokenizable(true);
 
         PaymentProduct paymentProduct2 = new PaymentProduct();
-        paymentProduct2.setCode("MASTERCARD");
+        paymentProduct2.setCode("mastercard");
+        paymentProduct2.setTokenizable(false);
 
         PaymentProduct paymentProduct3 = new PaymentProduct();
-        paymentProduct3.setCode("PAYPAL");
+        paymentProduct3.setCode("maestro");
+        paymentProduct3.setTokenizable(false);
 
         //TODO check later how to get products
         mPaymentProducts = new ArrayList<>(Arrays.asList(
