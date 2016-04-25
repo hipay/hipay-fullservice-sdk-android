@@ -27,8 +27,9 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
     }
 
     protected abstract HttpURLConnection getHttpURLConnection() throws IOException;
-    protected abstract HttpMethod getRequestType() throws IOException;
+    protected abstract HttpMethod getRequestType();
     protected abstract T buildFromHttpResponse(HttpResult httpResult);
+    protected abstract String concatUrl();
 
     protected HttpResult backgroundOperation() {
 

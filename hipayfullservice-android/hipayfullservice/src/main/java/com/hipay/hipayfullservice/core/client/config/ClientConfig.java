@@ -16,12 +16,9 @@ public class ClientConfig {
     private String userAgent;
     private URL appRedirectionURL;
 
-    private static final String ClientConfigCallbackURLHost = "hipay-fullservice";
 
     public static final String GatewayClientBaseURLStage = "https://stage-secure-gateway.hipay-tpp.com/rest/v1";
     public static final String GatewayClientBaseURLProduction = "https://secure-gateway.hipay-tpp.com/rest/v1";
-    public static final String GatewayCallbackURLPathName = "gateway";
-    public static final String GatewayCallbackURLOrderPathName = "order";
 
     public static final String SecureVaultClientBaseURLStage = "https://stage-secure-vault.hipay-tpp.com/rest/v1";
     public static final String SecureVaultClientBaseURLProduction = "https://secure-vault.hipay-tpp.com/rest/v1";
@@ -36,24 +33,6 @@ public class ClientConfig {
             mInstance = new ClientConfig();
         }
         return mInstance;
-    }
-
-    private URL urlSchemeWithString(String schemeString) {
-
-        //TODO remove that after we got the real scheme
-        schemeString = "http";
-
-        StringBuilder appURLSchemeBuilder = new StringBuilder(schemeString);
-        appURLSchemeBuilder.append("://");
-        appURLSchemeBuilder.append(ClientConfigCallbackURLHost);
-
-        try {
-            return new URL(appURLSchemeBuilder.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-
-            return null;
-        }
     }
 
     public enum Environment {
@@ -91,13 +70,11 @@ public class ClientConfig {
     }
 
 
-    public void setConfigEnvironment(Environment environment, String username, String password, String appURLscheme) {
+    public void setConfigEnvironment(Environment environment, String username, String password) {
 
         this.setEnvironment(environment);
         this.setUsername(username);
         this.setPassword(password);
-
-        this.setAppRedirectionURL(this.urlSchemeWithString(appURLscheme));
 
         //TODO determine useragent
         this.setUserAgent(null);
@@ -129,13 +106,5 @@ public class ClientConfig {
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
-    }
-
-    public URL getAppRedirectionURL() {
-        return appRedirectionURL;
-    }
-
-    public void setAppRedirectionURL(URL appRedirectionURL) {
-        this.appRedirectionURL = appRedirectionURL;
     }
 }

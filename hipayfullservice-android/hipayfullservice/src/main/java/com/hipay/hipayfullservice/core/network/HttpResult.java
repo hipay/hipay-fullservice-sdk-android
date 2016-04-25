@@ -1,9 +1,6 @@
 package com.hipay.hipayfullservice.core.network;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 /**
  * Created by nfillion on 25/01/16.
@@ -14,14 +11,6 @@ public class HttpResult {
     private String bodyStream;
     private String errorStream;
     private IOException ioException;
-
-    public HttpResult(int statusCode, String bodyStream, IOException ioException) {
-
-        this.setStatusCode(statusCode);
-        this.setBodyStream(bodyStream);
-        this.setIoException(ioException);
-        //this.setJsonException(jsonException);
-    }
 
     public HttpResult() {}
 
@@ -40,15 +29,6 @@ public class HttpResult {
     public void setIoException(IOException ioException) {
         this.ioException = ioException;
     }
-/*
-    public JSONException getJsonException() {
-        return jsonException;
-    }
-
-    public void setJsonException(JSONException jsonException) {
-        this.jsonException = jsonException;
-    }
-*/
 
     public String getBodyStream() {
         return bodyStream;

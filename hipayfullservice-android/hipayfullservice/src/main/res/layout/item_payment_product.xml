@@ -7,18 +7,26 @@
     android:foreground="@drawable/selector_subtle"
     tools:ignore="UseCompoundDrawables">
 
-    <ImageView
-        android:id="@+id/payment_product_icon"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/size_avatar_toolbar"
-        android:contentDescription="@string/payment_product" />
+        android:orientation="vertical"
+        >
 
-    <TextView
-        android:id="@+id/payment_product_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:textAppearance="@style/PaymentScreens.TextAppearance.PaymentProductItem"
-        android:padding="@dimen/spacing_double" />
+        <ImageView
+            android:id="@+id/payment_product_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/app_name" />
+
+        <TextView
+            android:id="@+id/payment_product_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:textAppearance="@style/PaymentScreens.TextAppearance.PaymentProductItem"
+            android:padding="@dimen/spacing_double" />
+
+    </LinearLayout>
 </FrameLayout>

@@ -40,13 +40,11 @@ public class ApiException extends AbstractException {
 
         @Override
         protected String getQueryString() {
-
             return super.getQueryString();
         }
 
         @Override
         protected Bundle getSerializedBundle() {
-
             return super.getSerializedBundle();
         }
     }
@@ -79,8 +77,6 @@ public class ApiException extends AbstractException {
 
         @Override
         protected ApiException mappedObjectFromBundle() {
-
-            //TODO build operation object from transactionRelatedItem
 
             Bundle exceptionBundle = this.getBundleForKey("cause");
             HttpException httpException = null;

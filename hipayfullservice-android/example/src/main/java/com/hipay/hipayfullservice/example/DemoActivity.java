@@ -21,13 +21,11 @@ public class DemoActivity extends AppCompatActivity {
         ClientConfig.Environment environment = ClientConfig.Environment.Stage;
         String username = "94654679.api.hipay-tpp.com";
         String password = "U5hQh4ZT0UyXpYhG8WI4trYQ";
-        String appURLScheme = "hipayexample";
 
         ClientConfig.getInstance().setConfigEnvironment(
                 environment,
                 username,
-                password,
-                appURLScheme
+                password
         );
 
         if (savedInstanceState == null) {

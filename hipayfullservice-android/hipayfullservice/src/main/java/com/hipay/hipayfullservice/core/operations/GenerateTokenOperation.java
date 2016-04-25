@@ -18,9 +18,9 @@ import java.net.URL;
  * Created by nfillion on 08/03/16.
  */
 
-public class SecureVaultOperation extends AbstractOperation {
+public class GenerateTokenOperation extends AbstractOperation {
 
-    public SecureVaultOperation(Context context, Bundle bundle) {
+    public GenerateTokenOperation(Context context, Bundle bundle) {
         super(context, bundle);
     }
 
@@ -80,13 +80,17 @@ public class SecureVaultOperation extends AbstractOperation {
     }
 
     @Override
-    protected HttpMethod getRequestType() throws IOException {
+    protected HttpMethod getRequestType() {
         return HttpMethod.POST;
     }
 
     @Override
     protected HttpResult buildFromHttpResponse(HttpResult httpResult) {
-
         return httpResult;
+    }
+
+    @Override
+    protected String concatUrl() {
+        return null;
     }
 }

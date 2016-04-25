@@ -27,15 +27,16 @@ public class PaymentPageRequestSerialization extends OrderRelatedRequestSerializ
         // get the OrderRelatedRequest serialization
         PaymentPageRequest paymentPageRequest = (PaymentPageRequest)this.getRequest();
 
-        relatedRequestMap.put("payment_product_list", null);
+        relatedRequestMap.put("payment_product_list", "visa");
         relatedRequestMap.put("payment_product_category_list", null);
 
         relatedRequestMap.put("eci", null);
         relatedRequestMap.put("authentication_indicator", null);
 
         //TODO check what multiUse returns
-        relatedRequestMap.put("multi_use", String.valueOf(paymentPageRequest.getMultiUse()));
-        relatedRequestMap.put("display_selector", String.valueOf(paymentPageRequest.getDisplaySelector()));
+        relatedRequestMap.put("multi_use", "0");
+        //relatedRequestMap.put("multi_use", paymentPageRequest.getMultiUse());
+        relatedRequestMap.put("display_selector", "0"); //String.valueOf(paymentPageRequest.getDisplaySelector()));
 
         relatedRequestMap.put("template", paymentPageRequest.getTemplateName());
 

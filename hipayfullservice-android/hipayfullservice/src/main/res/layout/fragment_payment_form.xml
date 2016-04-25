@@ -10,6 +10,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/card_info_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -27,9 +28,19 @@
             </ScrollView>
 
         </LinearLayout>
-        <include
-            layout="@layout/fab_done"
-            android:visibility="visible" />
+
+
+        <Button
+            android:id="@+id/pay_button"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+
+            android:textAppearance="@style/PaymentScreens.TextAppearance.AmountItem"
+            style="@style/PaymentScreens.Button"
+            android:layout_gravity="bottom"
+            android:layout_margin="@dimen/spacing_double"
+            android:text="Payer 8,56$"
+            />
 
         <ProgressBar
             android:id="@+id/empty"

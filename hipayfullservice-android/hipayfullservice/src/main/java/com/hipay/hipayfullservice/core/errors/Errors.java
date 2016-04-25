@@ -5,6 +5,8 @@ package com.hipay.hipayfullservice.core.errors;
  */
 public class Errors {
 
+    public static final String TAG = "Errors";
+
     public static final String HTTPOtherDescription = "An unknown error occurred while attempting to make the HTTP request.";
     public static final String HTTPNetworkUnavailableDescription = "The network is unavailable.";
     public static final String HTTPConfigDescription = "There's a remote/local configuration error.";
