@@ -35,6 +35,11 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
     }
 
     @Override
+    protected boolean isInputDataValid() {
+        return true;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
     }

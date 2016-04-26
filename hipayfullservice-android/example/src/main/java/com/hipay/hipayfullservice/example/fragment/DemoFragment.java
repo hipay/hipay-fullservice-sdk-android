@@ -266,8 +266,10 @@ public class DemoFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 // showing the floating action button if input data is valid
                 if (isInputDataValid()) {
+                    mAmount.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorAccent));
                     mDoneFab.show();
                 } else {
+                    mAmount.setTextColor(ContextCompat.getColor(getActivity(), R.color.red));
                     mDoneFab.hide();
                 }
             }
@@ -407,6 +409,7 @@ public class DemoFragment extends Fragment {
         try {
             Float.parseFloat(mAmount.getText().toString());
         } catch (NumberFormatException e) {
+
             return false;
         }
 

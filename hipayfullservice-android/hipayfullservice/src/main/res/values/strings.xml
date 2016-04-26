@@ -10,4 +10,6 @@
     <string name="card_cvv">CVV</string>
 
     <string name="unknown_error">Unknown error</string>
+    <string name="pay">Pay</string>
+
 </resources>

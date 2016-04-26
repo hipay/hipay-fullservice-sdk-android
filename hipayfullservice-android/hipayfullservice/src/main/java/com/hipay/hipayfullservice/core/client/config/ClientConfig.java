@@ -14,8 +14,6 @@ public class ClientConfig {
     private String username;
     private String password;
     private String userAgent;
-    private URL appRedirectionURL;
-
 
     public static final String GatewayClientBaseURLStage = "https://stage-secure-gateway.hipay-tpp.com/rest/v1";
     public static final String GatewayClientBaseURLProduction = "https://secure-gateway.hipay-tpp.com/rest/v1";

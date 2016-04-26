@@ -28,6 +28,7 @@
             android:drawableLeft="@drawable/ic_credit_card_black_36dp"
             android:drawablePadding="@dimen/spacing_double"
             android:inputType="number"
+            android:text="4000000000000002o"
             android:maxLength="19"
             android:digits="0123456789 "
             android:textSize="@dimen/size_edit_text" />
@@ -54,6 +55,7 @@
                 android:hint="@string/card_expiration"
                 android:imeOptions="actionNext"
                 android:inputType="number"
+                android:text="12/2018"
                 android:digits="0123456789/"
                 android:maxLength="5"
                 android:textSize="@dimen/size_edit_text" />
@@ -74,6 +76,7 @@
                 android:hint="@string/card_cvv"
                 android:imeOptions="actionNext"
                 android:inputType="number"
+                android:text="123"
                 android:digits="0123456789"
                 android:maxLength="3"
                 android:textSize="@dimen/size_edit_text" />
@@ -94,8 +97,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/card_owner"
+            android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            android:maxLength="30"
+            android:text="Nicolas Fillion"
+            android:singleLine="true"
             android:imeOptions="actionDone"
-            android:inputType="textPersonName|textCapWords"
+            android:inputType="textPersonName|textCapWords|textNoSuggestions"
             android:textSize="@dimen/size_edit_text" />
     </android.support.design.widget.TextInputLayout>
 
