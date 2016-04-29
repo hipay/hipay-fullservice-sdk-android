@@ -16,12 +16,12 @@ public class SecureVaultRequestSerialization extends AbstractSerialization {
 
     public SecureVaultRequestSerialization(SecureVaultRequest secureVaultRequest) {
 
-        this.setRequest(secureVaultRequest);
+        super(secureVaultRequest);
     }
 
     public Map<String, String> getSerializedRequest() {
 
-        SecureVaultRequest secureVaultRequest = (SecureVaultRequest)this.getRequest();
+        SecureVaultRequest secureVaultRequest = (SecureVaultRequest)this.getModel();
 
         Map<String, String> retMap = new HashMap<>();
         retMap.put("card_number", secureVaultRequest.getCardNumber());
@@ -30,6 +30,8 @@ public class SecureVaultRequestSerialization extends AbstractSerialization {
         retMap.put("card_holder", secureVaultRequest.getCardHolder());
         retMap.put("cvc", secureVaultRequest.getCardCVC());
         retMap.put("multi_use", String.valueOf(secureVaultRequest.getMultiUse() ? 1 : 0) );
+
+        while (retMap.values().remove(null));
 
         return retMap;
     }

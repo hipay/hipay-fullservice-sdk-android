@@ -1,9 +1,16 @@
 package com.hipay.hipayfullservice.core.models;
 
+import android.os.Bundle;
+
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
+import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.hipayfullservice.core.serialization.BundleSerialization;
+import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
 import org.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * Created by nfillion on 25/01/16.
@@ -19,6 +26,24 @@ public class ThreeDSecure extends AbstractModel {
     protected String xid;
 
     public ThreeDSecure() {
+    }
+
+    public static ThreeDSecure fromJSONObject(JSONObject object) {
+
+        ThreeDSecureMapper mapper = new ThreeDSecureMapper(object);
+        return mapper.mappedObject();
+    }
+
+    public static ThreeDSecure fromBundle(Bundle bundle) {
+
+        ThreeDSecureMapper mapper = new ThreeDSecureMapper(bundle);
+        return mapper.mappedObjectFromBundle();
+    }
+
+    public Bundle toBundle() {
+
+        ThreeDSecure.ThreeDSecureSerializationMapper mapper = new ThreeDSecure.ThreeDSecureSerializationMapper(this);
+        return mapper.getSerializedBundle();
     }
 
     public enum ThreeDSecureEnrollmentStatus {
@@ -163,10 +188,71 @@ public class ThreeDSecure extends AbstractModel {
         this.xid = xid;
     }
 
+    protected static class ThreeDSecureSerializationMapper extends AbstractSerializationMapper {
+
+        protected ThreeDSecureSerializationMapper(ThreeDSecure threeDSecure) {
+            super(threeDSecure);
+        }
+
+        @Override
+        protected String getQueryString() {
+
+            return super.getQueryString();
+        }
+
+        @Override
+        protected Bundle getSerializedBundle() {
+
+            return super.getSerializedBundle();
+        }
+    }
+
+    public static class ThreeDSecureSerialization extends AbstractSerialization {
+
+        //TODO time to put a rawData instead of model/request in initializer
+        public ThreeDSecureSerialization(ThreeDSecure threeDSecure) {
+            super(threeDSecure);
+        }
+
+        @Override
+        public Map<String, String> getSerializedRequest() {
+            return null;
+        }
+
+        @Override
+        public Bundle getSerializedBundle() {
+            super.getSerializedBundle();
+
+            ThreeDSecure threeDSecure = (ThreeDSecure)this.getModel();
+
+            this.putStringForKey("enrollmentMessage", threeDSecure.getEnrollmentMessage());
+
+            ThreeDSecureEnrollmentStatus enrollmentStatus = threeDSecure.getEnrollmentStatus();
+            if (enrollmentStatus != null) {
+                this.putStringForKey("enrollmentStatus", Character.toString(enrollmentStatus.getCharValue()));
+            }
+
+            ThreeDSecureAuthenticationStatus authenticationStatus = threeDSecure.getAuthenticationStatus();
+            if (authenticationStatus != null) {
+                this.putStringForKey("authenticationStatus", Character.toString(authenticationStatus.getCharValue()));
+            }
+
+            this.putStringForKey("authenticationMessage", threeDSecure.getAuthenticationMessage());
+            this.putStringForKey("authenticationToken", threeDSecure.getAuthenticationToken());
+            this.putStringForKey("xid", threeDSecure.getXid());
+
+            return this.getBundle();
+        }
+
+        @Override
+        public String getQueryString() {
+            return null;
+        }
+    }
 
     public static class ThreeDSecureMapper extends AbstractMapper {
-        public ThreeDSecureMapper(JSONObject jsonObject) {
-            super(jsonObject);
+        public ThreeDSecureMapper(Object rawData) {
+            super(rawData);
         }
 
         @Override
@@ -180,7 +266,7 @@ public class ThreeDSecure extends AbstractModel {
             return false;
         }
 
-        protected Object mappedObject() {
+        protected ThreeDSecure mappedObject() {
 
             ThreeDSecure object = new ThreeDSecure();
 
@@ -209,8 +295,31 @@ public class ThreeDSecure extends AbstractModel {
         }
 
         @Override
-        protected Object mappedObjectFromBundle() {
-            return null;
+        protected ThreeDSecure mappedObjectFromBundle() {
+
+            ThreeDSecure object = new ThreeDSecure();
+
+            object.setEnrollmentMessage(this.getStringForKey("enrollmentMessage"));
+
+            String enrollmentStatus = this.getEnumCharForKey("enrollmentStatus");
+            ThreeDSecureEnrollmentStatus status = ThreeDSecureEnrollmentStatus.fromStringValue(enrollmentStatus);
+            if (status == null) {
+                status = ThreeDSecureEnrollmentStatus.ThreeDSecureEnrollmentStatusUnknown;
+            }
+            object.setEnrollmentStatus(status);
+
+            String authenticationStatus = this.getEnumCharForKey("authenticationStatus");
+            ThreeDSecureAuthenticationStatus authStatus = ThreeDSecureAuthenticationStatus.fromStringValue(authenticationStatus);
+            if (authStatus == null) {
+                authStatus = ThreeDSecureAuthenticationStatus.ThreeDSecureAuthenticationStatusUnknown;
+            }
+            object.setAuthenticationStatus(authStatus);
+
+            object.setAuthenticationMessage(this.getStringForKey("authenticationMessage"));
+            object.setAuthenticationToken(this.getStringForKey("authenticationToken"));
+            object.setXid(this.getStringForKey("xid"));
+
+            return object;
         }
     }
 

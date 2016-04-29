@@ -3,6 +3,7 @@ package com.hipay.hipayfullservice.core.serialization;
 import android.os.Bundle;
 
 import java.net.URL;
+import java.util.Date;
 
 /**
  * Created by nfillion on 18/03/16.
@@ -22,10 +23,6 @@ public class BundleSerialization implements IBundle {
 
         if (floatNumber != null) {
             this.getBundle().putFloat(key, floatNumber);
-
-        } else {
-            //TODO don't put anything if float is null
-            //this.getBundle().putFloat(key, -1.f);
         }
     }
 
@@ -44,7 +41,6 @@ public class BundleSerialization implements IBundle {
 
         } else {
 
-            //TODO don't put anything if integer is null
             //this.getBundle().putInt(key, -1);
         }
     }
@@ -54,11 +50,6 @@ public class BundleSerialization implements IBundle {
 
         if (bool != null) {
             this.getBundle().putBoolean(key, bool);
-
-        } else {
-
-            //TODO don't put anything if bool is null
-            //this.getBundle().putBoolean(key, false);
         }
     }
 
@@ -67,11 +58,18 @@ public class BundleSerialization implements IBundle {
 
         if (bundle != null) {
             this.getBundle().putBundle(key, bundle);
+        }
+    }
 
-        } else {
+    @Override
+    public void putDate(String key, Date date) {
 
-            //TODO don't put anything if bool is null
-            //this.getBundle().putBoolean(key, false);
+        //TODO set date correctly in a string and put this in bundle
+        // put this timestamp or an iso format.
+
+        if (date != null) {
+
+            this.getBundle().putString(key, date.toString());
         }
     }
 

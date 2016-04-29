@@ -1,14 +1,13 @@
 package com.hipay.hipayfullservice.core.network;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.AsyncTaskLoader;
 
 import com.hipay.hipayfullservice.core.utils.Utils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 
 /**
@@ -71,6 +70,8 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
         }
 
         return httpResult;
+        // first one on s'en tape
+
     }
 
     @Override

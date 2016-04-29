@@ -39,6 +39,7 @@ import com.hipay.hipayfullservice.screen.activity.PaymentProductsActivity;
 import com.hipay.hipayfullservice.screen.helper.ApiLevelHelper;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -92,15 +93,6 @@ public class DemoFragment extends Fragment {
                 ApiException exception = ApiException.fromBundle(exceptionBundle);
 
                 Snackbar snackbar = Snackbar.make(mDoneFab, "Error : " + exception.getLocalizedMessage(),
-                        Snackbar.LENGTH_INDEFINITE);
-                View snackBarView = snackbar.getView();
-                snackBarView.setBackgroundColor((ContextCompat.getColor(getActivity(),
-                        android.R.color.holo_red_light)));
-                snackbar.show();
-
-            } else if (resultCode == R.id.transaction_unknown_error) {
-
-                Snackbar snackbar = Snackbar.make(mDoneFab, "Unknown error",
                         Snackbar.LENGTH_INDEFINITE);
                 View snackBarView = snackbar.getView();
                 snackBarView.setBackgroundColor((ContextCompat.getColor(getActivity(),
@@ -312,18 +304,31 @@ public class DemoFragment extends Fragment {
 
         PaymentPageRequest paymentPageRequest = new PaymentPageRequest();
 
-        StringBuilder stringBuilder = new StringBuilder("TEST_SDK_Android_").append(Calendar.getInstance().getTimeInMillis()/1000);
+        StringBuilder stringBuilder = new StringBuilder("TEST_SDK_Android_").append(Calendar.getInstance().getTimeInMillis());
         paymentPageRequest.setOrderId(stringBuilder.toString());
+        //paymentPageRequest.setOrderId("uniqueId2");
 
-        paymentPageRequest.setShortDescription("Outstanding item");
+        paymentPageRequest.setShortDescription("Un beau vêtement.");
+        paymentPageRequest.setLongDescription("Un très beau vêtement en soie de couleur bleue.");
+
+        paymentPageRequest.getCustomer().setFirstname("Martin");
+        paymentPageRequest.getCustomer().setLastname("Dupont");
+        paymentPageRequest.getCustomer().setEmail("contact@hipay.com");
+
+        paymentPageRequest.getCustomer().setRecipientInfo("Employee");
+        paymentPageRequest.getCustomer().setStreetAddress("6 Place du Colonel Bourgoin");
+        paymentPageRequest.getCustomer().setStreetAddress2("Immeuble de droite");
+
+        paymentPageRequest.getCustomer().setCity("Paris");
+        paymentPageRequest.getCustomer().setZipCode("75012");
         paymentPageRequest.getCustomer().setCountry("FR");
-        paymentPageRequest.getCustomer().setFirstname("John");
-        paymentPageRequest.getCustomer().setLastname("Doe");
+        paymentPageRequest.getCustomer().setState("France");
 
-        paymentPageRequest.getCustomer().setEmail("nfillion@hipay.com");
+        paymentPageRequest.setTax(2.67f);
+        paymentPageRequest.setShipping(1.56f);
 
-        paymentPageRequest.setMultiUse(mGroupCardSwitch.isChecked());
-        paymentPageRequest.setPaymentCardGroupingEnabled(mReusableTokenSwitch.isEnabled());
+        paymentPageRequest.setPaymentCardGroupingEnabled(mGroupCardSwitch.isChecked());
+        paymentPageRequest.setMultiUse(mReusableTokenSwitch.isChecked());
         paymentPageRequest.setAmount(Float.parseFloat(mAmount.getText().toString()));
 
         String selectedItem = (String)mCurrencySpinner.getSelectedItem();
@@ -335,15 +340,14 @@ public class DemoFragment extends Fragment {
         paymentPageRequest.setAuthenticationIndicator(authenticationIndicator);
 
         paymentPageRequest.setPaymentProductCategoryList(
+                new ArrayList<>(
+                        Arrays.asList(
 
-                Arrays.asList(
-
-                        PaymentProduct.PaymentProductCodeCB,
-                        PaymentProduct.PaymentProductCodeMasterCard,
-                        PaymentProduct.PaymentProductCodeVisa,
-                        PaymentProduct.PaymentProductCodeAmericanExpress,
-                        PaymentProduct.PaymentProductCodeMaestro,
-                        PaymentProduct.PaymentProductCodeDiners
+                                PaymentProduct.PaymentProductCategoryCodeRealtimeBanking,
+                                PaymentProduct.PaymentProductCategoryCodeCreditCard,
+                                PaymentProduct.PaymentProductCategoryCodeDebitCard,
+                                PaymentProduct.PaymentProductCategoryCodeEWallet
+                        )
                 )
         );
 

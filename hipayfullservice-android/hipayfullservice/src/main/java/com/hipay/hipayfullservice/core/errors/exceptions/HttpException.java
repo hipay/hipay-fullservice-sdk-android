@@ -104,7 +104,7 @@ public class HttpException extends AbstractException {
 
         //TODO time to put a rawData instead of model/request in initializer
         public HttpExceptionSerialization(Exception exception) {
-            this.setException(exception);
+            super(exception);
         }
 
         @Override
@@ -115,9 +115,9 @@ public class HttpException extends AbstractException {
         @Override
         public Bundle getSerializedBundle() {
 
-            this.setBundleBehaviour(new BundleSerialization());
+            super.getSerializedBundle();
 
-            HttpException httpException = (HttpException)this.getException();
+            HttpException httpException = (HttpException)this.getModel();
 
             this.putStringForKey("message", httpException.getMessage());
             this.putIntForKey("code", httpException.getStatusCode());

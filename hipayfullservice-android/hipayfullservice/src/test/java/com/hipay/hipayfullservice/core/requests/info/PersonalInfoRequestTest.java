@@ -37,7 +37,6 @@ public class PersonalInfoRequestTest {
     @Test
     public void testSetters() throws Exception {
 
-        personalInfoRequest.setDisplayName(null);
         personalInfoRequest.setFirstname(null);
         personalInfoRequest.setLastname(null);
         personalInfoRequest.setStreetAddress(null);

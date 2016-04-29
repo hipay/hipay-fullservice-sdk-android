@@ -2,6 +2,8 @@ package com.hipay.hipayfullservice.core.mapper.interfaces;
 
 import android.os.Bundle;
 
+import org.json.JSONObject;
+
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +31,7 @@ public interface IBehaviour {
 
     Bundle getBundleForKey(String key);
     Boolean getBoolNumberForKey(String key);
+    JSONObject getJSONObjectForKey(String key);
 
     Boolean getBoolForKey(String key);
     Map getMapForKey(String key);

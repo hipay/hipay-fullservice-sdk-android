@@ -12,7 +12,9 @@ import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.screen.activity.ForwardWebViewActivity;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by nfillion on 20/04/16.
@@ -22,16 +24,13 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
-
         mCardInfoLayout.setVisibility(View.GONE);
-        //TODO put this paymentPageRequest as args to get it.
     }
 
     @Override
@@ -44,9 +43,7 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
         super.onResume();
     }
 
-    protected void launchRequest() {
-
-        //TODO on tente le hpayment
+    public void launchRequest() {
 
         Bundle args = getArguments();
 
@@ -54,18 +51,17 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
         final PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
 
         PaymentPageRequest pageRequest = new PaymentPageRequest(paymentPageRequest);
-        pageRequest.setPaymentProductCategoryList(null);
 
-        ArrayList<String> codes = new ArrayList<>(1);
-        codes.add(paymentProduct.getCode());
-
-        pageRequest.setPaymentProductList(codes);
+        //everything already empty
+        //pageRequest.setPaymentProductCategoryList(null);
+        pageRequest.setPaymentProductList(new ArrayList(Arrays.asList(paymentProduct.getCode())));
         pageRequest.setDisplaySelector(false);
         pageRequest.setTemplateName(PaymentPageRequest.PaymentPageRequestTemplateNameFrame);
 
-        this.cancelOperation();
+        this.cancelOperations();
         mGatewayClient = new GatewayClient(getActivity());
-        mGatewayClient.createHostedPaymentPageRequest(paymentPageRequest, new PaymentPageRequestCallback() {
+        mCurrentLoading = 2;
+        mGatewayClient.createHostedPaymentPageRequest(pageRequest, new PaymentPageRequestCallback() {
 
             @Override
             public void onError(Exception error) {
@@ -73,16 +69,24 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
                 if (mCallback != null) {
                     mCallback.onCallbackOrderReceived(null, error);
                 }
+                cancelLoaderId(2);
             }
 
             @Override
             public void onSuccess(HostedPaymentPage hostedPaymentPage) {
 
-                if (getActivity() != null) {
+                if (mCallback != null) {
 
-                    final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
-                    ForwardWebViewActivity.start(getActivity(), hostedPaymentPage, customThemeBundle);
+                    URL forwardUrl = hostedPaymentPage.getForwardUrl();
+                    if (forwardUrl != null) {
+
+                        final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
+                        ForwardWebViewActivity.start(getActivity(), forwardUrl.toString(), customThemeBundle);
+                    }
                 }
+
+                mLoadingMode = false;
+                cancelLoaderId(2);
             }
         });
     }

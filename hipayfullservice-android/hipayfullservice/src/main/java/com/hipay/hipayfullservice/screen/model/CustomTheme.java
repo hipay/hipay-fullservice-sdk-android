@@ -6,7 +6,6 @@ import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.hipayfullservice.core.models.AbstractModel;
 import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
-import com.hipay.hipayfullservice.core.serialization.BundleSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
 import java.util.Map;
@@ -127,7 +126,7 @@ public class CustomTheme extends AbstractModel {
 
         //TODO time to put a rawData instead of model/request in initializer
         public CustomThemeSerialization(CustomTheme customTheme) {
-            this.setModel(customTheme);
+            super(customTheme);
         }
 
         @Override
@@ -138,7 +137,7 @@ public class CustomTheme extends AbstractModel {
         @Override
         public Bundle getSerializedBundle() {
 
-            this.setBundleBehaviour(new BundleSerialization());
+            super.getSerializedBundle();
 
             CustomTheme customTheme = (CustomTheme)this.getModel();
 

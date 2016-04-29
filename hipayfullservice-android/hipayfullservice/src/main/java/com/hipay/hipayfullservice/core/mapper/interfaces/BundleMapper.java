@@ -2,6 +2,8 @@ package com.hipay.hipayfullservice.core.mapper.interfaces;
 
 import android.os.Bundle;
 
+import org.json.JSONObject;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -118,6 +120,11 @@ public class BundleMapper implements IBehaviour {
 
     @Override
     public Boolean getBoolNumberForKey(String key) {
+        return null;
+    }
+
+    @Override
+    public JSONObject getJSONObjectForKey(String key) {
         return null;
     }
 

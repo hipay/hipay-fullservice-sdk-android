@@ -1,24 +1,28 @@
 package com.hipay.hipayfullservice.core.client;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.LoaderManager;
 import android.content.Context;
-import android.content.Loader;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.hipay.hipayfullservice.core.client.interfaces.IReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.OrderReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.PaymentPageReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.SecureVaultReqHandler;
+import com.hipay.hipayfullservice.core.client.interfaces.TransactionReqHandler;
+import com.hipay.hipayfullservice.core.client.interfaces.TransactionsReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.AbstractRequestCallback;
-import com.hipay.hipayfullservice.core.client.interfaces.callbacks.PaymentPageRequestCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.PaymentPageRequestCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionDetailsCallback;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionsDetailsCallback;
 import com.hipay.hipayfullservice.core.network.HttpResult;
 import com.hipay.hipayfullservice.core.operations.AbstractOperation;
-import com.hipay.hipayfullservice.core.requests.AbstractRequest;
 import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.securevault.SecureVaultRequest;
@@ -28,11 +32,10 @@ import java.lang.ref.WeakReference;
 /**
  * Created by nfillion on 21/01/16.
  */
-public abstract class AbstractClient implements LoaderManager.LoaderCallbacks<HttpResult>{
+public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks<HttpResult>{
 
     private IReqHandler reqHandler;
 
-    //TODO set it weakreference
     protected WeakReference<Context> contextWeakReference = null;
     private AbstractOperation operation;
 
@@ -41,7 +44,7 @@ public abstract class AbstractClient implements LoaderManager.LoaderCallbacks<Ht
         contextWeakReference = new WeakReference<>(ctx);
     }
 
-    protected void createRequest(AbstractRequest request, AbstractRequestCallback callback) {
+    protected void createRequest(T request, AbstractRequestCallback callback) {
 
         if (this.initReqHandler(request, callback)) {
             this.launchOperation();
@@ -65,8 +68,8 @@ public abstract class AbstractClient implements LoaderManager.LoaderCallbacks<Ht
 
         //...and it actually brutally destroys the loader
         if (this.getContext() != null) {
-            Activity activity = (Activity)this.getContext();
-            activity.getLoaderManager().destroyLoader(this.getLoaderId());
+            AppCompatActivity activity = (AppCompatActivity)this.getContext();
+            activity.getSupportLoaderManager().destroyLoader(this.getLoaderId());
         }
     }
 
@@ -75,11 +78,26 @@ public abstract class AbstractClient implements LoaderManager.LoaderCallbacks<Ht
         Bundle queryBundle = new Bundle();
         queryBundle.putString("queryParams", this.getQueryParams());
 
-        Activity activity = (Activity)this.getContext();
-        activity.getLoaderManager().initLoader(this.getLoaderId(), queryBundle, this);
+        AppCompatActivity activity = (AppCompatActivity)this.getContext();
+        //activity.getSupportLoaderManager().enableDebugLogging(true);
+        if (activity != null) {
+            activity.getSupportLoaderManager().initLoader(this.getLoaderId(), queryBundle, this);
+        }
     }
 
-    private boolean initReqHandler(AbstractRequest request, AbstractRequestCallback callback) {
+    public void reLaunchOperations(int loaderId) {
+
+        AppCompatActivity activity = (AppCompatActivity)this.getContext();
+        if (activity != null) {
+
+            LoaderManager supportLoaderManager = activity.getSupportLoaderManager();
+            if (supportLoaderManager.getLoader(loaderId) != null) {
+                this.launchOperation();
+            }
+        }
+    }
+
+    private boolean initReqHandler(T request, AbstractRequestCallback callback) {
 
         if (request instanceof PaymentPageRequest
                 && callback instanceof PaymentPageRequestCallback) {
@@ -110,6 +128,26 @@ public abstract class AbstractClient implements LoaderManager.LoaderCallbacks<Ht
             this.setReqHandler(new SecureVaultReqHandler(secureVaultRequest, secureVaultRequestCallback));
 
             return true;
+
+        } else if (request instanceof String
+                && callback instanceof TransactionsDetailsCallback) {
+
+            String orderId = (String) request;
+            TransactionsDetailsCallback transactionsDetailsCallback = (TransactionsDetailsCallback)callback;
+
+            this.setReqHandler(new TransactionsReqHandler(orderId, transactionsDetailsCallback));
+
+            return true;
+
+        } else if (request instanceof String
+                && callback instanceof TransactionDetailsCallback) {
+
+            String transactionReference = (String) request;
+            TransactionDetailsCallback transactionDetailsCallback = (TransactionDetailsCallback)callback;
+
+            this.setReqHandler(new TransactionReqHandler(transactionReference, transactionDetailsCallback));
+
+            return true;
         }
 
         return false;
@@ -137,6 +175,9 @@ public abstract class AbstractClient implements LoaderManager.LoaderCallbacks<Ht
 
     @Override
     public void onLoaderReset(Loader<HttpResult> loader) {
+
+        Log.i("reset", "reset");
+        Log.i("reset", "reset");
     }
 
     protected String getQueryParams() {

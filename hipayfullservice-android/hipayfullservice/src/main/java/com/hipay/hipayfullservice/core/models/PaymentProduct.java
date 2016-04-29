@@ -198,6 +198,7 @@ public class PaymentProduct extends AbstractModel {
     public final static String PaymentProductCodeSantanderHomeBanking      = "santander-home-banking";
 
     public final static String PaymentProductCategoryCodeCreditCard        = "credit-card";
+    //public final static String PaymentProductCategoryCodeCreditCard        = "cb";
     public final static String PaymentProductCategoryCodeDebitCard         = "debit-card";
     public final static String PaymentProductCategoryCodeRealtimeBanking   = "realtime-banking";
     public final static String PaymentProductCategoryCodeEWallet           = "ewallet";
@@ -292,8 +293,6 @@ public class PaymentProduct extends AbstractModel {
 
         protected PaymentProduct mappedObject() {
 
-            //TODO build operation object from transactionRelatedItem
-
             PaymentProduct object = new PaymentProduct();
 
             object.setCode(this.getStringForKey("code"));
@@ -308,7 +307,6 @@ public class PaymentProduct extends AbstractModel {
         @Override
         protected PaymentProduct mappedObjectFromBundle() {
 
-            //TODO same method as mappedObject
             return this.mappedObject();
         }
     }
@@ -318,7 +316,7 @@ public class PaymentProduct extends AbstractModel {
 
         //TODO time to put a rawData instead of model/request in initializer
         public PaymentProductSerialization(PaymentProduct paymentProduct) {
-            this.setModel(paymentProduct);
+            super(paymentProduct);
         }
 
         @Override
@@ -328,8 +326,7 @@ public class PaymentProduct extends AbstractModel {
 
         @Override
         public Bundle getSerializedBundle() {
-
-            this.setBundleBehaviour(new BundleSerialization());
+            super.getSerializedBundle();
 
             PaymentProduct paymentProduct = (PaymentProduct)this.getModel();
 

@@ -25,7 +25,6 @@ public class SecureVaultReqHandler extends AbstractReqHandler {
     @Override
     public void onSuccess(JSONObject jsonObject) {
 
-        //TODO on traite le JSON
         PaymentCardToken paymentCardToken = PaymentCardToken.fromJSONObject(jsonObject);
 
         SecureVaultRequestCallback orderRequestCallback = (SecureVaultRequestCallback)this.getCallback();
@@ -54,7 +53,7 @@ public class SecureVaultReqHandler extends AbstractReqHandler {
 
     @Override
     public int getLoaderId() {
-        return 1;
+        return 0;
     }
 
 }

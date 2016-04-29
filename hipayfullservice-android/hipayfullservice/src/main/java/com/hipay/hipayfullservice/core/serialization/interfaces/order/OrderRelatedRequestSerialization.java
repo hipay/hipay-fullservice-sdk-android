@@ -3,7 +3,9 @@ package com.hipay.hipayfullservice.core.serialization.interfaces.order;
 import android.os.Bundle;
 
 import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
+import com.hipay.hipayfullservice.core.requests.info.PersonalInfoRequest;
 import com.hipay.hipayfullservice.core.requests.order.OrderRelatedRequest;
+import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
 import java.util.HashMap;
@@ -14,19 +16,20 @@ import java.util.Map;
  */
 public abstract class OrderRelatedRequestSerialization extends AbstractSerialization {
 
+    public OrderRelatedRequestSerialization(OrderRelatedRequest orderRelatedRequest) {
+        super(orderRelatedRequest);
+    }
+
     @Override
     public Map<String, String> getSerializedRequest() {
 
-        OrderRelatedRequest orderRelatedRequest = (OrderRelatedRequest)this.getRequest();
+        OrderRelatedRequest orderRelatedRequest = (OrderRelatedRequest)this.getModel();
 
         Map<String, String> retMap = new HashMap<>();
 
         retMap.put("orderid", orderRelatedRequest.getOrderId());
-        //TODO retMap.put("operation")
 
         OrderRelatedRequest.OrderRequestOperation operation = orderRelatedRequest.getOperation();
-
-        //TODO change OrderRequestOperation from Integer to String
         if (operation != null) {
             retMap.put("operation", String.valueOf(operation.getIntegerValue()));
         }
@@ -35,8 +38,17 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         retMap.put("long_description", orderRelatedRequest.getLongDescription());
         retMap.put("currency", orderRelatedRequest.getCurrency());
         retMap.put("amount", String.valueOf(orderRelatedRequest.getAmount()));
-        //retMap.put("shipping", String.valueOf(orderRelatedRequest.getShipping()));
-        //retMap.put("tax", String.valueOf(orderRelatedRequest.getTax()));
+
+        Float shipping = orderRelatedRequest.getShipping();
+        if (shipping != null) {
+            retMap.put("shipping", String.valueOf(orderRelatedRequest.getShipping()));
+        }
+
+        Float tax = orderRelatedRequest.getTax();
+        if (tax != null) {
+            retMap.put("tax", String.valueOf(orderRelatedRequest.getTax()));
+        }
+
         retMap.put("cid", orderRelatedRequest.getClientId());
         retMap.put("ipaddr", orderRelatedRequest.getIpAddress());
 
@@ -64,17 +76,16 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         retMap.put("cdata9", orderRelatedRequest.getCdata9());
         retMap.put("cdata10", orderRelatedRequest.getCdata10());
 
+
         CustomerInfoRequest customerInfoRequest = orderRelatedRequest.getCustomer();
         Map<String, String> customerInfoMap = customerInfoRequest.getSerializedObject();
         retMap.putAll(customerInfoMap);
 
-        //TODO check about personal info prefix.
+        //TODO check about personal info prefix to handle
 
-        /*
-        PersonalInfoRequest personalInfoRequest = orderRelatedRequest.getShippingAddress();
-        Map<String, String> personalInfoMap = personalInfoRequest.getSerializedObject();
-        retMap.putAll(personalInfoMap);
-        */
+        //PersonalInfoRequest personalInfoRequest = orderRelatedRequest.getShippingAddress();
+        //Map<String, String> personalInfoMap = personalInfoRequest.getSerializedObject();
+        //retMap.putAll(personalInfoMap);
 
         //TODO check if objects are removed
         while (retMap.values().remove(null));
@@ -85,10 +96,9 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
     @Override
     public Bundle getSerializedBundle() {
 
-        OrderRelatedRequest orderRelatedRequest = (OrderRelatedRequest)this.getRequest();
+        super.getSerializedBundle();
 
-        //TODO the bundle is set in concrete class in paymentPageRequestSerialization (setBehaviour)
-        //Bundle bundle = new Bundle();
+        OrderRelatedRequest orderRelatedRequest = (OrderRelatedRequest)this.getModel();
 
         this.putStringForKey("orderid", orderRelatedRequest.getOrderId());
 
@@ -102,11 +112,12 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         this.putStringForKey("currency", orderRelatedRequest.getCurrency());
         this.putFloatForKey("amount",orderRelatedRequest.getAmount());
 
-        //retMap.put("shipping", String.valueOf(orderRelatedRequest.getShipping()));
-        //retMap.put("tax", String.valueOf(orderRelatedRequest.getTax()));
+        this.putFloatForKey("shipping",orderRelatedRequest.getShipping());
+        this.putFloatForKey("tax",orderRelatedRequest.getTax());
 
         this.putStringForKey("cid", orderRelatedRequest.getClientId());
         this.putStringForKey("ipaddr", orderRelatedRequest.getIpAddress());
+
         this.putStringForKey("http_accept", orderRelatedRequest.getHTTPAccept());
         this.putStringForKey("http_user_agent", orderRelatedRequest.getHTTPUserAgent());
         this.putStringForKey("device_fingerprint", orderRelatedRequest.getDeviceFingerprint());
@@ -131,19 +142,16 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         this.putStringForKey("cdata9", orderRelatedRequest.getCdata9());
         this.putStringForKey("cdata10", orderRelatedRequest.getCdata10());
 
-        //TODO handle customerInfoRequest
-        //CustomerInfoRequest customerInfoRequest = orderRelatedRequest.getCustomer();
+        //TODO put
+        CustomerInfoRequest customerInfoRequest = orderRelatedRequest.getCustomer();
+        Bundle customerInfoBundle = customerInfoRequest.toBundle();
+        this.putBundleForKey("customer", customerInfoBundle);
 
-        //Map<String, String> customerInfoMap = customerInfoRequest.getSerializedObject();
-        //retMap.putAll(customerInfoMap);
-
-        //TODO check about personal info prefix.
-
-        /*
+        //TODO handle the "shipto_" before
         PersonalInfoRequest personalInfoRequest = orderRelatedRequest.getShippingAddress();
-        Map<String, String> personalInfoMap = personalInfoRequest.getSerializedObject();
-        retMap.putAll(personalInfoMap);
-        */
+        Bundle personalInfoBundle = personalInfoRequest.toBundle();
+        this.putBundleForKey("shipping_address", personalInfoBundle);
+
         return this.getBundle();
     }
 }

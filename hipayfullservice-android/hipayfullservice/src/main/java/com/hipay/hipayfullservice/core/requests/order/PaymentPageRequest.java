@@ -9,6 +9,7 @@ import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRe
 import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -22,8 +23,8 @@ public class PaymentPageRequest extends OrderRelatedRequest {
     public static final String TAG = "Payment_page_request";
     public static final int REQUEST_ORDER = 0x2300;
 
-    List paymentProductList;
-    List paymentProductCategoryList;
+    ArrayList<String> paymentProductList;
+    ArrayList<String> paymentProductCategoryList;
 
     Transaction.ECI eci;
     CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator;
@@ -31,7 +32,7 @@ public class PaymentPageRequest extends OrderRelatedRequest {
     Boolean displaySelector;
     String templateName;
     URL css;
-    boolean paymentCardGroupingEnabled;
+    Boolean paymentCardGroupingEnabled;
 
     Set<String> groupedPaymentCardProductCodes;
 
@@ -80,11 +81,11 @@ public class PaymentPageRequest extends OrderRelatedRequest {
         return mapper.getQueryString();
     }
 
-    public boolean isPaymentCardGroupingEnabled() {
+    public Boolean isPaymentCardGroupingEnabled() {
         return paymentCardGroupingEnabled;
     }
 
-    public void setPaymentCardGroupingEnabled(boolean paymentCardGroupingEnabled) {
+    public void setPaymentCardGroupingEnabled(Boolean paymentCardGroupingEnabled) {
         this.paymentCardGroupingEnabled = paymentCardGroupingEnabled;
     }
 
@@ -108,19 +109,15 @@ public class PaymentPageRequest extends OrderRelatedRequest {
         return displaySelector;
     }
 
-    public List getPaymentProductList() {
+    public ArrayList<String> getPaymentProductList() {
         return paymentProductList;
     }
 
-    public void setPaymentProductList(List paymentProductList) {
-        this.paymentProductList = paymentProductList;
-    }
-
-    public List getPaymentProductCategoryList() {
+    public List<String> getPaymentProductCategoryList() {
         return paymentProductCategoryList;
     }
 
-    public void setPaymentProductCategoryList(List paymentProductCategoryList) {
+    public void setPaymentProductCategoryList(ArrayList<String> paymentProductCategoryList) {
         this.paymentProductCategoryList = paymentProductCategoryList;
     }
 
@@ -172,6 +169,10 @@ public class PaymentPageRequest extends OrderRelatedRequest {
         this.displaySelector = displaySelector;
     }
 
+    public void setPaymentProductList(ArrayList paymentProductList) {
+        this.paymentProductList = paymentProductList;
+    }
+
     protected static class PaymentPageRequestSerializationMapper extends AbstractSerializationMapper {
 
         protected PaymentPageRequestSerializationMapper(PaymentPageRequest request) {
@@ -204,35 +205,49 @@ public class PaymentPageRequest extends OrderRelatedRequest {
                 //TODO add more validation
                 return true;
             }
-
-            return true;
+            return false;
         }
 
         @Override
         protected PaymentPageRequest mappedObject() {
 
+            //we don't receive it from json
             return null;
         }
 
         @Override
         protected PaymentPageRequest mappedObjectFromBundle() {
-            //TODO get mapped object from transactionRelatedItem superclass
 
-            //PaymentPageRequest paymentPageRequest = (PaymentPageRequest)super.mappedObject();
-            PaymentPageRequest paymentPageRequest = this.pageRequestFromRelatedRequest(super.mappedObjectFromBundle());
+            OrderRelatedRequest orderRelatedRequest = super.mappedObjectFromBundle();
+            PaymentPageRequest paymentPageRequest = this.pageRequestFromRelatedRequest(orderRelatedRequest);
 
-            //TODO handle this
-            //relatedRequestMap.put("payment_product_list", null);
-            //relatedRequestMap.put("payment_product_category_list", null);
+            String paymentProductsString = this.getStringForKey("payment_product_list");
+            if (paymentProductsString != null) {
+                ArrayList paymentProducts = new ArrayList(Arrays.asList(paymentProductsString.split(",")));
+                paymentPageRequest.setPaymentProductList(paymentProducts);
+            }
 
-            //relatedRequestMap.put("eci", null);
-            //relatedRequestMap.put("authentication_indicator", null);
+            String paymentProductsCategoryString = this.getStringForKey("payment_product_category_list");
+            if (paymentProductsCategoryString != null) {
+                ArrayList paymentProductsCategory = new ArrayList(Arrays.asList(paymentProductsCategoryString.split(",")));
+                paymentPageRequest.setPaymentProductCategoryList(paymentProductsCategory);
+            }
 
-            //TODO check what multiUse returns
+            Integer eciInt = this.getIntegerForKey("eci");
+            Transaction.ECI eci = Transaction.ECI.fromIntegerValue(eciInt);
+            paymentPageRequest.setEci(eci);
+
+            Integer authenticationIndicatorInteger = this.getIntegerForKey("authenticationIndicator");
+            CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator = CardTokenPaymentMethodRequest.AuthenticationIndicator.fromIntegerValue(authenticationIndicatorInteger);
+            paymentPageRequest.setAuthenticationIndicator(authenticationIndicator);
 
             paymentPageRequest.setMultiUse(this.getBoolForKey("multi_use"));
             paymentPageRequest.setDisplaySelector(this.getBoolForKey("display_selector"));
             paymentPageRequest.setTemplateName(this.getStringForKey("template"));
+
+            paymentPageRequest.setCss(this.getURLForKey("css"));
+
+            paymentPageRequest.setPaymentCardGroupingEnabled(this.getBoolForKey("card_grouping"));
 
             return paymentPageRequest;
         }
@@ -241,16 +256,6 @@ public class PaymentPageRequest extends OrderRelatedRequest {
 
             PaymentPageRequest paymentPageRequest = new PaymentPageRequest();
 
-            //TODO handle this
-            //relatedRequestMap.put("payment_product_list", null);
-            //relatedRequestMap.put("payment_product_category_list", null);
-
-            //relatedRequestMap.put("eci", null);
-            //relatedRequestMap.put("authentication_indicator", null);
-
-            //TODO check what multiUse returns
-            //TODO get tax
-
             paymentPageRequest.setOrderId(orderRelatedRequest.getOrderId());
 
             paymentPageRequest.setOperation(orderRelatedRequest.getOperation());
@@ -258,9 +263,10 @@ public class PaymentPageRequest extends OrderRelatedRequest {
             paymentPageRequest.setShortDescription(orderRelatedRequest.getShortDescription());
             paymentPageRequest.setLongDescription(orderRelatedRequest.getLongDescription());
             paymentPageRequest.setCurrency(orderRelatedRequest.getCurrency());
-            paymentPageRequest.setAmount(orderRelatedRequest.getAmount());
 
-            //TODO amount, shipping, tax
+            paymentPageRequest.setAmount(orderRelatedRequest.getAmount());
+            paymentPageRequest.setShipping(orderRelatedRequest.getShipping());
+            paymentPageRequest.setTax(orderRelatedRequest.getTax());
 
             paymentPageRequest.setClientId(orderRelatedRequest.getClientId());
             paymentPageRequest.setIpAddress(orderRelatedRequest.getIpAddress());
@@ -274,6 +280,11 @@ public class PaymentPageRequest extends OrderRelatedRequest {
             paymentPageRequest.setPendingScheme(orderRelatedRequest.getPendingScheme());
             paymentPageRequest.setExceptionScheme(orderRelatedRequest.getExceptionScheme());
             paymentPageRequest.setCancelScheme(orderRelatedRequest.getCancelScheme());
+
+            paymentPageRequest.setCustomer(orderRelatedRequest.getCustomer());
+            paymentPageRequest.setShippingAddress(orderRelatedRequest.getShippingAddress());
+
+            paymentPageRequest.setCustomData(orderRelatedRequest.getCustomData());
 
             paymentPageRequest.setCdata1(orderRelatedRequest.getCdata1());
             paymentPageRequest.setCdata2(orderRelatedRequest.getCdata2());

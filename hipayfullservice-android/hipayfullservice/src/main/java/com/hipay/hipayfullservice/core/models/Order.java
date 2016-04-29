@@ -1,10 +1,15 @@
 package com.hipay.hipayfullservice.core.models;
 
+import android.os.Bundle;
+
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
+import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by nfillion on 25/01/16.
@@ -14,10 +19,10 @@ public class Order extends AbstractModel {
     protected String orderId;
     protected Date dateCreated;
     protected Integer attempts;
-    protected Number amount;
-    protected Number shipping;
-    protected Number tax;
-    protected Number decimals;
+    protected Float amount;
+    protected Float shipping;
+    protected Float tax;
+    protected Integer decimals;
     protected String currency;
     protected String customerId;
     protected String language;
@@ -32,6 +37,18 @@ public class Order extends AbstractModel {
 
         OrderMapper mapper = new OrderMapper(object);
         return mapper.mappedObject();
+    }
+
+    public static Order fromBundle(Bundle bundle) {
+
+        OrderMapper mapper = new OrderMapper(bundle);
+        return mapper.mappedObjectFromBundle();
+    }
+
+    public Bundle toBundle() {
+
+        Order.OrderSerializationMapper mapper = new Order.OrderSerializationMapper(this);
+        return mapper.getSerializedBundle();
     }
 
     public String getOrderId() {
@@ -58,35 +75,35 @@ public class Order extends AbstractModel {
         this.attempts = attemps;
     }
 
-    public Number getAmount() {
+    public Float getAmount() {
         return amount;
     }
 
-    public void setAmount(Number amount) {
+    public void setAmount(Float amount) {
         this.amount = amount;
     }
 
-    public Number getShipping() {
+    public Float getShipping() {
         return shipping;
     }
 
-    public void setShipping(Number shipping) {
+    public void setShipping(Float shipping) {
         this.shipping = shipping;
     }
 
-    public Number getTax() {
+    public Float getTax() {
         return tax;
     }
 
-    public void setTax(Number tax) {
+    public void setTax(Float tax) {
         this.tax = tax;
     }
 
-    public Number getDecimals() {
+    public Integer getDecimals() {
         return decimals;
     }
 
-    public void setDecimals(Number decimals) {
+    public void setDecimals(Integer decimals) {
         this.decimals = decimals;
     }
 
@@ -169,10 +186,70 @@ public class Order extends AbstractModel {
         }
     }
 
+    protected static class OrderSerializationMapper extends AbstractSerializationMapper {
+
+        protected OrderSerializationMapper(Order order) {
+            super(order);
+        }
+
+        @Override
+        protected String getQueryString() {
+            return super.getQueryString();
+        }
+
+        @Override
+        protected Bundle getSerializedBundle() {
+            return super.getSerializedBundle();
+        }
+    }
+
+    public static class OrderSerialization extends AbstractSerialization {
+
+        //TODO time to put a rawData instead of model/request in initializer
+        public OrderSerialization(Order order) {
+            super(order);
+        }
+
+        @Override
+        public Map<String, String> getSerializedRequest() {
+            return null;
+        }
+
+        @Override
+        public Bundle getSerializedBundle() {
+            super.getSerializedBundle();
+
+            Order order = (Order)this.getModel();
+
+            this.putStringForKey("currency", order.getCurrency());
+            this.putStringForKey("customerID", order.getCustomerId());
+            this.putStringForKey("language", order.getLanguage());
+            this.putStringForKey("id", order.getOrderId());
+            this.putIntForKey("attempts", order.getAttemps());
+            this.putFloatForKey("amount", order.getAmount());
+            this.putFloatForKey("shipping", order.getShipping());
+            this.putFloatForKey("tax", order.getTax());
+            this.putIntForKey("decimals", order.getDecimals());
+
+            Gender gender = order.getGender();
+            if (gender != null) {
+                this.putStringForKey("gender", Character.toString(gender.getCharValue()));
+            }
+
+            this.putDateForKey("dateCreated", order.getDateCreated());
+
+            return this.getBundle();
+        }
+
+        @Override
+        public String getQueryString() {
+            return null;
+        }
+    }
 
     public static class OrderMapper extends PersonalInformation.PersonalInformationMapper {
-        public OrderMapper(JSONObject object) {
-            super(object);
+        public OrderMapper(Object rawData) {
+            super(rawData);
         }
 
         @Override
@@ -190,11 +267,9 @@ public class Order extends AbstractModel {
             return false;
         }
 
+        @Override
         protected Order mappedObject() {
 
-            //TODO build operation object from transactionRelatedItem
-
-            //HPFOrder *object = [self mappedObjectWithPersonalInformation:[[HPFOrder alloc] init]];
             Order object = new Order();
 
             object.setCurrency(this.getStringForKey("currency"));
@@ -202,10 +277,10 @@ public class Order extends AbstractModel {
             object.setLanguage(this.getStringForKey("language"));
             object.setOrderId(this.getStringForKey("id"));
             object.setAttempts(this.getIntegerForKey("attempts"));
-            object.setAmount(this.getNumberForKey("amount"));
-            object.setShipping(this.getNumberForKey("shipping"));
-            object.setTax(this.getNumberForKey("tax"));
-            object.setDecimals(this.getNumberForKey("decimals"));
+            object.setAmount(this.getFloatForKey("amount"));
+            object.setShipping(this.getFloatForKey("shipping"));
+            object.setTax(this.getFloatForKey("tax"));
+            object.setDecimals(this.getIntegerForKey("decimals"));
 
             String genderString = this.getEnumCharForKey("gender");
             Gender gender = Gender.fromStringValue(genderString);
@@ -218,6 +293,32 @@ public class Order extends AbstractModel {
 
             return object;
 
+        }
+
+        @Override
+        protected Order mappedObjectFromBundle() {
+
+            Order object = new Order();
+
+            object.setCurrency(this.getStringForKey("currency"));
+            object.setCustomerId(this.getStringForKey("customerId"));
+            object.setLanguage(this.getStringForKey("language"));
+            object.setOrderId(this.getStringForKey("id"));
+            object.setAttempts(this.getIntegerForKey("attempts"));
+            object.setAmount(this.getFloatForKey("amount"));
+            object.setShipping(this.getFloatForKey("shipping"));
+            object.setTax(this.getFloatForKey("tax"));
+            object.setDecimals(this.getIntegerForKey("decimals"));
+
+            String genderString = this.getEnumCharForKey("gender");
+            Gender gender = Gender.fromStringValue(genderString);
+            if (gender == null) {
+                gender = Gender.GenderUndefined;
+            }
+            object.setGender(gender);
+            object.setDateCreated(this.getDateForKey("dateCreated"));
+
+            return object;
         }
     }
 }
