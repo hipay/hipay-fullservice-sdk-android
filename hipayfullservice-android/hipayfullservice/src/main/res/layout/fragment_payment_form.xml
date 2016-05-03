@@ -37,9 +37,9 @@
 
             android:textAppearance="@style/PaymentScreens.TextAppearance.AmountItem"
             style="@style/PaymentScreens.Button"
+            android:enabled="false"
             android:layout_gravity="bottom"
             android:layout_margin="@dimen/spacing_double"
-            android:text="Payer 8,56$"
             />
 
         <ProgressBar

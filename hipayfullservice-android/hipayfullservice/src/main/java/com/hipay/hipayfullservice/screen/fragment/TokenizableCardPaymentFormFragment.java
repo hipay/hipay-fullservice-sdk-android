@@ -29,6 +29,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         //TODO put this paymentPageRequest as args to get it.
     }
 
+
     @Override
     protected void launchRequest() {
 
@@ -39,12 +40,12 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         SecureVaultClient client = new SecureVaultClient(getActivity());
         client.createTokenRequest(
-                "4000000000000002o",
+                mCardNumber.getText().toString(),
                 //"4111111111111111",
                 "12",
                 "2019",
-                "John Doe",
-                "123",
+                mCardOwner.getText().toString(),
+                mCardCVV.getText().toString(),
                 false,
 
                 new SecureVaultRequestCallback() {
@@ -100,5 +101,24 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 }
         );
     }
+
+
+    @Override
+    protected boolean isInputDataValid() {
+
+        if (
+                this.isExpiryDateValid() &&
+                this.isCVVValid() &&
+                this.isCardOwnerValid() &&
+                this.isCardNumberValid()
+
+                ) {
+
+            return true;
+        }
+
+        return false;
+    }
+
 }
 

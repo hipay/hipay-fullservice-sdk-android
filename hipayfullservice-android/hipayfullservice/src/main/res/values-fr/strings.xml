@@ -9,6 +9,7 @@
     <string name="card_expiration">Date d\'expiration</string>
     <string name="card_cvv">Code de sécurité</string>
 
-
     <string name="unknown_error">Erreur inconnue</string>
+    <string name="pay">Payer</string>
+
 </resources>
