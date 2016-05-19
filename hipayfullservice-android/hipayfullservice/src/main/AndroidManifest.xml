@@ -1,0 +1,34 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hipay.hipayfullservice">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application>
+
+        <activity android:name=".screen.activity.PaymentProductsActivity"
+            android:theme="@style/PaymentScreens.PaymentProductsActivity"
+            />
+
+        <activity android:name=".screen.activity.PaymentFormActivity"
+            android:theme="@style/PaymentScreens.PaymentFormActivity"
+            android:windowSoftInputMode="adjustPan"
+            />
+        <!--
+        -->
+
+        <activity android:name=".screen.activity.ForwardWebViewActivity"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <data android:scheme="@string/hipay_scheme"
+                    android:host="@string/hipay_host"
+                    />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>

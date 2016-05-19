@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/quiz_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:windowBackground"
+        android:orientation="vertical">
+
+        <!-- Fake a toolbar for easier animations -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView android:id="@+id/payment_product_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/spacing_huge"
+                android:paddingLeft="@dimen/spacing_huge"
+                android:paddingTop="@dimen/spacing_micro"
+                android:paddingBottom="@dimen/spacing_micro"
+                style="@style/PaymentScreens.TextAppearance.Title"
+                android:minHeight="?actionBarSize"
+                android:textAppearance="@style/PaymentScreens.TextAppearance.Title"
+                android:gravity="center_vertical"
+                android:transitionName="@string/transition_toolbar"
+                tools:ignore="UnusedAttribute,NewApi,RtlSymmetry,PrivateResource" />
+            <ImageButton android:id="@+id/back"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:padding="@dimen/spacing_double"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_arrow_back"
+                android:layout_gravity="start|center_vertical"
+                android:background="@drawable/selector_subtle"/>
+        </FrameLayout>
+
+        <FrameLayout android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+
+            <FrameLayout android:id="@+id/form_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:visibility="visible"/>
+        </FrameLayout>
+    </LinearLayout>
+
+</merge>
+

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HiPayFullservice</string>
+
+    <string name="hipay_host" translatable="false">hipay-fullservice</string>
+    <string name="hipay_scheme" translatable="false">hipay</string>
+
+    <string name="paiment_products_title">Payment products</string>
+
+    <string name="card_owner">Card holder</string>
+    <string name="card_number">Number</string>
+    <string name="card_expiration">Expiry date</string>
+    <string name="card_cvv">CVV</string>
+
+    <string name="unknown_error">Unknown error</string>
+    <string name="pay">Pay %1$s</string>
+
+    <string name="transaction_error_declined_title">Transaction declined</string>
+    <string name="transaction_error_declined">Please check your entries and try again</string>
+    <string name="transaction_error_declined_reset">Please use another payment method</string>
+
+    <string name="transaction_error_other">An error occurred while processing your transaction</string>
+
+    <string name="error_button_dismiss">Ok</string>
+    <string name="error_button_retry">Retry</string>
+
+    <string name="error_title_default">An error occurred</string>
+    <string name="error_body_default">Your request could not be completed</string>
+
+    <string name="error_title_connection">Network error</string>
+</resources>

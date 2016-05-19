@@ -1,0 +1,23 @@
+<resources>
+    <style name="PaymentScreens" parent="PaymentScreens.Base">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:spinnerStyle">@style/Base.Widget.AppCompat.Spinner.Underlined</item>
+
+    </style>
+
+    <style name="PaymentScreens.PaymentProductsActivity">
+
+        <item name="android:windowSharedElementEnterTransition">@transition/products_shared_enter</item>
+        <item name="android:windowEnterTransition">@transition/products_enter</item>
+        <item name="android:windowExitTransition">@transition/products_exit</item>
+        <item name="android:windowBackground">@color/hpf_blank</item>
+
+    </style>
+
+    <style name="PaymentScreens.PaymentFormActivity">
+        <item name="android:windowSharedElementEnterTransition">@transition/form_shared_enter</item>
+        <item name="android:windowBackground">@color/hpf_light</item>
+    </style>
+
+</resources>
