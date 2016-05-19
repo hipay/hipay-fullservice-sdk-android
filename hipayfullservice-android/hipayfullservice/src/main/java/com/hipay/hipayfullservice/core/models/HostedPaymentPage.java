@@ -174,6 +174,9 @@ public class HostedPaymentPage extends AbstractModel {
 
             HostedPaymentPage object = new HostedPaymentPage();
 
+            //TODO set orderMapper
+            //[object setValue:[[HPFOrderMapper mapperWithRawData:[self getDictionaryForKey:@"order"]] mappedObject] forKey:@"order"];
+
             object.setCdata1(this.getStringForKey("cdata1"));
             object.setCdata2(this.getStringForKey("cdata2"));
             object.setCdata3(this.getStringForKey("cdata3"));
@@ -189,8 +192,6 @@ public class HostedPaymentPage extends AbstractModel {
             object.setTest(this.getBoolForKey("test"));
             object.setMid(this.getStringForKey("mid"));
 
-            //TODO set orderMapper
-            //[object setValue:[[HPFOrderMapper mapperWithRawData:[self getDictionaryForKey:@"order"]] mappedObject] forKey:@"order"];
 
             return object;
 

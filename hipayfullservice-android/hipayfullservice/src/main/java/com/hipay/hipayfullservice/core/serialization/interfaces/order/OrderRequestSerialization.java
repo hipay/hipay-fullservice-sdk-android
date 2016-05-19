@@ -13,15 +13,14 @@ import java.util.Map;
 public class OrderRequestSerialization extends OrderRelatedRequestSerialization {
 
     public OrderRequestSerialization(OrderRequest orderRequest) {
-
-        this.setRequest(orderRequest);
+        super(orderRequest);
     }
 
     public Map<String, String> getSerializedRequest() {
 
         Map<String, String> relatedRequestMap = super.getSerializedRequest();
 
-        OrderRequest orderRequest = (OrderRequest)this.getRequest();
+        OrderRequest orderRequest = (OrderRequest)this.getModel();
 
         relatedRequestMap.put("payment_product", orderRequest.getPaymentProductCode());
 

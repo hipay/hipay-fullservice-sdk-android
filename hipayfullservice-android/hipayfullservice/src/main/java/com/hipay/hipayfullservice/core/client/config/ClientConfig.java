@@ -1,8 +1,5 @@
 package com.hipay.hipayfullservice.core.client.config;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 /**
  * Created by nfillion on 21/01/16.
  */

@@ -105,9 +105,9 @@ public class PersonalInformation extends AbstractModel {
         this.email = email;
     }
 
-    public static class PersonalInformationMapper extends AbstractMapper<JSONObject> {
-        public PersonalInformationMapper(JSONObject object) {
-            super(object);
+    public static class PersonalInformationMapper extends AbstractMapper {
+        public PersonalInformationMapper(Object rawData) {
+            super(rawData);
         }
 
         @Override
@@ -122,8 +122,6 @@ public class PersonalInformation extends AbstractModel {
         }
 
         protected Object mappedObject() {
-
-            //TODO build operation object from transactionRelatedItem
 
             PersonalInformation object = new PersonalInformation();
 

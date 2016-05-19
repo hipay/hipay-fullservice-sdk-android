@@ -16,14 +16,13 @@ import java.util.Map;
 public class CardTokenPaymentMethodRequestSerialization extends AbstractSerialization {
 
     public CardTokenPaymentMethodRequestSerialization(CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest) {
-
-        this.setRequest(cardTokenPaymentMethodRequest);
+        super(cardTokenPaymentMethodRequest);
     }
 
     public Map<String, String> getSerializedRequest() {
 
         Map<String, String> retMap = new HashMap<>();
-        CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest = (CardTokenPaymentMethodRequest)this.getRequest();
+        CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest = (CardTokenPaymentMethodRequest)this.getModel();
 
         retMap.put("cardtoken", cardTokenPaymentMethodRequest.getCardToken());
 

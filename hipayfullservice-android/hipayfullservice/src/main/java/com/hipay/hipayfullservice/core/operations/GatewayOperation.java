@@ -35,7 +35,17 @@ public abstract class GatewayOperation extends AbstractOperation {
 
                 String params = this.getQueryParams();
                 if (params != null) {
-                    requestUrl = Utils.concatenateParams(requestUrl, params);
+
+                    //if the request contains params like transaction?orderid=transactionOrderId
+                    if (params.contains("=")) {
+                        requestUrl = Utils.concatenateParams(requestUrl, params);
+
+                    }
+
+                    //if the request is just an url like transaction/referenceTransaction
+                    else {
+                        requestUrl = Utils.concatenatePath(requestUrl, params);
+                    }
                 }
             }
 

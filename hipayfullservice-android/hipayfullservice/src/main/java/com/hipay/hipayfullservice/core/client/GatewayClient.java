@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.PaymentPageRequestCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionDetailsCallback;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionsDetailsCallback;
 import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 
@@ -24,4 +26,11 @@ public class GatewayClient extends AbstractClient  {
         super.createRequest(hostedPaymentPage, paymentPageRequestCallback);
     }
 
+    public void getTransactionWithReference(String reference, TransactionDetailsCallback transactionDetailsCallback) {
+        super.createRequest(reference, transactionDetailsCallback);
+    }
+
+    public void getTransactionsWithOrderId(String orderId, TransactionsDetailsCallback transactionsDetailsCallback) {
+        super.createRequest(orderId, transactionsDetailsCallback);
+    }
 }

@@ -18,7 +18,6 @@ import java.util.Date;
  */
 public abstract class AbstractMapper<T> {
 
-    protected T rawData;
     protected IBehaviour behaviour;
 
     protected abstract Object mappedObject();
@@ -31,41 +30,38 @@ public abstract class AbstractMapper<T> {
             this.isMapperValid(rawData);
 
         } catch (InvalidParameterException exception) {
-            //TODO
+
+            // json/bundle is not valid
 
         } finally {
             //continue
         }
     }
 
-    public AbstractMapper() {
-
-    }
+    public AbstractMapper() {}
 
     private void isMapperValid(T rawData) {
 
-        this.setRawData(rawData);
-
-        if (this.rawData == null) {
+        if (rawData == null) {
             throw new InvalidParameterException();
 
         } else {
 
-            if (this.rawData instanceof JSONObject) {
+            if (rawData instanceof JSONObject) {
 
-                JSONObject map = (JSONObject)this.getRawData();
+                JSONObject map = (JSONObject)rawData;
                 this.setBehaviour(new MapMapper(map));
 
-            } else if (this.rawData instanceof JSONArray) {
+            } else if (rawData instanceof JSONArray) {
 
                 //TODO not using JSONArray for now
 
                 //JSONArray list = (JSONArray)this.getRawData();
                 //this.setBehaviour(new ListMapper(list));
 
-            } else if (this.rawData instanceof Bundle) {
+            } else if (rawData instanceof Bundle) {
 
-                Bundle bundle = (Bundle)this.getRawData();
+                Bundle bundle = (Bundle)rawData;
                 this.setBehaviour(new BundleMapper(bundle));
             }
         }
@@ -120,17 +116,14 @@ public abstract class AbstractMapper<T> {
         return this.getBehaviour().getDateForKey(key);
     }
 
+    protected JSONObject getJSONObjectForKey(String key) {
+
+        return this.getBehaviour().getJSONObjectForKey(key);
+    }
+
     protected Bundle getBundleForKey(String key) {
 
         return this.getBehaviour().getBundleForKey(key);
-    }
-
-    public T getRawData() {
-        return rawData;
-    }
-
-    public void setRawData(T rawData) {
-        this.rawData = rawData;
     }
 
     public IBehaviour getBehaviour() {

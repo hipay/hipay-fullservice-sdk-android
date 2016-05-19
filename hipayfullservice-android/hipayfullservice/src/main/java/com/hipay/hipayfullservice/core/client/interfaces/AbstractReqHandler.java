@@ -20,16 +20,16 @@ import java.io.IOException;
 /**
  * Created by nfillion on 22/02/16.
  */
-public abstract class AbstractReqHandler implements IReqHandler {
+public abstract class AbstractReqHandler<T> implements IReqHandler {
 
-    protected AbstractRequest request;
+    protected T request;
     protected AbstractRequestCallback callback;
 
-    protected AbstractRequest getRequest() {
+    protected T getRequest() {
         return request;
     }
 
-    protected void setRequest(AbstractRequest request) {
+    protected void setRequest(T request) {
         this.request = request;
     }
 
@@ -45,7 +45,6 @@ public abstract class AbstractReqHandler implements IReqHandler {
     public abstract AbstractOperation getReqOperation(Context context, Bundle bundle);
     public abstract int getLoaderId();
 
-    //TODO abstract class with handle callback
     public abstract void onError(Exception exception);
     public abstract void onSuccess(JSONObject jsonObject);
 
@@ -55,7 +54,6 @@ public abstract class AbstractReqHandler implements IReqHandler {
         HttpException httpException = null;
         JSONObject jsonObject = null;
 
-        //TODO first on check la IOException
         IOException ioException = data.getIoException();
         String bodyStream = data.getBodyStream();
         String errorStream = data.getErrorStream();
@@ -63,19 +61,17 @@ public abstract class AbstractReqHandler implements IReqHandler {
 
         if (ioException != null) {
 
-            //TODO exception io failed, on la renvoie telle quelle.
-
             //io exception
             httpException = new HttpException(
-                    Errors.HTTPConnectionFailedDescription,
-                    Errors.Code.HTTPConnectionFailed.getIntegerValue(),
+                    Errors.HTTPNetworkUnavailableDescription,
+                    Errors.Code.HTTPNetworkUnavailable.getIntegerValue(),
                     new HttpException(ioException)
             );
 
         } else if (bodyStream != null) {
 
-            //TODO typically a 200.
-            // continue if json body received from hipay server
+            //typically a 200.
+            //continue if json body received from hipay server
 
             try {
                 jsonObject = new JSONObject(bodyStream);
@@ -91,7 +87,7 @@ public abstract class AbstractReqHandler implements IReqHandler {
 
         } else if (errorStream != null) {
 
-            //TODO typically a 400/500 client/server error
+            //typically a 400/500 client/server error
 
             try {
                 jsonObject = new JSONObject(errorStream);
@@ -113,9 +109,7 @@ public abstract class AbstractReqHandler implements IReqHandler {
 
                     case 4: {
 
-                        //TODO on traite le json pour avoir plus d'infos a renvoyer au-dessus
-
-                        //TODO httpclient error
+                        //httpclient error
                         httpException = new HttpException(
                                 Errors.HTTPClientDescription,
                                 Errors.Code.HTTPClient.getIntegerValue(),
@@ -125,8 +119,7 @@ public abstract class AbstractReqHandler implements IReqHandler {
 
                     case 5: {
 
-                        //TODO on traite le json
-                        //TODO httpserver error
+                        //httpserver error
                         httpException = new HttpException(
                                 Errors.HTTPServerDescription,
                                 Errors.Code.HTTPServer.getIntegerValue(),
@@ -149,7 +142,7 @@ public abstract class AbstractReqHandler implements IReqHandler {
 
         } else {
 
-            //TODO wtf error (OTHER), data is totally null
+            //wtf error (OTHER), data is totally null
 
             httpException = new HttpException(
                     Errors.HTTPOtherDescription,
@@ -158,7 +151,7 @@ public abstract class AbstractReqHandler implements IReqHandler {
             );
         }
 
-        //TODO first on check si l'exception existe
+        //first on check si l'exception existe
 
         if (httpException != null) {
 
@@ -181,8 +174,17 @@ public abstract class AbstractReqHandler implements IReqHandler {
         String message = DataExtractor.getStringFromField(jsonObject, "message");
         //String description = DataExtractor.getStringFromField(jsonObject, "description");
 
+        Integer apiCode = null;
+        if (code != null) {
+            apiCode = Integer.valueOf(code);
+        }
+
         Errors.Code errorCode = this.errorCodeForNumber(code);
-        return new ApiException(message, errorCode.getIntegerValue(), httpException);
+        return new ApiException(
+                message,
+                errorCode.getIntegerValue(),
+                apiCode,
+                httpException);
     }
 
     Errors.Code errorCodeForNumber(String codeNumber)

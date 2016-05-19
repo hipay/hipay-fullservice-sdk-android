@@ -1,8 +1,7 @@
 package com.hipay.hipayfullservice.core.models;
 
+import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
-
-import org.json.JSONObject;
 
 /**
  * Created by nfillion on 25/01/16.
@@ -55,7 +54,6 @@ public class Operation extends AbstractModel {
 
             return null;
         }
-
     }
 
     public OperationType getOperation() {
@@ -67,11 +65,10 @@ public class Operation extends AbstractModel {
         this.operation = operation;
     }
 
+    public static class OperationMapper extends AbstractMapper {
 
-    //TODO don't forget it extends TransactionRelatedItem
-    public static class HostedPaymentPageMapper extends TransactionRelatedItem.TransactionRelatedItemMapper {
-        public HostedPaymentPageMapper(JSONObject jsonObject) {
-            super(jsonObject);
+        public OperationMapper(Object rawData) {
+            super(rawData);
         }
 
         @Override
@@ -79,18 +76,15 @@ public class Operation extends AbstractModel {
 
             if (this.getBehaviour() instanceof MapMapper) {
 
-                // it extends from TransactionRelated.
-                if (super.isValid()) {
-                    if (this.getStringForKey("operation") != null) {
-                        return true;
-                    }
+                if (this.getStringForKey("operation") != null) {
+                    return true;
                 }
             }
 
             return false;
         }
 
-        protected Object mappedObject() {
+        protected Operation mappedObject() {
 
             //TODO build operation object from transactionRelatedItem
             Operation object = new Operation();
@@ -104,6 +98,11 @@ public class Operation extends AbstractModel {
 
             return object;
 
+        }
+
+        @Override
+        protected Operation mappedObjectFromBundle() {
+            return null;
         }
     }
 }

@@ -29,8 +29,6 @@ import com.hipay.hipayfullservice.screen.model.CustomTheme;
  */
 public class PaymentProductsActivity extends AppCompatActivity {
 
-    //TODO handle extra user
-
     private CustomTheme customTheme;
 
     public static void start(Activity activity, PaymentPageRequest paymentPageRequest, CustomTheme theme) {
@@ -82,21 +80,9 @@ public class PaymentProductsActivity extends AppCompatActivity {
 
             } else if (resultCode == R.id.transaction_failed) {
 
-                //TODO put exception in there
                 setResult(R.id.transaction_failed, data);
                 finish();
             }
-            else if (resultCode == R.id.transaction_unknown_error) {
-
-                //TODO put exception in there
-                setResult(R.id.transaction_unknown_error, null);
-                finish();
-
-                //ActivityCompat.finishAfterTransition(this);
-                //overridePendingTransition(0, 0);
-            }
-
-            // if resultCode == 0, do nothing
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -125,8 +111,7 @@ public class PaymentProductsActivity extends AppCompatActivity {
             //the fragment is loaded already, then remove the loading
         }
 
-        //TODO useful when this activity is gonna be called with makeTransition
-
+        //useful when this activity is gonna be called with makeTransition
         supportPostponeEnterTransition();
     }
 
@@ -145,10 +130,6 @@ public class PaymentProductsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        //TODO handle the price (montant)
-
-        //noinspection PrivateResource
 
         TextView textView = (TextView) toolbar.findViewById(R.id.title);
         textView.setText(R.string.paiment_products_title);

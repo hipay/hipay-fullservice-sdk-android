@@ -11,21 +11,20 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.ArrayMap;
 import android.view.Window;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.hipay.hipayfullservice.R;
-import com.hipay.hipayfullservice.core.models.HostedPaymentPage;
+import com.hipay.hipayfullservice.core.errors.Errors;
+import com.hipay.hipayfullservice.core.models.Order;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.OrderRelatedRequest;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.screen.helper.ApiLevelHelper;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
-import java.net.URL;
 import java.security.InvalidParameterException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,15 +33,6 @@ import java.util.Map;
  * Created by nfillion on 14/04/16.
  */
 public class ForwardWebViewActivity extends Activity {
-
-    public static void start(Activity activity, HostedPaymentPage hostedPaymentPage, Bundle theme) {
-        Intent starter = getStartIntent(activity, hostedPaymentPage, theme);
-
-        ActivityOptionsCompat activityOptions = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(activity, null);
-
-        ActivityCompat.startActivityForResult(activity, starter, PaymentPageRequest.REQUEST_ORDER, activityOptions.toBundle());
-    }
 
     public static void start(Activity activity, String forwardURLString, Bundle theme) {
         Intent starter = getStartIntent(activity, forwardURLString, theme);
@@ -55,6 +45,7 @@ public class ForwardWebViewActivity extends Activity {
 
     public static Intent getStartIntent(Context context, String forwardURLString, Bundle theme) {
 
+        //TODO check if we need to keep the PaymentPageRequest object
         if (forwardURLString != null) {
 
             Intent starter = new Intent(context, ForwardWebViewActivity.class);
@@ -68,51 +59,36 @@ public class ForwardWebViewActivity extends Activity {
         }
     }
 
-    public static Intent getStartIntent(Context context, HostedPaymentPage hostedPaymentPage, Bundle theme) {
+    //@Override
+    //public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (hostedPaymentPage != null) {
+        //if (requestCode == PaymentPageRequest.REQUEST_ORDER) {
 
-            URL forwardUrl = hostedPaymentPage.getForwardUrl();
-            Intent starter = new Intent(context, ForwardWebViewActivity.class);
-            starter.putExtra("forwardUrl", forwardUrl.toString());
-            starter.putExtra(CustomTheme.TAG, theme);
-            return starter;
+            //if (resultCode == R.id.transaction_succeed) {
 
-        } else {
+                //setResult(R.id.transaction_succeed, data);
 
-            throw new InvalidParameterException();
-        }
-    }
+            //} else if (resultCode == R.id.transaction_failed) {
+
+                //setResult(R.id.transaction_failed, data);
+            //}
+
+            //finish();
+        //}
+
+        //super.onActivityResult(requestCode, resultCode, data);
+    //}
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        //setIntent(intent);
-
-                //private static final String OrderRelatedRequestRedirectPathAccept = "accept";
-                //private static final String OrderRelatedRequestRedirectPathDecline = "decline";
-                //private static final String OrderRelatedRequestRedirectPathPending = "pending";
-                //private static final String OrderRelatedRequestRedirectPathException = "exception";
-                //private static final String OrderRelatedRequestRedirectPathCancel = "cancel";
-
-        Transaction transaction = transactionFromCallbackIntent(intent);
-        if (transaction != null) {
-
-            Intent transactionIntent = getIntent();
-            transactionIntent.putExtra(Transaction.TAG, transaction.toBundle());
-            setResult(R.id.transaction_succeed, transactionIntent);
-            finish();
-
-        } else {
-
-            //TODO handle the callback error
-        }
+        transactionFromCallbackIntent(intent.getData());
     }
 
-    private Transaction transactionFromCallbackIntent(Intent intent) {
+    private void transactionFromCallbackIntent(Uri data) {
 
-        Uri data = intent.getData();
+        //Uri data = intent.getData();
 
         //TODO will be useful for
         //Set set = data.getQueryParameterNames();
@@ -121,6 +97,8 @@ public class ForwardWebViewActivity extends Activity {
 
         //String l2 = data.getQueryParameter("eci3d");
         //String l3 = data.getQueryParameter("cardtoken");
+
+        Transaction transaction = null;
 
         if (data != null) {
 
@@ -134,36 +112,47 @@ public class ForwardWebViewActivity extends Activity {
             transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathException,Transaction.TransactionState.TransactionStateError);
             transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathPending,Transaction.TransactionState.TransactionStatePending);
 
-
             //List<String> statusList = Arrays.asList(
 
-                    //OrderRelatedRequest.OrderRelatedRequestRedirectPathAccept,
-                    //OrderRelatedRequest.OrderRelatedRequestRedirectPathCancel,
-                    //OrderRelatedRequest.OrderRelatedRequestRedirectPathDecline,
-                    //OrderRelatedRequest.OrderRelatedRequestRedirectPathException,
-                    //OrderRelatedRequest.OrderRelatedRequestRedirectPathPending
+            //OrderRelatedRequest.OrderRelatedRequestRedirectPathAccept,
+            //OrderRelatedRequest.OrderRelatedRequestRedirectPathCancel,
+            //OrderRelatedRequest.OrderRelatedRequestRedirectPathDecline,
+            //OrderRelatedRequest.OrderRelatedRequestRedirectPathException,
+            //OrderRelatedRequest.OrderRelatedRequestRedirectPathPending
             //);
 
             if (!pathSegments.isEmpty() && pathSegments.size() == 4) {
 
                 if (
                         pathSegments.get(0).equalsIgnoreCase(OrderRelatedRequest.GatewayCallbackURLPathName) &&
-                        pathSegments.get(1).equalsIgnoreCase(OrderRelatedRequest.GatewayCallbackURLOrderPathName) &&
+                                pathSegments.get(1).equalsIgnoreCase(OrderRelatedRequest.GatewayCallbackURLOrderPathName) &&
 
                                 transactionStatus.containsKey(pathSegments.get(3))
                         )
                 {
 
-
-                    Transaction transaction = new Transaction();
-                    transaction.setState( transactionStatus.get(pathSegments.get(3)));
+                    transaction = new Transaction();
+                    Order order = new Order();
+                    order.setOrderId(pathSegments.get(2));
+                    transaction.setOrder(order);
+                    transaction.setState(transactionStatus.get(pathSegments.get(3)));
                     //orderId a setter transaction.setOrder pathSegments.get(3)
-                    return transaction;
                 }
             }
         }
 
-        return null;
+        if (transaction != null) {
+
+            Intent transactionIntent = getIntent();
+            transactionIntent.putExtra(Transaction.TAG, transaction.toBundle());
+            setResult(R.id.transaction_succeed, transactionIntent);
+            finish();
+
+        } else {
+
+            //fail
+            finish();
+        }
     }
 
     @Override
@@ -172,14 +161,13 @@ public class ForwardWebViewActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_forward_webview);
+
         if (savedInstanceState == null) {
 
             WebView myWebView = (WebView) findViewById(R.id.webview);
             myWebView.getSettings().setJavaScriptEnabled(true);
+            myWebView.setWebViewClient(new MyWebViewClient());
 
-            //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                //WebView.setWebContentsDebuggingEnabled(true);
-            //}
             String stringUrl = getIntent().getStringExtra("forwardUrl");
 
             //TODO handle better the savedInstance state
@@ -189,6 +177,25 @@ public class ForwardWebViewActivity extends Activity {
             }
 
             myWebView.loadUrl(stringUrl);
+        }
+    }
+
+    private class MyWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+            Uri data = Uri.parse(url);
+
+            if (
+                    data.getHost().equals(getString(R.string.hipay_host)) &&
+                    data.getScheme().equals(getString(R.string.hipay_scheme))) {
+
+                transactionFromCallbackIntent(data);
+                return true;
+            }
+
+            //let the webview load the page
+            return false;
         }
     }
 

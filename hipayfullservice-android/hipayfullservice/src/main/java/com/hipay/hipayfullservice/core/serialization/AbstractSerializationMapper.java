@@ -5,7 +5,10 @@ import android.os.Bundle;
 import com.hipay.hipayfullservice.core.errors.exceptions.ApiException;
 import com.hipay.hipayfullservice.core.errors.exceptions.HttpException;
 import com.hipay.hipayfullservice.core.models.AbstractModel;
+import com.hipay.hipayfullservice.core.models.FraudScreening;
+import com.hipay.hipayfullservice.core.models.Order;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
+import com.hipay.hipayfullservice.core.models.ThreeDSecure;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.AbstractRequest;
 import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
@@ -15,8 +18,6 @@ import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.hipayfullservice.core.requests.securevault.SecureVaultRequest;
 import com.hipay.hipayfullservice.core.serialization.interfaces.ISerialization;
-import com.hipay.hipayfullservice.core.serialization.interfaces.info.CustomerInfoRequestSerialization;
-import com.hipay.hipayfullservice.core.serialization.interfaces.info.PersonalInfoRequestSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.order.OrderRequestSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.order.PaymentPageRequestSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.payment.CardTokenPaymentMethodRequestSerialization;
@@ -92,11 +93,26 @@ public abstract class AbstractSerializationMapper {
 
             Transaction transaction = (Transaction) model;
             this.setSerialization(new Transaction.TransactionSerialization(transaction));
+
+        } else if (model instanceof ThreeDSecure) {
+
+            ThreeDSecure threeDSecure = (ThreeDSecure) model;
+            this.setSerialization(new ThreeDSecure.ThreeDSecureSerialization(threeDSecure));
+
+        } else if (model instanceof FraudScreening) {
+
+            FraudScreening fraudScreening = (FraudScreening) model;
+            this.setSerialization(new FraudScreening.FraudScreeningSerialization(fraudScreening));
+
+        } else if (model instanceof Order) {
+
+            Order order = (Order) model;
+            this.setSerialization(new Order.OrderSerialization(order));
         }
+
     }
 
     private void initSerializing(AbstractRequest request) {
-
 
         if (request instanceof PaymentPageRequest) {
 
@@ -111,12 +127,12 @@ public abstract class AbstractSerializationMapper {
         } else if (request instanceof CustomerInfoRequest) {
 
             CustomerInfoRequest customerInfoRequest = (CustomerInfoRequest)request;
-            this.setSerialization(new CustomerInfoRequestSerialization(customerInfoRequest));
+            this.setSerialization(new CustomerInfoRequest.CustomerInfoRequestSerialization(customerInfoRequest));
 
         } else if (request instanceof PersonalInfoRequest) {
 
             PersonalInfoRequest personalInfoRequest = (PersonalInfoRequest)request;
-            this.setSerialization(new PersonalInfoRequestSerialization(personalInfoRequest));
+            this.setSerialization(new PersonalInfoRequest.PersonalInfoRequestSerialization(personalInfoRequest));
 
         } else if (request instanceof SecureVaultRequest) {
 
@@ -128,6 +144,7 @@ public abstract class AbstractSerializationMapper {
             CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest = (CardTokenPaymentMethodRequest)request;
             this.setSerialization(new CardTokenPaymentMethodRequestSerialization(cardTokenPaymentMethodRequest));
         }
+
     }
 
     public ISerialization getSerialization() {

@@ -1,11 +1,13 @@
 package com.hipay.hipayfullservice.core.models;
 
+import android.os.Bundle;
+
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
-
-import org.json.JSONObject;
+import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by nfillion on 25/01/16.
@@ -21,14 +23,13 @@ public class TransactionRelatedItem extends AbstractModel {
     protected Date dateAuthorized;
     protected TransactionStatus status;
     protected String message;
-    protected Number authorizedAmount;
-    protected Number capturedAmount;
-    protected Number refundedAmount;
-    protected Number decimals;
+    protected Float authorizedAmount;
+    protected Float capturedAmount;
+    protected Float refundedAmount;
+    protected Float decimals;
     protected String currency;
 
     public TransactionRelatedItem() {
-
     }
 
     public enum TransactionStatus {
@@ -327,38 +328,90 @@ public class TransactionRelatedItem extends AbstractModel {
         this.message = message;
     }
 
-    public Number getAuthorizedAmount() {
+    public Float getAuthorizedAmount() {
         return authorizedAmount;
     }
 
-    public void setAuthorizedAmount(Number authorizedAmount) {
+    public void setAuthorizedAmount(Float authorizedAmount) {
         this.authorizedAmount = authorizedAmount;
     }
 
-    public Number getCapturedAmount() {
+    public Float getCapturedAmount() {
         return capturedAmount;
     }
 
-    public void setCapturedAmount(Number capturedAmount) {
+    public void setCapturedAmount(Float capturedAmount) {
         this.capturedAmount = capturedAmount;
     }
 
-    public Number getRefundedAmount() {
+    public Float getRefundedAmount() {
         return refundedAmount;
     }
 
-    public void setRefundedAmount(Number refundedAmount) {
+    public void setRefundedAmount(Float refundedAmount) {
         this.refundedAmount = refundedAmount;
     }
 
-    public Number getDecimals() {
+    public Float getDecimals() {
         return decimals;
     }
 
-    public void setDecimals(Number decimals) {
+    public void setDecimals(Float decimals) {
         this.decimals = decimals;
     }
 
+    public static class TransactionRelatedItemSerialization extends AbstractSerialization {
+
+        //TODO time to put a rawData instead of model/request in initializer
+        public TransactionRelatedItemSerialization(TransactionRelatedItem transactionRelatedItem) {
+
+            super(transactionRelatedItem);
+        }
+
+        @Override
+        public Map<String, String> getSerializedRequest() {
+            // we don't send it as a queryString
+            return null;
+        }
+
+        @Override
+        public Bundle getSerializedBundle() {
+            super.getSerializedBundle();
+
+            TransactionRelatedItem transactionRelatedItem = (TransactionRelatedItem)this.getModel();
+            //TODO put the transactionRelatedItem elements
+
+            TransactionRelatedItem object = new TransactionRelatedItem();
+
+            this.putBoolForKey("test", object.getTest());
+            this.putStringForKey("mid", object.getMid());
+            this.putStringForKey("authorizationCode", object.getAuthorizationCode());
+            this.putStringForKey("transactionReference", object.getTransactionReference());
+            this.putDateForKey("dateCreated", object.getDateCreated());
+            this.putDateForKey("dateUpdated", object.getDateUpdated());
+            this.putDateForKey("dateAuthorized", object.getDateUpdated());
+
+            TransactionStatus status = object.getStatus();
+            if (status != null) {
+                this.putIntForKey("status", object.getStatus().getIntegerValue());
+            }
+
+            this.putStringForKey("message", object.getMessage());
+            this.putFloatForKey("authorizedAmount", object.getAuthorizedAmount());
+            this.putFloatForKey("capturedAmount", object.getCapturedAmount());
+            this.putFloatForKey("refundedAmount", object.getRefundedAmount());
+
+            this.putFloatForKey("decimals", object.getDecimals());
+            this.putStringForKey("currency", object.getCurrency());
+
+            return this.getBundle();
+        }
+
+        @Override
+        public String getQueryString() {
+            return null;
+        }
+    }
 
     public static class TransactionRelatedItemMapper extends AbstractMapper {
         public TransactionRelatedItemMapper(Object rawData) {
@@ -370,13 +423,15 @@ public class TransactionRelatedItem extends AbstractModel {
 
             if (this.getBehaviour() instanceof MapMapper) {
 
-                if (this.getStringForKey("transactionReference") != null) return true;
+                if (this.getStringForKey("transactionReference") != null) {
+                    return true;
+                }
             }
 
-            return false;
+            return true;
         }
 
-        protected Object mappedObject() {
+        protected TransactionRelatedItem mappedObject() {
 
             TransactionRelatedItem object = new TransactionRelatedItem();
 
@@ -396,19 +451,43 @@ public class TransactionRelatedItem extends AbstractModel {
             object.setStatus(status);
 
             object.setMessage(this.getStringForKey("message"));
-            object.setAuthorizedAmount(this.getNumberForKey("authorizedAmount"));
-            object.setAuthorizedAmount(this.getNumberForKey("capturedAmount"));
-            object.setAuthorizedAmount(this.getNumberForKey("refundedAmount"));
-            object.setDecimals(this.getNumberForKey("decimals"));
+            object.setAuthorizedAmount(this.getFloatForKey("authorizedAmount"));
+            object.setCapturedAmount(this.getFloatForKey("capturedAmount"));
+            object.setRefundedAmount(this.getFloatForKey("refundedAmount"));
+            object.setDecimals(this.getFloatForKey("decimals"));
             object.setCurrency(this.getStringForKey("currency"));
 
             return object;
-
         }
 
         @Override
-        protected Object mappedObjectFromBundle() {
-            return null;
+        protected TransactionRelatedItem mappedObjectFromBundle() {
+
+            TransactionRelatedItem object = new TransactionRelatedItem();
+
+            object.setTest(this.getBoolForKey("test"));
+            object.setMid(this.getStringForKey("mid"));
+            object.setAuthorizationCode(this.getStringForKey("authorizationCode"));
+            object.setTransactionReference(this.getStringForKey("transactionReference"));
+            object.setDateCreated(this.getDateForKey("dateCreated"));
+            object.setDateUpdated(this.getDateForKey("dateUpdated"));
+            object.setDateAuthorized(this.getDateForKey("dateAuthorized"));
+
+            Integer statusInteger = this.getIntegerForKey("status");
+            TransactionStatus status = TransactionStatus.fromIntegerValue(statusInteger);
+            if (status == null) {
+                status = TransactionStatus.TransactionStatusUnknown;
+            }
+            object.setStatus(status);
+
+            object.setMessage(this.getStringForKey("message"));
+            object.setAuthorizedAmount(this.getFloatForKey("authorizedAmount"));
+            object.setCapturedAmount(this.getFloatForKey("capturedAmount"));
+            object.setRefundedAmount(this.getFloatForKey("refundedAmount"));
+            object.setDecimals(this.getFloatForKey("decimals"));
+            object.setCurrency(this.getStringForKey("currency"));
+
+            return object;
         }
     }
 }

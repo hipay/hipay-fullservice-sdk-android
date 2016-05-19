@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +22,22 @@ import android.widget.ProgressBar;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.client.GatewayClient;
+import com.hipay.hipayfullservice.core.client.SecureVaultClient;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionDetailsCallback;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionsDetailsCallback;
+import com.hipay.hipayfullservice.core.models.HostedPaymentPage;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.screen.activity.ForwardWebViewActivity;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Currency;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -39,11 +46,17 @@ import java.util.Locale;
 
 public abstract class AbstractPaymentFormFragment extends Fragment {
 
+    private static final String STATE_IS_LOADING = "isLoading";
+    private static final String CURRENT_LOADER_ID = "currentLoaderId";
+
     private ProgressBar mProgressBar;
     OnCallbackOrderListener mCallback;
     protected LinearLayout mCardInfoLayout;
 
-    protected abstract void launchRequest();
+    protected boolean mLoadingMode = false;
+    protected int mCurrentLoading = -1;
+
+    public abstract void launchRequest();
     public interface OnCallbackOrderListener {
 
         void onCallbackOrderReceived(Transaction transaction, Exception exception);
@@ -56,15 +69,21 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     private Button mPayButton;
 
     protected GatewayClient mGatewayClient;
+    protected SecureVaultClient mSecureVaultClient;
 
     public static AbstractPaymentFormFragment newInstance(Bundle paymentPageRequestBundle, PaymentProduct paymentProduct, Bundle customTheme) {
 
         AbstractPaymentFormFragment fragment;
 
         Boolean isTokenizable = paymentProduct.isTokenizable();
+
         if (isTokenizable != null && isTokenizable == true) {
 
             fragment = new TokenizableCardPaymentFormFragment();
+
+        } else if (forwardProductsCodes().contains(paymentProduct.getCode()) ) {
+
+            fragment = new ForwardPaymentFormFragment();
 
         } else {
 
@@ -81,6 +100,25 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         return fragment;
     }
 
+    private static List<String> forwardProductsCodes() {
+
+        List<String> forwardProductsCode = new ArrayList<>(Arrays.asList(
+                PaymentProduct.PaymentProductCodePayPal,
+                PaymentProduct.PaymentProductCodeYandex,
+                PaymentProduct.PaymentProductCodeSofortUberweisung,
+                PaymentProduct.PaymentProductCodeSisal,
+                PaymentProduct.PaymentProductCodeSDD,
+                PaymentProduct.PaymentProductCodePayULatam,
+                PaymentProduct.PaymentProductCodeINGHomepay,
+                PaymentProduct.PaymentProductCodeBCMCMobile,
+                PaymentProduct.PaymentProductCodeBankTransfer,
+                PaymentProduct.PaymentProductCodePaysafecard,
+                PaymentProduct.PaymentProductCodeDexiaDirectNet
+        ));
+
+        return forwardProductsCode;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -93,9 +131,50 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         }
     }
 
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.i("onActivityCreated", "onActivityCreated");
+
+        setRetainInstance(true);
+
+        // ---- magic lines starting here -----
+        // call this to re-connect with an existing
+        // loader (after screen configuration changes for e.g!)
+
+        if (mSecureVaultClient != null && mCurrentLoading == 0) {
+            mSecureVaultClient.reLaunchOperations(0);
+        }
+
+        if (mGatewayClient != null && mCurrentLoading > 0 ) {
+            mGatewayClient.reLaunchOperations(mCurrentLoading);
+        }
+
+        //TODO need to handle the loadInBackground elements
+
+        //----- end magic lines -----
+
+
+        //LoaderManager supportLoaderManager = getActivity().getSupportLoaderManager();
+        //lm = getLoaderManager();
+        //if (supportLoaderManager.getLoader(0) != null) {
+        //supportLoaderManager.initLoader(0, null, getActivity());
+        //}
+    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mLoadingMode = savedInstanceState.getBoolean(STATE_IS_LOADING);
+            mCurrentLoading = savedInstanceState.getInt(CURRENT_LOADER_ID, -1);
+        }
     }
 
     @Override
@@ -105,9 +184,25 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         validatePayButton(isInputDataValid());
         putEverythingInRed();
 
-        mPayButton.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.GONE);
+        this.setLoadingMode(mLoadingMode);
+
         //TODO reinit button to pay
+    }
+
+    public void setLoadingMode(boolean loadingMode) {
+
+        if (loadingMode) {
+
+            mPayButton.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.VISIBLE);
+
+        } else {
+
+            mPayButton.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.GONE);
+        }
+
+        mLoadingMode = loadingMode;
     }
 
     @Override
@@ -127,33 +222,18 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        //if (mAvatarGrid != null) {
-        //    outState.putInt(KEY_SELECTED_AVATAR_INDEX, mAvatarGrid.getCheckedItemPosition());
-        //} else {
-        //    outState.putInt(KEY_SELECTED_AVATAR_INDEX, GridView.INVALID_POSITION);
-        //}
+
+        outState.putBoolean(STATE_IS_LOADING, mLoadingMode);
+        outState.putInt(CURRENT_LOADER_ID, mCurrentLoading);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-       // if (mPlayer == null || edit) {
-       //     view.findViewById(R.id.empty).setVisibility(View.GONE);
-       //     view.findViewById(R.id.content).setVisibility(View.VISIBLE);
-       //     initContentViews(view);
-       //     initContents();
-       // } else {
-       //     final Activity activity = getActivity();
-       //     CategorySelectionActivity.start(activity, mPlayer);
-       //     activity.finish();
-       // }
-
         super.onViewCreated(view, savedInstanceState);
         initContentViews(view);
-
-        //TODO put this paymentPageRequest as args to get it.
-
     }
+
     private class GenericTextWatcher implements TextWatcher {
 
         private int diffLength = 0;
@@ -253,7 +333,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         return res;
     }
 
-    private void initContentViews(View view) {
+    protected void initContentViews(View view) {
 
         View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
             @Override
@@ -291,19 +371,12 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         Bundle args = getArguments();
         final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
 
-        //double money = 100.1;
-        //NumberFormat formatter = NumberFormat.getCurrencyInstance();
-        //String moneyString = formatter.format(money);
-
-        DecimalFormat twoPlaces = new DecimalFormat("0.00");
-
-        //mPayButton.setText("Pay " + paymentPageRequest.getCurrency() + " " + paymentPageRequest.getAmount());
-        //mPayButton.setText(moneyString);
-
-        String moneyFormatted = twoPlaces.format(paymentPageRequest.getAmount());
-
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
         Currency c = Currency.getInstance(paymentPageRequest.getCurrency());
-        String moneyString = new StringBuilder("Pay ").append(c.getSymbol()).append("").append(moneyFormatted).toString();
+        currencyFormatter.setCurrency(c);
+        String moneyFormatted = currencyFormatter.format(paymentPageRequest.getAmount());
+
+        String moneyString = getString(R.string.pay, moneyFormatted);
 
         mPayButton.setText(moneyString);
 
@@ -311,8 +384,8 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                mPayButton.setVisibility(View.GONE);
-                mProgressBar.setVisibility(View.VISIBLE);
+
+                setLoadingMode(true);
 
                 launchRequest();
             }
@@ -345,7 +418,6 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         //};
 
         mCardOwner = (EditText) view.findViewById(R.id.card_owner);
-
 
         mCardOwner.setOnFocusChangeListener(focusChangeListener);
         mCardOwner.addTextChangedListener(new GenericTextWatcher(mCardOwner));
@@ -461,6 +533,70 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
     }
 
+    public void launchBackgroundReload(Transaction transaction) {
+
+        if (transaction != null) {
+
+            String transactionReference = transaction.getTransactionReference();
+
+            mCurrentLoading = 3;
+            new GatewayClient(getActivity())
+                    .getTransactionWithReference(transactionReference, new TransactionDetailsCallback() {
+
+                        @Override
+                        public void onSuccess(final Transaction transaction) {
+                            Log.i("transaction success", transaction.toString());
+
+                            if (mCallback != null) {
+                                mCallback.onCallbackOrderReceived(transaction, null);
+                            }
+                            cancelLoaderId(3);
+                        }
+
+                        @Override
+                        public void onError(Exception error) {
+                            Log.i("transaction failed", error.getLocalizedMessage());
+                            if (mCallback != null) {
+                                mCallback.onCallbackOrderReceived(null, error);
+                            }
+                            cancelLoaderId(3);
+                        }
+                    });
+        }
+        else {
+
+            Bundle args = getArguments();
+            final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
+
+            String orderId = paymentPageRequest.getOrderId();
+            mCurrentLoading = 4;
+            new GatewayClient(getActivity())
+                    .getTransactionsWithOrderId(orderId, new TransactionsDetailsCallback() {
+
+                        @Override
+                        public void onSuccess(List<Transaction> transactions) {
+
+                            Log.i("transaction success", transactions.toString());
+
+                            if (mCallback != null) {
+                                mCallback.onCallbackOrderReceived(transactions.get(0), null);
+                            }
+                            cancelLoaderId(4);
+                        }
+
+
+                        @Override
+                        public void onError(Exception error) {
+                            Log.i("transaction failed", error.getLocalizedMessage());
+                            if (mCallback != null) {
+                                mCallback.onCallbackOrderReceived(null, error);
+                            }
+                            cancelLoaderId(4);
+                        }
+                    });
+        }
+    }
+
     private void validatePayButton(boolean validate) {
 
         if (validate) {
@@ -487,18 +623,82 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         }
     }
 
-    protected void cancelOperation() {
+    protected void cancelLoaderId(int loaderId) {
+
+        mCurrentLoading = -1;
+
+        switch (loaderId) {
+
+            //securevault
+            case 0: {
+
+                if (mSecureVaultClient != null) {
+                    mSecureVaultClient.cancelOperation();
+                    mSecureVaultClient = null;
+                }
+
+            } break;
+
+            //order
+            case 1: {
+
+                if (mGatewayClient != null) {
+                    mGatewayClient.cancelOperation();
+                    mGatewayClient = null;
+                }
+
+            } break;
+
+            //paymentPageRequest
+            case 2: {
+
+                if (mGatewayClient != null) {
+                    mGatewayClient.cancelOperation();
+                    mGatewayClient = null;
+                }
+
+            } break;
+
+
+            //transaction reference
+            case 3: {
+
+                if (mGatewayClient != null) {
+                    mGatewayClient.cancelOperation();
+                    mGatewayClient = null;
+                }
+
+            } break;
+
+            //transaction orderid
+            case 4: {
+
+                if (mGatewayClient != null) {
+                    mGatewayClient.cancelOperation();
+                    mGatewayClient = null;
+                }
+
+            } break;
+        }
+    }
+
+    protected void cancelOperations() {
 
         if (mGatewayClient != null) {
             mGatewayClient.cancelOperation();
             mGatewayClient = null;
+        }
+
+        if (mSecureVaultClient != null) {
+            mSecureVaultClient.cancelOperation();
+            mSecureVaultClient = null;
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        cancelOperation();
+        //cancelOperations();
     }
 
     protected abstract boolean isInputDataValid();
@@ -508,7 +708,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         if (!TextUtils.isEmpty(mCardExpiration.getText())) {
 
             String cvvString = mCardCVV.getText().toString().trim();
-            if (cvvString.length() == 3 && TextUtils.isDigitsOnly(cvvString)) {
+            if (cvvString.length() >= 3 && TextUtils.isDigitsOnly(cvvString)) {
 
                 //TODO is CVV always a 3 digits number?
                 //TODO looks like mastercard needs 4 digits
@@ -662,13 +862,13 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         return !hasYearPassed(expYear);
     }
 
-    public static boolean hasYearPassed(int year) {
+    protected boolean hasYearPassed(int year) {
         int normalized = normalizeYear(year);
         Calendar now = Calendar.getInstance();
         return normalized < now.get(Calendar.YEAR);
     }
 
-    public static boolean hasMonthPassed(int year, int month) {
+    protected boolean hasMonthPassed(int year, int month) {
         Calendar now = Calendar.getInstance();
         // Expires at end of specified month, Calendar month starts at 0
 
@@ -677,7 +877,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     }
 
     // Convert two-digit year to full year if necessary
-    private static int normalizeYear(int year)  {
+    protected int normalizeYear(int year)  {
         if (year < 100 && year >= 0) {
             Calendar now = Calendar.getInstance();
             String currentYear = String.valueOf(now.get(Calendar.YEAR));

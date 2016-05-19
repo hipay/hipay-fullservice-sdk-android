@@ -50,6 +50,15 @@ public class DataExtractor {
         return null;
     }
 
+    public static int getLengthFromObject(JSONObject jsonObject) {
+
+        if (jsonObject != null) {
+            return jsonObject.length();
+        }
+
+        return 0;
+    }
+
     public static String getStringFromField(JSONArray jsonArray, int i) {
 
         if (checkParams(jsonArray, i)) {

@@ -25,9 +25,6 @@ public abstract class AbstractOperation extends AbstractHttpClient<HttpResult> {
         String username = ClientConfig.getInstance().getUsername();
         String password = ClientConfig.getInstance().getPassword();
 
-        StringBuilder authHeaderBuilder = new StringBuilder();
-        authHeaderBuilder.append(username).append(":").append(password);
-
         String authHeaderString = new StringBuilder(username)
                 .append(":")
                 .append(password)
@@ -47,7 +44,7 @@ public abstract class AbstractOperation extends AbstractHttpClient<HttpResult> {
         }
 
         return new StringBuilder("Basic ")
-                .append(Base64.encodeToString(b, Base64.DEFAULT))
+                .append(Base64.encodeToString(b, Base64.NO_WRAP))
                 .toString();
     }
 }

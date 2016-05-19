@@ -1,6 +1,7 @@
 package com.hipay.hipayfullservice.core.models;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
@@ -99,13 +100,13 @@ public class Transaction extends TransactionRelatedItem {
         return transaction.dateCreated.before(this.dateCreated);
     }
 
-    public boolean isHandled() {
+    public Boolean isHandled() {
 
         if (this.state.equals(TransactionState.TransactionStatePending) ||
                 this.state.equals(TransactionState.TransactionStateCompleted )) {
-            return true;
+            return Boolean.valueOf(true);
         }
-        return false;
+        return Boolean.valueOf(false);
     }
 
     public enum AVSResult {
@@ -556,11 +557,11 @@ public class Transaction extends TransactionRelatedItem {
         }
     }
 
-    public static class TransactionSerialization extends AbstractSerialization {
+    public static class TransactionSerialization extends TransactionRelatedItemSerialization {
 
         //TODO time to put a rawData instead of model/request in initializer
         public TransactionSerialization(Transaction transaction) {
-            this.setModel(transaction);
+            super(transaction);
         }
 
         @Override
@@ -570,12 +571,9 @@ public class Transaction extends TransactionRelatedItem {
 
         @Override
         public Bundle getSerializedBundle() {
-
-            this.setBundleBehaviour(new BundleSerialization());
+            super.getSerializedBundle();
 
             Transaction transaction = (Transaction)this.getModel();
-
-            //TODO get mapped object from transactionRelatedItem superclass
 
             this.putStringForKey("cdata1", transaction.getCdata1());
             this.putStringForKey("cdata2", transaction.getCdata2());
@@ -618,6 +616,24 @@ public class Transaction extends TransactionRelatedItem {
                 this.putStringForKey("state", state.getStringValue());
             }
 
+            ThreeDSecure threeDSecure = transaction.getThreeDSecure();
+            if (threeDSecure != null) {
+                Bundle bundle = threeDSecure.toBundle();
+                this.putBundleForKey("threeDSecure", bundle);
+            }
+
+            FraudScreening fraudScreening = transaction.getFraudScreening();
+            if (fraudScreening != null) {
+                Bundle bundle = fraudScreening.toBundle();
+                this.putBundleForKey("fraudScreening", bundle);
+            }
+
+            Order order = transaction.getOrder();
+            if (order != null) {
+                Bundle bundle = order.toBundle();
+                this.putBundleForKey("order", bundle);
+            }
+
             return this.getBundle();
         }
 
@@ -626,7 +642,6 @@ public class Transaction extends TransactionRelatedItem {
             return null;
         }
     }
-
 
     private static class TransactionMapper extends TransactionRelatedItemMapper {
         public TransactionMapper(Object object) {
@@ -651,9 +666,8 @@ public class Transaction extends TransactionRelatedItem {
         @Override
         protected Transaction mappedObjectFromBundle() {
 
-            //TODO pour l'instant on s'occupe pas de la superclass
-
-            Transaction object = new Transaction();
+            TransactionRelatedItem transactionRelatedItem = super.mappedObjectFromBundle();
+            Transaction object = this.transactionFromRelatedItem(transactionRelatedItem);
 
             object.setCdata1(this.getStringForKey("cdata1"));
             object.setCdata2(this.getStringForKey("cdata2"));
@@ -675,7 +689,6 @@ public class Transaction extends TransactionRelatedItem {
             object.setPaymentProduct(this.getStringForKey("paymentProduct"));
 
             object.setForwardUrl(this.getURLForKey("forwardUrl"));
-
 
             String resultString = this.getEnumCharForKey("avsResult");
             AVSResult result = AVSResult.fromStringValue(resultString);
@@ -704,7 +717,31 @@ public class Transaction extends TransactionRelatedItem {
                 state = TransactionState.TransactionStateError;
             }
             object.setState(state);
+
+
+            Bundle threeDSecureBundle = this.getBundleForKey("threeDSecure");
+            ThreeDSecure threeDSecure = null;
+            if (threeDSecureBundle != null) {
+                threeDSecure = ThreeDSecure.fromBundle(threeDSecureBundle);
+            }
+            object.setThreeDSecure(threeDSecure);
+
+            Bundle fraudScreeningBundle = this.getBundleForKey("fraudScreening");
+            FraudScreening fraudScreening = null;
+            if (fraudScreeningBundle != null) {
+                fraudScreening = FraudScreening.fromBundle(fraudScreeningBundle);
+            }
+            object.setFraudScreening(fraudScreening);
+
+            Bundle orderBundle = this.getBundleForKey("order");
+            Order order = null;
+            if (orderBundle != null) {
+                order = Order.fromBundle(orderBundle);
+            }
+            object.setOrder(order);
+
             return object;
+
         }
 
         @Override
@@ -712,7 +749,8 @@ public class Transaction extends TransactionRelatedItem {
 
             //TODO get mapped object from transactionRelatedItem superclass
 
-            Transaction object = new Transaction();
+            TransactionRelatedItem transactionRelatedItem = super.mappedObject();
+            Transaction object = this.transactionFromRelatedItem(transactionRelatedItem);
 
             object.setCdata1(this.getStringForKey("cdata1"));
             object.setCdata2(this.getStringForKey("cdata2"));
@@ -763,19 +801,51 @@ public class Transaction extends TransactionRelatedItem {
             }
             object.setState(state);
 
-            /*
-            Integer transactionStateString = this.getIntegerForKey("");
+            JSONObject fraudScreeningObject = this.getJSONObjectForKey("fraudScreening");
+            FraudScreening fraudScreening = null;
+            if (fraudScreeningObject != null) {
+                fraudScreening = FraudScreening.fromJSONObject(fraudScreeningObject);
+            }
+            object.setFraudScreening(fraudScreening);
 
-            protected TransactionState state;
-            protected ThreeDSecure threeDSecure;
-            protected FraudScreening fraudScreening;
-            protected Order order;
-            protected Map debitAgreement;
+            JSONObject orderObject = this.getJSONObjectForKey("order");
+            Order order = null;
+            if (orderObject != null) {
+                order = Order.fromJSONObject(orderObject);
+            }
+            object.setOrder(order);
 
-            */
+            //TODO look for debitAgreement and paymentMethod
 
             return object;
 
         }
+
+        private Transaction transactionFromRelatedItem(TransactionRelatedItem transactionRelatedItem) {
+
+            Transaction transaction = new Transaction();
+
+            transaction.setTest(transactionRelatedItem.getTest());
+            transaction.setMid(transactionRelatedItem.getMid());
+            transaction.setAuthorizationCode(transactionRelatedItem.getAuthorizationCode());
+            transaction.setTransactionReference(transactionRelatedItem.getTransactionReference());
+
+            transaction.setDateCreated(transactionRelatedItem.getDateCreated());
+            transaction.setDateUpdated(transactionRelatedItem.getDateUpdated());
+            transaction.setDateAuthorized(transactionRelatedItem.getDateAuthorized());
+
+            transaction.setStatus(transactionRelatedItem.getStatus());
+            transaction.setMessage(transactionRelatedItem.getMessage());
+
+            transaction.setAuthorizedAmount(transactionRelatedItem.getAuthorizedAmount());
+            transaction.setCapturedAmount(transactionRelatedItem.getCapturedAmount());
+            transaction.setRefundedAmount(transactionRelatedItem.getRefundedAmount());
+
+            transaction.setDecimals(transactionRelatedItem.getDecimals());
+            transaction.setCurrency(transactionRelatedItem.getCurrency());
+
+            return transaction;
+        }
+
     }
 }

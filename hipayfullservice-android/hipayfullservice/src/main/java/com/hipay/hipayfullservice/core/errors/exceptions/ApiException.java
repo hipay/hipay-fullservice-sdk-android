@@ -6,7 +6,6 @@ import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
-import com.hipay.hipayfullservice.core.serialization.BundleSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
 import java.util.Map;
@@ -16,8 +15,11 @@ import java.util.Map;
  */
 public class ApiException extends AbstractException {
 
-    public ApiException(String message, Integer statusCode, Throwable throwable) {
+    private Integer apiCode;
+
+    public ApiException(String message, Integer statusCode, Integer apiCode, Throwable throwable) {
         super(message, statusCode, throwable);
+        this.apiCode = apiCode;
     }
 
     public static ApiException fromBundle(Bundle bundle) {
@@ -87,6 +89,7 @@ public class ApiException extends AbstractException {
             ApiException object = new ApiException(
                     this.getStringForKey("message"),
                     this.getIntegerForKey("code"),
+                    this.getIntegerForKey("apiCode"),
                     httpException
             );
 
@@ -98,7 +101,7 @@ public class ApiException extends AbstractException {
 
         //TODO time to put a rawData instead of model/request in initializer
         public ApiExceptionSerialization(Exception exception) {
-            this.setException(exception);
+            super(exception);
         }
 
         @Override
@@ -109,12 +112,13 @@ public class ApiException extends AbstractException {
         @Override
         public Bundle getSerializedBundle() {
 
-            this.setBundleBehaviour(new BundleSerialization());
+            super.getSerializedBundle();
 
-            ApiException apiException = (ApiException)this.getException();
+            ApiException apiException = (ApiException)this.getModel();
 
             this.putStringForKey("message", apiException.getMessage());
             this.putIntForKey("code", apiException.getStatusCode());
+            this.putIntForKey("apiCode", apiException.getApiCode());
 
             Throwable exception = apiException.getCause();
             if (exception != null) {
@@ -131,5 +135,9 @@ public class ApiException extends AbstractException {
         public String getQueryString() {
             return null;
         }
+    }
+
+    public Integer getApiCode() {
+        return apiCode;
     }
 }

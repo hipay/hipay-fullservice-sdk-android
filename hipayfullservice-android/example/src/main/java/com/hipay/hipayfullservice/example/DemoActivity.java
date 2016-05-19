@@ -19,8 +19,11 @@ public class DemoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ClientConfig.Environment environment = ClientConfig.Environment.Stage;
-        String username = "94654679.api.hipay-tpp.com";
-        String password = "U5hQh4ZT0UyXpYhG8WI4trYQ";
+        //String username = "94654679.api.hipay-tpp.com";
+        //String password = "U5hQh4ZT0UyXpYhG8WI4trYQ";
+
+        String username = "94656047.stage-secure-gateway.hipay-tpp.com";
+        String password = "Test_pfS0ojds5ZPu1t8ow8PuASCD";
 
         ClientConfig.getInstance().setConfigEnvironment(
                 environment,

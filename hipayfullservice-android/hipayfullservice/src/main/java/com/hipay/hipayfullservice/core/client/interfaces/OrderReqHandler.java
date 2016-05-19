@@ -26,6 +26,8 @@ public class OrderReqHandler extends AbstractReqHandler {
     public String getReqQueryString() {
 
         OrderRequest orderRequest = (OrderRequest)this.getRequest();
+
+        //String params = orderRequest.getStringParameters();
         return orderRequest.getStringParameters();
     }
 
@@ -34,27 +36,9 @@ public class OrderReqHandler extends AbstractReqHandler {
         return new OrderOperation(context, bundle);
     }
 
-    //@Override
-    //public void handleCallback(HttpResult data) {
-
-    //    String bodyStream = data.getBodyStream();
-
-    //    try {
-    //        JSONObject object = new JSONObject(bodyStream);
-
-    //        Transaction transaction = Transaction.fromJSONObject(object);
-
-    //        OrderRequestCallback orderRequestCallback = (OrderRequestCallback)this.getCallback();
-    //        orderRequestCallback.onSuccess(transaction);
-
-        //} catch (JSONException e) {
-            //e.printStackTrace();
-        //}
-    //}
-
     @Override
     public int getLoaderId() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -64,7 +48,6 @@ public class OrderReqHandler extends AbstractReqHandler {
 
         OrderRequestCallback orderRequestCallback = (OrderRequestCallback)this.getCallback();
         orderRequestCallback.onSuccess(transaction);
-
     }
 
     @Override

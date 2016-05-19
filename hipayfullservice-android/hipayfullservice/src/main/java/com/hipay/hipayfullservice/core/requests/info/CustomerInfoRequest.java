@@ -1,7 +1,12 @@
 package com.hipay.hipayfullservice.core.requests.info;
 
+import android.os.Bundle;
+
 import com.hipay.hipayfullservice.core.models.Order;
 import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.hipayfullservice.core.utils.Utils;
+
+import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -12,7 +17,24 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
 
     public CustomerInfoRequest() {
 
-        this.setGender(Order.Gender.GenderUndefined);
+        //this.setGender(Order.Gender.GenderUndefined);
+    }
+
+    public static CustomerInfoRequest fromBundle(Bundle bundle) {
+
+        CustomerInfoRequestMapper mapper = new CustomerInfoRequestMapper(bundle);
+        return mapper.mappedObjectFromBundle();
+    }
+
+    public static CustomerInfoRequest fromJSONObject(JSONObject jsonObject) {
+
+        CustomerInfoRequestMapper mapper = new CustomerInfoRequestMapper(jsonObject);
+        return mapper.mappedObject();
+    }
+    public Bundle toBundle() {
+
+        CustomerInfoRequest.CustomerInfoRequestSerializationMapper mapper = new CustomerInfoRequest.CustomerInfoRequestSerializationMapper(this);
+        return mapper.getSerializedBundle();
     }
 
     public String getStringParameters() {
@@ -29,9 +51,9 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
 
     protected String email;
     protected String phone;
-    protected Number birthDateDay;
-    protected String birthDateMonth;
-    protected String birthDateYear;
+    protected Integer birthDateDay;
+    protected Integer birthDateMonth;
+    protected Integer birthDateYear;
     protected Order.Gender gender;
 
     public String getEmail() {
@@ -50,27 +72,27 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
         this.phone = phone;
     }
 
-    public Number getBirthDateDay() {
+    public Integer getBirthDateDay() {
         return birthDateDay;
     }
 
-    public void setBirthDateDay(Number birthDateDay) {
+    public void setBirthDateDay(Integer birthDateDay) {
         this.birthDateDay = birthDateDay;
     }
 
-    public String getBirthDateMonth() {
+    public Integer getBirthDateMonth() {
         return birthDateMonth;
     }
 
-    public void setBirthDateMonth(String birthDateMonth) {
+    public void setBirthDateMonth(Integer birthDateMonth) {
         this.birthDateMonth = birthDateMonth;
     }
 
-    public String getBirthDateYear() {
+    public Integer getBirthDateYear() {
         return birthDateYear;
     }
 
-    public void setBirthDateYear(String birthDateYear) {
+    public void setBirthDateYear(Integer birthDateYear) {
         this.birthDateYear = birthDateYear;
     }
 
@@ -90,7 +112,6 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
 
         @Override
         protected String getQueryString() {
-
             return super.getQueryString();
         }
 
@@ -99,5 +120,145 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
 
             return super.getSerializedObject();
         }
+
+        @Override
+        protected Bundle getSerializedBundle() {
+
+            return super.getSerializedBundle();
+        }
     }
+
+    public static class CustomerInfoRequestSerialization extends PersonalInfoRequestSerialization {
+
+        //TODO time to put a rawData instead of model/request in initializer
+        public CustomerInfoRequestSerialization(CustomerInfoRequest customerInfoRequest) {
+            super(customerInfoRequest);
+        }
+
+        @Override
+        public Map<String, String> getSerializedRequest() {
+
+            CustomerInfoRequest customerInfoRequest = (CustomerInfoRequest)this.getModel();
+
+            Map<String, String> personalInfoRequestMap = super.getSerializedRequest();
+
+            personalInfoRequestMap.put("email", customerInfoRequest.getEmail());
+            personalInfoRequestMap.put("phone", customerInfoRequest.getPhone());
+
+            //TODO send the full birthDate
+            //TODO key = birthdate
+            //personalInfoRequestMap.put("birthDateDay", String.valueOf(customerInfoRequest.getBirthDateMonth()));
+            //personalInfoRequestMap.put("birthDateMonth", String.valueOf(customerInfoRequest.getBirthDateMonth()));
+            //personalInfoRequestMap.put("birthDateYear", String.valueOf(customerInfoRequest.getBirthDateYear()));
+
+            Order.Gender gender = customerInfoRequest.getGender();
+            if (gender != null && gender != Order.Gender.GenderUndefined) {
+                personalInfoRequestMap.put("gender", String.valueOf(gender.getCharValue()));
+            }
+
+            return personalInfoRequestMap;
+        }
+
+        @Override
+        public Bundle getSerializedBundle() {
+
+            //super class put data into the bundle first
+            super.getSerializedBundle();
+
+
+            CustomerInfoRequest customerInfoRequest = (CustomerInfoRequest)this.getModel();
+
+            this.putStringForKey("email", customerInfoRequest.getEmail());
+            this.putStringForKey("phone", customerInfoRequest.getPhone());
+
+            this.putIntForKey("birthDateDay", customerInfoRequest.getBirthDateDay());
+            this.putIntForKey("birthDateMonth", customerInfoRequest.getBirthDateMonth());
+            this.putIntForKey("birthDateYear", customerInfoRequest.getBirthDateYear());
+
+            Order.Gender gender = customerInfoRequest.getGender();
+            if (gender != null) {
+                this.putStringForKey("gender", Character.toString(gender.getCharValue()));
+            }
+
+            return this.getBundle();
+        }
+
+        @Override
+        public String getQueryString() {
+            return Utils.queryStringFromMap(this.getSerializedRequest());
+        }
+    }
+
+    public static class CustomerInfoRequestMapper extends PersonalInfoRequestMapper {
+        public CustomerInfoRequestMapper(Object rawData) {
+            super(rawData);
+        }
+
+        @Override
+        protected boolean isValid() {
+
+            return true;
+        }
+
+        protected CustomerInfoRequest mappedObject() {
+
+            PersonalInfoRequest personalInfoRequest = super.mappedObject();
+            CustomerInfoRequest object = this.customerFromPersonalRequest(personalInfoRequest);
+
+            object.setEmail(this.getStringForKey("email"));
+            object.setPhone(this.getStringForKey("phone"));
+            object.setBirthDateDay(this.getIntegerForKey("birthDateDay"));
+            object.setBirthDateMonth(this.getIntegerForKey("birthDateMonth"));
+            object.setBirthDateYear(this.getIntegerForKey("birthDateYear"));
+
+            String genderChar = this.getEnumCharForKey("gender");
+            Order.Gender gender = Order.Gender.fromStringValue(genderChar);
+            if (gender == null) {
+                gender = Order.Gender.GenderUnknown;
+            }
+            object.setGender(gender);
+
+            return object;
+        }
+
+        @Override
+        protected CustomerInfoRequest mappedObjectFromBundle() {
+
+            PersonalInfoRequest personalInfoRequest = super.mappedObjectFromBundle();
+            CustomerInfoRequest object = this.customerFromPersonalRequest(personalInfoRequest);
+
+            object.setEmail(this.getStringForKey("email"));
+            object.setPhone(this.getStringForKey("phone"));
+            object.setBirthDateDay(this.getIntegerForKey("birthDateDay"));
+            object.setBirthDateMonth(this.getIntegerForKey("birthDateMonth"));
+            object.setBirthDateYear(this.getIntegerForKey("birthDateYear"));
+
+            String genderChar = this.getEnumCharForKey("gender");
+            Order.Gender gender = Order.Gender.fromStringValue(genderChar);
+            if (gender == null) {
+                gender = Order.Gender.GenderUnknown;
+            }
+            object.setGender(gender);
+
+            return object;
+        }
+
+        private CustomerInfoRequest customerFromPersonalRequest(PersonalInfoRequest personalInfoRequest) {
+
+            CustomerInfoRequest customerInfoRequest = new CustomerInfoRequest();
+
+            customerInfoRequest.setFirstname(personalInfoRequest.getFirstname());
+            customerInfoRequest.setLastname(personalInfoRequest.getLastname());
+            customerInfoRequest.setStreetAddress(personalInfoRequest.getStreetAddress());
+            customerInfoRequest.setStreetAddress2(personalInfoRequest.getStreetAddress2());
+            customerInfoRequest.setRecipientInfo(personalInfoRequest.getRecipientInfo());
+            customerInfoRequest.setCity(personalInfoRequest.getCity());
+            customerInfoRequest.setState(personalInfoRequest.getState());
+            customerInfoRequest.setZipCode(personalInfoRequest.getZipCode());
+            customerInfoRequest.setCountry(personalInfoRequest.getCountry());
+
+            return customerInfoRequest;
+        }
+    }
+
 }

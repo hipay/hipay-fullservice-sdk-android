@@ -3,6 +3,7 @@ package com.hipay.hipayfullservice.core.serialization;
 import android.os.Bundle;
 
 import java.net.URL;
+import java.util.Date;
 
 /**
  * Created by nfillion on 18/03/16.
@@ -15,6 +16,7 @@ public interface IBundle {
     void putBool(String key, Boolean bool);
     void putUrl(String key, URL url);
     void putBundle(String key, Bundle bundle);
+    void putDate(String key, Date date);
     Bundle getBundle();
 
 }

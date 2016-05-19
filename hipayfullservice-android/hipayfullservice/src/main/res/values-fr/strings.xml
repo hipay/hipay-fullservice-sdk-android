@@ -10,6 +10,19 @@
     <string name="card_cvv">Code de sécurité</string>
 
     <string name="unknown_error">Erreur inconnue</string>
-    <string name="pay">Payer</string>
+    <string name="pay">Payer %1$s</string>
 
+    <string name="transaction_error_declined_title">Transaction refusée</string>
+    <string name="transaction_error_declined">Veuillez vérifier vos informations et réessayer.</string>
+    <string name="transaction_error_declined_reset">Merci de bien vouloir utiliser un autre moyen de paiement.</string>
+
+    <string name="transaction_error_other">Une erreur est survenue lors du traitement de la transaction.</string>
+
+    <string name="error_button_dismiss">Ok</string>
+    <string name="error_button_retry">Réessayer</string>
+
+    <string name="error_title_default">Une erreur est survenue</string>
+    <string name="error_body_default">Votre demande n\'a pu aboutir.</string>
+
+    <string name="error_title_connection">Erreur de connexion</string>
 </resources>

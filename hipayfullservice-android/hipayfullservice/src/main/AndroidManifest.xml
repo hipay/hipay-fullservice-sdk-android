@@ -15,12 +15,13 @@
         -->
 
         <activity android:name=".screen.activity.ForwardWebViewActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-                <data android:scheme="hipay"
-                    android:host="hipay-fullservice"
+                <data android:scheme="@string/hipay_scheme"
+                    android:host="@string/hipay_host"
                     />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />

@@ -2,26 +2,36 @@ package com.hipay.hipayfullservice.core.serialization.interfaces;
 
 import android.os.Bundle;
 
-import com.hipay.hipayfullservice.core.models.AbstractModel;
-import com.hipay.hipayfullservice.core.requests.AbstractRequest;
+import com.hipay.hipayfullservice.core.serialization.BundleSerialization;
 import com.hipay.hipayfullservice.core.serialization.IBundle;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.Map;
 
 /**
  * Created by nfillion on 04/02/16.
  */
-public abstract class AbstractSerialization implements ISerialization {
+public abstract class AbstractSerialization<T> implements ISerialization {
 
-    protected AbstractRequest request;
-    protected AbstractModel model;
-    protected Exception exception;
+    protected T model;
 
     IBundle bundleBehaviour;
 
+    public AbstractSerialization(T model) {
+        this.setModel(model);
+    }
+
+    //TODO add the Map<String,String> behaviour
+
     public abstract Map<String, String> getSerializedRequest();
-    public abstract Bundle getSerializedBundle();
+
+    public Bundle getSerializedBundle() {
+
+        this.setBundleBehaviour(new BundleSerialization());
+        return this.getBundle();
+    }
+
     public abstract String getQueryString();
 
     //TODO it should be Bundle or Map behaviour
@@ -33,28 +43,12 @@ public abstract class AbstractSerialization implements ISerialization {
         this.bundleBehaviour = bundleBehaviour;
     }
 
-    protected AbstractRequest getRequest() {
-        return request;
-    }
-
-    protected void setRequest(AbstractRequest request) {
-        this.request = request;
-    }
-
-    public AbstractModel getModel() {
+    public T getModel() {
         return model;
     }
 
-    public void setModel(AbstractModel model) {
+    public void setModel(T model) {
         this.model = model;
-    }
-
-    public Exception getException() {
-        return exception;
-    }
-
-    public void setException(Exception exception) {
-        this.exception = exception;
     }
 
     protected void putFloatForKey(String key, Float floatNumber) {
@@ -71,6 +65,10 @@ public abstract class AbstractSerialization implements ISerialization {
 
     protected void putIntForKey(String key, Integer integer) {
         this.getBundleBehaviour().putInt(key, integer);
+    }
+
+    protected void putDateForKey(String key, Date date) {
+        this.getBundleBehaviour().putDate(key, date);
     }
 
     protected void putBoolForKey(String key, Boolean bool) {

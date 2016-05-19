@@ -17,7 +17,6 @@ import com.hipay.hipayfullservice.screen.activity.PaymentProductsActivity;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,7 +44,11 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
         mResources = mActivity.getResources();
         mPackageName = mActivity.getPackageName();
         mLayoutInflater = LayoutInflater.from(activity.getApplicationContext());
-        updatePaymentProducts(activity);
+
+        mPaymentProducts = new ArrayList<>();
+
+        //updatePaymentProducts(activity);
+        //emptyPaymentProducts();
     }
 
     @Override
@@ -76,7 +79,6 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
                 mOnItemClickListener.onClick(v, position);
             }
         });
-
     }
 
     @Override
@@ -101,13 +103,13 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
      * @param id Id of changed category.
      */
     public final void notifyItemChanged(String id) {
-        updatePaymentProducts(mActivity);
-        notifyItemChanged(getItemPositionById(id));
+        //updatePaymentProducts(mActivity);
+        //notifyItemChanged(getItemPositionById(id));
     }
 
     private int getItemPositionById(String id) {
 
-        //TODO not useful
+        //not useful
         return -1;
 
         //for (int i = 0; i < mPaymentProducts.size(); i++) {
@@ -124,32 +126,195 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
 
     private void setCategoryIcon(PaymentProduct paymentProduct, ImageView icon) {
 
-        final int categoryImageResource = mResources.getIdentifier(
-                ICON_PAYMENT_PRODUCTS + paymentProduct.getCode(), DRAWABLE, mPackageName);
 
-        icon.setImageResource(categoryImageResource);
+        if (paymentProduct.getPaymentProductDescription() != null) {
+
+            final int categoryImageResource = mResources.getIdentifier(
+                    ICON_PAYMENT_PRODUCTS + replaceString(PaymentProduct.PaymentProductCategoryCodeCreditCard), DRAWABLE, mPackageName);
+            icon.setImageResource(categoryImageResource);
+
+        } else {
+
+            final int categoryImageResource = mResources.getIdentifier(
+                    ICON_PAYMENT_PRODUCTS + replaceString(paymentProduct.getCode()), DRAWABLE, mPackageName);
+            icon.setImageResource(categoryImageResource);
+        }
+
     }
 
-    private void updatePaymentProducts(Activity activity) {
+    PaymentProduct paymentProduct(String code, boolean tokenizable) {
 
         PaymentProduct paymentProduct = new PaymentProduct();
-        paymentProduct.setCode("visa");
-        paymentProduct.setTokenizable(true);
 
-        PaymentProduct paymentProduct2 = new PaymentProduct();
-        paymentProduct2.setCode("mastercard");
-        paymentProduct2.setTokenizable(false);
+        if (code.equals(PaymentProduct.PaymentProductCategoryCodeCreditCard)) {
+            paymentProduct.setCode(PaymentProduct.PaymentProductCodeCB);
+            //TODO remove hack
+            paymentProduct.setPaymentProductDescription("null");
 
-        PaymentProduct paymentProduct3 = new PaymentProduct();
-        paymentProduct3.setCode("maestro");
-        paymentProduct3.setTokenizable(false);
+        } else {
+            paymentProduct.setCode(code);
+        }
 
-        //TODO check later how to get products
-        mPaymentProducts = new ArrayList<>(Arrays.asList(
-                paymentProduct,
-                paymentProduct2,
-                paymentProduct3
-                ));
+        paymentProduct.setTokenizable(tokenizable);
+
+        return paymentProduct;
+    }
+
+    public void updatePaymentProducts(Boolean groupedCards) {
+
+        if (groupedCards != null && groupedCards.equals(Boolean.TRUE)) {
+
+            mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCategoryCodeCreditCard, true));
+
+        } else {
+
+            //tokenizable card
+            mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeMaestro, true));
+            mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeBCMC, true));
+
+            mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeVisa, true));
+            mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeAmericanExpress, true));
+
+            mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeCB, true));
+            mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeDiners, true));
+            mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeMasterCard, true));
+        }
+
+        // forward
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodePayPal, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeYandex, false));
+
+        //TODO be careful about these
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeSofortUberweisung, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeSisal, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeSDD, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodePayULatam, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeINGHomepay, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeBCMCMobile, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeBankTransfer, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodePaysafecard, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeDexiaDirectNet, false));
+
+        //not found
+        //mPaymentProducts.add(paymentProduct("account_klarna", false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeKlarnacheckout, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeKlarnaInvoice, false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeArgencard, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeAura, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeBaloto, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeBanamex, false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeBancoDoBrasil, false));
+        // banco provincia
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeProvincia, false));
+
+        //banque_accord
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeCarteAccord, false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeBBVABancomer, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeBCP, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeBitcoin, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeBoletoBancario, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeBradesco, false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeCabal, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeCaixa, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCode4xcb, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeCBCOnline, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCode3xcb, false));
+
+        //cencosud
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeCensosud, false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeCobroExpress, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeCofinoga, false));
+
+        // not found
+        //mPaymentProducts.add(paymentProduct("dcb", false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeDiscover, false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeEfecty, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeElo, false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeGiropay, false));
+
+        //not found
+        //mPaymentProducts.add(paymentProduct("hipercard", false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeIDEAL, false));
+
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeItau, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeIxe, false));
+
+        //not found
+        //mPaymentProducts.add(paymentProduct("jcb", false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeKBCOnline, false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodePrzelewy24, false));
+
+        //not found
+        //mPaymentProducts.add(paymentProduct("mastercard_debit", false));
+
+        //not found
+        //mPaymentProducts.add(paymentProduct("mercado_livre", false));
+
+        //not found
+        //mPaymentProducts.add(paymentProduct("multibanco", false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeOxxo, false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodePagoFacil, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCode3xcbNoFees, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCode4xcbNoFees, false));
+
+        //not found
+        //mPaymentProducts.add(paymentProduct("payshop", false));
+
+        //not found
+        //mPaymentProducts.add(paymentProduct("prelevement", false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeQiwiWallet, false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeRapipago, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeRipsa, false));
+
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeSantanderCash, false));
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeSantanderHomeBanking, false));
+
+        //not found
+        //mPaymentProducts.add(paymentProduct("sepa_bank_transfer", false));
+
+        //not found
+        //mPaymentProducts.add(paymentProduct("sofort_lastshrift", false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeTarjetaShopping, false));
+
+        //not found
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeNaranja, false));
+
+        //not found
+        //mPaymentProducts.add(paymentProduct("visa_debit", false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeWebmoneyTransfer, false));
+
+        //notifyItemInserted(0);
+        //notifyItemRangeInserted(0, 4);
+        notifyDataSetChanged();
+    }
+
+    private String replaceString(String string) {
+
+        return string.replace("-", "_");
+    }
+
+    public void emptyPaymentProducts() {
+        mPaymentProducts.clear();
     }
 
     /**

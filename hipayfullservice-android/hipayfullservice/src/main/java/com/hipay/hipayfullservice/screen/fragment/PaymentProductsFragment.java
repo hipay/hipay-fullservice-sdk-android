@@ -78,14 +78,19 @@ public class PaymentProductsFragment extends Fragment {
                     }
                 });
 
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+        categoriesView.setAdapter(mAdapter);
 
-                categoriesView.setAdapter(mAdapter);
-            }
-        }, 1000);
+        PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(paymentPageRequestBundle);
+        mAdapter.updatePaymentProducts(paymentPageRequest.isPaymentCardGroupingEnabled());
+
+        //final Handler handler = new Handler();
+        //handler.postDelayed(new Runnable() {
+            //@Override
+            //public void run() {
+//
+                //mAdapter.updatePaymentProducts(getActivity());
+            //}
+        //}, 400);
     }
 
     @Override

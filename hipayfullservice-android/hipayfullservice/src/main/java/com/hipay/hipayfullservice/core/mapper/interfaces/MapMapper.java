@@ -75,8 +75,6 @@ public class MapMapper implements IBehaviour {
                 String digits = (String)object;
                 if (TextUtils.isDigitsOnly(digits)) {
 
-                    //TODO Number is abstract
-
                     Number number = Integer.parseInt(digits);
                     return number;
                 }
@@ -150,6 +148,12 @@ public class MapMapper implements IBehaviour {
 
     }
 
+    @Override
+    public JSONObject getJSONObjectForKey(String key) {
+
+        return DataExtractor.getJSONObjectFromField(this.getJsonObject(), key);
+    }
+
     public Date getDateForKey(String key) {
 
         Date date = this.getDateBasicForKey(key);
@@ -193,6 +197,7 @@ public class MapMapper implements IBehaviour {
     }
 
 
+
     public Map getMapForKey(String key) {
 
         Object object = this.getObjectForKey(key);
@@ -227,7 +232,6 @@ public class MapMapper implements IBehaviour {
 
     public List getArrayFromObject(Object object) {
 
-        //TODO tricky getter
         return null;
     }
 
