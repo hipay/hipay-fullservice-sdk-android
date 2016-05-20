@@ -132,7 +132,7 @@ public class PaymentProductsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         TextView textView = (TextView) toolbar.findViewById(R.id.title);
-        textView.setText(R.string.paiment_products_title);
+        textView.setText(R.string.payment_products_title);
         textView.setTextColor(ContextCompat.getColor(this, this.getCustomTheme().getTextColorPrimaryId()));
     }
 

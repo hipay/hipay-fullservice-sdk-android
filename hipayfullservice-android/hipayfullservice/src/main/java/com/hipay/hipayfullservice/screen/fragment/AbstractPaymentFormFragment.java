@@ -1,13 +1,18 @@
 package com.hipay.hipayfullservice.screen.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -16,7 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -25,20 +30,26 @@ import com.hipay.hipayfullservice.core.client.GatewayClient;
 import com.hipay.hipayfullservice.core.client.SecureVaultClient;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionDetailsCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionsDetailsCallback;
-import com.hipay.hipayfullservice.core.models.HostedPaymentPage;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
+import com.hipay.hipayfullservice.core.utils.DataExtractor;
 import com.hipay.hipayfullservice.screen.activity.ForwardWebViewActivity;
+import com.hipay.hipayfullservice.screen.helper.FormHelper;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Currency;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created by nfillion on 29/02/16.
@@ -62,14 +73,23 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         void onCallbackOrderReceived(Transaction transaction, Exception exception);
     }
 
-    protected EditText mCardOwner;
-    protected EditText mCardNumber;
-    protected EditText mCardExpiration;
-    protected EditText mCardCVV;
+    protected TextInputEditText mCardOwner;
+    protected TextInputEditText mCardNumber;
+    protected TextInputEditText mCardExpiration;
+    protected TextInputEditText mCardCVV;
+
+    protected TextInputLayout mCardCVVLayout;
+    protected TextInputLayout mCardNumberLayout;
+    protected TextInputLayout mCardExpirationLayout;
+    protected TextInputLayout mCardOwnerLayout;
+
     private Button mPayButton;
+    private FrameLayout mPayButtonLayout;
 
     protected GatewayClient mGatewayClient;
     protected SecureVaultClient mSecureVaultClient;
+
+    protected Set<String> paymentProductCodes;
 
     public static AbstractPaymentFormFragment newInstance(Bundle paymentPageRequestBundle, PaymentProduct paymentProduct, Bundle customTheme) {
 
@@ -120,13 +140,13 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         try {
-            mCallback = (OnCallbackOrderListener) activity;
+            mCallback = (OnCallbackOrderListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
             + " must implement OnCallbackOrderListener");
         }
     }
@@ -185,20 +205,18 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         putEverythingInRed();
 
         this.setLoadingMode(mLoadingMode);
-
-        //TODO reinit button to pay
     }
 
     public void setLoadingMode(boolean loadingMode) {
 
         if (loadingMode) {
 
-            mPayButton.setVisibility(View.GONE);
+            mPayButtonLayout.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.VISIBLE);
 
         } else {
 
-            mPayButton.setVisibility(View.VISIBLE);
+            mPayButtonLayout.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
         }
 
@@ -232,6 +250,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
         initContentViews(view);
+
     }
 
     private class GenericTextWatcher implements TextWatcher {
@@ -312,9 +331,10 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
                     putExpiryDateInRed(false);
                 }
 
+
             } else if (i == R.id.card_number) {
 
-                //TODO
+                //paymentProductCodes = FormHelper.getPaymentProductCodes(mCardNumber.getText().toString(), getActivity());
                 putCardNumberInRed(false);
 
             } else {
@@ -367,6 +387,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         };
 
         mPayButton = (Button) view.findViewById(R.id.pay_button);
+        mPayButtonLayout = (FrameLayout) view.findViewById(R.id.pay_button_layout);
 
         Bundle args = getArguments();
         final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
@@ -380,7 +401,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
         mPayButton.setText(moneyString);
 
-        mPayButton.setOnClickListener(new View.OnClickListener() {
+        mPayButtonLayout.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -394,37 +415,15 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         mProgressBar = (ProgressBar) view.findViewById(R.id.empty);
         mCardInfoLayout = (LinearLayout) view.findViewById(R.id.card_info_layout);
 
-        //TextWatcher textWatcher = new TextWatcher() {
-        //    @Override
-        //    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        //        /* no-op */
-        //    }
-
-        //    @Override
-        //    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        //        // hiding the floating action button if text is empty
-        //        if (s.length() == 0) {
-        //            mDoneFab.hide();
-        //        }
-        //    }
-
-        //    @Override
-        //    public void afterTextChanged(Editable s) {
-        //        // showing the floating action button if avatar is selected and input data is valid
-        //        if (isAvatarSelected() && isInputDataValid()) {
-        //            mDoneFab.show();
-        //        }
-            //}
-        //};
-
-        mCardOwner = (EditText) view.findViewById(R.id.card_owner);
+        mCardOwner = (TextInputEditText) view.findViewById(R.id.card_owner);
 
         mCardOwner.setOnFocusChangeListener(focusChangeListener);
         mCardOwner.addTextChangedListener(new GenericTextWatcher(mCardOwner));
 
-        mCardNumber = (EditText) view.findViewById(R.id.card_number);
+        mCardNumber = (TextInputEditText) view.findViewById(R.id.card_number);
         mCardNumber.addTextChangedListener(new GenericTextWatcher(mCardNumber));
         mCardNumber.setOnFocusChangeListener(focusChangeListener);
+
 
 //        InputFilter filter = new InputFilter() {
 //            public CharSequence filter(CharSequence source, int start, int end,
@@ -523,13 +522,23 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         });
         */
 
-        mCardExpiration = (EditText) view.findViewById(R.id.card_expiration);
+        mCardExpiration = (TextInputEditText) view.findViewById(R.id.card_expiration);
         mCardExpiration.setOnFocusChangeListener(focusChangeListener);
         mCardExpiration.addTextChangedListener(new GenericTextWatcher(mCardExpiration));
 
-        mCardCVV = (EditText) view.findViewById(R.id.card_cvv);
+        mCardCVV = (TextInputEditText) view.findViewById(R.id.card_cvv);
         mCardCVV.setOnFocusChangeListener(focusChangeListener);
         mCardCVV.addTextChangedListener(new GenericTextWatcher(mCardCVV));
+
+        mCardCVVLayout = (TextInputLayout) view.findViewById(R.id.card_cvv_support);
+        mCardOwnerLayout = (TextInputLayout) view.findViewById(R.id.card_owner_support);
+        mCardExpirationLayout = (TextInputLayout) view.findViewById(R.id.card_expiration_support);
+        mCardNumberLayout = (TextInputLayout) view.findViewById(R.id.card_number_support);
+
+        mCardOwnerLayout.setError(" ");
+        mCardNumberLayout.setError(" ");
+        mCardExpirationLayout.setError(" ");
+        mCardCVVLayout.setError(" ");
 
     }
 
@@ -604,21 +613,32 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
             final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
             CustomTheme theme = CustomTheme.fromBundle(customThemeBundle);
 
-            //TODO active button
             mPayButton.setTextColor(ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
-            mPayButton.setEnabled(true);
+            mPayButtonLayout.setEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                mPayButton.setBackground(makeSelector(theme));
+                //mPayButton.setBackground(makeSelector(theme));
+                mPayButtonLayout.setBackground(makeSelector(theme));
+
+                Drawable[] drawables = mPayButton.getCompoundDrawables();
+                Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
+                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
             }
 
         } else {
 
             //TODO inactive button
             mPayButton.setTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
-            mPayButton.setEnabled(false);
+            mPayButtonLayout.setEnabled(false);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 CustomTheme greyTheme = new CustomTheme(R.color.dark_grey, R.color.dark_grey, R.color.dark_grey);
-                mPayButton.setBackground(makeSelector(greyTheme));
+                //mPayButton.setBackground(makeSelector(greyTheme));
+                mPayButtonLayout.setBackground(makeSelector(greyTheme));
+                //mPayButton.getDra
+
+                Drawable[] drawables = mPayButton.getCompoundDrawables();
+                Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
+                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), android.R.color.white));
+                //DrawableCompat.setTint(wrapDrawable, getResources().getColor(android.R.color.holo_red_dark));
             }
         }
     }
@@ -705,7 +725,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
     protected boolean isCVVValid() {
 
-        if (!TextUtils.isEmpty(mCardExpiration.getText())) {
+        if (!TextUtils.isEmpty(mCardCVV.getText())) {
 
             String cvvString = mCardCVV.getText().toString().trim();
             if (cvvString.length() >= 3 && TextUtils.isDigitsOnly(cvvString)) {
@@ -730,10 +750,28 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
         if (!TextUtils.isEmpty(mCardNumber.getText())) {
 
-            //TODO
+            //luhn first
+            if (!FormHelper.luhnTest(mCardNumber.getText().toString())) {
+                return false;
+            }
 
-            return true;
+            //format then
+            Set<String> paymentProducts = FormHelper.getPaymentProductCodes(mCardNumber.getText().toString(), getActivity());
+            if (paymentProducts.isEmpty()) {
+                return false;
+            }
+
+            if (paymentProducts.size() == 1) {
+
+                String[] things = paymentProducts.toArray(new String[1]);
+
+                if (FormHelper.hasValidCardLength(mCardNumber.getText().toString(), things[0], getActivity())) {
+
+                    return true;
+                }
+            }
         }
+
         return false;
     }
 
@@ -778,21 +816,19 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         int color;
 
         if (red && !this.isExpiryDateValid()) {
-            color = R.color.red;
-
+            color = R.color.design_textinput_error_color_light;
         } else {
             color = R.color.hpf_accent;
         }
 
         this.mCardExpiration.setTextColor(ContextCompat.getColor(getActivity(), color));
     }
-
     private void putCVVInRed(boolean red) {
 
         int color;
 
         if (red && !this.isCVVValid()) {
-            color = R.color.red;
+            color = R.color.design_textinput_error_color_light;
 
         } else {
             color = R.color.hpf_accent;
@@ -805,7 +841,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         int color;
 
         if (red && !this.isCardOwnerValid()) {
-            color = R.color.red;
+            color = R.color.design_textinput_error_color_light;
 
         } else {
             color = R.color.hpf_accent;
@@ -813,13 +849,12 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
         this.mCardOwner.setTextColor(ContextCompat.getColor(getActivity(), color));
     }
-
     private void putCardNumberInRed(boolean red) {
 
         int color;
 
         if (red && !this.isCardNumberValid()) {
-            color = R.color.red;
+            color = R.color.design_textinput_error_color_light;
 
         } else {
             color = R.color.hpf_accent;
@@ -835,7 +870,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         }
 
         Integer expMonth = Integer.valueOf(expiryDate.substring(0,2));
-        Integer expYear = Integer.valueOf(expiryDate.substring(2, 4));
+        Integer expYear = Integer.valueOf(expiryDate.substring(2,4));
 
         if (!validateExpMonth(expMonth)) {
             return false;

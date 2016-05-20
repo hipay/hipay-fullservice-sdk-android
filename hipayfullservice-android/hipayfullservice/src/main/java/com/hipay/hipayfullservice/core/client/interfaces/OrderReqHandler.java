@@ -26,8 +26,6 @@ public class OrderReqHandler extends AbstractReqHandler {
     public String getReqQueryString() {
 
         OrderRequest orderRequest = (OrderRequest)this.getRequest();
-
-        //String params = orderRequest.getStringParameters();
         return orderRequest.getStringParameters();
     }
 

@@ -144,8 +144,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
             }
         }
 
-        //TODO put to loading mode ended.
-
     }
 
     private void setLoadingMode(boolean loadingMode) {
@@ -245,7 +243,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                                         abstractPaymentFormFragment.setLoadingMode(true);
                                         abstractPaymentFormFragment.launchRequest();
                                     }
-                                    //TODO retry the loading, check the best way to do that.
                                 }
                                 break;
 
@@ -291,8 +288,8 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                             abstractPaymentFormFragment.setLoadingMode(true);
                             abstractPaymentFormFragment.launchRequest();
                         }
-                        //TODO retry the loading, check the best way to do that.
                     }
+
                     break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -351,7 +348,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
             case TransactionStateForwarding: {
 
-                //TODO handled with forwardUrl
                 URL forwardUrl = transaction.getForwardUrl();
 
                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
@@ -366,8 +362,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
             } break;
 
             case TransactionStateError: {
-
-                //TODO ask for user if we need to reload
 
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
