@@ -87,7 +87,11 @@ public class DataExtractor {
     public static Integer getIntegerFromField(JSONObject jsonObject, String field) {
 
         if (checkParams(jsonObject, field)) {
-            return jsonObject.optInt(field, -1);
+
+            Integer optInt = jsonObject.optInt(field, Integer.MIN_VALUE);
+            if (optInt != Integer.MIN_VALUE) {
+                return optInt;
+            }
         }
         return null;
     }
@@ -158,7 +162,6 @@ public class DataExtractor {
 
         if (checkParams(jsonObject, field)) {
 
-            //TODO check the date format
             //return jsonObject.optLong(field, -1);
         }
 
@@ -184,7 +187,6 @@ public class DataExtractor {
 
         if (checkParams(jsonArray, i)) {
 
-            //TODO check the date format
             //return jsonObject.optLong(field, -1);
         }
 

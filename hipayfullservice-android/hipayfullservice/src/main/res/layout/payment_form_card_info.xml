@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingBottom="@dimen/spacing_double"
     android:paddingLeft="@dimen/spacing_double"
@@ -12,23 +12,51 @@
     tools:showIn="@layout/fragment_payment_form">
 
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/card_owner_support"
+        app:errorTextAppearance="@style/PaymentScreens.TextAppearance.ErrorSmallItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
+        android:hint="@string/card_owner"
         android:clipToPadding="false"
         android:transitionGroup="true"
         tools:ignore="UnusedAttribute,NewApi">
 
-        <!--
-        android:text="4000000000000002o"
-        -->
-        <EditText
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/card_owner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/card_owner_placeholder"
+            android:drawableRight="@drawable/ic_person_black"
+            android:drawableEnd="@drawable/ic_person_black"
+            android:drawablePadding="@dimen/spacing_double"
+            android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            android:maxLength="30"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:inputType="textPersonName|textCapWords|textNoSuggestions"
+            android:textSize="@dimen/size_edit_text" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/card_number_support"
+        app:errorTextAppearance="@style/PaymentScreens.TextAppearance.ErrorSmallItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?android:attr/actionBarSize"
+        android:hint="@string/card_number"
+        android:clipToPadding="false"
+        android:transitionGroup="true"
+        tools:ignore="UnusedAttribute,NewApi">
+
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/card_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/card_number"
             android:imeOptions="actionNext"
-            android:drawableLeft="@drawable/ic_credit_card_black"
+            android:hint="@string/card_number_placeholder_visa_mastercard"
+            android:drawableRight="@drawable/ic_credit_card_black"
+            android:drawableEnd="@drawable/ic_credit_card_black"
             android:drawablePadding="@dimen/spacing_double"
             android:inputType="number"
             android:maxLength="19"
@@ -40,22 +68,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:baselineAligned="false"
         >
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/card_expiration_support"
+            app:errorTextAppearance="@style/PaymentScreens.TextAppearance.ErrorSmallItem"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:minHeight="?android:attr/actionBarSize"
             android:clipToPadding="false"
+            android:hint="@string/card_expiration"
             android:transitionGroup="true"
             tools:ignore="UnusedAttribute,NewApi">
-            <EditText
+
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/card_expiration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/card_expiration"
                 android:imeOptions="actionNext"
+                android:hint="@string/card_expiration_placeholder"
                 android:inputType="number"
                 android:digits="0123456789/"
                 android:maxLength="5"
@@ -64,47 +97,27 @@
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/card_cvv_support"
+            app:errorTextAppearance="@style/PaymentScreens.TextAppearance.ErrorSmallItem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:minHeight="?android:attr/actionBarSize"
+            android:hint="@string/card_cvv"
             android:clipToPadding="false"
-            android:transitionGroup="true"
+            android:transitionGroup="false"
             tools:ignore="UnusedAttribute,NewApi">
-            <EditText
+
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/card_cvv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/card_cvv"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:inputType="number"
-                android:text="123"
                 android:digits="0123456789"
                 android:maxLength="3"
                 android:textSize="@dimen/size_edit_text" />
         </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="?android:attr/actionBarSize"
-        android:clipToPadding="false"
-        android:transitionGroup="true"
-        tools:ignore="UnusedAttribute,NewApi">
-
-        <EditText
-            android:id="@+id/card_owner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/card_owner"
-            android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            android:maxLength="30"
-            android:singleLine="true"
-            android:imeOptions="actionDone"
-            android:inputType="textPersonName|textCapWords|textNoSuggestions"
-            android:textSize="@dimen/size_edit_text" />
-    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

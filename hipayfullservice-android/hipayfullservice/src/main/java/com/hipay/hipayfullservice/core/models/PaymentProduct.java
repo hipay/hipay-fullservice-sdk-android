@@ -314,7 +314,6 @@ public class PaymentProduct extends AbstractModel {
 
     public static class PaymentProductSerialization extends AbstractSerialization {
 
-        //TODO time to put a rawData instead of model/request in initializer
         public PaymentProductSerialization(PaymentProduct paymentProduct) {
             super(paymentProduct);
         }

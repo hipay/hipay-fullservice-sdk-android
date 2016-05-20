@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="@drawable/selector_subtle"
-    tools:ignore="UseCompoundDrawables">
+    tools:ignore="UseCompoundDrawables,UselessParent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:layout_gravity="center"
             android:paddingTop="@dimen/spacing_normal"
             android:paddingBottom="@dimen/spacing_normal"
-            android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/content_description" />
 
         <TextView
             android:id="@+id/payment_product_title"

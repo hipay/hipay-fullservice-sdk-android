@@ -99,7 +99,6 @@ public class ApiException extends AbstractException {
 
     public static class ApiExceptionSerialization extends AbstractSerialization {
 
-        //TODO time to put a rawData instead of model/request in initializer
         public ApiExceptionSerialization(Exception exception) {
             super(exception);
         }

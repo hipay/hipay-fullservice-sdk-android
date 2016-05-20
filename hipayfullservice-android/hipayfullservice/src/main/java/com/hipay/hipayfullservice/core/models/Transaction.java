@@ -79,27 +79,6 @@ public class Transaction extends TransactionRelatedItem {
         return mapper.getSerializedBundle();
     }
 
-    public List<Transaction> sortTransactionsByRelevance(List<Transaction> transactions) {
-
-        //TODO return comparison
-        return null;
-
-    }
-
-
-    public boolean isMoreRelevantThan(Transaction transaction) {
-
-        if (transaction.isHandled()) {
-            return false;
-        }
-
-        if (this.isHandled()) {
-            return true;
-        }
-
-        return transaction.dateCreated.before(this.dateCreated);
-    }
-
     public Boolean isHandled() {
 
         if (this.state.equals(TransactionState.TransactionStatePending) ||
@@ -559,7 +538,6 @@ public class Transaction extends TransactionRelatedItem {
 
     public static class TransactionSerialization extends TransactionRelatedItemSerialization {
 
-        //TODO time to put a rawData instead of model/request in initializer
         public TransactionSerialization(Transaction transaction) {
             super(transaction);
         }

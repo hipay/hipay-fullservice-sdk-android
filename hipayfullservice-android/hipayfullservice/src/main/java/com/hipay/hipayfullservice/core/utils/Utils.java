@@ -1,5 +1,7 @@
 package com.hipay.hipayfullservice.core.utils;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 
@@ -47,6 +49,7 @@ public class Utils {
         return newUri.toURL();
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String queryStringFromMap(Map<String, String> map) {
 
         if (map == null || map.isEmpty()) return null;

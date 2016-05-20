@@ -19,4 +19,5 @@
     <dimen name="size_edit_text">18sp</dimen>
     <dimen name="payment_product_item_text_size">14sp</dimen>
     <dimen name="amount_item_text_size">18sp</dimen>
+    <dimen name="error_item_very_small_size">1sp</dimen>
 </resources>

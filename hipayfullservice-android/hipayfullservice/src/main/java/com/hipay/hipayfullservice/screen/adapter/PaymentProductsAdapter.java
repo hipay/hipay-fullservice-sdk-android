@@ -126,6 +126,7 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
 
     private void setCategoryIcon(PaymentProduct paymentProduct, ImageView icon) {
 
+        //TODO remove hack
 
         if (paymentProduct.getPaymentProductDescription() != null) {
 
@@ -183,6 +184,8 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
         // forward
         mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodePayPal, false));
         mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeYandex, false));
+
+        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodePrzelewy24, false));
 
         //TODO be careful about these
         mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeSofortUberweisung, false));
@@ -255,7 +258,6 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
 
         mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeKBCOnline, false));
 
-        mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodePrzelewy24, false));
 
         //not found
         //mPaymentProducts.add(paymentProduct("mastercard_debit", false));
