@@ -9,6 +9,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
 import com.hipay.hipayfullservice.R;
+import com.hipay.hipayfullservice.core.models.PaymentProduct;
+import com.hipay.hipayfullservice.screen.helper.FormHelper;
 
 /**
  * Created by nfillion on 20/05/16.
@@ -24,6 +26,7 @@ public class MaestroBehaviour implements ICardBehaviour {
         cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_maestro, 0);
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_DONE);
         cardCVV.setHint(context.getString(R.string.card_security_code_placeholder_cvv));
+        cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeMaestro, context))});
         //Maestro
         //"6759 4111 0000 0008",
         //cardCVV.setText("123");
@@ -38,5 +41,11 @@ public class MaestroBehaviour implements ICardBehaviour {
     @Override
     public boolean hasSecurityCode() {
         return false;
+    }
+
+    @Override
+    public boolean hasSpaceAtIndex(Integer index, Context context) {
+
+        return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeMaestro, context);
     }
 }

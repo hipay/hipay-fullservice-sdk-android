@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
+import com.hipay.hipayfullservice.screen.helper.FormHelper;
 
 /**
  * Created by nfillion on 20/05/16.
@@ -28,13 +29,15 @@ public class AmexBehaviour implements ICardBehaviour {
         cardCVV.setHint(context.getString(R.string.card_security_code_placeholder_cid));
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
-        //cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_amex, 0);
-        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_black, 0);
+        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_amex, 0);
+        cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeAmericanExpress, context))});
+
+        //cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_black, 0);
 
         //<string name="card_security_code_placeholder_cvv" translatable="false">123</string>
 
         //American Express
-        //"3712 4493 1714 724",
+        //"3712 449317 14724",
         //cardNumber.setText("371244931714724");
         //cardCVV.setText("1234");
     }
@@ -55,5 +58,11 @@ public class AmexBehaviour implements ICardBehaviour {
     @Override
     public boolean hasSecurityCode() {
         return true;
+    }
+
+    @Override
+    public boolean hasSpaceAtIndex(Integer index, Context context) {
+
+        return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeAmericanExpress, context);
     }
 }

@@ -75,4 +75,8 @@ public class CardBehaviour {
 
         return this.getCardBehaviour().hasSecurityCode();
     }
+
+    public boolean hasSpaceAtIndex(Integer index, Context context) {
+        return this.getCardBehaviour().hasSpaceAtIndex(index, context);
+    }
 }

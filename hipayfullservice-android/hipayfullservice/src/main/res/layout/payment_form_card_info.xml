@@ -59,7 +59,7 @@
             android:drawableEnd="@drawable/ic_credit_card_black"
             android:drawablePadding="@dimen/spacing_double"
             android:inputType="number"
-            android:maxLength="19"
+            android:maxLength="23"
             android:digits="0123456789 "
             android:textSize="@dimen/size_edit_text" />
     </android.support.design.widget.TextInputLayout>

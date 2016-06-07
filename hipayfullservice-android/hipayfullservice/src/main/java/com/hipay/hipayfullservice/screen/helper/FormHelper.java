@@ -128,9 +128,63 @@ public class FormHelper {
     public static String getStringResourceByName(String aString, Context context) {
 
         String packageName = context.getPackageName();
-        aString.replace("-", "_");
-        int resId = context.getResources().getIdentifier(aString, "string", packageName);
+
+        int resId = context.getResources().getIdentifier(aString.replace("-", "_"), "string", packageName);
         return context.getString(resId);
+    }
+
+    public static boolean isIndexSpace(Integer index, String productCode, Context context) {
+
+        String cardVisaInfoString = FormHelper.getStringResourceByName("card_"+productCode+"_info", context);
+
+        try {
+
+            JSONObject cardVisaInfo = new JSONObject(cardVisaInfoString);
+            JSONArray format = DataExtractor.getJSONArrayFromField(cardVisaInfo, "format");
+
+            Integer integer = 0;
+            for (int i = 0; i < format.length(); i++) {
+
+                integer += DataExtractor.getIntegerFromField(format, i);
+                if (index.equals(integer+i)) {
+                    return true;
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+
+    }
+
+    public static Integer getMaxCardNumberLength(String productCode, Context context) {
+
+        Integer integer = 0;
+        String cardVisaInfoString = FormHelper.getStringResourceByName("card_"+productCode+"_info", context);
+
+        try {
+
+            JSONObject cardVisaInfo = new JSONObject(cardVisaInfoString);
+            JSONObject lengths = DataExtractor.getJSONObjectFromField(cardVisaInfo, "lengths");
+
+            integer = DataExtractor.getIntegerFromField(lengths, "length");
+            Integer variable = DataExtractor.getIntegerFromField(lengths, "variable");
+            if (variable != null) {
+                integer += variable;
+            }
+
+            JSONArray format = DataExtractor.getJSONArrayFromField(cardVisaInfo, "format");
+            integer += format.length();
+
+            return integer;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return integer;
     }
 
     public static boolean hasValidCardLength(String plainTextNumber, String productCode, Context context) {

@@ -8,6 +8,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
 import com.hipay.hipayfullservice.R;
+import com.hipay.hipayfullservice.core.models.PaymentProduct;
+import com.hipay.hipayfullservice.screen.helper.FormHelper;
 
 /**
  * Created by nfillion on 20/05/16.
@@ -23,6 +25,7 @@ public class BCMCBehaviour implements ICardBehaviour {
 
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
+        //cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeAmericanExpress, context))});
         cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_product_bcmc, 0);
         cardCVV.setHint(context.getString(R.string.card_security_code_placeholder_cvv));
         //bcmc
@@ -40,5 +43,11 @@ public class BCMCBehaviour implements ICardBehaviour {
     @Override
     public boolean hasSecurityCode() {
         return false;
+    }
+
+    @Override
+    public boolean hasSpaceAtIndex(Integer index, Context context) {
+
+        return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeBCMC, context);
     }
 }
