@@ -102,9 +102,7 @@ public class PaymentProductsFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
-        //TODO nothing for now
     }
 
     private void startPaymentFormActivityWithTransition(Activity activity, View toolbar, Bundle paymentPageRequestBundle, Bundle customThemeBundle,

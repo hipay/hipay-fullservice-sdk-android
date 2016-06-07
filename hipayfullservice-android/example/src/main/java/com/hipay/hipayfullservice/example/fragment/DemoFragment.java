@@ -33,15 +33,21 @@ import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.hipayfullservice.core.utils.DataExtractor;
 import com.hipay.hipayfullservice.example.DemoActivity;
 import com.hipay.hipayfullservice.example.R;
 import com.hipay.hipayfullservice.screen.activity.PaymentProductsActivity;
 import com.hipay.hipayfullservice.screen.helper.ApiLevelHelper;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Set;
 
 /**
  * Created by nfillion on 15/03/16.
@@ -59,6 +65,7 @@ public class DemoFragment extends Fragment {
     private AppCompatSpinner mCurrencySpinner;
     private AppCompatSpinner m3DSSpinner;
 
+
     public static DemoFragment newInstance() {
 
         DemoFragment fragment = new DemoFragment();
@@ -73,8 +80,6 @@ public class DemoFragment extends Fragment {
 
             if (resultCode == R.id.transaction_succeed) {
 
-                //TODO let's find transaction
-
                 Bundle transactionBundle = data.getBundleExtra(Transaction.TAG);
                 Transaction transaction = Transaction.fromBundle(transactionBundle);
 
@@ -86,8 +91,6 @@ public class DemoFragment extends Fragment {
                 snackbar.show();
 
             } else if (resultCode == R.id.transaction_failed) {
-
-                //TODO let's find transaction
 
                 Bundle exceptionBundle = data.getBundleExtra(Errors.TAG);
                 ApiException exception = ApiException.fromBundle(exceptionBundle);
@@ -101,6 +104,7 @@ public class DemoFragment extends Fragment {
             }
         }
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -112,6 +116,7 @@ public class DemoFragment extends Fragment {
                 R.color.theme_blue_text);
 
         this.setCustomTheme(theme);
+
     }
 
     @Override
@@ -306,14 +311,13 @@ public class DemoFragment extends Fragment {
 
         StringBuilder stringBuilder = new StringBuilder("TEST_SDK_Android_").append(Calendar.getInstance().getTimeInMillis());
         paymentPageRequest.setOrderId(stringBuilder.toString());
-        //paymentPageRequest.setOrderId("uniqueId2");
 
         paymentPageRequest.setShortDescription("Un beau vêtement.");
         paymentPageRequest.setLongDescription("Un très beau vêtement en soie de couleur bleue.");
 
         paymentPageRequest.getCustomer().setFirstname("Martin");
         paymentPageRequest.getCustomer().setLastname("Dupont");
-        paymentPageRequest.getCustomer().setEmail("contact@hipay.com");
+        //paymentPageRequest.getCustomer().setEmail("contact@hipay.com");
 
         paymentPageRequest.getCustomer().setRecipientInfo("Employee");
         paymentPageRequest.getCustomer().setStreetAddress("6 Place du Colonel Bourgoin");

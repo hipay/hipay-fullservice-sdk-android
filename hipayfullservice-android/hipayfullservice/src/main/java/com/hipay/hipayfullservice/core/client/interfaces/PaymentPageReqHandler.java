@@ -28,8 +28,6 @@ public class PaymentPageReqHandler extends AbstractReqHandler {
     public String getReqQueryString() {
 
         PaymentPageRequest paymentPageRequest = (PaymentPageRequest)this.getRequest();
-
-        //String params = paymentPageRequest.getStringParameters();
         return paymentPageRequest.getStringParameters();
     }
 

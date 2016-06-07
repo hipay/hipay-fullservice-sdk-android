@@ -45,7 +45,6 @@ public class ForwardWebViewActivity extends Activity {
 
     public static Intent getStartIntent(Context context, String forwardURLString, Bundle theme) {
 
-        //TODO check if we need to keep the PaymentPageRequest object
         if (forwardURLString != null) {
 
             Intent starter = new Intent(context, ForwardWebViewActivity.class);
@@ -89,8 +88,6 @@ public class ForwardWebViewActivity extends Activity {
     private void transactionFromCallbackIntent(Uri data) {
 
         //Uri data = intent.getData();
-
-        //TODO will be useful for
         //Set set = data.getQueryParameterNames();
 
         //List<String> l4 = data.getQueryParameters("cardtoken");

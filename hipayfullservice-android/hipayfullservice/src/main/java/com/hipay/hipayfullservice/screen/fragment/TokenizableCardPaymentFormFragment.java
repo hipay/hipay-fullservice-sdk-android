@@ -2,16 +2,12 @@ package com.hipay.hipayfullservice.screen.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
-import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.client.GatewayClient;
 import com.hipay.hipayfullservice.core.client.SecureVaultClient;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
@@ -23,6 +19,7 @@ import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.hipayfullservice.screen.fragment.interfaces.CardBehaviour;
 
 /**
  * Created by nfillion on 20/04/16.
@@ -30,6 +27,7 @@ import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRe
 public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragment {
 
     private String inferedPaymentProduct;
+    private CardBehaviour cardBehaviour;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,9 +39,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     @Override
     protected void initContentViews(View view) {
         super.initContentViews(view);
-
-        EditText cardExpiryEditText = (EditText) view.findViewById(R.id.card_expiration);
-        cardExpiryEditText.setText("12/34");
 
         mCardInfoLayout.setVisibility(View.VISIBLE);
 
@@ -58,75 +53,9 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         // check every product code to know how to handle the editTexts
         final PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
-        String paymentProductCode = paymentProduct.getCode();
+        cardBehaviour = new CardBehaviour(paymentProduct);
+        cardBehaviour.updateForm(mCardNumber, mCardCVV, mCardCVVLayout);
 
-        if (
-                paymentProductCode.equals(PaymentProduct.PaymentProductCodeBCMC)) {
-
-            //hide the security code for bcmc
-            TextInputLayout editTextCVVsupport = (TextInputLayout) view.findViewById(R.id.card_cvv_support);
-            editTextCVVsupport.setVisibility(View.GONE);
-
-            //bcmc
-            //"67030000000000003",
-            mCardNumber.setText("67030000000000003");
-            mCardCVV.setText("123");
-
-            // replace CVV by CID
-
-        } else if (paymentProductCode.equals(PaymentProduct.PaymentProductCodeMaestro)) {
-
-            TextInputLayout editTextCVVsupport = (TextInputLayout) view.findViewById(R.id.card_cvv_support);
-            editTextCVVsupport.setVisibility(View.GONE);
-
-            //Maestro
-            //"6759411100000008",
-            mCardCVV.setText("123");
-            mCardNumber.setText("6759411100000008");
-
-        } else if (paymentProductCode.equals(PaymentProduct.PaymentProductCodeAmericanExpress)) {
-
-            //nothing for amex
-
-            //card_cvv
-            //security code is 4 digits long for amex
-            mCardCVV.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
-
-            //Mastercard
-            //"371244931714724",
-            mCardNumber.setText("371244931714724");
-            mCardCVV.setText("1234");
-
-        } else if (paymentProductCode.equals(PaymentProduct.PaymentProductCodeVisa) ||
-                paymentProductCode.equals(PaymentProduct.PaymentProductCodeCB)) {
-
-            //visa
-            //"4111111111111111",
-            //"4000000000000002",
-            //"4111113333333333",
-            mCardNumber.setText("4111111111111111");
-            mCardCVV.setText("123");
-
-            //3056 991822 5904
-
-
-        } else if (paymentProductCode.equals(PaymentProduct.PaymentProductCodeMasterCard)) {
-
-            //Mastercard
-            //"5399999999999999",
-            mCardNumber.setText("5399999999999999");
-            mCardCVV.setText("123");
-
-        } else if (paymentProductCode.equals(PaymentProduct.PaymentProductCodeDiners)) {
-
-            //no test card
-            //Diners Club International
-            //"36082634567890"
-            //"30569309025904"
-            //"38520000023237"
-            mCardNumber.setText("38520000023237");
-            mCardCVV.setText("123");
-        }
     }
 
     @Override
@@ -158,20 +87,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         mSecureVaultClient.createTokenRequest(
 
                 mCardNumber.getText().toString(),
-
-                //visa
-                //"4111111111111111",
-                //"4000000000000002",
-                //"4111113333333333",
-
-                //Mastercard
-                //"5399999999999999",
-
-                //Maestro
-                //"6759411100000008",
-
-                //bcmc
-                //"67030000000000003",
 
                 this.getMonthFromExpiry(mCardExpiration.getText().toString()),
                 this.getYearFromExpiry(mCardExpiration.getText().toString()),
@@ -266,6 +181,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
     @Override
     protected boolean isInputDataValid() {
+
+        //TODO behaviour will handle that
 
         if (
                 this.isExpiryDateValid() &&

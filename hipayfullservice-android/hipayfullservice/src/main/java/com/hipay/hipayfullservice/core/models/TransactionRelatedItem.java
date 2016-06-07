@@ -362,9 +362,7 @@ public class TransactionRelatedItem extends AbstractModel {
 
     public static class TransactionRelatedItemSerialization extends AbstractSerialization {
 
-        //TODO time to put a rawData instead of model/request in initializer
         public TransactionRelatedItemSerialization(TransactionRelatedItem transactionRelatedItem) {
-
             super(transactionRelatedItem);
         }
 

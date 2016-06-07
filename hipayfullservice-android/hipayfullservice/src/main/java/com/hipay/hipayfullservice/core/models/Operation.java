@@ -8,6 +8,7 @@ import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
  */
 public class Operation extends AbstractModel {
 
+    //TODO useful for maintenance operations. handle that better
     protected OperationType operation;
 
     public enum OperationType {
@@ -86,7 +87,6 @@ public class Operation extends AbstractModel {
 
         protected Operation mappedObject() {
 
-            //TODO build operation object from transactionRelatedItem
             Operation object = new Operation();
 
             String operationTypeString = this.getLowercaseStringForKey("operation");

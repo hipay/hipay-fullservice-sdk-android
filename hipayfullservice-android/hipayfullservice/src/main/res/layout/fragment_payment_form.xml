@@ -29,18 +29,39 @@
 
         </LinearLayout>
 
-
-        <Button
-            android:id="@+id/pay_button"
+        <FrameLayout
+            android:id="@+id/pay_button_layout"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
-
-            android:textAppearance="@style/PaymentScreens.TextAppearance.AmountItem"
             style="@style/PaymentScreens.Button"
+            android:gravity="center"
             android:enabled="false"
             android:layout_gravity="bottom"
             android:layout_margin="@dimen/spacing_double"
-            />
+            >
+
+            <Button
+                android:id="@+id/pay_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:drawableLeft="@drawable/ic_lock_black"
+                android:drawableTint="@color/hpf_light"
+                android:drawablePadding="@dimen/spacing_normal"
+                android:textAppearance="@style/PaymentScreens.TextAppearance.AmountItem"
+                android:layout_gravity="center"
+                android:enabled="false"
+
+                android:background="@null"
+                android:clickable="false"
+                android:focusable="false"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+
+                />
+
+        </FrameLayout>
+
 
         <ProgressBar
             android:id="@+id/empty"
