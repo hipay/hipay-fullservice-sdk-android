@@ -50,7 +50,7 @@ public class ListMapper implements IBehaviour {
 
         String string = this.getStringForKey(key);
         if (string != null) {
-            return string.toLowerCase();
+            return string.toLowerCase(Locale.US);
         }
 
         return null;
@@ -177,10 +177,10 @@ public class ListMapper implements IBehaviour {
             String string = (String) object;
 
             if (string.equalsIgnoreCase("true")) {
-                return new Boolean(true);
+                return Boolean.valueOf(true);
 
             } else if (string.equalsIgnoreCase("false")) {
-                return new Boolean(false);
+                return Boolean.valueOf(true);
             }
         } else if (object instanceof Boolean) {
 

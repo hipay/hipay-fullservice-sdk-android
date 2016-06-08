@@ -39,10 +39,9 @@ import java.util.List;
  */
 public class PaymentFormActivity extends AppCompatActivity implements AbstractPaymentFormFragment.OnCallbackOrderListener {
 
-    private static final String TAG = "PaymentProductsActivity";
-
     private CustomTheme customTheme;
     private ImageButton mToolbarBack;
+    private AlertDialog mDialog;
 
     public static Intent getStartIntent(Context context, Bundle paymentPageRequestBundle, Bundle themeBundle, PaymentProduct paymentProduct) {
 
@@ -144,8 +143,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
             }
         }
 
-        //TODO put to loading mode ended.
-
     }
 
     private void setLoadingMode(boolean loadingMode) {
@@ -245,7 +242,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                                         abstractPaymentFormFragment.setLoadingMode(true);
                                         abstractPaymentFormFragment.launchRequest();
                                     }
-                                    //TODO retry the loading, check the best way to do that.
                                 }
                                 break;
 
@@ -291,8 +287,8 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                             abstractPaymentFormFragment.setLoadingMode(true);
                             abstractPaymentFormFragment.launchRequest();
                         }
-                        //TODO retry the loading, check the best way to do that.
                     }
+
                     break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -351,7 +347,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
             case TransactionStateForwarding: {
 
-                //TODO handled with forwardUrl
                 URL forwardUrl = transaction.getForwardUrl();
 
                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
@@ -361,13 +356,14 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                     abstractPaymentFormFragment.launchHostedPaymentPage(forwardUrl.toString());
                 }
 
+                //dismiss the dialog before launching the forward webview
+                dismissDialogs();
+
                 formResult = FormResult.FormActionReload;
 
             } break;
 
             case TransactionStateError: {
-
-                //TODO ask for user if we need to reload
 
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
@@ -402,6 +398,21 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         } else {
 
             this.formResultAction(null, exception);
+        }
+    }
+
+    @Override
+    public void updatePaymentProduct(String title) {
+
+        TextView titleView = (TextView) findViewById(R.id.payment_product_title);
+        titleView.setText(title);
+    }
+
+    @Override
+    public void dismissDialogs() {
+
+        if (mDialog != null) {
+            mDialog.dismiss();
         }
     }
 
@@ -525,6 +536,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
     }
 
+
     @SuppressLint("NewApi")
     public void setToolbarElevation(boolean shouldElevate) {
         if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.LOLLIPOP)) {
@@ -558,9 +570,62 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         super.onSaveInstanceState(outState);
     }
 
+    private void forceBackPressed() {
+        super.onBackPressed();
+    }
+
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
+        if (fragment != null) {
+
+            AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
+
+            boolean loadingMode = abstractPaymentFormFragment.getLoadingMode();
+            if (loadingMode == true) {
+
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE: {
+                                dialog.dismiss();
+
+                                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
+                                if (fragment != null) {
+
+                                    AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
+                                    abstractPaymentFormFragment.cancelOperations();
+                                }
+
+                                forceBackPressed();
+                            }
+                            break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                dialog.dismiss();
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                mDialog = builder.setTitle(R.string.alert_transaction_loading_title)
+                        .setMessage(R.string.alert_transaction_loading_body)
+                        .setNegativeButton(R.string.alert_transaction_loading_no, dialogClickListener)
+                        .setPositiveButton(R.string.alert_transaction_loading_yes, dialogClickListener)
+                        .setCancelable(false)
+                        .show();
+
+            } else {
+
+                super.onBackPressed();
+            }
+
+        } else {
+            super.onBackPressed();
+        }
     }
 
     public CustomTheme getCustomTheme() {

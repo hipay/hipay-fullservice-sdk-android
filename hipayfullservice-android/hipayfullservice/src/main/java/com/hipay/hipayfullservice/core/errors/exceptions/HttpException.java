@@ -102,7 +102,6 @@ public class HttpException extends AbstractException {
 
     public static class HttpExceptionSerialization extends AbstractSerialization {
 
-        //TODO time to put a rawData instead of model/request in initializer
         public HttpExceptionSerialization(Exception exception) {
             super(exception);
         }

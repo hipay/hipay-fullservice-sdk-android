@@ -209,7 +209,6 @@ public class ThreeDSecure extends AbstractModel {
 
     public static class ThreeDSecureSerialization extends AbstractSerialization {
 
-        //TODO time to put a rawData instead of model/request in initializer
         public ThreeDSecureSerialization(ThreeDSecure threeDSecure) {
             super(threeDSecure);
         }

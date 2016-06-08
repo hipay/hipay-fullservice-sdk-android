@@ -124,7 +124,6 @@ public class CustomTheme extends AbstractModel {
 
     public static class CustomThemeSerialization extends AbstractSerialization {
 
-        //TODO time to put a rawData instead of model/request in initializer
         public CustomThemeSerialization(CustomTheme customTheme) {
             super(customTheme);
         }

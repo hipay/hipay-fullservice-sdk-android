@@ -166,7 +166,6 @@ public class FraudScreening extends AbstractModel {
 
     public static class FraudScreeningSerialization extends AbstractSerialization {
 
-        //TODO time to put a rawData instead of model/request in initializer
         public FraudScreeningSerialization(FraudScreening fraudScreening) {
             super(fraudScreening);
         }

@@ -205,7 +205,6 @@ public class Order extends AbstractModel {
 
     public static class OrderSerialization extends AbstractSerialization {
 
-        //TODO time to put a rawData instead of model/request in initializer
         public OrderSerialization(Order order) {
             super(order);
         }

@@ -47,7 +47,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:imeOptions="actionDone"
-            android:text=".50"
+            android:text="60.00"
             android:inputType="numberDecimal"
             android:digits="0123456789.,"
             android:maxLength="10"

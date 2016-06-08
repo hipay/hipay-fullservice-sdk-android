@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">HiPayFullservice</string>
 
     <string name="hipay_host" translatable="false">hipay-fullservice</string>
     <string name="hipay_scheme" translatable="false">hipay</string>
 
-    <string name="paiment_products_title">Payment products</string>
+    <string name="content_description" translatable="false">Content description</string>
+
+    <string name="payment_products_title">Payment</string>
 
     <string name="card_owner">Card holder</string>
     <string name="card_number">Number</string>
     <string name="card_expiration">Expiry date</string>
-    <string name="card_cvv">CVV</string>
+    <string name="card_cvv">Security code</string>
 
     <string name="unknown_error">Unknown error</string>
     <string name="pay">Pay %1$s</string>
@@ -19,13 +20,189 @@
     <string name="transaction_error_declined">Please check your entries and try again</string>
     <string name="transaction_error_declined_reset">Please use another payment method</string>
 
+    <string name="alert_transaction_loading_title">Transaction in progress</string>
+    <string name="alert_transaction_loading_body">Your transaction is still being processed. Are you sure that you want to leave the screen?</string>
+    <string name="alert_transaction_loading_yes">Quit</string>
+    <string name="alert_transaction_loading_no">Resume</string>
+
     <string name="transaction_error_other">An error occurred while processing your transaction</string>
 
-    <string name="error_button_dismiss">Ok</string>
+    <string name="error_button_dismiss">@android:string/ok</string>
     <string name="error_button_retry">Retry</string>
 
     <string name="error_title_default">An error occurred</string>
     <string name="error_body_default">Your request could not be completed</string>
 
     <string name="error_title_connection">Network error</string>
+
+    <string name="card_expiration_placeholder">MM / AA</string>
+    <string name="card_expiration_placeholder_error">MM / AA</string>
+
+    <string name="card_security_code_placeholder_cvv" translatable="false">123</string>
+    <string name="card_security_code_placeholder_cid" translatable="false">1234</string>
+
+    <string name="card_security_code_placeholder_cvv_error">3 digits</string>
+    <string name="card_security_code_placeholder_cid_error">4 digits</string>
+
+    <string name="card_security_code_description_cvv">The CVV is the three-digit number on the back of your payment card.</string>
+    <string name="card_security_code_description_cid">The CID is the four-digit number on the front of your American Express card.</string>
+
+    <string name="card_number_placeholder_visa_mastercard" translatable="false">4321 9876 5432 1098</string>
+    <string name="card_number_placeholder_amex" translatable="false">3782 8224 6310 005</string>
+    <string name="card_number_placeholder_maestro_bcmc" translatable="false">6703 1233 2143 27863</string>
+    <string name="card_number_placeholder_diners" translatable="false">3056 9918 2259 04</string>
+
+    <string name="card_number_placeholder_error">Invalid card number</string>
+
+    <string name="card_owner_placeholder" translatable="false">Martin Dupont</string>
+
+    <string-array name="card_products_list" translatable="false">
+        <item>visa</item>
+        <item>mastercard</item>
+        <item>diners</item>
+        <item>american_express</item>
+        <item>maestro</item>
+    </string-array>
+
+    <string name="card_visa_info" translatable="false">
+
+        {
+            "ranges":[
+
+                {
+                    "first": 4,
+                    "variable": null
+                }
+            ],
+
+            "lengths": {
+                "length": 16,
+                "variable": null
+            },
+
+            "format":[4,4,4]
+        }
+
+    </string>
+
+    <string name="card_mastercard_info" translatable="false">
+        {
+            "ranges":[
+
+                {
+                    "first": 51,
+                    "variable": 4
+                }
+            ],
+
+            "lengths": {
+                "length": 16,
+                "variable": null
+            },
+
+            "format":[4,4,4]
+        }
+
+    </string>
+
+    <string name="card_diners_info" translatable="false">
+
+        {
+            "ranges":[
+
+                {
+                    "first": 300,
+                    "variable": 5
+                },
+
+                {
+                    "first": 38,
+                    "variable": 1
+                },
+
+                {
+                    "first": 2014,
+                    "variable": null
+                },
+
+                {
+                    "first": 2149,
+                    "variable": null
+                },
+
+                {
+                    "first": 309,
+                    "variable": null
+                },
+
+                {
+                    "first": 36,
+                    "variable": null
+                }
+            ],
+
+            "lengths": {
+                "length": 14,
+                "variable": 1
+            },
+
+            "format":[4,4,4]
+        }
+
+    </string>
+
+    <string name="card_american_express_info" translatable="false">
+
+        {
+            "ranges":[
+
+                {
+                    "first": 34,
+                    "variable": null
+                },
+
+                {
+                    "first": 37,
+                    "variable": null
+                }
+
+            ],
+
+            "lengths": {
+                "length": 15,
+                "variable": null
+            },
+
+            "format":[4,4,4]
+        }
+
+    </string>
+
+    <string name="card_maestro_info" translatable="false">
+
+        {
+            "ranges":[
+
+                {
+                    "first": 50,
+                    "variable": null
+                },
+
+                {
+                    "first": 56,
+                    "variable": 13
+                }
+
+            ],
+
+            "lengths": {
+                "length": 12,
+                "variable": 7
+            },
+
+            "format":[4,4,4]
+        }
+
+    </string>
+
 </resources>

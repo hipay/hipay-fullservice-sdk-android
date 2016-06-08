@@ -1,6 +1,8 @@
 package com.hipay.hipayfullservice.core.operations;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 
@@ -20,6 +22,7 @@ public abstract class AbstractOperation extends AbstractHttpClient<HttpResult> {
         super(context, bundle);
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     protected String getAuthHeader() {
 
         String username = ClientConfig.getInstance().getUsername();

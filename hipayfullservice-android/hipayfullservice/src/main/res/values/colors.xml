@@ -10,6 +10,8 @@
     <color name="hpf_text">#606060</color>
     <color name="hpf_blank">#424242</color>
 
+    <color name="hpf_error">#FFD50000</color>
+
     <!-- theme colors -->
     <color name="theme_blue_background">@color/light_grey</color>
     <color name="theme_blue_primary">#03a9f4</color>

@@ -20,11 +20,9 @@ public class ForwardPaymentFormFragment extends AbstractPaymentFormFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
         super.onViewCreated(view, savedInstanceState);
 
         mCardInfoLayout.setVisibility(View.GONE);
-        //TODO put this paymentPageRequest as args to get it.
     }
 
     @Override
