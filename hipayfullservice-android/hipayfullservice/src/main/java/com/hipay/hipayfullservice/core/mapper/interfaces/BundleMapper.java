@@ -41,7 +41,7 @@ public class BundleMapper implements IBehaviour {
     @Override
     public Boolean getBoolForKey(String key) {
 
-        return Boolean.valueOf(this.getBundleObject().getBoolean(key));
+        return this.getBundleObject().getBoolean(key);
     }
 
     @Override
