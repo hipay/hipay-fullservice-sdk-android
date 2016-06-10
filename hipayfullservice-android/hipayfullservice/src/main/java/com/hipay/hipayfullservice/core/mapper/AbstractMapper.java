@@ -101,11 +101,6 @@ public abstract class AbstractMapper<T> {
         return this.getBehaviour().getBoolForKey(key);
     }
 
-    protected Number getNumberForKey(String key) {
-
-        return this.getBehaviour().getNumberForKey(key);
-    }
-
     protected String getEnumCharForKey(String key) {
 
         return this.getBehaviour().getEnumCharForKey(key);

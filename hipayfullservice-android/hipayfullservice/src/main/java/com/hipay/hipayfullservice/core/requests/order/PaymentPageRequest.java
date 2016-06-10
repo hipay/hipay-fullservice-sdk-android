@@ -9,6 +9,7 @@ import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRe
 import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
 
 import java.net.URL;
+import java.nio.BufferUnderflowException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -237,7 +238,7 @@ public class PaymentPageRequest extends OrderRelatedRequest {
             Transaction.ECI eci = Transaction.ECI.fromIntegerValue(eciInt);
             paymentPageRequest.setEci(eci);
 
-            Integer authenticationIndicatorInteger = this.getIntegerForKey("authenticationIndicator");
+            Integer authenticationIndicatorInteger = this.getIntegerForKey("authentication_indicator");
             CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator = CardTokenPaymentMethodRequest.AuthenticationIndicator.fromIntegerValue(authenticationIndicatorInteger);
             paymentPageRequest.setAuthenticationIndicator(authenticationIndicator);
 
