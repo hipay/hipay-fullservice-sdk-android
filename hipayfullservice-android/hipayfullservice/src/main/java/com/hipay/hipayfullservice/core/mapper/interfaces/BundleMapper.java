@@ -81,7 +81,6 @@ public class BundleMapper implements IBehaviour {
 
         String string = this.getStringForKey(key);
         if (string != null && string.length() == 1)  {
-
             return string;
         }
 

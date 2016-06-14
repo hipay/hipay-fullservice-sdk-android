@@ -3,7 +3,10 @@ package com.hipay.hipayfullservice.screen.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.hipay.hipayfullservice.core.client.GatewayClient;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
@@ -23,6 +26,14 @@ public class ForwardPaymentFormFragment extends AbstractPaymentFormFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mCardInfoLayout.setVisibility(View.GONE);
+
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mProgressBar.getLayoutParams();
+        layoutParams.gravity = Gravity.CENTER;
+
+        if (getLoadingMode() == false) {
+            setLoadingMode(true, false);
+            launchRequest();
+        }
     }
 
     @Override
@@ -34,6 +45,24 @@ public class ForwardPaymentFormFragment extends AbstractPaymentFormFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i("onCreate", "onCreate");
+    }
+
+    @Override
+    public void setLoadingMode(boolean loadingMode, boolean delay) {
+
+        if (!delay) {
+
+            if (loadingMode) {
+
+                mProgressBar.setVisibility(View.VISIBLE);
+
+            } else {
+
+                mProgressBar.setVisibility(View.GONE);
+            }
+        }
+
+        mLoadingMode = loadingMode;
     }
 
     @Override
@@ -53,7 +82,7 @@ public class ForwardPaymentFormFragment extends AbstractPaymentFormFragment {
 
             @Override
             public void onSuccess(final Transaction transaction) {
-                Log.i("transaction success", transaction.toString());
+                //Log.i("transaction success", transaction.toString());
 
                 if (mCallback != null) {
                     mCallback.onCallbackOrderReceived(transaction, null);
@@ -64,7 +93,7 @@ public class ForwardPaymentFormFragment extends AbstractPaymentFormFragment {
 
             @Override
             public void onError(Exception error) {
-                Log.i("transaction failed", error.getLocalizedMessage());
+                //Log.i("transaction failed", error.getLocalizedMessage());
                 if (mCallback != null) {
                     mCallback.onCallbackOrderReceived(null, error);
                 }

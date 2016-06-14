@@ -31,6 +31,11 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
 
         super.onViewCreated(view, savedInstanceState);
         mCardInfoLayout.setVisibility(View.GONE);
+
+        if (getLoadingMode() == false) {
+            setLoadingMode(true, false);
+            launchRequest();
+        }
     }
 
     @Override
@@ -41,6 +46,24 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void setLoadingMode(boolean loadingMode, boolean delay) {
+
+        if (!delay) {
+
+            if (loadingMode) {
+
+                mProgressBar.setVisibility(View.VISIBLE);
+
+            } else {
+
+                mProgressBar.setVisibility(View.GONE);
+            }
+        }
+
+        mLoadingMode = loadingMode;
     }
 
     public void launchRequest() {
