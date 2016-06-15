@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">HiPay m-commerce demo</string>
-    <string name="action_settings">Settings</string>
     <string name="generate_payment_screen">Generate a payment screen</string>
     <string name="amount_and_currency">Amount and currency</string>
     <string name="amount">Amount</string>
@@ -11,7 +10,14 @@
     <string name="color">Color</string>
     <string name="currency">Currency</string>
 
-    <string-array name="array_currencies">
+    <string name="form_payment_products_credit_card">Credit card</string>
+    <string name="form_payment_products_debit_card">Debit card</string>
+    <string name="form_payment_products_ewallet">E-Wallet</string>
+    <string name="form_payment_products_realtime_banking">Real-time banking</string>
+
+    <string name="form_payment_products_categories">Payment product categories</string>
+
+    <string-array name="array_currencies" translatable="false">
         <item>EUR</item>
         <item>USD</item>
         <item>BRL</item>

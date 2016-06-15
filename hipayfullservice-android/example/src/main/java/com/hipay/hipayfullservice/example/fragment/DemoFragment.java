@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -33,21 +34,17 @@ import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
-import com.hipay.hipayfullservice.core.utils.DataExtractor;
 import com.hipay.hipayfullservice.example.DemoActivity;
 import com.hipay.hipayfullservice.example.R;
 import com.hipay.hipayfullservice.screen.activity.PaymentProductsActivity;
 import com.hipay.hipayfullservice.screen.helper.ApiLevelHelper;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by nfillion on 15/03/16.
@@ -65,6 +62,8 @@ public class DemoFragment extends Fragment {
     private AppCompatSpinner mCurrencySpinner;
     private AppCompatSpinner m3DSSpinner;
 
+    private AppCompatButton mPaymentProductsButton;
+    protected boolean inhibit_spinner;
 
     public static DemoFragment newInstance() {
 
@@ -110,14 +109,25 @@ public class DemoFragment extends Fragment {
 
         super.onCreate(savedInstanceState);
 
-        CustomTheme theme = new CustomTheme(
+        CustomTheme theme;
+
+        if (savedInstanceState == null) {
+            theme = new CustomTheme(
                 R.color.hpf_primary,
                 R.color.hpf_primary_dark,
                 R.color.theme_blue_text);
 
-        this.setCustomTheme(theme);
+        } else {
 
+            Bundle themeBundle = savedInstanceState.getBundle(CustomTheme.TAG);
+            theme = CustomTheme.fromBundle(themeBundle);
+        }
+
+        inhibit_spinner = true;
+
+        this.setCustomTheme(theme);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -144,6 +154,9 @@ public class DemoFragment extends Fragment {
         m3DSSpinner.setAdapter(adapterAuthSpinner);
         m3DSSpinner.setSelection(1);
 
+        mPaymentProductsButton = (AppCompatButton) contentView.findViewById(R.id.payment_products_button);
+
+
         AppCompatSpinner colorSpinner = (AppCompatSpinner) contentView.findViewById(R.id.color_spinner);
         ArrayAdapter<CharSequence> adapterColorSpinner = ArrayAdapter.createFromResource(getActivity(),
                 R.array.array_colors_theme, android.R.layout.simple_spinner_dropdown_item);
@@ -152,6 +165,12 @@ public class DemoFragment extends Fragment {
         colorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (inhibit_spinner) {
+                    inhibit_spinner = false;
+                    return;
+                }
+
                 switch (position) {
 
                     case 0: {
@@ -220,12 +239,8 @@ public class DemoFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mDoneFab = (FloatingActionButton) view.findViewById(R.id.done);
         mDoneFab.setOnClickListener(new View.OnClickListener() {
@@ -276,7 +291,7 @@ public class DemoFragment extends Fragment {
         mAmount = (EditText)view.findViewById(R.id.amountEditText);
         mAmount.addTextChangedListener(textWatcher);
 
-        super.onViewCreated(view, savedInstanceState);
+        switchTheme(this.getCustomTheme());
     }
 
     @Override
@@ -302,11 +317,11 @@ public class DemoFragment extends Fragment {
 
         final Activity activity = getActivity();
 
-        PaymentPageRequest paymentPageRequest = buildPageRequest();
+        PaymentPageRequest paymentPageRequest = buildPageRequest(activity);
         PaymentProductsActivity.start(activity, paymentPageRequest, this.getCustomTheme());
     }
 
-    protected PaymentPageRequest buildPageRequest() {
+    protected PaymentPageRequest buildPageRequest(Activity activity) {
 
         PaymentPageRequest paymentPageRequest = new PaymentPageRequest();
 
@@ -344,17 +359,22 @@ public class DemoFragment extends Fragment {
 
         paymentPageRequest.setAuthenticationIndicator(authenticationIndicator);
 
-        paymentPageRequest.setPaymentProductCategoryList(
-                new ArrayList<>(
-                        Arrays.asList(
+        DemoActivity demoActivity = (DemoActivity)activity;
 
-                                PaymentProduct.PaymentProductCategoryCodeRealtimeBanking,
-                                PaymentProduct.PaymentProductCategoryCodeCreditCard,
-                                PaymentProduct.PaymentProductCategoryCodeDebitCard,
-                                PaymentProduct.PaymentProductCategoryCodeEWallet
-                        )
-                )
-        );
+        ArrayList<String> productCategories = demoActivity.getPaymentProductsAsList();
+        paymentPageRequest.setPaymentProductCategoryList(productCategories);
+
+        //paymentPageRequest.setPaymentProductCategoryList(
+                //new ArrayList<>(
+                        //Arrays.asList(
+
+                                //PaymentProduct.PaymentProductCategoryCodeRealtimeBanking,
+                                //PaymentProduct.PaymentProductCategoryCodeCreditCard,
+                                //PaymentProduct.PaymentProductCategoryCodeDebitCard,
+                                //PaymentProduct.PaymentProductCategoryCodeEWallet
+                        //)
+                //)
+        //);
 
         return paymentPageRequest;
     }
@@ -382,6 +402,7 @@ public class DemoFragment extends Fragment {
 
         mGroupCardSwitch.setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
         mReusableTokenSwitch.setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
+        mPaymentProductsButton.setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
 
     }
 
@@ -431,5 +452,12 @@ public class DemoFragment extends Fragment {
 
     public void setCustomTheme(CustomTheme customTheme) {
         this.customTheme = customTheme;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBundle(CustomTheme.TAG, this.getCustomTheme().toBundle());
     }
 }

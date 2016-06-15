@@ -83,6 +83,24 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         />
 
+    <!--
+    -->
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/payment_products_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickPaymentProducts"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/colorPrimaryDark"
+        android:textAllCaps="false"
+        android:paddingLeft="0dp"
+        style="?attr/borderlessButtonStyle"
+        android:text="@string/form_payment_products_categories"
+        android:gravity="left|center_vertical"
+        android:drawableEnd="@drawable/ic_navigate_next_black"
+        android:drawableRight="@drawable/ic_navigate_next_black"
+        android:drawableTint="@android:color/darker_gray"
+        android:minHeight="?android:attr/actionBarSize"/>
 
     <LinearLayout
         android:layout_width="match_parent"
