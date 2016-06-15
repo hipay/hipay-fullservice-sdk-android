@@ -12,4 +12,5 @@ public interface ICardBehaviour {
     void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, Context context);
     boolean isSecurityCodeValid(EditText cardCVV);
     boolean hasSecurityCode();
+    boolean hasSpaceAtIndex(Integer index, Context context);
 }

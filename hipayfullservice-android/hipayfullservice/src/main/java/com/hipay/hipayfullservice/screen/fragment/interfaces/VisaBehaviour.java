@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
+import com.hipay.hipayfullservice.screen.helper.FormHelper;
 
 /**
  * Created by nfillion on 20/05/16.
@@ -25,6 +26,7 @@ public class VisaBehaviour implements ICardBehaviour {
         cardCVV.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
         cardCVV.setHint(context.getString(R.string.card_security_code_placeholder_cvv));
 
+        cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeVisa, context))});
         cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_visa, 0);
         //visa
         //"4111 1111 1111 1111",
@@ -50,5 +52,11 @@ public class VisaBehaviour implements ICardBehaviour {
     @Override
     public boolean hasSecurityCode() {
         return true;
+    }
+
+    @Override
+    public boolean hasSpaceAtIndex(Integer index, Context context) {
+
+        return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeVisa, context);
     }
 }

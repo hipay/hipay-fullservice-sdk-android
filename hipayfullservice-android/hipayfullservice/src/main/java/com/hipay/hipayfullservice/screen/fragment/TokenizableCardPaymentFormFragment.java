@@ -246,6 +246,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         private int diffLength = 0;
         private int changeStart = 0;
         private boolean isLastSpace = false;
+        private int currentLength = 0;
 
         private View v;
         private GenericTextWatcher(View view) {
@@ -268,6 +269,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
             diffLength = count - before;
             changeStart = start;
+
+            currentLength = s.length();
         }
 
         public void afterTextChanged(Editable editable) {
@@ -358,14 +361,10 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                 } else {
 
-                    if (version.length() == 4 && diffLength == 1 && changeStart == 3) {
-                        editable.insert(4, " ");
-
-                    } else if (version.length() == 9 && diffLength == 1 && changeStart == 8) {
-                        editable.insert(9, " ");
-
-                    } else if (version.length() == 14 && diffLength == 1 && changeStart == 13) {
-                        editable.insert(14, " ");
+                    if (diffLength == 1 && changeStart == currentLength-1) {
+                        if (hasSpaceAtIndex(currentLength)) {
+                            editable.insert(currentLength, " ");
+                        }
                     }
 
                 }
@@ -539,6 +538,11 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             return true;
         }
         return false;
+    }
+
+    protected boolean hasSpaceAtIndex(int index) {
+
+        return mCardBehaviour.hasSpaceAtIndex(index, getActivity());
     }
 
     protected boolean isCardNumberValid() {
