@@ -1,23 +1,15 @@
 package com.hipay.hipayfullservice.screen.fragment;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.StateListDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -33,12 +25,9 @@ import com.hipay.hipayfullservice.screen.activity.ForwardWebViewActivity;
 import com.hipay.hipayfullservice.screen.fragment.interfaces.CardBehaviour;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Currency;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by nfillion on 29/02/16.
@@ -49,7 +38,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     private static final String STATE_IS_LOADING = "isLoading";
     private static final String CURRENT_LOADER_ID = "currentLoaderId";
 
-    private ProgressBar mProgressBar;
+    protected ProgressBar mProgressBar;
     OnCallbackOrderListener mCallback;
     protected LinearLayout mCardInfoLayout;
 
@@ -74,14 +63,14 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     protected TextInputLayout mCardExpirationLayout;
     protected TextInputLayout mCardOwnerLayout;
 
-    private Button mPayButton;
-    private FrameLayout mPayButtonLayout;
 
     protected GatewayClient mGatewayClient;
     protected SecureVaultClient mSecureVaultClient;
 
     protected String inferedPaymentProduct;
     protected CardBehaviour mCardBehaviour;
+
+    protected abstract boolean isInputDataValid();
 
     public static AbstractPaymentFormFragment newInstance(Bundle paymentPageRequestBundle, PaymentProduct paymentProduct, Bundle customTheme) {
 
@@ -186,39 +175,27 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         //important for the magic lines
         setRetainInstance(true);
 
-        if (savedInstanceState != null) {
-            mLoadingMode = savedInstanceState.getBoolean(STATE_IS_LOADING);
-            mCurrentLoading = savedInstanceState.getInt(CURRENT_LOADER_ID, -1);
-        }
+        //TODO no need to putState if setRetainInstance is true
+        //if (savedInstanceState != null) {
+            //mLoadingMode = savedInstanceState.getBoolean(STATE_IS_LOADING);
+            //mCurrentLoading = savedInstanceState.getInt(CURRENT_LOADER_ID, -1);
+        //}
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        validatePayButton(isInputDataValid());
-        this.setLoadingMode(mLoadingMode);
+        //TODO not needed because of retainInstance
+        this.setLoadingMode(mLoadingMode, false);
     }
 
     public boolean getLoadingMode() {
         return mLoadingMode;
     }
 
-    public void setLoadingMode(boolean loadingMode) {
+    public abstract void setLoadingMode(boolean loadingMode, boolean delay);
 
-        if (loadingMode) {
-
-            mPayButtonLayout.setVisibility(View.GONE);
-            mProgressBar.setVisibility(View.VISIBLE);
-
-        } else {
-
-            mPayButtonLayout.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.GONE);
-        }
-
-        mLoadingMode = loadingMode;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -250,43 +227,12 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
     }
 
-    private StateListDrawable makeSelector(CustomTheme theme) {
-        StateListDrawable res = new StateListDrawable();
-        res.addState(new int[]{android.R.attr.state_pressed}, new ColorDrawable(ContextCompat.getColor(getActivity(), theme.getColorPrimaryDarkId())));
-        res.addState(new int[]{}, new ColorDrawable(ContextCompat.getColor(getActivity(), theme.getColorPrimaryId())));
-        return res;
-    }
-
     protected void initContentViews(View view) {
-
-        mPayButton = (Button) view.findViewById(R.id.pay_button);
-        mPayButtonLayout = (FrameLayout) view.findViewById(R.id.pay_button_layout);
-
-        Bundle args = getArguments();
-        final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
-
-        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
-        Currency c = Currency.getInstance(paymentPageRequest.getCurrency());
-        currencyFormatter.setCurrency(c);
-        String moneyFormatted = currencyFormatter.format(paymentPageRequest.getAmount());
-
-        String moneyString = getString(R.string.pay, moneyFormatted);
-
-        mPayButton.setText(moneyString);
-
-        mPayButtonLayout.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                setLoadingMode(true);
-                launchRequest();
-            }
-        });
 
         mProgressBar = (ProgressBar) view.findViewById(R.id.empty);
         mCardInfoLayout = (LinearLayout) view.findViewById(R.id.card_info_layout);
 
+        //validatePayButton(isInputDataValid());
     }
 
     public void launchBackgroundReload(Transaction transaction) {
@@ -350,43 +296,6 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
                             cancelLoaderId(4);
                         }
                     });
-        }
-    }
-
-    protected void validatePayButton(boolean validate) {
-
-        if (validate) {
-
-            final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
-            CustomTheme theme = CustomTheme.fromBundle(customThemeBundle);
-
-            mPayButton.setTextColor(ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
-            mPayButtonLayout.setEnabled(true);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                //mPayButton.setBackground(makeSelector(theme));
-                mPayButtonLayout.setBackground(makeSelector(theme));
-
-                Drawable[] drawables = mPayButton.getCompoundDrawables();
-                Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
-                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
-            }
-
-        } else {
-
-            //TODO inactive button
-            mPayButton.setTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
-            mPayButtonLayout.setEnabled(false);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                CustomTheme greyTheme = new CustomTheme(R.color.dark_grey, R.color.dark_grey, R.color.dark_grey);
-                //mPayButton.setBackground(makeSelector(greyTheme));
-                mPayButtonLayout.setBackground(makeSelector(greyTheme));
-                //mPayButton.getDra
-
-                Drawable[] drawables = mPayButton.getCompoundDrawables();
-                Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
-                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), android.R.color.white));
-                //DrawableCompat.setTint(wrapDrawable, getResources().getColor(android.R.color.holo_red_dark));
-            }
         }
     }
 
@@ -465,9 +374,12 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        //cancelOperations();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
-    protected abstract boolean isInputDataValid();
- }
+        this.cancelOperations();
+    }
+}

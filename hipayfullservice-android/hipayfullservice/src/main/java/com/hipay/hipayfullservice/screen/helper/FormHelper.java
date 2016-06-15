@@ -16,8 +16,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -222,4 +224,62 @@ public class FormHelper {
 
     }
 
+    public static boolean validateExpiryDate(String expiryDate) {
+
+        if (expiryDate.length() != 4 || !TextUtils.isDigitsOnly(expiryDate)) {
+            return false;
+        }
+
+        Integer expMonth = Integer.valueOf(expiryDate.substring(0,2));
+        Integer expYear = Integer.valueOf(expiryDate.substring(2,4));
+
+        if (!validateExpMonth(expMonth)) {
+            return false;
+        }
+
+        if (!validateExpYear(expYear)) {
+            return false;
+        }
+
+        return !hasMonthPassed(expYear, expMonth);
+    }
+
+    public static boolean validateExpMonth(Integer expMonth) {
+        if (expMonth == null) {
+            return false;
+        }
+        return (expMonth >= 1 && expMonth <= 12);
+    }
+
+    public static boolean validateExpYear(Integer expYear) {
+        if (expYear == null) {
+            return false;
+        }
+        return !hasYearPassed(expYear);
+    }
+
+    public static boolean hasYearPassed(int year) {
+        int normalized = normalizeYear(year);
+        Calendar now = Calendar.getInstance();
+        return normalized < now.get(Calendar.YEAR);
+    }
+
+    public static boolean hasMonthPassed(int year, int month) {
+        Calendar now = Calendar.getInstance();
+        // Expires at end of specified month, Calendar month starts at 0
+
+        return hasYearPassed(year) ||
+                normalizeYear(year) == now.get(Calendar.YEAR) && month < (now.get(Calendar.MONTH) + 1);
+    }
+
+    // Convert two-digit year to full year if necessary
+    public static int normalizeYear(int year)  {
+        if (year < 100 && year >= 0) {
+            Calendar now = Calendar.getInstance();
+            String currentYear = String.valueOf(now.get(Calendar.YEAR));
+            String prefix = currentYear.substring(0, currentYear.length() - 2);
+            year = Integer.parseInt(String.format(Locale.US, "%s%02d", prefix, year));
+        }
+        return year;
+    }
 }

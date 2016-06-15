@@ -27,6 +27,7 @@ import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.screen.fragment.AbstractPaymentFormFragment;
+import com.hipay.hipayfullservice.screen.fragment.TokenizableCardPaymentFormFragment;
 import com.hipay.hipayfullservice.screen.helper.ApiLevelHelper;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 import com.hipay.hipayfullservice.screen.widget.TextSharedElementCallback;
@@ -87,10 +88,33 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
                 //ActivityCompat.finishAfterTransition(this);
                 //overridePendingTransition(0, 0);
+
+            } else {
+
+                //back pressed
+
+                if (!isPaymentTokenizable()) {
+                    forceBackPressed();
+                }
             }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private boolean isPaymentTokenizable() {
+
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
+        if (fragment != null) {
+
+            AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
+            if ( (abstractPaymentFormFragment instanceof TokenizableCardPaymentFormFragment)) {
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void formResultAction(Transaction transaction, Exception exception) {
@@ -111,15 +135,19 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
             switch (formResult) {
 
+                // this never happens for now
                 case FormActionReset: {
 
-                    this.setLoadingMode(false);
+                    this.setLoadingMode(false, false);
+                    if (!isPaymentTokenizable()) {
+                        forceBackPressed();
+                    }
 
                 } break;
 
                 case FormActionReload: {
                     //this is made directly
-                    this.setLoadingMode(false);
+                    this.setLoadingMode(false, false);
 
                 } break;
 
@@ -131,6 +159,12 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
                 } break;
 
+                case FormActionForward: {
+
+                    this.setLoadingMode(false, true);
+                    //do not dismiss the loading thing now
+                } break;
+
                 case FormActionQuit: {
 
                     //not need to stop the loading mode
@@ -139,19 +173,20 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
                 default: {
                     //nothing
+                    this.setLoadingMode(false, true);
                 }
             }
         }
 
     }
 
-    private void setLoadingMode(boolean loadingMode) {
+    private void setLoadingMode(boolean loadingMode, boolean delay) {
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
         if (fragment != null) {
 
             AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
-            abstractPaymentFormFragment.setLoadingMode(loadingMode);
+            abstractPaymentFormFragment.setLoadingMode(loadingMode, delay);
         }
     }
 
@@ -173,6 +208,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         FormActionReset,
         FormActionReload,
         FormActionBackgroundReload,
+        FormActionForward,
         FormActionQuit
     }
 
@@ -212,6 +248,9 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
+                            if (!isPaymentTokenizable()) {
+                                forceBackPressed();
+                            }
                         }
                     };
 
@@ -239,7 +278,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                                     if (fragment != null) {
 
                                         AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
-                                        abstractPaymentFormFragment.setLoadingMode(true);
+                                        abstractPaymentFormFragment.setLoadingMode(true, false);
                                         abstractPaymentFormFragment.launchRequest();
                                     }
                                 }
@@ -247,6 +286,9 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
                                 case DialogInterface.BUTTON_NEGATIVE:
                                     dialog.dismiss();
+                                    if (!isPaymentTokenizable()) {
+                                        forceBackPressed();
+                                    }
                                     break;
                             }
                         }
@@ -284,7 +326,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                         if (fragment != null) {
 
                             AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
-                            abstractPaymentFormFragment.setLoadingMode(true);
+                            abstractPaymentFormFragment.setLoadingMode(true, false);
                             abstractPaymentFormFragment.launchRequest();
                         }
                     }
@@ -293,6 +335,9 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
                     case DialogInterface.BUTTON_NEGATIVE:
                         dialog.dismiss();
+                        if (!isPaymentTokenizable()) {
+                            forceBackPressed();
+                        }
                         break;
                 }
             }
@@ -331,6 +376,9 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        if (!isPaymentTokenizable()) {
+                            forceBackPressed();
+                        }
                     }
                 };
 
@@ -359,7 +407,8 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                 //dismiss the dialog before launching the forward webview
                 dismissDialogs();
 
-                formResult = FormResult.FormActionReload;
+                //formResult = FormResult.FormActionReload;
+                formResult = FormResult.FormActionForward;
 
             } break;
 
@@ -369,6 +418,9 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        if (!isPaymentTokenizable()) {
+                            forceBackPressed();
+                        }
                     }
                 };
 
@@ -571,7 +623,10 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     }
 
     private void forceBackPressed() {
+
+        //is it different from finish?
         super.onBackPressed();
+        //finish();
     }
 
     @Override

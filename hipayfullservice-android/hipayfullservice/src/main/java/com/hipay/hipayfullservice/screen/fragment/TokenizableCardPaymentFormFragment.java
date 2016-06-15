@@ -1,11 +1,16 @@
 package com.hipay.hipayfullservice.screen.fragment;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -14,6 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.FrameLayout;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.client.GatewayClient;
@@ -29,8 +36,11 @@ import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.hipayfullservice.screen.fragment.interfaces.CardBehaviour;
 import com.hipay.hipayfullservice.screen.helper.FormHelper;
+import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
+import java.text.NumberFormat;
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.Locale;
 import java.util.Set;
 
@@ -38,6 +48,9 @@ import java.util.Set;
  * Created by nfillion on 20/04/16.
  */
 public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragment {
+
+    private Button mPayButton;
+    private FrameLayout mPayButtonLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,6 +62,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     @Override
     public void onResume() {
         super.onResume();
+
+        validatePayButton(isInputDataValid());
         putEverythingInRed();
     }
 
@@ -56,10 +71,36 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     protected void initContentViews(View view) {
         super.initContentViews(view);
 
+        mPayButton = (Button) view.findViewById(R.id.pay_button);
+        mPayButtonLayout = (FrameLayout) view.findViewById(R.id.pay_button_layout);
+
+        mPayButtonLayout.setVisibility(View.VISIBLE);
+
         mCardInfoLayout.setVisibility(View.VISIBLE);
 
+        Bundle args = getArguments();
+        final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
 
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
+        Currency c = Currency.getInstance(paymentPageRequest.getCurrency());
+        currencyFormatter.setCurrency(c);
+        String moneyFormatted = currencyFormatter.format(paymentPageRequest.getAmount());
+
+        String moneyString = getString(R.string.pay, moneyFormatted);
+
+        mPayButton.setText(moneyString);
+
+        mPayButtonLayout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                setLoadingMode(true,false);
+                launchRequest();
+            }
+        });
         View.OnFocusChangeListener focusChangeListener = this.focusChangeListener();
+
 
         mCardOwner = (TextInputEditText) view.findViewById(R.id.card_owner);
 
@@ -88,9 +129,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         mCardExpirationLayout.setError(" ");
         mCardCVVLayout.setError(" ");
 
-        Bundle args = getArguments();
-        final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
-
         // check every product code to know how to handle the editTexts
         PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
         inferedPaymentProduct = paymentProduct.getCode();
@@ -105,6 +143,26 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         mCardNumber.requestFocus();
 
+    }
+
+    @Override
+    public void setLoadingMode(boolean loadingMode, boolean delay) {
+
+        if (!delay) {
+
+            if (loadingMode) {
+
+                mPayButtonLayout.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.VISIBLE);
+
+            } else {
+
+                mPayButtonLayout.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.GONE);
+            }
+        }
+
+        mLoadingMode = loadingMode;
     }
 
     private View.OnFocusChangeListener focusChangeListener() {
@@ -138,6 +196,49 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 }
             }
         };
+    }
+
+    protected void validatePayButton(boolean validate) {
+
+        if (validate) {
+
+            final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
+            CustomTheme theme = CustomTheme.fromBundle(customThemeBundle);
+
+            mPayButton.setTextColor(ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
+            mPayButtonLayout.setEnabled(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                //mPayButton.setBackground(makeSelector(theme));
+                mPayButtonLayout.setBackground(makeSelector(theme));
+
+                Drawable[] drawables = mPayButton.getCompoundDrawables();
+                Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
+                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
+            }
+
+        } else {
+
+            mPayButton.setTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
+            mPayButtonLayout.setEnabled(false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                CustomTheme greyTheme = new CustomTheme(R.color.dark_grey, R.color.dark_grey, R.color.dark_grey);
+                //mPayButton.setBackground(makeSelector(greyTheme));
+                mPayButtonLayout.setBackground(makeSelector(greyTheme));
+                //mPayButton.getDra
+
+                Drawable[] drawables = mPayButton.getCompoundDrawables();
+                Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
+                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), android.R.color.white));
+                //DrawableCompat.setTint(wrapDrawable, getResources().getColor(android.R.color.holo_red_dark));
+            }
+        }
+    }
+
+    private StateListDrawable makeSelector(CustomTheme theme) {
+        StateListDrawable res = new StateListDrawable();
+        res.addState(new int[]{android.R.attr.state_pressed}, new ColorDrawable(ContextCompat.getColor(getActivity(), theme.getColorPrimaryDarkId())));
+        res.addState(new int[]{}, new ColorDrawable(ContextCompat.getColor(getActivity(), theme.getColorPrimaryId())));
+        return res;
     }
 
     private class GenericTextWatcher implements TextWatcher {
@@ -349,7 +450,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                                 @Override
                                 public void onSuccess(final Transaction transaction) {
-                                    Log.i("transaction success", transaction.toString());
+                                    //Log.i("transaction success", transaction.toString());
 
                                     if (mCallback != null) {
                                         mCallback.onCallbackOrderReceived(transaction, null);
@@ -360,7 +461,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                                 @Override
                                 public void onError(Exception error) {
-                                    Log.i("transaction failed", error.getLocalizedMessage());
+                                    //Log.i("transaction failed", error.getLocalizedMessage());
                                     if (mCallback != null) {
                                         mCallback.onCallbackOrderReceived(null, error);
                                     }
@@ -398,7 +499,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         }
 
         if (year != null) {
-            return String.valueOf(normalizeYear(Integer.valueOf(year)));
+            return String.valueOf(FormHelper.normalizeYear(Integer.valueOf(year)));
         }
 
         return null;
@@ -490,12 +591,12 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 if (TextUtils.isDigitsOnly(expiryDate)) {
 
                     //TODO finish this
-                    return validateExpiryDate(expiryDate);
+                    return FormHelper.validateExpiryDate(expiryDate);
                 }
 
             } else if (expiryDateString.length() == 4 && TextUtils.isDigitsOnly(expiryDateString)) {
 
-                return validateExpiryDate(expiryDateString);
+                return FormHelper.validateExpiryDate(expiryDateString);
             }
         }
         return false;
@@ -581,65 +682,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         }
 
         this.mCardNumber.setTextColor(ContextCompat.getColor(getActivity(), color));
-    }
-
-    public boolean validateExpiryDate(String expiryDate) {
-
-        if (expiryDate.length() != 4 || !TextUtils.isDigitsOnly(expiryDate)) {
-            return false;
-        }
-
-        Integer expMonth = Integer.valueOf(expiryDate.substring(0,2));
-        Integer expYear = Integer.valueOf(expiryDate.substring(2,4));
-
-        if (!validateExpMonth(expMonth)) {
-            return false;
-        }
-
-        if (!validateExpYear(expYear)) {
-            return false;
-        }
-
-        return !hasMonthPassed(expYear, expMonth);
-    }
-
-    public boolean validateExpMonth(Integer expMonth) {
-        if (expMonth == null) {
-            return false;
-        }
-        return (expMonth >= 1 && expMonth <= 12);
-    }
-
-    public boolean validateExpYear(Integer expYear) {
-        if (expYear == null) {
-            return false;
-        }
-        return !hasYearPassed(expYear);
-    }
-
-    protected boolean hasYearPassed(int year) {
-        int normalized = normalizeYear(year);
-        Calendar now = Calendar.getInstance();
-        return normalized < now.get(Calendar.YEAR);
-    }
-
-    protected boolean hasMonthPassed(int year, int month) {
-        Calendar now = Calendar.getInstance();
-        // Expires at end of specified month, Calendar month starts at 0
-
-        return hasYearPassed(year) ||
-                normalizeYear(year) == now.get(Calendar.YEAR) && month < (now.get(Calendar.MONTH) + 1);
-    }
-
-    // Convert two-digit year to full year if necessary
-    protected int normalizeYear(int year)  {
-        if (year < 100 && year >= 0) {
-            Calendar now = Calendar.getInstance();
-            String currentYear = String.valueOf(now.get(Calendar.YEAR));
-            String prefix = currentYear.substring(0, currentYear.length() - 2);
-            year = Integer.parseInt(String.format(Locale.US, "%s%02d", prefix, year));
-        }
-        return year;
     }
 }
 

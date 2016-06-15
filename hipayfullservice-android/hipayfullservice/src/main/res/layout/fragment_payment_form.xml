@@ -39,6 +39,7 @@
             android:enabled="false"
             android:layout_gravity="bottom"
             android:layout_margin="@dimen/spacing_double"
+            android:visibility="gone"
             >
 
             <Button
@@ -59,11 +60,9 @@
                 android:focusable="false"
                 android:minHeight="0dp"
                 android:minWidth="0dp"
-
                 />
 
         </FrameLayout>
-
 
         <ProgressBar
             android:id="@+id/empty"
