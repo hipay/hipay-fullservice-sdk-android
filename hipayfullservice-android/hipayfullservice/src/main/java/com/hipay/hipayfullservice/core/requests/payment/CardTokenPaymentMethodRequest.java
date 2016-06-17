@@ -17,7 +17,7 @@ public class CardTokenPaymentMethodRequest extends AbstractPaymentMethodRequest 
 
     public CardTokenPaymentMethodRequest() {
 
-        this.setEci(Transaction.ECI.ECIUndefined);
+        this.setEci(Transaction.ECI.Undefined);
     }
 
     public CardTokenPaymentMethodRequest(String cardToken, Transaction.ECI eci, AuthenticationIndicator authenticationIndicator) {
@@ -34,10 +34,10 @@ public class CardTokenPaymentMethodRequest extends AbstractPaymentMethodRequest 
 
     public enum AuthenticationIndicator {
 
-        //AuthenticationIndicatorUndefined (-1),
-        AuthenticationIndicatorBypass (0),
-        AuthenticationIndicatorIfAvailable (1),
-        AuthenticationIndicatorMandatory (2);
+        //Undefined (-1),
+        Bypass(0),
+        IfAvailable(1),
+        Mandatory(2);
 
         protected final Integer indicator;
         AuthenticationIndicator(Integer indicator) {
@@ -49,17 +49,17 @@ public class CardTokenPaymentMethodRequest extends AbstractPaymentMethodRequest 
 
             if (value == null) return null;
 
-            if (value == AuthenticationIndicatorBypass.getIntegerValue()) {
-                return AuthenticationIndicatorBypass;
+            if (value.equals(Bypass.getIntegerValue())) {
+                return Bypass;
             }
 
-            if (value == AuthenticationIndicatorIfAvailable.getIntegerValue()) {
+            if (value.equals(IfAvailable.getIntegerValue())) {
 
-                return AuthenticationIndicatorIfAvailable;
+                return IfAvailable;
             }
 
-            if (value == AuthenticationIndicatorMandatory.getIntegerValue()) {
-                return AuthenticationIndicatorMandatory;
+            if (value.equals(Mandatory.getIntegerValue())) {
+                return Mandatory;
             }
 
             return null;

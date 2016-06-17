@@ -17,7 +17,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.hipay.hipayfullservice.R;
-import com.hipay.hipayfullservice.core.errors.Errors;
 import com.hipay.hipayfullservice.core.models.Order;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.OrderRelatedRequest;

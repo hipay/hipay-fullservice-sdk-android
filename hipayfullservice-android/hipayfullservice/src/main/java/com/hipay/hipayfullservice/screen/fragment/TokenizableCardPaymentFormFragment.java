@@ -39,7 +39,6 @@ import com.hipay.hipayfullservice.screen.helper.FormHelper;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
 import java.text.NumberFormat;
-import java.util.Calendar;
 import java.util.Currency;
 import java.util.Locale;
 import java.util.Set;
@@ -410,7 +409,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         mSecureVaultClient = new SecureVaultClient(getActivity());
         mCurrentLoading = 0;
-        mSecureVaultClient.createTokenRequest(
+        mSecureVaultClient.generateToken(
 
                 mCardNumber.getText().toString(),
 
@@ -446,7 +445,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                             mGatewayClient = new GatewayClient(getActivity());
                             mCurrentLoading = 1;
-                            mGatewayClient.createOrderRequest(orderRequest, new OrderRequestCallback() {
+                            mGatewayClient.requestNewOrder(orderRequest, new OrderRequestCallback() {
 
                                 @Override
                                 public void onSuccess(final Transaction transaction) {

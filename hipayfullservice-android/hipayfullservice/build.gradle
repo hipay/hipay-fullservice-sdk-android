@@ -24,7 +24,6 @@ android {
     }
 }
 
-
 ext {
     supportLibVersion = "23.2.0"
     androidTestVersion = "0.4.1"

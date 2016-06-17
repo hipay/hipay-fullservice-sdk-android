@@ -30,7 +30,6 @@ import android.widget.TextView;
 
 import com.hipay.hipayfullservice.core.errors.Errors;
 import com.hipay.hipayfullservice.core.errors.exceptions.ApiException;
-import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
@@ -41,10 +40,7 @@ import com.hipay.hipayfullservice.screen.helper.ApiLevelHelper;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by nfillion on 15/03/16.

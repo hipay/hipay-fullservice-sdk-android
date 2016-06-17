@@ -27,7 +27,7 @@ public class CardTokenPaymentMethodRequestSerialization extends AbstractSerializ
         retMap.put("cardtoken", cardTokenPaymentMethodRequest.getCardToken());
 
         Transaction.ECI eci = cardTokenPaymentMethodRequest.getEci();
-        if (eci != null && eci != Transaction.ECI.ECIUndefined) {
+        if (eci != null && eci != Transaction.ECI.Undefined) {
             retMap.put("eci", String.valueOf(eci.getIntegerValue()));
         }
 

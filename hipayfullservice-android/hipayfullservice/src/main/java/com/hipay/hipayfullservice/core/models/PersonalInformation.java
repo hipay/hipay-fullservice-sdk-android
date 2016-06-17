@@ -3,8 +3,6 @@ package com.hipay.hipayfullservice.core.models;
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 
-import org.json.JSONObject;
-
 /**
  * Created by nfillion on 25/01/16.
  */

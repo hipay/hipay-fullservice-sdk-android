@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.hipay.hipayfullservice.core.client.GatewayClient;
@@ -78,7 +77,7 @@ public class ForwardPaymentFormFragment extends AbstractPaymentFormFragment {
 
         mGatewayClient = new GatewayClient(getActivity());
         mCurrentLoading = 1;
-        mGatewayClient.createOrderRequest(orderRequest, new OrderRequestCallback() {
+        mGatewayClient.requestNewOrder(orderRequest, new OrderRequestCallback() {
 
             @Override
             public void onSuccess(final Transaction transaction) {

@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -199,7 +200,7 @@ public class FormHelper {
             JSONObject lengths = DataExtractor.getJSONObjectFromField(cardVisaInfo, "lengths");
 
             Integer integer = DataExtractor.getIntegerFromField(lengths, "length");
-            Set<Integer> integerSet = new HashSet<>(Arrays.asList(integer));
+            Set<Integer> integerSet = new HashSet<>(Collections.singletonList(integer));
 
             Integer variable = DataExtractor.getIntegerFromField(lengths, "variable");
             if (variable != null) {

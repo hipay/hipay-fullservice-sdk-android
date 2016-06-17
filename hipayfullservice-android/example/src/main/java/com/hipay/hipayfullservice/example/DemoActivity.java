@@ -16,7 +16,6 @@ import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DemoActivity extends AppCompatActivity implements ProductCategoryListFragment.OnPaymentProductSelectedListener {
@@ -35,8 +34,8 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
 
         ClientConfig.Environment environment = ClientConfig.Environment.Stage;
 
-        String username = "94656047.stage-secure-gateway.hipay-tpp.com";
-        String password = "Test_pfS0ojds5ZPu1t8ow8PuASCD";
+        String username = getString(R.string.username);
+        String password = getString(R.string.password);
 
         ClientConfig.getInstance().setConfigEnvironment(
                 environment,

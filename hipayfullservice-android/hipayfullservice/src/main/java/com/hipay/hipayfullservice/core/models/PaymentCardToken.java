@@ -21,18 +21,6 @@ public class PaymentCardToken extends PaymentMethod {
     protected String country;
     protected String domesticNetwork;
 
-    public boolean isEqualToPaymentCardToken(PaymentCardToken object) {
-
-        if (object instanceof PaymentCardToken && this.getToken() != null) {
-
-            //TODO override equals
-            return object.getToken().equalsIgnoreCase(this.getToken());
-        }
-
-        return false;
-    }
-
-
     public static PaymentCardToken fromJSONObject(JSONObject object) {
 
         PaymentCardTokenMapper mapper = new PaymentCardTokenMapper(object);

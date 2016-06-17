@@ -5,7 +5,6 @@ import android.os.Bundle;
 import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.hipayfullservice.core.requests.info.PersonalInfoRequest;
 import com.hipay.hipayfullservice.core.requests.order.OrderRelatedRequest;
-import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
 import java.util.HashMap;

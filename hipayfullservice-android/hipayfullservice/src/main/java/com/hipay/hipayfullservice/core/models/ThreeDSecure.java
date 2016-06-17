@@ -5,7 +5,6 @@ import android.os.Bundle;
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
-import com.hipay.hipayfullservice.core.serialization.BundleSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
 import org.json.JSONObject;

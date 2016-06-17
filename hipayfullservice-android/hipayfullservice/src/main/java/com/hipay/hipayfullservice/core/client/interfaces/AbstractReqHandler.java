@@ -9,7 +9,6 @@ import com.hipay.hipayfullservice.core.errors.exceptions.ApiException;
 import com.hipay.hipayfullservice.core.errors.exceptions.HttpException;
 import com.hipay.hipayfullservice.core.network.HttpResult;
 import com.hipay.hipayfullservice.core.operations.AbstractOperation;
-import com.hipay.hipayfullservice.core.requests.AbstractRequest;
 import com.hipay.hipayfullservice.core.utils.DataExtractor;
 
 import org.json.JSONException;

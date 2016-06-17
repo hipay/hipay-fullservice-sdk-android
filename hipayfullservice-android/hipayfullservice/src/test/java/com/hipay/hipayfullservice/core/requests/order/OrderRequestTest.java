@@ -3,8 +3,6 @@ package com.hipay.hipayfullservice.core.requests.order;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by nfillion on 22/02/16.
  */

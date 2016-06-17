@@ -13,6 +13,10 @@ public class OrderRequest extends OrderRelatedRequest {
         super(orderRelatedRequest);
     }
 
+    public OrderRequest() {
+        super();
+    }
+
     protected String paymentProductCode;
     protected AbstractPaymentMethodRequest paymentMethod;
 

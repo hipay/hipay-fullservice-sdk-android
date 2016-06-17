@@ -14,13 +14,13 @@ public class SecureVaultClient extends AbstractClient {
         super(context);
     }
 
-    public void createTokenRequest(String cardNumber,
-                                      String cardExpiryMonth,
-                                      String cardExpiryYear,
-                                      String cardHolder,
-                                      String cardCVV,
-                                      boolean multiUse,
-                                      SecureVaultRequestCallback callback
+    public void generateToken(String cardNumber,
+                              String cardExpiryMonth,
+                              String cardExpiryYear,
+                              String cardHolder,
+                              String cardCVV,
+                              boolean multiUse,
+                              SecureVaultRequestCallback callback
 
     ) {
 
