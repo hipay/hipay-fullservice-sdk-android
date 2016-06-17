@@ -26,7 +26,7 @@ public class BCMCBehaviour implements ICardBehaviour {
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         //cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeAmericanExpress, context))});
-        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_product_bcmc, 0);
+        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_black, 0);
         cardCVV.setHint(context.getString(R.string.card_security_code_placeholder_cvv));
         //bcmc
         //"6703 0000 0000 00003",

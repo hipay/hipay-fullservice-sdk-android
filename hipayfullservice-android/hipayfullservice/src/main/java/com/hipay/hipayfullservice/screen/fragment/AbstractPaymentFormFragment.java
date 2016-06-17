@@ -63,7 +63,6 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     protected TextInputLayout mCardExpirationLayout;
     protected TextInputLayout mCardOwnerLayout;
 
-
     protected GatewayClient mGatewayClient;
     protected SecureVaultClient mSecureVaultClient;
 
