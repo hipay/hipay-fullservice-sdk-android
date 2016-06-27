@@ -16,6 +16,7 @@
             android:launchMode="singleTop"
             android:configChanges="orientation|screenSize">
 
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <data android:scheme="@string/hipay_scheme"
@@ -25,6 +26,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
             </intent-filter>
+            -->
         </activity>
 
     </application>
