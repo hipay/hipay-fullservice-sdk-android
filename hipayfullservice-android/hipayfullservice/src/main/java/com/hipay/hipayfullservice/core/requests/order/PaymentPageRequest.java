@@ -9,8 +9,6 @@ import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRe
 import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
 
 import java.net.URL;
-import java.nio.BufferUnderflowException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -24,8 +22,8 @@ public class PaymentPageRequest extends OrderRelatedRequest {
     public static final String TAG = "Payment_page_request";
     public static final int REQUEST_ORDER = 0x2300;
 
-    ArrayList<String> paymentProductList;
-    ArrayList<String> paymentProductCategoryList;
+    List<String> paymentProductList;
+    List<String> paymentProductCategoryList;
 
     Transaction.ECI eci;
     CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator;
@@ -42,7 +40,7 @@ public class PaymentPageRequest extends OrderRelatedRequest {
 
     public PaymentPageRequest() {
 
-        this.setEci(Transaction.ECI.ECIUndefined);
+        this.setEci(Transaction.ECI.Undefined);
         this.setMultiUse(false);
         this.setDisplaySelector(false);
         this.setPaymentCardGroupingEnabled(false);
@@ -110,7 +108,7 @@ public class PaymentPageRequest extends OrderRelatedRequest {
         return displaySelector;
     }
 
-    public ArrayList<String> getPaymentProductList() {
+    public List<String> getPaymentProductList() {
         return paymentProductList;
     }
 
@@ -118,7 +116,7 @@ public class PaymentPageRequest extends OrderRelatedRequest {
         return paymentProductCategoryList;
     }
 
-    public void setPaymentProductCategoryList(ArrayList<String> paymentProductCategoryList) {
+    public void setPaymentProductCategoryList(List<String> paymentProductCategoryList) {
         this.paymentProductCategoryList = paymentProductCategoryList;
     }
 
@@ -170,7 +168,7 @@ public class PaymentPageRequest extends OrderRelatedRequest {
         this.displaySelector = displaySelector;
     }
 
-    public void setPaymentProductList(ArrayList paymentProductList) {
+    public void setPaymentProductList(List<String> paymentProductList) {
         this.paymentProductList = paymentProductList;
     }
 
@@ -224,13 +222,13 @@ public class PaymentPageRequest extends OrderRelatedRequest {
 
             String paymentProductsString = this.getStringForKey("payment_product_list");
             if (paymentProductsString != null) {
-                ArrayList paymentProducts = new ArrayList(Arrays.asList(paymentProductsString.split(",")));
+                List paymentProducts = Arrays.asList(paymentProductsString.split(","));
                 paymentPageRequest.setPaymentProductList(paymentProducts);
             }
 
             String paymentProductsCategoryString = this.getStringForKey("payment_product_category_list");
             if (paymentProductsCategoryString != null) {
-                ArrayList paymentProductsCategory = new ArrayList(Arrays.asList(paymentProductsCategoryString.split(",")));
+                List<String> paymentProductsCategory = Arrays.asList(paymentProductsCategoryString.split(","));
                 paymentPageRequest.setPaymentProductCategoryList(paymentProductsCategory);
             }
 

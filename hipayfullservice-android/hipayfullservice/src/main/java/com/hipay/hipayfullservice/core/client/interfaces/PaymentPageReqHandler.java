@@ -3,7 +3,6 @@ package com.hipay.hipayfullservice.core.client.interfaces;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.PaymentPageRequestCallback;
 import com.hipay.hipayfullservice.core.models.HostedPaymentPage;
 import com.hipay.hipayfullservice.core.operations.GatewayOperation;

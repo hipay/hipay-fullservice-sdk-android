@@ -1,14 +1,18 @@
 <resources>
     <string name="app_name">HiPay m-commerce demo</string>
+
+    <string name="username" translatable="false">94656047.stage-secure-gateway.hipay-tpp.com</string>
+    <string name="password" translatable="false">Test_pfS0ojds5ZPu1t8ow8PuASCD</string>
+
     <string name="generate_payment_screen">Generate a payment screen</string>
     <string name="amount_and_currency">Amount and currency</string>
-    <string name="amount">Amount</string>
     <string name="group_cards">Group card</string>
     <string name="reusable_token">Reusable token</string>
 
-    <string name="three_ds">3DS</string>
+    <string name="three_ds">3DS Authentication</string>
     <string name="color">Color</string>
-    <string name="currency">Currency</string>
+
+    <string name="amount_default" translatable="false">60.00</string>
 
     <string name="form_payment_products_credit_card">Credit card</string>
     <string name="form_payment_products_debit_card">Debit card</string>

@@ -1,7 +1,5 @@
 package com.hipay.hipayfullservice.core.models;
 
-import junit.framework.TestCase;
-
 import org.junit.Before;
 import org.junit.Test;
 

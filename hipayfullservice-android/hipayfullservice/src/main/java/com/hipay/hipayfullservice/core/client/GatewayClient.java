@@ -18,7 +18,7 @@ public class GatewayClient extends AbstractClient  {
         super(context);
     }
 
-    public void createOrderRequest(OrderRequest orderRequest, OrderRequestCallback orderRequestCallback) {
+    public void requestNewOrder(OrderRequest orderRequest, OrderRequestCallback orderRequestCallback) {
         super.createRequest(orderRequest, orderRequestCallback);
     }
 

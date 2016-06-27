@@ -15,6 +15,7 @@ import com.hipay.hipayfullservice.screen.model.CustomTheme;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Created by nfillion on 20/04/16.
@@ -77,7 +78,7 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
 
         //everything already empty
         //pageRequest.setPaymentProductCategoryList(null);
-        pageRequest.setPaymentProductList(new ArrayList(Arrays.asList(paymentProduct.getCode())));
+        pageRequest.setPaymentProductList(Collections.singletonList(paymentProduct.getCode()));
         pageRequest.setDisplaySelector(false);
         pageRequest.setTemplateName(PaymentPageRequest.PaymentPageRequestTemplateNameFrame);
 

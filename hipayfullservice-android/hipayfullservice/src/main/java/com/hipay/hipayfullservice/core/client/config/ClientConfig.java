@@ -43,11 +43,11 @@ public class ClientConfig {
 
         public static Environment fromIntegerValue(Integer value) {
 
-            if (value == Stage.getIntegerValue()) {
+            if (value.equals(Stage.getIntegerValue())) {
                 return Stage;
             }
 
-            if (value == Production.getIntegerValue()) {
+            if (value.equals(Production.getIntegerValue())) {
                 return Production;
             }
 

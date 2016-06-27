@@ -3,7 +3,6 @@ package com.hipay.hipayfullservice.screen.fragment.interfaces;
 import android.content.Context;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;

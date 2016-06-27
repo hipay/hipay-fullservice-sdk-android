@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         style="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/red"
         android:elevation="@dimen/elevation_header"
         android:gravity="center_vertical"
         android:text="@string/form_payment_products_categories"

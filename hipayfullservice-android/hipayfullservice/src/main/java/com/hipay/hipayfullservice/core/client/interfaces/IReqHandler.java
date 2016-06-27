@@ -3,10 +3,8 @@ package com.hipay.hipayfullservice.core.client.interfaces;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.hipay.hipayfullservice.core.errors.exceptions.HttpException;
 import com.hipay.hipayfullservice.core.network.HttpResult;
 import com.hipay.hipayfullservice.core.operations.AbstractOperation;
-import com.hipay.hipayfullservice.core.operations.GatewayOperation;
 
 import org.json.JSONObject;
 

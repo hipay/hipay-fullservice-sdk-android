@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.hipay.hipayfullservice.core.client.config.ClientConfig;
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
-import com.hipay.hipayfullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.hipayfullservice.core.requests.AbstractRequest;
 import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.hipayfullservice.core.requests.info.PersonalInfoRequest;
@@ -151,10 +150,8 @@ public class OrderRelatedRequest extends AbstractRequest {
 
     public enum OrderRequestOperation {
 
-        OrderRequestOperationUndefined (0),
-        OrderRequestOperationAuthorization (1),
-        OrderRequestOperationSale (2);
-
+        Undefined(0),
+        Authorization(1), Sale(2);
         protected final Integer operation;
         OrderRequestOperation(Integer operation) {
 
@@ -165,12 +162,12 @@ public class OrderRelatedRequest extends AbstractRequest {
 
             if (value == null) return null;
 
-            if (value == OrderRequestOperationAuthorization.getIntegerValue()) {
-                return OrderRequestOperationAuthorization;
+            if (value.equals(Authorization.getIntegerValue())) {
+                return Authorization;
             }
 
-            if (value == OrderRequestOperationSale.getIntegerValue()) {
-                return OrderRequestOperationSale;
+            if (value.equals(Sale.getIntegerValue())) {
+                return Sale;
             }
 
             return null;

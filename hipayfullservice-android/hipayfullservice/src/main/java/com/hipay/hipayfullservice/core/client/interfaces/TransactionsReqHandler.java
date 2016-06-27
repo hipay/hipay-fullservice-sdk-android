@@ -8,18 +8,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
-import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionDetailsCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionsDetailsCallback;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.operations.GatewayOperation;
-import com.hipay.hipayfullservice.core.operations.OrderOperation;
 import com.hipay.hipayfullservice.core.operations.TransactionsDetailsOperation;
-import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.utils.DataExtractor;
 import com.hipay.hipayfullservice.core.utils.Utils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -103,7 +98,7 @@ public class TransactionsReqHandler extends AbstractReqHandler {
                 Transaction transaction = Transaction.fromJSONObject(transactionJSONObject);
 
                 TransactionsDetailsCallback transactionDetailsCallback = (TransactionsDetailsCallback)this.getCallback();
-                transactionDetailsCallback.onSuccess(new ArrayList<>(Arrays.asList(transaction)));
+                transactionDetailsCallback.onSuccess(new ArrayList<>(Collections.singletonList(transaction)));
 
             }
 

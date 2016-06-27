@@ -24,8 +24,6 @@
     <integer name="tick_cross_stroke_width">2</integer>
     <string translatable="false" name="path_tick_line_1">M19.6,7 L10.4,16.2</string>
     <string translatable="false" name="path_tick_line_2">M4.8,13.4 L9,17.6</string>
-    <string translatable="false" name="path_cross_line_1">M17.6,6.4 L6.4,17.6</string>
-    <string translatable="false" name="path_cross_line_2">M6.4,6.4 L17.6,17.6</string>
 
     <!-- names -->
     <string translatable="false" name="groupTickCross">groupTickCross</string>
@@ -34,8 +32,5 @@
 
     <!-- drawing -->
     <color name="tick_cross_stroke_color">@android:color/white</color>
-
-    <!-- timing -->
-    <integer name="tick_cross_duration">450</integer>
 
 </resources>

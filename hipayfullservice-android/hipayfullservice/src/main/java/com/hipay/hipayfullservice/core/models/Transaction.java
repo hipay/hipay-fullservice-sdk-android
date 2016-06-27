@@ -1,17 +1,13 @@
 package com.hipay.hipayfullservice.core.models;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
-import com.hipay.hipayfullservice.core.serialization.BundleSerialization;
-import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
 import org.json.JSONObject;
 
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -56,7 +52,7 @@ public class Transaction extends TransactionRelatedItem {
 
     public Transaction() {
 
-        this.eci = ECI.ECIUndefined;
+        this.eci = ECI.Undefined;
         this.avsResult = AVSResult.AVSResultNotApplicable;
         this.cvcResult = CVCResult.CVCResultNotApplicable;
     }
@@ -161,13 +157,13 @@ public class Transaction extends TransactionRelatedItem {
 
     public enum ECI {
 
-        ECIUndefined (Integer.MAX_VALUE),
-        ECIMOTO (1),
-        ECIRecurringMOTO (2),
-        ECIInstallmentPayment (3),
-        ECIManuallyKeyedCardPresent (4),
-        ECISecureECommerce (7),
-        ECIRecurringECommerce (9);
+        Undefined(Integer.MAX_VALUE),
+        MOTO(1),
+        RecurringMOTO(2),
+        InstallmentPayment(3),
+        ManuallyKeyedCardPresent(4),
+        SecureECommerce(7),
+        RecurringECommerce(9);
 
         protected final int eci;
         ECI(int eci) {
@@ -182,28 +178,28 @@ public class Transaction extends TransactionRelatedItem {
 
             if (value == null) return null;
 
-            if (value == ECIMOTO.getIntegerValue()) {
-                return ECIMOTO;
+            if (value.equals(MOTO.getIntegerValue())) {
+                return MOTO;
             }
 
-            if (value == ECIRecurringMOTO.getIntegerValue()) {
-                return ECIRecurringMOTO;
+            if (value.equals(RecurringMOTO.getIntegerValue())) {
+                return RecurringMOTO;
             }
 
-            if (value == ECIInstallmentPayment.getIntegerValue()) {
-                return ECIInstallmentPayment;
+            if (value.equals(InstallmentPayment.getIntegerValue())) {
+                return InstallmentPayment;
             }
 
-            if (value == ECIManuallyKeyedCardPresent.getIntegerValue()) {
-                return ECIManuallyKeyedCardPresent;
+            if (value.equals(ManuallyKeyedCardPresent.getIntegerValue())) {
+                return ManuallyKeyedCardPresent;
             }
 
-            if (value == ECISecureECommerce.getIntegerValue()) {
-                return ECISecureECommerce;
+            if (value.equals(SecureECommerce.getIntegerValue())) {
+                return SecureECommerce;
             }
 
-            if (value == ECIRecurringECommerce.getIntegerValue()) {
-                return ECIRecurringECommerce;
+            if (value.equals(RecurringECommerce.getIntegerValue())) {
+                return RecurringECommerce;
             }
 
             return null;
@@ -685,7 +681,7 @@ public class Transaction extends TransactionRelatedItem {
             Integer eciString = this.getIntegerForKey("eci");
             ECI eci = ECI.fromIntegerValue(eciString);
             if (eci == null) {
-                eci = ECI.ECIUndefined;
+                eci = ECI.Undefined;
             }
             object.setEci(eci);
 
@@ -768,7 +764,7 @@ public class Transaction extends TransactionRelatedItem {
             Integer eciString = this.getIntegerForKey("eci");
             ECI eci = ECI.fromIntegerValue(eciString);
             if (eci == null) {
-                eci = ECI.ECIUndefined;
+                eci = ECI.Undefined;
             }
             object.setEci(eci);
 

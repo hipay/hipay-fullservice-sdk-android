@@ -1,8 +1,5 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
     <dimen name="spacing_nano">2dp</dimen>
     <dimen name="spacing_micro">4dp</dimen>
     <dimen name="spacing_normal">8dp</dimen>
@@ -14,7 +11,6 @@
     <dimen name="elevation_header">4dp</dimen>
 
     <dimen name="min_height_touch_target">48dp</dimen>
-    <dimen name="amount_button">54dp</dimen>
 
     <dimen name="size_edit_text">18sp</dimen>
     <dimen name="payment_product_item_text_size">14sp</dimen>
