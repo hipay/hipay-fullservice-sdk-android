@@ -25,7 +25,6 @@ import com.hipay.hipayfullservice.screen.activity.ForwardWebViewActivity;
 import com.hipay.hipayfullservice.screen.fragment.interfaces.CardBehaviour;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -102,7 +101,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
     private static List<String> forwardProductsCodes() {
 
-        List<String> forwardProductsCode = new ArrayList<>(Arrays.asList(
+        List<String> forwardProductsCode = Arrays.asList(
                 PaymentProduct.PaymentProductCodePayPal,
                 PaymentProduct.PaymentProductCodeYandex,
                 PaymentProduct.PaymentProductCodeSofortUberweisung,
@@ -115,7 +114,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
                 PaymentProduct.PaymentProductCodeBankTransfer,
                 PaymentProduct.PaymentProductCodePaysafecard,
                 PaymentProduct.PaymentProductCodeDexiaDirectNet
-        ));
+        );
 
         return forwardProductsCode;
     }
@@ -241,8 +240,8 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
             String transactionReference = transaction.getTransactionReference();
 
             mCurrentLoading = 3;
-            new GatewayClient(getActivity())
-                    .getTransactionWithReference(transactionReference, new TransactionDetailsCallback() {
+            mGatewayClient = new GatewayClient(getActivity());
+                    mGatewayClient.getTransactionWithReference(transactionReference, new TransactionDetailsCallback() {
 
                         @Override
                         public void onSuccess(final Transaction transaction) {
@@ -271,30 +270,30 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
             String orderId = paymentPageRequest.getOrderId();
             mCurrentLoading = 4;
-            new GatewayClient(getActivity())
-                    .getTransactionsWithOrderId(orderId, new TransactionsDetailsCallback() {
+            mGatewayClient = new GatewayClient(getActivity());
+            mGatewayClient.getTransactionsWithOrderId(orderId, new TransactionsDetailsCallback() {
 
-                        @Override
-                        public void onSuccess(List<Transaction> transactions) {
+                @Override
+                public void onSuccess(List<Transaction> transactions) {
 
-                            Log.i("transaction success", transactions.toString());
+                    Log.i("transaction success", transactions.toString());
 
-                            if (mCallback != null) {
-                                mCallback.onCallbackOrderReceived(transactions.get(0), null);
-                            }
-                            cancelLoaderId(4);
-                        }
+                    if (mCallback != null) {
+                        mCallback.onCallbackOrderReceived(transactions.get(0), null);
+                    }
+                    cancelLoaderId(4);
+                }
 
 
-                        @Override
-                        public void onError(Exception error) {
-                            Log.i("transaction failed", error.getLocalizedMessage());
-                            if (mCallback != null) {
-                                mCallback.onCallbackOrderReceived(null, error);
-                            }
-                            cancelLoaderId(4);
-                        }
-                    });
+                @Override
+                public void onError(Exception error) {
+                    Log.i("transaction failed", error.getLocalizedMessage());
+                    if (mCallback != null) {
+                        mCallback.onCallbackOrderReceived(null, error);
+                    }
+                    cancelLoaderId(4);
+                }
+            });
         }
     }
 

@@ -9,6 +9,7 @@ import com.hipay.hipayfullservice.core.operations.GatewayOperation;
 import com.hipay.hipayfullservice.core.operations.PaymentPageOperation;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -42,6 +43,10 @@ public class PaymentPageReqHandler extends AbstractReqHandler {
 
         PaymentPageRequestCallback orderRequestCallback = (PaymentPageRequestCallback)this.getCallback();
         orderRequestCallback.onSuccess(hostedPaymentPage);
+    }
+
+    @Override
+    public void onSuccess(JSONArray jsonArray) {
     }
 
     @Override

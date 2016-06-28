@@ -17,6 +17,7 @@ import com.hipay.hipayfullservice.screen.activity.PaymentProductsActivity;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -40,6 +41,7 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
     }
 
     public PaymentProductsAdapter(Activity activity) {
+
         mActivity = activity;
         mResources = mActivity.getResources();
         mPackageName = mActivity.getPackageName();
@@ -68,7 +70,7 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
         setCategoryIcon(paymentProduct, holder.icon);
 
         holder.itemView.setBackgroundColor(getColor(android.R.color.background_light));
-        holder.title.setText(paymentProduct.getCode());
+        holder.title.setText(paymentProduct.getPaymentProductDescription());
 
         holder.title.setTextColor(getColor(theme.getTextColorPrimaryId()));
         holder.title.setBackgroundColor(getColor(theme.getColorPrimaryId()));
@@ -126,43 +128,46 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
 
     private void setCategoryIcon(PaymentProduct paymentProduct, ImageView icon) {
 
-        //TODO remove hack
+        int categoryImageResource;
 
-        if (paymentProduct.getPaymentProductDescription() != null) {
-
-            final int categoryImageResource = mResources.getIdentifier(
-                    ICON_PAYMENT_PRODUCTS + replaceString(PaymentProduct.PaymentProductCategoryCodeCreditCard), DRAWABLE, mPackageName);
-            icon.setImageResource(categoryImageResource);
-
-        } else {
-
-            final int categoryImageResource = mResources.getIdentifier(
-                    ICON_PAYMENT_PRODUCTS + replaceString(paymentProduct.getCode()), DRAWABLE, mPackageName);
-            icon.setImageResource(categoryImageResource);
-        }
-
+        categoryImageResource = mResources.getIdentifier(
+                ICON_PAYMENT_PRODUCTS + replaceString(paymentProduct.getCode()), DRAWABLE, mPackageName);
+        icon.setImageResource(categoryImageResource);
     }
 
-    PaymentProduct paymentProduct(String code, boolean tokenizable) {
+    public void updatePaymentProducts(List<PaymentProduct> paymentProducts, Boolean isGroupingEnabled) {
 
-        PaymentProduct paymentProduct = new PaymentProduct();
+        mPaymentProducts.clear();
 
-        if (code.equals(PaymentProduct.PaymentProductCategoryCodeCreditCard)) {
-            paymentProduct.setCode(PaymentProduct.PaymentProductCodeCB);
-            //TODO remove hack
-            paymentProduct.setPaymentProductDescription("null");
+        if (isGroupingEnabled != null && isGroupingEnabled.equals(Boolean.TRUE)) {
 
-        } else {
-            paymentProduct.setCode(code);
+            boolean atLeastOneCard = false;
+
+            Iterator<PaymentProduct> iter = paymentProducts.iterator();
+            while (iter.hasNext()) {
+
+                PaymentProduct p = iter.next();
+                if (p.isTokenizable()) {
+                    atLeastOneCard = true;
+                    iter.remove();
+                }
+            }
+
+            if (atLeastOneCard) {
+
+                PaymentProduct cardProduct = new PaymentProduct();
+                cardProduct.setCode(PaymentProduct.PaymentProductCategoryCodeCard);
+                cardProduct.setPaymentProductDescription(mActivity.getString(R.string.payment_product_card_description));
+                cardProduct.setTokenizable(true);
+
+                mPaymentProducts.add(cardProduct);
+            }
         }
 
-        paymentProduct.setTokenizable(tokenizable);
+        mPaymentProducts.addAll(paymentProducts);
+        notifyDataSetChanged();
 
-        return paymentProduct;
-    }
-
-    public void updatePaymentProducts(Boolean groupedCards) {
-
+        /*
         if (groupedCards != null && groupedCards.equals(Boolean.TRUE)) {
 
             mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCategoryCodeCreditCard, true));
@@ -304,19 +309,16 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
         //mPaymentProducts.add(paymentProduct("visa_debit", false));
 
         mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeWebmoneyTransfer, false));
+        */
 
         //notifyItemInserted(0);
         //notifyItemRangeInserted(0, 4);
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
     private String replaceString(String string) {
 
         return string.replace("-", "_");
-    }
-
-    public void emptyPaymentProducts() {
-        mPaymentProducts.clear();
     }
 
     /**

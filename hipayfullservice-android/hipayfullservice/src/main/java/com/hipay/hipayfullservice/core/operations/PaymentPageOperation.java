@@ -19,6 +19,11 @@ public class PaymentPageOperation extends GatewayOperation {
     }
 
     @Override
+    protected boolean isV2() {
+        return false;
+    }
+
+    @Override
     protected HttpMethod getRequestType() {
         return HttpMethod.POST;
     }

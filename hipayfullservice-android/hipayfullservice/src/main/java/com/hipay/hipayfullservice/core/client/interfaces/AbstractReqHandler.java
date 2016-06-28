@@ -11,8 +11,10 @@ import com.hipay.hipayfullservice.core.network.HttpResult;
 import com.hipay.hipayfullservice.core.operations.AbstractOperation;
 import com.hipay.hipayfullservice.core.utils.DataExtractor;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.IOException;
 
@@ -46,12 +48,14 @@ public abstract class AbstractReqHandler<T> implements IReqHandler {
 
     public abstract void onError(Exception exception);
     public abstract void onSuccess(JSONObject jsonObject);
+    public abstract void onSuccess(JSONArray jsonArray);
 
     @Override
     public void handleCallback(HttpResult data) {
 
         HttpException httpException = null;
         JSONObject jsonObject = null;
+        JSONArray jsonArray = null;
 
         IOException ioException = data.getIoException();
         String bodyStream = data.getBodyStream();
@@ -73,10 +77,18 @@ public abstract class AbstractReqHandler<T> implements IReqHandler {
             //continue if json body received from hipay server
 
             try {
-                jsonObject = new JSONObject(bodyStream);
+
+                Object json = new JSONTokener(bodyStream).nextValue();
+                if (json instanceof JSONObject) {
+
+                    jsonObject = new JSONObject(bodyStream);
+
+                } else if (json instanceof JSONArray) {
+
+                    jsonArray = new JSONArray(bodyStream);
+                }
 
             } catch (JSONException e) {
-                jsonObject = null;
 
                 httpException = new HttpException(
                         Errors.HTTPServerDescription,
@@ -161,8 +173,9 @@ public abstract class AbstractReqHandler<T> implements IReqHandler {
 
             onSuccess(jsonObject);
 
-        } else {
+        } else if (jsonArray != null ){
 
+            onSuccess(jsonArray);
             //no-op
         }
     }

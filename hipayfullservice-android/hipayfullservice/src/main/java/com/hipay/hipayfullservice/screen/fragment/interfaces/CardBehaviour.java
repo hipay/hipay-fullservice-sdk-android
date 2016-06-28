@@ -49,8 +49,11 @@ public class CardBehaviour {
         } else if (paymentProductCode.equals(PaymentProduct.PaymentProductCodeDiners)) {
 
             this.setCardBehaviour(new DinersBehaviour());
-        }
 
+        } else  {
+
+            this.setCardBehaviour(new DefaultBehaviour());
+        }
     }
 
     public ICardBehaviour getCardBehaviour() {

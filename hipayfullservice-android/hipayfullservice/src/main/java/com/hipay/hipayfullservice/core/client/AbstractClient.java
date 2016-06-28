@@ -12,12 +12,14 @@ import android.util.Log;
 import com.hipay.hipayfullservice.core.client.interfaces.IReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.OrderReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.PaymentPageReqHandler;
+import com.hipay.hipayfullservice.core.client.interfaces.PaymentProductsReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.SecureVaultReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.TransactionReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.TransactionsReqHandler;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.AbstractRequestCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.PaymentPageRequestCallback;
+import com.hipay.hipayfullservice.core.client.interfaces.callbacks.PaymentProductsCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionDetailsCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionsDetailsCallback;
@@ -148,8 +150,17 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
             this.setReqHandler(new TransactionReqHandler(transactionReference, transactionDetailsCallback));
 
             return true;
-        }
 
+        } else if (request instanceof PaymentPageRequest
+                && callback instanceof PaymentProductsCallback) {
+
+            PaymentPageRequest paymentPageRequest = (PaymentPageRequest) request;
+            PaymentProductsCallback paymentProductsCallback = (PaymentProductsCallback) callback;
+
+            this.setReqHandler(new PaymentProductsReqHandler(paymentPageRequest, paymentProductsCallback));
+
+            return true;
+        }
         return false;
     }
 

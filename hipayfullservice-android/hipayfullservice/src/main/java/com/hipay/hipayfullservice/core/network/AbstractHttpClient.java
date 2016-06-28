@@ -29,6 +29,7 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
     protected abstract HttpMethod getRequestType();
     protected abstract T buildFromHttpResponse(HttpResult httpResult);
     protected abstract String concatUrl();
+    protected abstract boolean isV2();
 
     protected HttpResult backgroundOperation() {
 

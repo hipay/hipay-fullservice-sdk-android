@@ -579,7 +579,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         mToolbarBack.setOnClickListener(mOnClickListener);
         TextView titleView = (TextView) findViewById(R.id.payment_product_title);
 
-        titleView.setText(paymentProduct.getCode());
+        titleView.setText(paymentProduct.getPaymentProductDescription());
         titleView.setTextColor(ContextCompat.getColor(this,
                 getCustomTheme().getTextColorPrimaryId()));
 

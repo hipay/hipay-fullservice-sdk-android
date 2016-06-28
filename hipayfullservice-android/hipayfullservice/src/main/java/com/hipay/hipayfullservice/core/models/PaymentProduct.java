@@ -8,6 +8,8 @@ import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
 import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
 
+import org.json.JSONObject;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -41,6 +43,11 @@ public class PaymentProduct extends AbstractModel {
 
     }
 
+    public static PaymentProduct fromJSONObject(JSONObject object) {
+
+        PaymentProductMapper mapper = new PaymentProductMapper(object);
+        return mapper.mappedObject();
+    }
     public static PaymentProduct fromBundle(Bundle bundle) {
 
         PaymentProductMapper mapper = new PaymentProductMapper(bundle);
@@ -197,7 +204,7 @@ public class PaymentProduct extends AbstractModel {
     public final static String PaymentProductCodeSantanderHomeBanking      = "santander-home-banking";
 
     public final static String PaymentProductCategoryCodeCreditCard        = "credit-card";
-    //public final static String PaymentProductCategoryCodeCreditCard        = "cb";
+    public final static String PaymentProductCategoryCodeCard              = "card";
     public final static String PaymentProductCategoryCodeDebitCard         = "debit-card";
     public final static String PaymentProductCategoryCodeRealtimeBanking   = "realtime-banking";
     public final static String PaymentProductCategoryCodeEWallet           = "ewallet";
@@ -294,10 +301,10 @@ public class PaymentProduct extends AbstractModel {
 
             PaymentProduct object = new PaymentProduct();
 
+            object.setPaymentProductId(this.getStringForKey("id"));
             object.setCode(this.getStringForKey("code"));
             object.setPaymentProductDescription(this.getStringForKey("description"));
-            object.setPaymentProductId(this.getStringForKey("paymentProductId"));
-            object.setPaymentProductCategoryCode(this.getStringForKey("paymentProductCategoryCode"));
+            object.setPaymentProductCategoryCode(this.getStringForKey("payment_product_category_code"));
             object.setTokenizable(this.getBoolForKey("tokenizable"));
 
             return object;
@@ -328,10 +335,10 @@ public class PaymentProduct extends AbstractModel {
 
             PaymentProduct paymentProduct = (PaymentProduct)this.getModel();
 
+            this.putStringForKey("id", paymentProduct.getPaymentProductId());
             this.putStringForKey("code", paymentProduct.getCode());
             this.putStringForKey("description", paymentProduct.getPaymentProductDescription());
-            this.putStringForKey("paymentProductId", paymentProduct.getPaymentProductId());
-            this.putStringForKey("paymentProductCategoryCode", paymentProduct.getPaymentProductCategoryCode());
+            this.putStringForKey("payment_product_category_code", paymentProduct.getPaymentProductCategoryCode());
             this.putBoolForKey("tokenizable", paymentProduct.isTokenizable());
 
             return this.getBundle();

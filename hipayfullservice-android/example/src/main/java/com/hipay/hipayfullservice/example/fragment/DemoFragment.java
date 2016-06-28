@@ -244,10 +244,15 @@ public class DemoFragment extends Fragment {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.done:
+
+                        final Activity activity = getActivity();
+                        final PaymentPageRequest paymentPageRequest = buildPageRequest(activity);
+
                         removeDoneFab(new Runnable() {
                             @Override
                             public void run() {
-                                validateCartWithTransition();
+
+                                PaymentProductsActivity.start(activity, paymentPageRequest, getCustomTheme());
                                 mDoneFab.setVisibility(View.INVISIBLE);
                             }
                         });
@@ -309,14 +314,6 @@ public class DemoFragment extends Fragment {
         }
     }
 
-    private void validateCartWithTransition() {
-
-        final Activity activity = getActivity();
-
-        PaymentPageRequest paymentPageRequest = buildPageRequest(activity);
-        PaymentProductsActivity.start(activity, paymentPageRequest, this.getCustomTheme());
-    }
-
     protected PaymentPageRequest buildPageRequest(Activity activity) {
 
         PaymentPageRequest paymentPageRequest = new PaymentPageRequest();
@@ -359,18 +356,6 @@ public class DemoFragment extends Fragment {
 
         ArrayList<String> productCategories = demoActivity.getPaymentProductsAsList();
         paymentPageRequest.setPaymentProductCategoryList(productCategories);
-
-        //paymentPageRequest.setPaymentProductCategoryList(
-                //new ArrayList<>(
-                        //Arrays.asList(
-
-                                //PaymentProduct.PaymentProductCategoryCodeRealtimeBanking,
-                                //PaymentProduct.PaymentProductCategoryCodeCreditCard,
-                                //PaymentProduct.PaymentProductCategoryCodeDebitCard,
-                                //PaymentProduct.PaymentProductCategoryCodeEWallet
-                        //)
-                //)
-        //);
 
         return paymentPageRequest;
     }

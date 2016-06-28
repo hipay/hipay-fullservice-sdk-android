@@ -22,4 +22,9 @@ public class OrderOperation extends GatewayOperation {
     protected String concatUrl() {
         return "order";
     }
+
+    @Override
+    protected boolean isV2() {
+        return false;
+    }
 }

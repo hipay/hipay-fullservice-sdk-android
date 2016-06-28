@@ -16,7 +16,10 @@
         <item name="android:colorBackground">@color/light_grey</item>
     </style>
 
-    <style name="PaymentScreens.PaymentProductsActivity" />
+    <style name="PaymentScreens.PaymentProductsActivity">
+        <item name="android:windowBackground">@color/hpf_blank</item>
+    </style>
+
     <style name="PaymentScreens.PaymentFormActivity" />
 
     <style name="PaymentScreens.CompoundButton" parent="Widget.AppCompat.Button.Borderless">

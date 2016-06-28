@@ -13,8 +13,6 @@ import com.hipay.hipayfullservice.screen.activity.ForwardWebViewActivity;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 /**
