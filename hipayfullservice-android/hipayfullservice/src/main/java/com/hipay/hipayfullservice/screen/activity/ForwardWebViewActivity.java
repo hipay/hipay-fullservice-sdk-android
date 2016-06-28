@@ -3,9 +3,12 @@ package com.hipay.hipayfullservice.screen.activity;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +16,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.Window;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -165,17 +170,21 @@ public class ForwardWebViewActivity extends Activity {
             WebView myWebView = (WebView) findViewById(R.id.webview);
             myWebView.getSettings().setJavaScriptEnabled(true);
             myWebView.setWebViewClient(new MyWebViewClient());
+            myWebView.setWebChromeClient(new WebChromeClient());
 
             String stringUrl = getIntent().getStringExtra("forwardUrl");
 
-            //TODO handle better the savedInstance state
             Bundle customTheme = getIntent().getBundleExtra(CustomTheme.TAG);
             if (customTheme != null) {
                 this.initStatusBar(CustomTheme.fromBundle(customTheme));
             }
-
             myWebView.loadUrl(stringUrl);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     private class MyWebViewClient extends WebViewClient {
@@ -194,6 +203,57 @@ public class ForwardWebViewActivity extends Activity {
 
             //let the webview load the page
             return false;
+        }
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        @Override
+        public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+            //super.onReceivedSslError(view, handler, error);
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(ForwardWebViewActivity.this);
+            builder.setTitle(getString(R.string.certificate_error_title));
+
+            StringBuilder messageBuilder = new StringBuilder();
+
+            switch (error.getPrimaryError())
+            {
+                case SslError.SSL_UNTRUSTED:
+                    messageBuilder.append(getString(R.string.certificate_error_untrusted)); break;
+                case SslError.SSL_EXPIRED:
+                    messageBuilder.append(getString(R.string.certificate_error_expired)); break;
+                case SslError.SSL_IDMISMATCH:
+                    messageBuilder.append(getString(R.string.certificate_error_mismatched)); break;
+                case SslError.SSL_NOTYETVALID:
+                    messageBuilder.append(getString(R.string.certificate_error_not_yet_valid)); break;
+                default:
+                    messageBuilder.append(getString(R.string.certificate_error)); break;
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                messageBuilder.append(System.lineSeparator());
+
+            } else {
+                messageBuilder.append(System.getProperty("line.separator"));
+            }
+
+            messageBuilder.append(getString(R.string.certificate_error_continue));
+            builder.setMessage(messageBuilder.toString());
+
+            builder.setPositiveButton(getString(R.string.prompt_continue), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    handler.proceed();
+                }
+            });
+            builder.setNegativeButton(getString(R.string.promt_cancel), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    handler.cancel();
+                    finish();
+                }
+            });
+            final AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
 

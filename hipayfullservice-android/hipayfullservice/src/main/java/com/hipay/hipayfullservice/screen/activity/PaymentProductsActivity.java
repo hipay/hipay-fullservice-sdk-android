@@ -70,7 +70,7 @@ public class PaymentProductsActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PaymentPageRequest.REQUEST_ORDER) {
 
             if (resultCode == R.id.transaction_succeed) {
@@ -85,7 +85,6 @@ public class PaymentProductsActivity extends AppCompatActivity {
             }
         }
 
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

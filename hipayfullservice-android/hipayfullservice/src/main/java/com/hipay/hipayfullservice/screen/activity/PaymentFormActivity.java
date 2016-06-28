@@ -62,6 +62,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        super.onActivityResult(requestCode, resultCode, data);
         //it comes from ForwardWebViewActivity, handlind 3DS
 
         if (requestCode == PaymentPageRequest.REQUEST_ORDER) {
@@ -99,7 +100,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
             }
         }
 
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private boolean isPaymentTokenizable() {

@@ -65,6 +65,7 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.demo_container);
         if (fragment != null) {

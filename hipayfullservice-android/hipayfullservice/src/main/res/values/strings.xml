@@ -54,6 +54,7 @@
 
     <string name="card_number_placeholder_error">Invalid card number</string>
 
+
     <string name="card_owner_placeholder" translatable="false">Martin Dupont</string>
 
     <string-array name="card_products_list" translatable="false">
@@ -63,6 +64,17 @@
         <item>american_express</item>
         <item>maestro</item>
     </string-array>
+
+    <string name="certificate_error_title">SSL Certificate Error</string>
+    <string name="certificate_error">Certificate error.</string>
+    <string name="certificate_error_untrusted">Certificate is untrusted.</string>
+    <string name="certificate_error_expired">Certificate has expired.</string>
+    <string name="certificate_error_mismatched">Certificate ID is mismatched.</string>
+    <string name="certificate_error_not_yet_valid">Certificate is not yet valid.</string>
+    <string name="certificate_error_continue">Do you want to continue anyway?</string>
+
+    <string name="promt_cancel">Cancel</string>
+    <string name="prompt_continue">Continue</string>
 
     <string name="card_visa_info" translatable="false">
 
