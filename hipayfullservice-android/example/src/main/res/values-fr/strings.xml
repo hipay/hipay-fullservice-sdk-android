@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Démo m-commerce HiPay</string>
+
+    <string name="app_name">Démo HiPay</string>
+    <string name="mcommence_demo">Démo m-commerce Hipay</string>
+
     <string name="generate_payment_screen">Générer un écran de paiement</string>
     <string name="amount_and_currency">Montant et device</string>
     <string name="group_cards">Regrouper les cartes</string>
