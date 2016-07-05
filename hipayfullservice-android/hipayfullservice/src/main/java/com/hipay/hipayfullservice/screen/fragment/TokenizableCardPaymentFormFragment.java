@@ -154,10 +154,20 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 mPayButtonLayout.setVisibility(View.GONE);
                 mProgressBar.setVisibility(View.VISIBLE);
 
+                mCardOwner.setEnabled(false);
+                mCardCVV.setEnabled(false);
+                mCardExpiration.setEnabled(false);
+                mCardNumber.setEnabled(false);
+
             } else {
 
                 mPayButtonLayout.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.GONE);
+
+                mCardOwner.setEnabled(true);
+                mCardCVV.setEnabled(true);
+                mCardExpiration.setEnabled(true);
+                mCardNumber.setEnabled(true);
             }
         }
 
