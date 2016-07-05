@@ -11,9 +11,11 @@
     <color name="hpf_blank">#424242</color>
 
     <color name="hpf_error">#FFD50000</color>
+    <color name="hpf_placeholder">#ccc</color>
 
     <color name="green">#00e676</color>
     <color name="red">#ff5252</color>
     <color name="dark_grey">#aaa</color>
     <color name="light_grey">#ddd</color>
+
 </resources>
