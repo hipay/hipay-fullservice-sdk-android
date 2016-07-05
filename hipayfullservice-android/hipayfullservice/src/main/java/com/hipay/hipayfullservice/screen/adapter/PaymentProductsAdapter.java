@@ -2,6 +2,8 @@ package com.hipay.hipayfullservice.screen.adapter;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -133,6 +135,12 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
         categoryImageResource = mResources.getIdentifier(
                 ICON_PAYMENT_PRODUCTS + replaceString(paymentProduct.getCode()), DRAWABLE, mPackageName);
         icon.setImageResource(categoryImageResource);
+
+        if (paymentProduct.getCode().equals(PaymentProduct.PaymentProductCategoryCodeCard)) {
+            PaymentProductsActivity activity = (PaymentProductsActivity)mActivity;
+            CustomTheme theme = activity.getCustomTheme();
+            icon.setColorFilter(getColor(theme.getColorPrimaryId()), PorterDuff.Mode.SRC_IN);
+        }
     }
 
     public void updatePaymentProducts(List<PaymentProduct> paymentProducts, Boolean isGroupingEnabled) {
