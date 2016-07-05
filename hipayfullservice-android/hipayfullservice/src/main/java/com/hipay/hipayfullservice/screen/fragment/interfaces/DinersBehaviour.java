@@ -26,6 +26,7 @@ public class DinersBehaviour implements ICardBehaviour {
 
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         cardCVV.setHint(context.getString(R.string.card_security_code_placeholder_cvv));
+        cardNumber.setHint(context.getString(R.string.card_number_placeholder_diners));
 
         cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeDiners, context))});
         cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_diners, 0);

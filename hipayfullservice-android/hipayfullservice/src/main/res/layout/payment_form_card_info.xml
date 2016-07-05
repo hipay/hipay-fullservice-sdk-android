@@ -55,7 +55,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionNext"
-            android:hint="@string/card_number_placeholder_visa_mastercard"
             android:drawableRight="@drawable/ic_credit_card_black"
             android:drawableEnd="@drawable/ic_credit_card_black"
             android:drawablePadding="@dimen/spacing_double"

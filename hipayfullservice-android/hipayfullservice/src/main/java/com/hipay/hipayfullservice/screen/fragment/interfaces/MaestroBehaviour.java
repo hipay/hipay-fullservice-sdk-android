@@ -22,6 +22,7 @@ public class MaestroBehaviour implements ICardBehaviour {
         cardCVV.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
         securityCodeLayout.setVisibility(View.GONE);
 
+        cardNumber.setHint(context.getString(R.string.card_number_placeholder_maestro_bcmc));
         cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_maestro, 0);
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_DONE);
         cardCVV.setHint(context.getString(R.string.card_security_code_placeholder_cvv));

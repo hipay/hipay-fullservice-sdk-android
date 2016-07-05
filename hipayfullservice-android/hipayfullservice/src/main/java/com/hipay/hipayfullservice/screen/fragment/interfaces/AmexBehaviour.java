@@ -26,6 +26,8 @@ public class AmexBehaviour implements ICardBehaviour {
         //security code is 4 digits long for amex
         cardCVV.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
 
+        cardNumber.setHint(context.getString(R.string.card_number_placeholder_amex));
+
         cardCVV.setHint(context.getString(R.string.card_security_code_placeholder_cid));
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 

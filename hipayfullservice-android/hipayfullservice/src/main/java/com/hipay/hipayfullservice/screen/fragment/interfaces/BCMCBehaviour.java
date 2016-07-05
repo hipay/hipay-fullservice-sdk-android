@@ -24,6 +24,7 @@ public class BCMCBehaviour implements ICardBehaviour {
         securityCodeLayout.setVisibility(View.GONE);
 
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        cardNumber.setHint(context.getString(R.string.card_number_placeholder_maestro_bcmc));
 
         //cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeAmericanExpress, context))});
         cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_black, 0);

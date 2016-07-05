@@ -21,6 +21,7 @@ public class MastercardBehaviour implements ICardBehaviour {
     public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, Context context) {
 
         securityCodeLayout.setVisibility(View.VISIBLE);
+        cardNumber.setHint(context.getString(R.string.card_number_placeholder_visa_mastercard));
 
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         cardCVV.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
