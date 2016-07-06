@@ -58,4 +58,9 @@ public class MastercardBehaviour implements ICardBehaviour {
 
         return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeMasterCard, context);
     }
+
+    @Override
+    public String getProductCode() {
+        return PaymentProduct.PaymentProductCodeMasterCard;
+    }
 }

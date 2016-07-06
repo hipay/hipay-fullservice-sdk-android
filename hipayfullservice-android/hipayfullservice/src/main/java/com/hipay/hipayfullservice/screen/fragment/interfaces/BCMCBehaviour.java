@@ -51,4 +51,9 @@ public class BCMCBehaviour implements ICardBehaviour {
 
         return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeBCMC, context);
     }
+
+    @Override
+    public String getProductCode() {
+        return PaymentProduct.PaymentProductCodeBCMC;
+    }
 }

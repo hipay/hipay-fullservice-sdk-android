@@ -67,4 +67,9 @@ public class AmexBehaviour implements ICardBehaviour {
 
         return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeAmericanExpress, context);
     }
+
+    @Override
+    public String getProductCode() {
+        return PaymentProduct.PaymentProductCodeAmericanExpress;
+    }
 }

@@ -39,7 +39,7 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
     private OnItemClickListener mOnItemClickListener;
 
     public interface OnItemClickListener {
-        void onClick(View view, int position);
+        void onClick(View view, PaymentProduct paymentProduct);
     }
 
     public PaymentProductsAdapter(Activity activity) {
@@ -80,7 +80,7 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnItemClickListener.onClick(v, position);
+                mOnItemClickListener.onClick(v, getItem(position));
             }
         });
     }
@@ -102,28 +102,6 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
         return mPaymentProducts.get(position);
     }
 
-    /**
-     * @see android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int)
-     * @param id Id of changed category.
-     */
-    public final void notifyItemChanged(String id) {
-        //updatePaymentProducts(mActivity);
-        //notifyItemChanged(getItemPositionById(id));
-    }
-
-    private int getItemPositionById(String id) {
-
-        //not useful
-        return -1;
-
-        //for (int i = 0; i < mPaymentProducts.size(); i++) {
-            //if (mPaymentProducts.get(i).getId().equals(id)) {
-                //return i;
-            //}
-        //}
-        //return -1;
-    }
-
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
@@ -143,11 +121,14 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
         }
     }
 
-    public void updatePaymentProducts(List<PaymentProduct> paymentProducts, Boolean isGroupingEnabled) {
+    public void updatePaymentProducts(List<PaymentProduct> paymentProducts) {
 
         mPaymentProducts.clear();
+        mPaymentProducts.addAll(paymentProducts);
+        notifyDataSetChanged();
 
-        if (isGroupingEnabled != null && isGroupingEnabled.equals(Boolean.TRUE)) {
+        /*
+        if (isGroupingEnabled != null || isGroupingEnabled.equals(Boolean.TRUE)) {
 
             boolean atLeastOneCard = false;
 
@@ -156,7 +137,6 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
 
                 PaymentProduct p = iter.next();
                 if (p.isTokenizable()) {
-                    atLeastOneCard = true;
                     iter.remove();
                 }
             }
@@ -168,12 +148,14 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
                 cardProduct.setPaymentProductDescription(mActivity.getString(R.string.payment_product_card_description));
                 cardProduct.setTokenizable(true);
 
-                mPaymentProducts.add(cardProduct);
+                mOnItemClickListener.onClick(null, cardProduct);
+                //mPaymentProducts.add(cardProduct);
             }
         }
+        */
 
-        mPaymentProducts.addAll(paymentProducts);
-        notifyDataSetChanged();
+
+        //mOnItemClickListener.onClick(null, mPaymentProducts.get(0));
 
         /*
         if (groupedCards != null && groupedCards.equals(Boolean.TRUE)) {

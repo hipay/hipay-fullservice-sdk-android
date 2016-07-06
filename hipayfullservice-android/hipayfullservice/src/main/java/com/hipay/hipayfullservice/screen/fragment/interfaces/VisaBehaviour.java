@@ -60,4 +60,9 @@ public class VisaBehaviour implements ICardBehaviour {
 
         return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeVisa, context);
     }
+
+    @Override
+    public String getProductCode() {
+        return PaymentProduct.PaymentProductCodeVisa;
+    }
 }

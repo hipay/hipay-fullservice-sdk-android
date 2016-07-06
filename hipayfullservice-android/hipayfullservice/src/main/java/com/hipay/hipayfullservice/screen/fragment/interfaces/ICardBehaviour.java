@@ -13,4 +13,5 @@ public interface ICardBehaviour {
     boolean isSecurityCodeValid(EditText cardCVV);
     boolean hasSecurityCode();
     boolean hasSpaceAtIndex(Integer index, Context context);
+    String getProductCode();
 }

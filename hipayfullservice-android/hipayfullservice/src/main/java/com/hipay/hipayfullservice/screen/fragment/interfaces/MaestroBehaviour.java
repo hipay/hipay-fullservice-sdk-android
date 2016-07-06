@@ -48,4 +48,9 @@ public class MaestroBehaviour implements ICardBehaviour {
 
         return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeMaestro, context);
     }
+
+    @Override
+    public String getProductCode() {
+        return PaymentProduct.PaymentProductCodeMaestro;
+    }
 }

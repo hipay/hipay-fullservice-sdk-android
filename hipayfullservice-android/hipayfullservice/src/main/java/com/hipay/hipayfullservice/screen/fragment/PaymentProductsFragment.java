@@ -33,13 +33,15 @@ import com.hipay.hipayfullservice.screen.helper.TransitionHelper;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 import com.hipay.hipayfullservice.screen.widget.OffsetDecoration;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by nfillion on 26/02/16.
  */
 
-public class PaymentProductsFragment extends Fragment {
+public class PaymentProductsFragment extends Fragment implements PaymentProductsAdapter.OnItemClickListener  {
 
     private static final String STATE_IS_LOADING = "isLoading";
 
@@ -48,7 +50,7 @@ public class PaymentProductsFragment extends Fragment {
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
 
-    private List<PaymentProduct> mPaymentProducts;
+    private List<PaymentProduct> paymentProducts;
 
     protected boolean mLoadingMode;
     protected int mCurrentLoading = -1;
@@ -106,13 +108,14 @@ public class PaymentProductsFragment extends Fragment {
         mCurrentLoading = 5;
         mGatewayClient.getPaymentProducts(paymentPageRequest, new PaymentProductsCallback() {
             @Override
-            public void onSuccess(List<PaymentProduct> paymentProducts) {
+            public void onSuccess(List<PaymentProduct> pProducts) {
 
-                if (paymentProducts != null && !paymentProducts.isEmpty()) {
+                if (pProducts != null && !pProducts.isEmpty()) {
 
-                    mPaymentProducts = paymentProducts;
-                    mAdapter.updatePaymentProducts(mPaymentProducts, paymentPageRequest.isPaymentCardGroupingEnabled());
-                    //notifyItemChanged();
+                    paymentProducts = updatedPaymentProducts(pProducts, paymentPageRequest.isPaymentCardGroupingEnabled());
+                    if (paymentProducts != null) {
+                        mAdapter.updatePaymentProducts(paymentProducts);
+                    }
 
                 } else {
 
@@ -168,14 +171,67 @@ public class PaymentProductsFragment extends Fragment {
         });
     }
 
+    private List<PaymentProduct> updatedPaymentProducts(List<PaymentProduct> paymentProducts, Boolean isGroupingCard) {
+
+        boolean atLeastOneCard = false;
+        boolean atLeastOneNoCard = false;
+
+        if (isGroupingCard != null && isGroupingCard.equals(Boolean.TRUE)) {
+
+            Iterator<PaymentProduct> iter = paymentProducts.iterator();
+            while (iter.hasNext()) {
+
+                PaymentProduct p = iter.next();
+                if (p.isTokenizable()) {
+                    iter.remove();
+                    atLeastOneCard = true;
+                } else {
+                    atLeastOneNoCard = true;
+                }
+            }
+
+            if (atLeastOneCard) {
+
+                PaymentProduct cardProduct = new PaymentProduct();
+                cardProduct.setCode(PaymentProduct.PaymentProductCategoryCodeCard);
+                cardProduct.setPaymentProductDescription(getActivity().getString(R.string.payment_product_card_description));
+                cardProduct.setTokenizable(true);
+
+                // there are other payment products
+                if (atLeastOneNoCard) {
+
+                    paymentProducts.add(0, cardProduct);
+
+                } else {
+
+                    // just one card, represented by card product
+                    onClick(null, cardProduct);
+                    return null;
+                }
+            }
+
+        } else {
+
+            // do something only if there is one tokenizable
+            if (paymentProducts.size() == 1) {
+
+                PaymentProduct paymentProduct = paymentProducts.get(0);
+                if (paymentProduct.isTokenizable()) {
+
+                    onClick(null, paymentProduct);
+                    return null;
+                }
+            }
+        }
+
+        return paymentProducts;
+    }
+
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        //TODO check when we fire this one
         super.onViewCreated(view, savedInstanceState);
-
-        final Bundle paymentPageRequestBundle = getArguments().getBundle(PaymentPageRequest.TAG);
-        final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
 
         mProgressBar = (ProgressBar)view.findViewById(R.id.progress);
 
@@ -187,7 +243,7 @@ public class PaymentProductsFragment extends Fragment {
         }
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.products);
-        setUpProductGrid(mRecyclerView, paymentPageRequestBundle, customThemeBundle);
+        setUpProductGrid(mRecyclerView);
 
         if (savedInstanceState == null) {
 
@@ -195,10 +251,8 @@ public class PaymentProductsFragment extends Fragment {
 
         } else {
 
-            PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(paymentPageRequestBundle);
-
-            if (mPaymentProducts != null && !mPaymentProducts.isEmpty()) {
-                mAdapter.updatePaymentProducts(mPaymentProducts, paymentPageRequest.isPaymentCardGroupingEnabled());
+            if (paymentProducts != null && !paymentProducts.isEmpty()) {
+                mAdapter.updatePaymentProducts(paymentProducts);
             }
         }
     }
@@ -218,28 +272,29 @@ public class PaymentProductsFragment extends Fragment {
         mLoadingMode = loadingMode;
     }
 
-    private void setUpProductGrid(final RecyclerView categoriesView, final Bundle paymentPageRequestBundle, final Bundle customThemeBundle) {
+    private void setUpProductGrid(final RecyclerView categoriesView) {
 
         final int spacing = getContext().getResources()
                 .getDimensionPixelSize(R.dimen.spacing_nano);
         categoriesView.addItemDecoration(new OffsetDecoration(spacing));
 
         mAdapter = new PaymentProductsAdapter(getActivity());
-        mAdapter.setOnItemClickListener(
-                new PaymentProductsAdapter.OnItemClickListener() {
-                    @Override
-                    public void onClick(View v, int position) {
-                        Activity activity = getActivity();
-                        startPaymentFormActivityWithTransition(activity,
-                                v.findViewById(R.id.payment_product_title),
-                                paymentPageRequestBundle,
-                                customThemeBundle,
-                                mAdapter.getItem(position));
-                    }
-                });
+        mAdapter.setOnItemClickListener(this);
 
         categoriesView.setAdapter(mAdapter);
+    }
 
+    @Override
+    public void onClick(View view, PaymentProduct paymentProduct) {
+
+        final Bundle paymentPageRequestBundle = getArguments().getBundle(PaymentPageRequest.TAG);
+        final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
+        Activity activity = getActivity();
+        startPaymentFormActivityWithTransition(activity, view == null ? null :
+                        view.findViewById(R.id.payment_product_title),
+                paymentPageRequestBundle,
+                customThemeBundle,
+                paymentProduct);
     }
 
     @Override
@@ -260,14 +315,18 @@ public class PaymentProductsFragment extends Fragment {
     private void startPaymentFormActivityWithTransition(Activity activity, View toolbar, Bundle paymentPageRequestBundle, Bundle customThemeBundle,
                                                         PaymentProduct paymentProduct) {
 
-        final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
-                new Pair<>(toolbar, activity.getString(R.string.transition_toolbar)));
-        @SuppressWarnings("unchecked")
-        ActivityOptionsCompat sceneTransitionAnimation = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(activity, pairs);
+        Bundle transitionBundle = null;
 
-         //Start the activity with the participants, animating from one to the other.
-        final Bundle transitionBundle = sceneTransitionAnimation.toBundle();
+        if (toolbar != null) {
+            final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
+                    new Pair<>(toolbar, activity.getString(R.string.transition_toolbar)));
+            @SuppressWarnings("unchecked")
+            ActivityOptionsCompat sceneTransitionAnimation = ActivityOptionsCompat
+                    .makeSceneTransitionAnimation(activity, pairs);
+
+            //Start the activity with the participants, animating from one to the other.
+            transitionBundle = sceneTransitionAnimation.toBundle();
+        }
 
         Intent startIntent = PaymentFormActivity.getStartIntent(activity, paymentPageRequestBundle, customThemeBundle, paymentProduct);
         ActivityCompat.startActivityForResult(activity,
@@ -291,5 +350,13 @@ public class PaymentProductsFragment extends Fragment {
         }
 
         setLoadingMode(false);
+    }
+
+    public List<PaymentProduct> getPaymentProducts() {
+        return paymentProducts;
+    }
+
+    public void setPaymentProducts(List<PaymentProduct> paymentProducts) {
+        this.paymentProducts = paymentProducts;
     }
 }

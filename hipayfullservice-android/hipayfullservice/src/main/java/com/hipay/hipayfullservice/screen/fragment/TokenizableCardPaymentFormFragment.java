@@ -437,7 +437,13 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                         Log.i(paymentCardToken.toString(), paymentCardToken.toString());
 
                         OrderRequest orderRequest = new OrderRequest(paymentPageRequest);
-                        orderRequest.setPaymentProductCode(paymentProduct.getCode());
+
+                        String productCode = paymentProduct.getCode();
+                        if (productCode.equals(PaymentProduct.PaymentProductCategoryCodeCard)) {
+                            productCode = mCardBehaviour.getProductCode();
+                        }
+
+                        orderRequest.setPaymentProductCode(productCode);
 
                         CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest =
                                 new CardTokenPaymentMethodRequest(

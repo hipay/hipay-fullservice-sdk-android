@@ -74,6 +74,11 @@ public class CardBehaviour {
         return this.getCardBehaviour().isSecurityCodeValid(cardCVV);
     }
 
+    public String getProductCode() {
+
+        return this.getCardBehaviour().getProductCode();
+    }
+
     public boolean hasSecurityCode() {
 
         return this.getCardBehaviour().hasSecurityCode();

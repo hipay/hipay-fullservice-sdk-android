@@ -14,15 +14,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
+import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.screen.fragment.PaymentProductsFragment;
 import com.hipay.hipayfullservice.screen.helper.ApiLevelHelper;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
+
+import java.util.List;
 
 /**
  * Created by nfillion on 25/02/16.
@@ -82,9 +84,20 @@ public class PaymentProductsActivity extends AppCompatActivity {
 
                 setResult(R.id.transaction_failed, data);
                 finish();
+
+            } else {
+
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.payment_products_container);
+                if (fragment != null) {
+
+                    PaymentProductsFragment paymentProductsFragment = (PaymentProductsFragment) fragment;
+                    List<PaymentProduct> paymentProducts = paymentProductsFragment.getPaymentProducts();
+                    if (paymentProducts == null || paymentProducts.isEmpty()) {
+                        finish();
+                    }
+                }
             }
         }
-
     }
 
     @Override

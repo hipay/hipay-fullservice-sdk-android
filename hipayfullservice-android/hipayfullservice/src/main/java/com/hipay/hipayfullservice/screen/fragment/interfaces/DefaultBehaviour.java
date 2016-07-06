@@ -52,4 +52,9 @@ public class DefaultBehaviour implements ICardBehaviour {
     public boolean hasSpaceAtIndex(Integer index, Context context) {
         return false;
     }
+
+    @Override
+    public String getProductCode() {
+        return null;
+    }
 }

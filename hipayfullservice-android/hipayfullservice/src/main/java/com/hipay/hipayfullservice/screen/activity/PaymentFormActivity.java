@@ -23,6 +23,7 @@ import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.errors.Errors;
 import com.hipay.hipayfullservice.core.errors.exceptions.ApiException;
 import com.hipay.hipayfullservice.core.errors.exceptions.HttpException;
+import com.hipay.hipayfullservice.core.models.PaymentMethod;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
@@ -43,6 +44,8 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     private CustomTheme customTheme;
     private ImageButton mToolbarBack;
     private AlertDialog mDialog;
+
+    private List<PaymentMethod> history;
 
     public static Intent getStartIntent(Context context, Bundle paymentPageRequestBundle, Bundle themeBundle, PaymentProduct paymentProduct) {
 
@@ -81,25 +84,14 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
                 this.formResultAction(null, exception);
 
-                //ApiException exception = new ApiException(getString(R.string.unknown_error),Errors.Code.APIOther.getIntegerValue(), null);
-                //Intent intent = getIntent();
-                //intent.putExtra(Errors.TAG, exception.toBundle());
-                //setResult(R.id.transaction_failed, intent);
-                //finish();
-
-                //ActivityCompat.finishAfterTransition(this);
-                //overridePendingTransition(0, 0);
-
             } else {
 
                 //back pressed
-
                 if (!isPaymentTokenizable()) {
                     forceBackPressed();
                 }
             }
         }
-
     }
 
     private boolean isPaymentTokenizable() {
