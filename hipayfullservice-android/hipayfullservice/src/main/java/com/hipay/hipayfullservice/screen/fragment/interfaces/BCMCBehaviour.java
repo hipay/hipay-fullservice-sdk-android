@@ -17,7 +17,7 @@ import com.hipay.hipayfullservice.screen.helper.FormHelper;
 public class BCMCBehaviour implements ICardBehaviour {
 
     @Override
-    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, Context context) {
+    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, boolean networked, Context context) {
 
         cardCVV.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
         //hide the security code for bcmc
@@ -27,13 +27,11 @@ public class BCMCBehaviour implements ICardBehaviour {
         cardNumber.setHint(context.getString(R.string.card_number_placeholder_maestro_bcmc));
 
         //cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeAmericanExpress, context))});
-        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_black, 0);
-        cardCVV.setHint(context.getString(R.string.card_security_code_placeholder_cvv));
+        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_bcmc, 0);
         //bcmc
         //"6703 0000 0000 00003",
         //cardNumber.setText("67030000000000003");
         //cardCVV.setText("123");
-
     }
 
     @Override
@@ -49,7 +47,7 @@ public class BCMCBehaviour implements ICardBehaviour {
     @Override
     public boolean hasSpaceAtIndex(Integer index, Context context) {
 
-        return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeBCMC, context);
+        return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeMaestro, context);
     }
 
     @Override

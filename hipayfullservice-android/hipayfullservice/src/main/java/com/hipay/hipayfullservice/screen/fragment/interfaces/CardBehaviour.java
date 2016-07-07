@@ -37,8 +37,7 @@ public class CardBehaviour {
 
             this.setCardBehaviour(new AmexBehaviour());
 
-        } else if (paymentProductCode.equals(PaymentProduct.PaymentProductCodeVisa) ||
-                paymentProductCode.equals(PaymentProduct.PaymentProductCodeCB)) {
+        } else if (paymentProductCode.equals(PaymentProduct.PaymentProductCodeVisa)) {
 
             this.setCardBehaviour(new VisaBehaviour());
 
@@ -50,7 +49,11 @@ public class CardBehaviour {
 
             this.setCardBehaviour(new DinersBehaviour());
 
-        } else  {
+        } else if (paymentProductCode.equals(PaymentProduct.PaymentProductCodeCB)) {
+
+            this.setCardBehaviour(new CBBehaviour());
+
+        } else  if (paymentProductCode.equals(PaymentProduct.PaymentProductCategoryCodeCard)){
 
             this.setCardBehaviour(new DefaultBehaviour());
         }
@@ -64,9 +67,9 @@ public class CardBehaviour {
         this.cardBehaviour = cardBehaviour;
     }
 
-    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, Context context) {
+    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, boolean networked, Context context) {
 
-        this.getCardBehaviour().updateForm(cardNumber, cardCVV, cardExpiry, securityCodeLayout, context);
+        this.getCardBehaviour().updateForm(cardNumber, cardCVV, cardExpiry, securityCodeLayout, networked, context);
     }
 
     public boolean isSecurityCodeValid(EditText cardCVV) {

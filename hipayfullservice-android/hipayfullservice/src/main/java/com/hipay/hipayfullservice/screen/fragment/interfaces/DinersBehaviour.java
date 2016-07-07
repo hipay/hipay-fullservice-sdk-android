@@ -18,7 +18,7 @@ import com.hipay.hipayfullservice.screen.helper.FormHelper;
 public class DinersBehaviour implements ICardBehaviour {
 
     @Override
-    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, Context context) {
+    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, boolean networked, Context context) {
 
         securityCodeLayout.setVisibility(View.VISIBLE);
 

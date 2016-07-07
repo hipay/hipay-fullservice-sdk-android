@@ -9,7 +9,7 @@ import android.widget.EditText;
  */
 public interface ICardBehaviour {
 
-    void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, Context context);
+    void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, boolean networked, Context context);
     boolean isSecurityCodeValid(EditText cardCVV);
     boolean hasSecurityCode();
     boolean hasSpaceAtIndex(Integer index, Context context);

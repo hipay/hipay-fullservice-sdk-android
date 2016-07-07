@@ -13,22 +13,29 @@ import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.screen.helper.FormHelper;
 
 /**
- * Created by nfillion on 01/07/16.
+ * Created by nfillion on 07/07/16.
  */
-public class DefaultBehaviour implements ICardBehaviour {
+public class CBBehaviour implements ICardBehaviour {
 
     @Override
     public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, boolean networked, Context context) {
 
         securityCodeLayout.setVisibility(View.VISIBLE);
+        cardNumber.setHint(context.getString(R.string.card_number_placeholder_visa_mastercard));
 
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         cardCVV.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
         cardCVV.setHint(context.getString(R.string.card_security_code_placeholder_cvv));
 
-        cardNumber.setHint(context.getString(R.string.card_number_placeholder_visa_mastercard));
         cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeVisa, context))});
-        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_black, 0);
+        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_cb, 0);
+        //visa
+        //"4111 1111 1111 1111",
+        //"4000 0000 0000 0002",
+        //"4111 1133 3333 3333",
+        //cardNumber.setText("4111111111111111");
+        //cardCVV.setText("123");
+
     }
 
     @Override
@@ -51,11 +58,12 @@ public class DefaultBehaviour implements ICardBehaviour {
 
     @Override
     public boolean hasSpaceAtIndex(Integer index, Context context) {
-        return false;
+
+        return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeVisa, context);
     }
 
     @Override
     public String getProductCode() {
-        return null;
+        return PaymentProduct.PaymentProductCodeCB;
     }
 }

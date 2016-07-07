@@ -17,15 +17,15 @@ import com.hipay.hipayfullservice.screen.helper.FormHelper;
 public class MaestroBehaviour implements ICardBehaviour {
 
     @Override
-    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, Context context) {
+    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, boolean networked, Context context) {
 
         cardCVV.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
         securityCodeLayout.setVisibility(View.GONE);
 
         cardNumber.setHint(context.getString(R.string.card_number_placeholder_maestro_bcmc));
-        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_maestro, 0);
+        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, networked? R.drawable.ic_credit_card_bcmc:R.drawable.ic_credit_card_maestro, 0);
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        cardCVV.setHint(context.getString(R.string.card_security_code_placeholder_cvv));
+
         cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeMaestro, context))});
         //Maestro
         //"6759 4111 0000 0008",

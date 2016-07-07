@@ -18,7 +18,7 @@ import com.hipay.hipayfullservice.screen.helper.FormHelper;
 public class MastercardBehaviour implements ICardBehaviour {
 
     @Override
-    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, Context context) {
+    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, boolean networked, Context context) {
 
         securityCodeLayout.setVisibility(View.VISIBLE);
         cardNumber.setHint(context.getString(R.string.card_number_placeholder_visa_mastercard));
@@ -28,7 +28,7 @@ public class MastercardBehaviour implements ICardBehaviour {
         cardCVV.setHint(context.getString(R.string.card_security_code_placeholder_cvv));
 
         cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeMasterCard, context))});
-        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_mastercard, 0);
+        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, networked?R.drawable.ic_credit_card_cb:R.drawable.ic_credit_card_mastercard, 0);
         //Mastercard
         //"5399 9999 9999 9999",
         //cardNumber.setText("5399999999999999");
