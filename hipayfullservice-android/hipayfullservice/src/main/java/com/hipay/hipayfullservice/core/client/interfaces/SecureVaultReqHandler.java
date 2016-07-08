@@ -8,6 +8,7 @@ import com.hipay.hipayfullservice.core.models.PaymentCardToken;
 import com.hipay.hipayfullservice.core.operations.GenerateTokenOperation;
 import com.hipay.hipayfullservice.core.requests.securevault.SecureVaultRequest;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -29,6 +30,10 @@ public class SecureVaultReqHandler extends AbstractReqHandler {
 
         SecureVaultRequestCallback orderRequestCallback = (SecureVaultRequestCallback)this.getCallback();
         orderRequestCallback.onSuccess(paymentCardToken);
+    }
+
+    @Override
+    public void onSuccess(JSONArray jsonArray) {
     }
 
     @Override

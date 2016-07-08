@@ -93,4 +93,9 @@ public class GenerateTokenOperation extends AbstractOperation {
     protected String concatUrl() {
         return null;
     }
+
+    @Override
+    protected boolean isV2() {
+        return false;
+    }
 }

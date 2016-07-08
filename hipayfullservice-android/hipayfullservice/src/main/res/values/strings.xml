@@ -33,6 +33,7 @@
     <string name="error_title_default">An error occurred</string>
     <string name="error_body_default">Your request could not be completed</string>
 
+    <string name="error_body_payment_products">No paiment product found</string>
     <string name="error_title_connection">Network error</string>
 
     <string name="card_expiration_placeholder">MM / AA</string>
@@ -53,9 +54,9 @@
     <string name="card_number_placeholder_diners" translatable="false">3056 9918 2259 04</string>
 
     <string name="card_number_placeholder_error">Invalid card number</string>
-
-
     <string name="card_owner_placeholder" translatable="false">Martin Dupont</string>
+
+    <string name="payment_product_card_description">Card</string>
 
     <string-array name="card_products_list" translatable="false">
         <item>visa</item>

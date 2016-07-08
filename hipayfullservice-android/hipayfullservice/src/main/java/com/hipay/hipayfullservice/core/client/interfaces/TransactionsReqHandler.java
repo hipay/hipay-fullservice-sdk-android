@@ -15,6 +15,7 @@ import com.hipay.hipayfullservice.core.operations.TransactionsDetailsOperation;
 import com.hipay.hipayfullservice.core.utils.DataExtractor;
 import com.hipay.hipayfullservice.core.utils.Utils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -101,9 +102,11 @@ public class TransactionsReqHandler extends AbstractReqHandler {
                 transactionDetailsCallback.onSuccess(new ArrayList<>(Collections.singletonList(transaction)));
 
             }
-
         }
+    }
 
+    @Override
+    public void onSuccess(JSONArray jsonArray) {
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.hipay.hipayfullservice.core.network.HttpResult;
 import com.hipay.hipayfullservice.core.operations.AbstractOperation;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -19,5 +20,6 @@ public interface IReqHandler {
     int getLoaderId();
     void onError(Exception exception);
     void onSuccess(JSONObject jsonObject);
+    void onSuccess(JSONArray jsonArray);
 
 }

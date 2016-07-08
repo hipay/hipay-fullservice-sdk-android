@@ -21,6 +21,8 @@
 
     <string name="form_payment_products_categories">Payment product categories</string>
 
+    <string name="config_parameters_error">Do not forget to replace the username and password arguments with your API username and password.</string>
+
     <string-array name="array_currencies" translatable="false">
         <item>EUR</item>
         <item>USD</item>

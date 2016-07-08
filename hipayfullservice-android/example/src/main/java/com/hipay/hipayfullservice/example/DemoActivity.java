@@ -6,14 +6,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.hipay.hipayfullservice.core.client.config.ClientConfig;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
+import com.hipay.hipayfullservice.core.utils.Utils;
 import com.hipay.hipayfullservice.example.fragment.DemoFragment;
 import com.hipay.hipayfullservice.example.fragment.ProductCategoryListFragment;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,13 +35,17 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ClientConfig.Environment environment = ClientConfig.Environment.Stage;
-
         String username = getString(R.string.username);
         String password = getString(R.string.password);
 
-        ClientConfig.getInstance().setConfigEnvironment(
-                environment,
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
+            throw new IllegalArgumentException(
+                    getString(R.string.config_parameters_error)
+            );
+        }
+
+        ClientConfig.getInstance().setConfig(
+                ClientConfig.Environment.Stage,
                 username,
                 password
         );

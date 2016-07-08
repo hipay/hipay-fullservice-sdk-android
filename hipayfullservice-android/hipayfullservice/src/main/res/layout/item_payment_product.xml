@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:textAppearance="@style/PaymentScreens.TextAppearance.PaymentProductItem"
+            android:singleLine="true"
             android:padding="@dimen/spacing_double" />
 
     </LinearLayout>

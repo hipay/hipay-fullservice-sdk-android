@@ -28,6 +28,8 @@
     <string name="error_title_default">Une erreur est survenue</string>
     <string name="error_body_default">Votre demande n\'a pu aboutir.</string>
 
+    <string name="error_body_payment_products">Aucun moyen de paiement n\'a été trouvé.</string>
+
     <string name="error_title_connection">Erreur de connexion</string>
 
     <string name="card_expiration_placeholder">MM / YY</string>
@@ -51,5 +53,7 @@
 
     <string name="promt_cancel">Annuler</string>
     <string name="prompt_continue">Continuer</string>
+
+    <string name="payment_product_card_description">Carte</string>
 
 </resources>

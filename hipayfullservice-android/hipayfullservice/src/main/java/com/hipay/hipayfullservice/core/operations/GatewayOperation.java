@@ -39,7 +39,6 @@ public abstract class GatewayOperation extends AbstractOperation {
                     //if the request contains params like transaction?orderid=transactionOrderId
                     if (params.contains("=")) {
                         requestUrl = Utils.concatenateParams(requestUrl, params);
-
                     }
 
                     //if the request is just an url like transaction/referenceTransaction
@@ -62,7 +61,16 @@ public abstract class GatewayOperation extends AbstractOperation {
 
         switch (ClientConfig.getInstance().getEnvironment()) {
 
-            case Stage: return ClientConfig.GatewayClientBaseURLStage;
+            case Stage: {
+
+                if (this.isV2()) {
+                    return ClientConfig.GatewayClientBaseURLNewStage;
+
+                } else {
+                    return ClientConfig.GatewayClientBaseURLStage;
+                }
+
+            }
             case Production: return ClientConfig.GatewayClientBaseURLProduction;
             default: return null;
         }

@@ -4,27 +4,28 @@ import android.content.Context;
 import android.os.Bundle;
 
 /**
- * Created by nfillion on 08/05/16.
+ * Created by nfillion on 28/06/16.
  */
 
-public class TransactionsDetailsOperation  extends GatewayOperation {
+public class PaymentProductsOperation extends GatewayOperation {
 
-    public TransactionsDetailsOperation(Context context, Bundle bundle) {
+    public PaymentProductsOperation(Context context, Bundle bundle) {
         super(context, bundle);
     }
 
     @Override
     protected String concatUrl() {
-        return "transaction";
+        return "available-payment-products";
     }
 
     @Override
     protected boolean isV2() {
-        return false;
+        return true;
     }
 
     @Override
     protected HttpMethod getRequestType() {
         return HttpMethod.GET;
     }
+
 }

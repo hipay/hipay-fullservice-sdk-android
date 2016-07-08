@@ -100,13 +100,7 @@ public class PaymentProductsActivity extends AppCompatActivity {
 
         setUpToolbar();
         if (savedInstanceState == null) {
-
             attachProductGridFragment();
-
-        } else {
-
-            setProgressBarVisibility(View.GONE);
-            //the fragment is loaded already, then remove the loading
         }
 
         //useful when this activity is gonna be called with makeTransition
@@ -152,12 +146,6 @@ public class PaymentProductsActivity extends AppCompatActivity {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.payment_products_container, fragment)
                 .commit();
-
-        setProgressBarVisibility(View.GONE);
-    }
-
-    private void setProgressBarVisibility(int visibility) {
-        findViewById(R.id.progress).setVisibility(visibility);
     }
 
     public CustomTheme getCustomTheme() {

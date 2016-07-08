@@ -41,7 +41,7 @@ public class PaymentPageRequestSerialization extends OrderRelatedRequestSerializ
         }
 
         Transaction.ECI eci = paymentPageRequest.getEci();
-        if (eci != null) {
+        if (eci != null && !eci.equals(Transaction.ECI.Undefined)) {
             relatedRequestMap.put("eci", String.valueOf(eci.getIntegerValue()));
         }
 

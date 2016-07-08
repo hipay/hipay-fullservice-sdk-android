@@ -13,6 +13,7 @@ import com.hipay.hipayfullservice.core.operations.GatewayOperation;
 import com.hipay.hipayfullservice.core.operations.TransactionDetailsOperation;
 import com.hipay.hipayfullservice.core.utils.DataExtractor;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class TransactionReqHandler extends AbstractReqHandler {
@@ -51,6 +52,10 @@ public class TransactionReqHandler extends AbstractReqHandler {
 
         TransactionDetailsCallback transactionDetailsCallback = (TransactionDetailsCallback)this.getCallback();
         transactionDetailsCallback.onSuccess(transaction);
+    }
+
+    @Override
+    public void onSuccess(JSONArray jsonArray) {
     }
 
     @Override
