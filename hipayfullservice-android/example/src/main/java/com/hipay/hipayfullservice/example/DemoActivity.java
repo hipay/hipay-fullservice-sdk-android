@@ -11,12 +11,10 @@ import android.view.View;
 
 import com.hipay.hipayfullservice.core.client.config.ClientConfig;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
-import com.hipay.hipayfullservice.core.utils.Utils;
 import com.hipay.hipayfullservice.example.fragment.DemoFragment;
 import com.hipay.hipayfullservice.example.fragment.ProductCategoryListFragment;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +31,7 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
 
         //easier to customize a toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.mcommence_demo));
         setSupportActionBar(toolbar);
 
         String username = getString(R.string.username);

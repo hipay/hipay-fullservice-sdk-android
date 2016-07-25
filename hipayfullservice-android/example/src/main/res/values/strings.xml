@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">HiPay m-commerce demo</string>
+    <string name="app_name">HiPay demo</string>
+    <string name="mcommence_demo">HiPay m-commerce demo</string>
 
     <string name="username" translatable="false">94656047.stage-secure-gateway.hipay-tpp.com</string>
     <string name="password" translatable="false">Test_pfS0ojds5ZPu1t8ow8PuASCD</string>

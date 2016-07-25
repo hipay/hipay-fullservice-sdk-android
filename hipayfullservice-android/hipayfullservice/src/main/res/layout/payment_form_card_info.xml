@@ -33,6 +33,7 @@
             android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:maxLength="30"
             android:singleLine="true"
+            android:textColorHint="@color/hpf_placeholder"
             android:imeOptions="actionNext"
             android:inputType="textPersonName|textCapWords|textNoSuggestions"
             android:textSize="@dimen/size_edit_text" />
@@ -54,11 +55,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionNext"
-            android:hint="@string/card_number_placeholder_visa_mastercard"
             android:drawableRight="@drawable/ic_credit_card_black"
             android:drawableEnd="@drawable/ic_credit_card_black"
             android:drawablePadding="@dimen/spacing_double"
             android:inputType="number"
+            android:textColorHint="@color/hpf_placeholder"
             android:maxLength="23"
             android:digits="0123456789 "
             android:textSize="@dimen/size_edit_text" />
@@ -91,6 +92,7 @@
                 android:hint="@string/card_expiration_placeholder"
                 android:inputType="number"
                 android:digits="0123456789/"
+                android:textColorHint="@color/hpf_placeholder"
                 android:maxLength="5"
                 android:textSize="@dimen/size_edit_text" />
         </android.support.design.widget.TextInputLayout>
@@ -114,6 +116,7 @@
                 android:imeOptions="actionDone"
                 android:inputType="number"
                 android:digits="0123456789"
+                android:textColorHint="@color/hpf_placeholder"
                 android:maxLength="3"
                 android:textSize="@dimen/size_edit_text" />
         </android.support.design.widget.TextInputLayout>

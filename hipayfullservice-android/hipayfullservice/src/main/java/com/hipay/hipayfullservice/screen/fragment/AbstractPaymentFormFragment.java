@@ -65,8 +65,6 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     protected GatewayClient mGatewayClient;
     protected SecureVaultClient mSecureVaultClient;
 
-    protected String inferedPaymentProduct;
-    protected CardBehaviour mCardBehaviour;
 
     protected abstract boolean isInputDataValid();
 

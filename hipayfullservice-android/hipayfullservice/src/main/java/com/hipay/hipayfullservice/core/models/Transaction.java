@@ -48,8 +48,6 @@ public class Transaction extends TransactionRelatedItem {
     protected String cdata9;
     protected String cdata10;
 
-    protected boolean isHandled;
-
     public Transaction() {
 
         this.eci = ECI.Undefined;

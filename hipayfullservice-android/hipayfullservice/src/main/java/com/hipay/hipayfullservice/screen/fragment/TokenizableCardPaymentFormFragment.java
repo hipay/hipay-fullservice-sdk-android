@@ -51,6 +51,11 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     private Button mPayButton;
     private FrameLayout mPayButtonLayout;
 
+    private PaymentProduct basicPaymentProduct;
+    private String inferedPaymentProduct;
+
+    private CardBehaviour mCardBehaviour;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -130,9 +135,12 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         // check every product code to know how to handle the editTexts
         PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
+
+        basicPaymentProduct = paymentProduct;
+
         inferedPaymentProduct = paymentProduct.getCode();
         mCardBehaviour = new CardBehaviour(paymentProduct);
-        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, getActivity());
+        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, false, getActivity());
 
         CustomerInfoRequest customerInfoRequest = paymentPageRequest.getCustomer();
         String displayName = customerInfoRequest.getDisplayName();
@@ -154,10 +162,20 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 mPayButtonLayout.setVisibility(View.GONE);
                 mProgressBar.setVisibility(View.VISIBLE);
 
+                mCardOwner.setEnabled(false);
+                mCardCVV.setEnabled(false);
+                mCardExpiration.setEnabled(false);
+                mCardNumber.setEnabled(false);
+
             } else {
 
                 mPayButtonLayout.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.GONE);
+
+                mCardOwner.setEnabled(true);
+                mCardCVV.setEnabled(true);
+                mCardExpiration.setEnabled(true);
+                mCardNumber.setEnabled(true);
             }
         }
 
@@ -427,7 +445,13 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                         Log.i(paymentCardToken.toString(), paymentCardToken.toString());
 
                         OrderRequest orderRequest = new OrderRequest(paymentPageRequest);
-                        orderRequest.setPaymentProductCode(paymentProduct.getCode());
+
+                        String productCode = paymentProduct.getCode();
+                        if (productCode.equals(PaymentProduct.PaymentProductCategoryCodeCard)) {
+                            productCode = mCardBehaviour.getProductCode();
+                        }
+
+                        orderRequest.setPaymentProductCode(productCode);
 
                         CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest =
                                 new CardTokenPaymentMethodRequest(
@@ -667,13 +691,25 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 if (paymentProductCodes.size() == 1 && !paymentProductCodes.contains(inferedPaymentProduct)) {
 
                     String[] things = paymentProductCodes.toArray(new String[1]);
-                    inferedPaymentProduct = things[0];
-                    mCallback.updatePaymentProduct(inferedPaymentProduct);
 
-                    mCardBehaviour.updatePaymentProduct(inferedPaymentProduct);
-                    mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, getActivity());
+                    inferedPaymentProduct = things[0];
+
+                    if (isDomesticNetwork(inferedPaymentProduct)) {
+
+                        //on garde le inferedPaymentProduct (VISA) mais on met l'image et titre de CB
+                        mCallback.updatePaymentProduct(basicPaymentProduct.getPaymentProductDescription());
+                        mCardBehaviour.updatePaymentProduct(inferedPaymentProduct);
+                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, true, getActivity());
+
+                    } else {
+
+                        mCallback.updatePaymentProduct(inferedPaymentProduct);
+                        mCardBehaviour.updatePaymentProduct(inferedPaymentProduct);
+                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, false, getActivity());
+                    }
 
                     this.putEverythingInRed();
+
                 }
             }
 
@@ -681,6 +717,45 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         }
 
         this.mCardNumber.setTextColor(ContextCompat.getColor(getActivity(), color));
+    }
+
+    /*
+    private void backtoOrigin() {
+
+        mCallback.updatePaymentProduct(basicPaymentProduct.getPaymentProductDescription());
+
+        mCardBehaviour.updatePaymentProduct(basicPaymentProduct.getCode());
+        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, getActivity());
+
+        inferedPaymentProduct = basicPaymentProduct.getCode();
+    }
+    */
+
+    private boolean isDomesticNetwork() {
+
+        return basicPaymentProduct.getCode().equals(PaymentProduct.PaymentProductCodeCB) ||
+                basicPaymentProduct.getCode().equals(PaymentProduct.PaymentProductCodeBCMC);
+    }
+
+    private boolean isDomesticNetwork(String paymentProductCode) {
+
+        if (isDomesticNetwork()) {
+
+            String basicProductCode = basicPaymentProduct.getCode();
+
+            if (basicProductCode.equals(PaymentProduct.PaymentProductCodeBCMC)) {
+
+                return paymentProductCode.equals(PaymentProduct.PaymentProductCodeMaestro);
+
+            } else if (basicProductCode.equals(PaymentProduct.PaymentProductCodeCB)) {
+
+                return
+                        paymentProductCode.equals(PaymentProduct.PaymentProductCodeVisa) ||
+                                paymentProductCode.equals(PaymentProduct.PaymentProductCodeMasterCard);
+            }
+        }
+
+        return false;
     }
 }
 

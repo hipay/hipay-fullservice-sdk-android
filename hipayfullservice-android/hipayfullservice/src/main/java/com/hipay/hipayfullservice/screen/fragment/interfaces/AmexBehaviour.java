@@ -18,13 +18,15 @@ import com.hipay.hipayfullservice.screen.helper.FormHelper;
 public class AmexBehaviour implements ICardBehaviour {
 
     @Override
-    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, Context context) {
+    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, boolean networked, Context context) {
 
         securityCodeLayout.setVisibility(View.VISIBLE);
 
         //card_cvv
         //security code is 4 digits long for amex
         cardCVV.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
+
+        cardNumber.setHint(context.getString(R.string.card_number_placeholder_amex));
 
         cardCVV.setHint(context.getString(R.string.card_security_code_placeholder_cid));
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_NEXT);
@@ -64,5 +66,10 @@ public class AmexBehaviour implements ICardBehaviour {
     public boolean hasSpaceAtIndex(Integer index, Context context) {
 
         return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeAmericanExpress, context);
+    }
+
+    @Override
+    public String getProductCode() {
+        return PaymentProduct.PaymentProductCodeAmericanExpress;
     }
 }
