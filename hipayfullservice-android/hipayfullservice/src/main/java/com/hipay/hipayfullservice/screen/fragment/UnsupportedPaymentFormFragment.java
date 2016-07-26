@@ -103,7 +103,7 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
                     if (forwardUrl != null) {
 
                         final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
-                        ForwardWebViewActivity.start(getActivity(), forwardUrl.toString(), customThemeBundle);
+                        ForwardWebViewActivity.start(getActivity(), forwardUrl.toString(), paymentProduct.getPaymentProductDescription(), customThemeBundle);
                     }
                 }
 

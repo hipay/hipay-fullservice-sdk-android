@@ -201,10 +201,10 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         return contentView;
     }
 
-    public void launchHostedPaymentPage(String forwardURLString) {
+    public void launchHostedPaymentPage(String forwardURLString, String title) {
 
         final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
-        ForwardWebViewActivity.start(getActivity(), forwardURLString, customThemeBundle);
+        ForwardWebViewActivity.start(getActivity(), forwardURLString, title, customThemeBundle);
     }
 
     @Override

@@ -7,6 +7,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
@@ -15,11 +17,19 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.models.Order;
@@ -37,10 +47,10 @@ import java.util.Map;
 /**
  * Created by nfillion on 14/04/16.
  */
-public class ForwardWebViewActivity extends Activity {
+public class ForwardWebViewActivity extends AppCompatActivity {
 
-    public static void start(Activity activity, String forwardURLString, Bundle theme) {
-        Intent starter = getStartIntent(activity, forwardURLString, theme);
+    public static void start(Activity activity, String forwardURLString, String title, Bundle theme) {
+        Intent starter = getStartIntent(activity, forwardURLString, title, theme);
 
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat
                 .makeSceneTransitionAnimation(activity, null);
@@ -48,12 +58,13 @@ public class ForwardWebViewActivity extends Activity {
         ActivityCompat.startActivityForResult(activity, starter, PaymentPageRequest.REQUEST_ORDER, activityOptions.toBundle());
     }
 
-    public static Intent getStartIntent(Context context, String forwardURLString, Bundle theme) {
+    public static Intent getStartIntent(Context context, String forwardURLString, String title, Bundle theme) {
 
         if (forwardURLString != null) {
 
             Intent starter = new Intent(context, ForwardWebViewActivity.class);
             starter.putExtra("forwardUrl", forwardURLString);
+            starter.putExtra("title", title);
             starter.putExtra(CustomTheme.TAG, theme);
             return starter;
 
@@ -158,12 +169,57 @@ public class ForwardWebViewActivity extends Activity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_webview, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_webview) {
+
+            WebView myWebView = (WebView) findViewById(R.id.webview);
+            myWebView.reload();
+
+            return true;
+
+        } else if (id == android.R.id.home) {
+
+            WebView myWebView = (WebView) findViewById(R.id.webview);
+
+            if (myWebView.canGoBack()) {
+                myWebView.goBack();
+
+            } else {
+                onBackPressed();
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @Override
     @SuppressLint("SetJavaScriptEnabled")
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_forward_webview);
+
+        Bundle customTheme = getIntent().getBundleExtra(CustomTheme.TAG);
+        if (customTheme != null) {
+            this.initStatusBar(CustomTheme.fromBundle(customTheme));
+        }
+
+        //getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         if (savedInstanceState == null) {
 
@@ -173,13 +229,14 @@ public class ForwardWebViewActivity extends Activity {
             myWebView.setWebChromeClient(new WebChromeClient());
 
             String stringUrl = getIntent().getStringExtra("forwardUrl");
-
-            Bundle customTheme = getIntent().getBundleExtra(CustomTheme.TAG);
-            if (customTheme != null) {
-                this.initStatusBar(CustomTheme.fromBundle(customTheme));
-            }
             myWebView.loadUrl(stringUrl);
         }
+    }
+
+    public static Drawable setTint(Drawable d, int color) {
+        Drawable wrappedDrawable = DrawableCompat.wrap(d);
+        DrawableCompat.setTint(wrappedDrawable, color);
+        return wrappedDrawable;
     }
 
     @Override
@@ -266,6 +323,34 @@ public class ForwardWebViewActivity extends Activity {
             window.setStatusBarColor(ContextCompat.getColor(this,
                     theme.getColorPrimaryDarkId()));
         }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, theme.getTextColorPrimaryId()));
+
+
+        toolbar.setBackgroundColor(ContextCompat.getColor(this, theme.getColorPrimaryId()));
+
+        Drawable icon;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            icon = getResources().getDrawable(R.drawable.ic_arrow_back_black, null);
+        } else {
+            icon = getResources().getDrawable(R.drawable.ic_arrow_back_black);
+        }
+
+        toolbar.setNavigationIcon(setTint(icon,ContextCompat.getColor(this, theme.getTextColorPrimaryId())));
+
+        Drawable drawable = toolbar.getOverflowIcon();
+        if(drawable != null) {
+            toolbar.setOverflowIcon(setTint(drawable, ContextCompat.getColor(this, theme.getTextColorPrimaryId())));
+        }
+
+        setSupportActionBar(toolbar);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        String title = getIntent().getStringExtra("title");
+        getSupportActionBar().setTitle(title);
+
     }
 
     @Override
