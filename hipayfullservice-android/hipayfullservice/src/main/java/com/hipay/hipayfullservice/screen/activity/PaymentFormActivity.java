@@ -290,6 +290,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                     builder.setTitle(R.string.error_title_connection)
                             .setMessage(R.string.error_body_default)
                             .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                            .setPositiveButton(R.string.error_button_retry, dialogClickListener)
                             .setCancelable(false)
                             .show();
 

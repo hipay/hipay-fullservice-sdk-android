@@ -390,6 +390,14 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 if (isCardNumberValid()) {
 
                     mCardExpiration.requestFocus();
+
+                } else if (FormHelper.hasValidCardLength(mCardNumber.getText().toString(), inferedPaymentProduct, getActivity())) {
+
+                    putCardNumberInRed(true);
+
+                } else {
+
+                    putCardNumberInRed(false);
                 }
 
             } else {
@@ -684,6 +692,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         } else {
 
+            color = R.color.hpf_accent;
+
             //every time the user types
             if (!TextUtils.isEmpty(mCardNumber.getText()) && inferedPaymentProduct != null) {
 
@@ -711,9 +721,11 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                     this.putEverythingInRed();
 
                 }
+
+                // on va essayer d'atteindre la taille max.
+
             }
 
-            color = R.color.hpf_accent;
         }
 
         this.mCardNumber.setTextColor(ContextCompat.getColor(getActivity(), color));
