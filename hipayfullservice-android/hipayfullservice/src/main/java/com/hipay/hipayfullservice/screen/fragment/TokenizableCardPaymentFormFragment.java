@@ -21,6 +21,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.client.GatewayClient;
@@ -82,6 +85,10 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         mCardInfoLayout.setVisibility(View.VISIBLE);
 
+        mSecurityCodeInfoLayout = (LinearLayout) view.findViewById(R.id.card_cvv_info);
+        mSecurityCodeInfoTextview = (TextView) view.findViewById(R.id.card_cvv_info_text);
+        mSecurityCodeInfoImageview = (ImageView) view.findViewById(R.id.card_cvv_info_src);
+
         Bundle args = getArguments();
         final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
 
@@ -137,10 +144,10 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
 
         basicPaymentProduct = paymentProduct;
-
         inferedPaymentProduct = paymentProduct.getCode();
+
         mCardBehaviour = new CardBehaviour(paymentProduct);
-        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, false, getActivity());
+        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, false, getActivity());
 
         CustomerInfoRequest customerInfoRequest = paymentPageRequest.getCustomer();
         String displayName = customerInfoRequest.getDisplayName();
@@ -197,6 +204,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 } else if (i == R.id.card_cvv) {
 
                     putCVVInRed(!hasFocus);
+
+                    mSecurityCodeInfoLayout.setVisibility(hasFocus? View.VISIBLE : View.GONE);
 
                 } else if (i == R.id.card_expiration) {
 
@@ -391,7 +400,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                     mCardExpiration.requestFocus();
 
-                } else if (FormHelper.hasValidCardLength(mCardNumber.getText().toString(), inferedPaymentProduct, getActivity())) {
+                } else if ( !isInferedOrCardDomesticNetwork(inferedPaymentProduct) &&
+                        FormHelper.hasValidCardLength(mCardNumber.getText().toString(), inferedPaymentProduct, getActivity())) {
 
                     putCardNumberInRed(true);
 
@@ -709,13 +719,13 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                         //on garde le inferedPaymentProduct (VISA) mais on met l'image et titre de CB
                         mCallback.updatePaymentProduct(basicPaymentProduct.getPaymentProductDescription());
                         mCardBehaviour.updatePaymentProduct(inferedPaymentProduct);
-                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, true, getActivity());
+                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, false, getActivity());
 
                     } else {
 
                         mCallback.updatePaymentProduct(inferedPaymentProduct);
                         mCardBehaviour.updatePaymentProduct(inferedPaymentProduct);
-                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, false, getActivity());
+                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, false, getActivity());
                     }
 
                     this.putEverythingInRed();
@@ -743,6 +753,13 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     }
     */
 
+    private boolean isInferedOrCardDomesticNetwork(String product) {
+
+        return product.equals(PaymentProduct.PaymentProductCodeCB) ||
+                product.equals(PaymentProduct.PaymentProductCodeBCMC) ||
+                product.equals(PaymentProduct.PaymentProductCategoryCodeCard);
+    }
+
     private boolean isDomesticNetwork() {
 
         return basicPaymentProduct.getCode().equals(PaymentProduct.PaymentProductCodeCB) ||
@@ -751,9 +768,9 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
     private boolean isDomesticNetwork(String paymentProductCode) {
 
-        if (isDomesticNetwork()) {
+        String basicProductCode = basicPaymentProduct.getCode();
 
-            String basicProductCode = basicPaymentProduct.getCode();
+        if (isDomesticNetwork()) {
 
             if (basicProductCode.equals(PaymentProduct.PaymentProductCodeBCMC)) {
 

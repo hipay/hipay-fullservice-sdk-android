@@ -6,6 +6,8 @@ import android.text.InputFilter;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
@@ -17,7 +19,7 @@ import com.hipay.hipayfullservice.screen.helper.FormHelper;
 public class BCMCBehaviour implements ICardBehaviour {
 
     @Override
-    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, boolean networked, Context context) {
+    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, boolean networked, Context context) {
 
         cardCVV.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
         //hide the security code for bcmc
@@ -28,6 +30,10 @@ public class BCMCBehaviour implements ICardBehaviour {
 
         //cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeAmericanExpress, context))});
         cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_bcmc, 0);
+
+        securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_description_cvv));
+        securityCodeInfoImageview.setImageResource(R.drawable.cvc_mv);
+
         //bcmc
         //"6703 0000 0000 00003",
         //cardNumber.setText("67030000000000003");

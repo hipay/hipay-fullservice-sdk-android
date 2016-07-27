@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
@@ -18,7 +20,7 @@ import com.hipay.hipayfullservice.screen.helper.FormHelper;
 public class DinersBehaviour implements ICardBehaviour {
 
     @Override
-    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, boolean networked, Context context) {
+    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, boolean networked, Context context) {
 
         securityCodeLayout.setVisibility(View.VISIBLE);
 
@@ -30,6 +32,9 @@ public class DinersBehaviour implements ICardBehaviour {
 
         cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeDiners, context))});
         cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_diners, 0);
+
+        securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_description_cvv));
+        securityCodeInfoImageview.setImageResource(R.drawable.cvc_mv);
 
         //no test card
         //Diners Club International

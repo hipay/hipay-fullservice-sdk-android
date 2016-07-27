@@ -59,6 +59,10 @@
         <item name="android:textSize">@dimen/error_item_very_small_size</item>
     </style>
 
+    <style name="PaymentScreens.TextAppearance.InfoItem" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textSize">@dimen/info_item_text_size</item>
+    </style>
+
     <style name="PaymentScreens.TextAppearance.Title" parent="TextAppearance.AppCompat.Title">
         <item name="android:textColor">@color/hpf_primary</item>
     </style>
