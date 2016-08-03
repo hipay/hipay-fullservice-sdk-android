@@ -24,9 +24,7 @@ import java.util.List;
 public class PaymentProductsReqHandler extends AbstractReqHandler {
 
     public PaymentProductsReqHandler(PaymentPageRequest request, PaymentProductsCallback callback) {
-
-        this.setRequest(request);
-        this.setCallback(callback);
+        super(request, callback);
     }
 
     @Override

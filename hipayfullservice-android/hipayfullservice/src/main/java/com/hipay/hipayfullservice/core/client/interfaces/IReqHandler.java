@@ -15,6 +15,7 @@ import org.json.JSONObject;
 public interface IReqHandler {
 
     String getReqQueryString();
+    String getReqSignatureString();
     AbstractOperation getReqOperation(Context context, Bundle bundle);
     void handleCallback(HttpResult result);
     int getLoaderId();

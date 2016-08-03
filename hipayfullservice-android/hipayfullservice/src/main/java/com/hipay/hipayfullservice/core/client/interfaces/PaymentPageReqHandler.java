@@ -18,10 +18,8 @@ import org.json.JSONObject;
 
 public class PaymentPageReqHandler extends AbstractReqHandler {
 
-    public PaymentPageReqHandler(PaymentPageRequest paymentPageRequest, PaymentPageRequestCallback callback) {
-
-        this.setRequest(paymentPageRequest);
-        this.setCallback(callback);
+    public PaymentPageReqHandler(PaymentPageRequest paymentPageRequest, String signature, PaymentPageRequestCallback callback) {
+        super(paymentPageRequest, signature, callback);
     }
 
     @Override

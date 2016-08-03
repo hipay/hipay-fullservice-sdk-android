@@ -18,10 +18,8 @@ import org.json.JSONObject;
 
 public class TransactionReqHandler extends AbstractReqHandler {
 
-    public TransactionReqHandler(String transactionReference, TransactionDetailsCallback callback) {
-
-        this.setRequest(transactionReference);
-        this.setCallback(callback);
+    public TransactionReqHandler(String transactionReference, String signature, TransactionDetailsCallback callback) {
+        super(transactionReference, signature, callback);
     }
 
     @Override

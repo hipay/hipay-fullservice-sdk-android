@@ -487,7 +487,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                             mGatewayClient = new GatewayClient(getActivity());
                             mCurrentLoading = 1;
-                            mGatewayClient.requestNewOrder(orderRequest, new OrderRequestCallback() {
+                            mGatewayClient.requestNewOrder(orderRequest, "signature requestNewOrder", new OrderRequestCallback() {
 
                                 @Override
                                 public void onSuccess(final Transaction transaction) {

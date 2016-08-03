@@ -19,20 +19,20 @@ public class GatewayClient extends AbstractClient  {
         super(context);
     }
 
-    public void requestNewOrder(OrderRequest orderRequest, OrderRequestCallback orderRequestCallback) {
-        super.createRequest(orderRequest, orderRequestCallback);
+    public void requestNewOrder(OrderRequest orderRequest, String signature, OrderRequestCallback orderRequestCallback) {
+        super.createRequest(orderRequest, signature, orderRequestCallback);
     }
 
-    public void createHostedPaymentPageRequest(PaymentPageRequest hostedPaymentPage, PaymentPageRequestCallback paymentPageRequestCallback) {
-        super.createRequest(hostedPaymentPage, paymentPageRequestCallback);
+    public void createHostedPaymentPageRequest(PaymentPageRequest hostedPaymentPage, String signature, PaymentPageRequestCallback paymentPageRequestCallback) {
+        super.createRequest(hostedPaymentPage, signature, paymentPageRequestCallback);
     }
 
-    public void getTransactionWithReference(String reference, TransactionDetailsCallback transactionDetailsCallback) {
-        super.createRequest(reference, transactionDetailsCallback);
+    public void getTransactionWithReference(String reference, String signature, TransactionDetailsCallback transactionDetailsCallback) {
+        super.createRequest(reference, signature, transactionDetailsCallback);
     }
 
-    public void getTransactionsWithOrderId(String orderId, TransactionsDetailsCallback transactionsDetailsCallback) {
-        super.createRequest(orderId, transactionsDetailsCallback);
+    public void getTransactionsWithOrderId(String orderId, String signature, TransactionsDetailsCallback transactionsDetailsCallback) {
+        super.createRequest(orderId, signature, transactionsDetailsCallback);
     }
 
     public void getPaymentProducts(PaymentPageRequest paymentPageRequest, PaymentProductsCallback paymentProductsCallback) {

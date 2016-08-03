@@ -135,12 +135,10 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         }
     }
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.i("onActivityCreated", "onActivityCreated");
-
 
         // ---- magic lines starting here -----
         // call this to re-connect with an existing
@@ -245,7 +243,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
             mCurrentLoading = 3;
             mGatewayClient = new GatewayClient(getActivity());
-                    mGatewayClient.getTransactionWithReference(transactionReference, new TransactionDetailsCallback() {
+                    mGatewayClient.getTransactionWithReference(transactionReference, "signature getTransactionWithReference", new TransactionDetailsCallback() {
 
                         @Override
                         public void onSuccess(final Transaction transaction) {
@@ -275,7 +273,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
             String orderId = paymentPageRequest.getOrderId();
             mCurrentLoading = 4;
             mGatewayClient = new GatewayClient(getActivity());
-            mGatewayClient.getTransactionsWithOrderId(orderId, new TransactionsDetailsCallback() {
+            mGatewayClient.getTransactionsWithOrderId(orderId, "signature getTransactionsWithOrderId", new TransactionsDetailsCallback() {
 
                 @Override
                 public void onSuccess(List<Transaction> transactions) {
