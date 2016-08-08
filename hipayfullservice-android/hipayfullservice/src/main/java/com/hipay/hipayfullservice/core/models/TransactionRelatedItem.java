@@ -87,159 +87,159 @@ public class TransactionRelatedItem extends AbstractModel {
 
             if (value == null) return null;
 
-            if (value == TransactionStatusUnknown.getIntegerValue()) {
+            if (value.equals(TransactionStatusUnknown.getIntegerValue())) {
                 return TransactionStatusUnknown;
             }
 
-            if (value == TransactionStatusCreated.getIntegerValue()) {
+            if (value.equals(TransactionStatusCreated.getIntegerValue())) {
                 return TransactionStatusCreated;
             }
 
-            if (value == TransactionStatusCardholderEnrolled.getIntegerValue()) {
+            if (value.equals(TransactionStatusCardholderEnrolled.getIntegerValue())) {
                 return TransactionStatusCardholderEnrolled;
             }
 
-            if (value == TransactionStatusCardholderNotEnrolled.getIntegerValue()) {
+            if (value.equals(TransactionStatusCardholderNotEnrolled.getIntegerValue())) {
                 return TransactionStatusCardholderNotEnrolled;
             }
 
-            if (value == TransactionStatusUnableToAuthenticate.getIntegerValue()) {
+            if (value.equals(TransactionStatusUnableToAuthenticate.getIntegerValue())) {
                 return TransactionStatusUnableToAuthenticate;
             }
 
-            if (value == TransactionStatusCardholderAuthenticated.getIntegerValue()) {
+            if (value.equals(TransactionStatusCardholderAuthenticated.getIntegerValue())) {
                 return TransactionStatusCardholderAuthenticated;
             }
 
-            if (value ==TransactionStatusAuthenticationAttempted.getIntegerValue()) {
+            if (value.equals(TransactionStatusAuthenticationAttempted.getIntegerValue())) {
                 return TransactionStatusAuthenticationAttempted;
             }
 
-            if (value == TransactionStatusCouldNotAuthenticate.getIntegerValue()) {
+            if (value.equals(TransactionStatusCouldNotAuthenticate.getIntegerValue())) {
                 return TransactionStatusCouldNotAuthenticate;
             }
 
-            if (value == TransactionStatusAuthenticationFailed.getIntegerValue()) {
+            if (value.equals(TransactionStatusAuthenticationFailed.getIntegerValue())) {
                 return TransactionStatusAuthenticationFailed;
             }
 
-            if (value == TransactionStatusBlocked.getIntegerValue()) {
+            if (value.equals(TransactionStatusBlocked.getIntegerValue())) {
                 return TransactionStatusBlocked;
             }
 
-            if (value == TransactionStatusDenied.getIntegerValue()) {
+            if (value.equals(TransactionStatusDenied.getIntegerValue())) {
                 return TransactionStatusDenied;
             }
 
-            if (value == TransactionStatusAuthorizedAndPending.getIntegerValue()) {
+            if (value.equals(TransactionStatusAuthorizedAndPending.getIntegerValue())) {
                 return TransactionStatusAuthorizedAndPending;
             }
 
-            if (value == TransactionStatusRefused.getIntegerValue()) {
+            if (value.equals(TransactionStatusRefused.getIntegerValue())) {
                 return TransactionStatusRefused;
             }
 
-            if (value == TransactionStatusExpired.getIntegerValue()) {
+            if (value.equals(TransactionStatusExpired.getIntegerValue())) {
                 return TransactionStatusExpired;
             }
 
-            if (value == TransactionStatusCancelled.getIntegerValue()) {
+            if (value.equals(TransactionStatusCancelled.getIntegerValue())) {
                 return TransactionStatusCancelled;
             }
 
-            if (value == TransactionStatusAuthorized.getIntegerValue()) {
+            if (value.equals(TransactionStatusAuthorized.getIntegerValue())) {
                 return TransactionStatusAuthorized;
             }
 
-            if (value == TransactionStatusCaptureRequested.getIntegerValue()) {
+            if (value.equals(TransactionStatusCaptureRequested.getIntegerValue())) {
                 return TransactionStatusCaptureRequested;
             }
 
-            if (value == TransactionStatusCaptured.getIntegerValue()) {
+            if (value.equals(TransactionStatusCaptured.getIntegerValue())) {
                 return TransactionStatusCaptured;
             }
 
-            if (value == TransactionStatusPartiallyCaptured.getIntegerValue()) {
+            if (value.equals(TransactionStatusPartiallyCaptured.getIntegerValue())) {
                 return TransactionStatusPartiallyCaptured;
             }
 
-            if (value == TransactionStatusCollected.getIntegerValue()) {
+            if (value.equals(TransactionStatusCollected.getIntegerValue())) {
                 return TransactionStatusCollected;
             }
 
-            if (value == TransactionStatusPartiallyCollected.getIntegerValue()) {
+            if (value.equals(TransactionStatusPartiallyCollected.getIntegerValue())) {
                 return TransactionStatusPartiallyCollected;
             }
 
-            if (value == TransactionStatusSettled.getIntegerValue()) {
+            if (value.equals(TransactionStatusSettled.getIntegerValue())) {
                 return TransactionStatusSettled;
             }
 
-            if (value == TransactionStatusPartiallySettled.getIntegerValue()) {
+            if (value.equals(TransactionStatusPartiallySettled.getIntegerValue())) {
                 return TransactionStatusPartiallySettled;
             }
 
-            if (value == TransactionStatusRefundRequested.getIntegerValue()) {
+            if (value.equals(TransactionStatusRefundRequested.getIntegerValue())) {
                 return TransactionStatusRefundRequested;
             }
 
-            if (value == TransactionStatusRefunded.getIntegerValue()) {
+            if (value.equals(TransactionStatusRefunded.getIntegerValue())) {
                 return TransactionStatusRefunded;
             }
 
-            if (value == TransactionStatusPartiallyRefunded.getIntegerValue()) {
+            if (value.equals(TransactionStatusPartiallyRefunded.getIntegerValue())) {
                 return TransactionStatusPartiallyRefunded;
             }
 
-            if (value == TransactionStatusChargedBack.getIntegerValue()) {
+            if (value.equals(TransactionStatusChargedBack.getIntegerValue())) {
                 return TransactionStatusChargedBack;
             }
 
-            if (value == TransactionStatusDebited.getIntegerValue()) {
+            if (value.equals(TransactionStatusDebited.getIntegerValue())) {
                 return TransactionStatusDebited;
             }
 
-            if (value == TransactionStatusPartiallyDebited.getIntegerValue()) {
+            if (value.equals(TransactionStatusPartiallyDebited.getIntegerValue())) {
                 return TransactionStatusPartiallyDebited;
             }
 
-            if (value == TransactionStatusAuthenticationRequested.getIntegerValue()) {
+            if (value.equals(TransactionStatusAuthenticationRequested.getIntegerValue())) {
                 return TransactionStatusAuthenticationRequested;
             }
 
-            if (value == TransactionStatusAuthenticated.getIntegerValue()) {
+            if (value.equals(TransactionStatusAuthenticated.getIntegerValue())) {
                 return TransactionStatusAuthenticated;
             }
 
-            if (value == TransactionStatusAuthorizationRequested.getIntegerValue()) {
+            if (value.equals(TransactionStatusAuthorizationRequested.getIntegerValue())) {
                 return TransactionStatusAuthorizationRequested;
             }
 
-            if (value == TransactionStatusAcquirerFound.getIntegerValue()) {
+            if (value.equals(TransactionStatusAcquirerFound.getIntegerValue())) {
                 return TransactionStatusAcquirerFound;
             }
 
-            if (value == TransactionStatusAcquirernotFound.getIntegerValue()) {
+            if (value.equals(TransactionStatusAcquirernotFound.getIntegerValue())) {
                 return TransactionStatusAcquirernotFound;
             }
 
-            if (value == TransactionStatusCardholderEnrollmentUnknown.getIntegerValue()) {
+            if (value.equals(TransactionStatusCardholderEnrollmentUnknown.getIntegerValue())) {
                 return TransactionStatusCardholderEnrollmentUnknown;
             }
 
-            if (value == TransactionStatusRiskAccepted.getIntegerValue()) {
+            if (value.equals(TransactionStatusRiskAccepted.getIntegerValue())) {
                 return TransactionStatusRiskAccepted;
             }
 
-            if (value == TransactionStatusAuthorizationRefused.getIntegerValue()) {
+            if (value.equals(TransactionStatusAuthorizationRefused.getIntegerValue())) {
                 return TransactionStatusAuthorizationRefused;
             }
 
-            if (value == TransactionStatusCaptureRefused.getIntegerValue()) {
+            if (value.equals(TransactionStatusCaptureRefused.getIntegerValue())) {
                 return TransactionStatusCaptureRefused;
             }
 
-            if (value == TransactionStatusPendingPayment.getIntegerValue()) {
+            if (value.equals(TransactionStatusPendingPayment.getIntegerValue())) {
                 return TransactionStatusPendingPayment;
             }
 

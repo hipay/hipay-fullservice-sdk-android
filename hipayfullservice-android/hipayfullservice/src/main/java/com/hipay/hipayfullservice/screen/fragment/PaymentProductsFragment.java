@@ -55,7 +55,7 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
     protected boolean mLoadingMode;
     protected int mCurrentLoading = -1;
 
-    public static PaymentProductsFragment newInstance(Bundle paymentPageRequestBundle, Bundle customTheme) {
+    public static PaymentProductsFragment newInstance(Bundle paymentPageRequestBundle, String signature, Bundle customTheme) {
 
         PaymentProductsFragment fragment = new PaymentProductsFragment();
 
@@ -63,6 +63,7 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
         bundle.putBundle(PaymentPageRequest.TAG, paymentPageRequestBundle);
 
         bundle.putBundle(CustomTheme.TAG, customTheme);
+        bundle.putString(GatewayClient.SIGNATURE_TAG, signature);
 
         fragment.setArguments(bundle);
         return fragment;
@@ -289,12 +290,15 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
 
         final Bundle paymentPageRequestBundle = getArguments().getBundle(PaymentPageRequest.TAG);
         final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
+        final String signature = getArguments().getString(GatewayClient.SIGNATURE_TAG);
+
         Activity activity = getActivity();
         startPaymentFormActivityWithTransition(activity, view == null ? null :
                         view.findViewById(R.id.payment_product_title),
                 paymentPageRequestBundle,
                 customThemeBundle,
-                paymentProduct);
+                paymentProduct,
+                signature);
     }
 
     @Override
@@ -313,7 +317,7 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
     }
 
     private void startPaymentFormActivityWithTransition(Activity activity, View toolbar, Bundle paymentPageRequestBundle, Bundle customThemeBundle,
-                                                        PaymentProduct paymentProduct) {
+                                                        PaymentProduct paymentProduct, String signature) {
 
         Bundle transitionBundle = null;
 
@@ -328,7 +332,7 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
             transitionBundle = sceneTransitionAnimation.toBundle();
         }
 
-        Intent startIntent = PaymentFormActivity.getStartIntent(activity, paymentPageRequestBundle, customThemeBundle, paymentProduct);
+        Intent startIntent = PaymentFormActivity.getStartIntent(activity, paymentPageRequestBundle, customThemeBundle, paymentProduct, signature);
         ActivityCompat.startActivityForResult(activity,
                 startIntent,
                 PaymentPageRequest.REQUEST_ORDER,

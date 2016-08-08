@@ -18,6 +18,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
+import com.hipay.hipayfullservice.core.client.GatewayClient;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.screen.fragment.PaymentProductsFragment;
@@ -33,8 +34,8 @@ public class PaymentProductsActivity extends AppCompatActivity {
 
     private CustomTheme customTheme;
 
-    public static void start(Activity activity, PaymentPageRequest paymentPageRequest, CustomTheme theme) {
-        Intent starter = getStartIntent(activity, paymentPageRequest, theme);
+    public static void start(Activity activity, PaymentPageRequest paymentPageRequest, String signature, CustomTheme theme) {
+        Intent starter = getStartIntent(activity, paymentPageRequest, signature, theme);
 
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat
                 .makeSceneTransitionAnimation(activity, null);
@@ -55,7 +56,7 @@ public class PaymentProductsActivity extends AppCompatActivity {
     }
 
     @NonNull
-    static Intent getStartIntent(Context context, PaymentPageRequest paymentPageRequest, CustomTheme theme) {
+    static Intent getStartIntent(Context context, PaymentPageRequest paymentPageRequest, String signature, CustomTheme theme) {
 
         Intent starter = new Intent(context, PaymentProductsActivity.class);
 
@@ -66,6 +67,7 @@ public class PaymentProductsActivity extends AppCompatActivity {
             theme = new CustomTheme(R.color.hpf_primary,R.color.hpf_primary_dark,R.color.hpf_light);
         }
         starter.putExtra(CustomTheme.TAG, theme.toBundle());
+        starter.putExtra(GatewayClient.SIGNATURE_TAG, signature);
 
         return starter;
     }
@@ -151,7 +153,9 @@ public class PaymentProductsActivity extends AppCompatActivity {
 
             Bundle customThemeBundle = getIntent().getBundleExtra(CustomTheme.TAG);
 
-            fragment = PaymentProductsFragment.newInstance(paymentPageRequestBundle, customThemeBundle);
+            String signature = getIntent().getStringExtra(GatewayClient.SIGNATURE_TAG);
+
+            fragment = PaymentProductsFragment.newInstance(paymentPageRequestBundle, signature, customThemeBundle);
 
             //fragment.setArguments(paymentPageRequestBundle);
         }

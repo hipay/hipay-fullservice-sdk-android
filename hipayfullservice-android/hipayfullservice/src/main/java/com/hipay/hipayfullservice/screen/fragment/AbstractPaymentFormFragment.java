@@ -74,7 +74,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
     protected abstract boolean isInputDataValid();
 
-    public static AbstractPaymentFormFragment newInstance(Bundle paymentPageRequestBundle, PaymentProduct paymentProduct, Bundle customTheme) {
+    public static AbstractPaymentFormFragment newInstance(Bundle paymentPageRequestBundle, PaymentProduct paymentProduct, String signature, Bundle customTheme) {
 
         AbstractPaymentFormFragment fragment;
 
@@ -97,6 +97,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         args.putBundle(PaymentPageRequest.TAG, paymentPageRequestBundle);
         args.putBundle(PaymentProduct.TAG, paymentProduct.toBundle());
         args.putBundle(CustomTheme.TAG, customTheme);
+        args.putString(GatewayClient.SIGNATURE_TAG, signature);
 
         fragment.setArguments(args);
 
@@ -241,9 +242,12 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
             String transactionReference = transaction.getTransactionReference();
 
+            Bundle args = getArguments();
+            final String signature = args.getString(GatewayClient.SIGNATURE_TAG);
+
             mCurrentLoading = 3;
             mGatewayClient = new GatewayClient(getActivity());
-                    mGatewayClient.getTransactionWithReference(transactionReference, "signature getTransactionWithReference", new TransactionDetailsCallback() {
+                    mGatewayClient.getTransactionWithReference(transactionReference, signature, new TransactionDetailsCallback() {
 
                         @Override
                         public void onSuccess(final Transaction transaction) {
@@ -269,11 +273,12 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
             Bundle args = getArguments();
             final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
+            final String signature = args.getString(GatewayClient.SIGNATURE_TAG);
 
             String orderId = paymentPageRequest.getOrderId();
             mCurrentLoading = 4;
             mGatewayClient = new GatewayClient(getActivity());
-            mGatewayClient.getTransactionsWithOrderId(orderId, "signature getTransactionsWithOrderId", new TransactionsDetailsCallback() {
+            mGatewayClient.getTransactionsWithOrderId(orderId, signature, new TransactionsDetailsCallback() {
 
                 @Override
                 public void onSuccess(List<Transaction> transactions) {

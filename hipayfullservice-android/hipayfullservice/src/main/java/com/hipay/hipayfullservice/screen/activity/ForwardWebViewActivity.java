@@ -327,7 +327,6 @@ public class ForwardWebViewActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, theme.getTextColorPrimaryId()));
 
-
         toolbar.setBackgroundColor(ContextCompat.getColor(this, theme.getColorPrimaryId()));
 
         Drawable icon;

@@ -18,8 +18,11 @@
     <string name="form_payment_products_realtime_banking">Real-time banking</string>
 
     <string name="form_payment_products_categories">Payment product categories</string>
+    <string name="error_button_dismiss">@android:string/ok</string>
 
     <string name="config_parameters_error">Do not forget to replace the username and password arguments with your API username and password.</string>
+    
+    <string name="server_url" translatable="false">http://www.hipay-pos-platform.com:8012/index.php/order_info?amount=%1$s&amp;currency=%2$s</string>
 
     <string-array name="array_currencies" translatable="false">
         <item>EUR</item>

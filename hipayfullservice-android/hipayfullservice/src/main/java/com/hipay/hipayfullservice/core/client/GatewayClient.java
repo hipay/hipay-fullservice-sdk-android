@@ -15,6 +15,8 @@ import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
  */
 public class GatewayClient extends AbstractClient  {
 
+    public static final String SIGNATURE_TAG = "signature_tag";
+
     public GatewayClient(Context context) {
         super(context);
     }

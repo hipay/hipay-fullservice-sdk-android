@@ -231,6 +231,59 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
         return this.getReqHandler().getLoaderId();
     }
 
+    public enum RequestLoaderId {
+
+        GenerateTokenReqLoaderId(0),
+        OrderReqLoaderId(1),
+        PaymentPageReqLoaderId(2),
+        TransactionReqLoaderId(3),
+        TransactionsReqLoaderId(4),
+        SecureVaultReqLoaderId(5),
+        SignatureReqLoaderId(6);
+
+        protected final Integer loaderId;
+
+        RequestLoaderId(Integer loaderId) {
+            this.loaderId = loaderId;
+        }
+
+        public Integer getIntegerValue() {
+            return this.loaderId;
+        }
+
+        public static RequestLoaderId fromIntegerValue(Integer value) {
+
+            if (value == null) return null;
+
+            if (value.equals(GenerateTokenReqLoaderId.getIntegerValue())) {
+                return GenerateTokenReqLoaderId;
+            }
+
+            if (value.equals(OrderReqLoaderId.getIntegerValue())) {
+                return OrderReqLoaderId;
+            }
+
+            if (value.equals(PaymentPageReqLoaderId.getIntegerValue())) {
+                return PaymentPageReqLoaderId;
+            }
+
+            if (value.equals(TransactionReqLoaderId.getIntegerValue())) {
+                return TransactionReqLoaderId;
+            }
+
+            if (value.equals(TransactionsReqLoaderId.getIntegerValue())) {
+                return TransactionsReqLoaderId;
+            }
+
+            if (value.equals(SecureVaultReqLoaderId.getIntegerValue())) {
+                return SecureVaultReqLoaderId;
+            }
+            return null;
+        }
+    }
+
+
+
     protected Context getContext() {
         return contextWeakReference.get();
     }
