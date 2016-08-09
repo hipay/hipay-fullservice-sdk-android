@@ -362,4 +362,19 @@ public class ForwardWebViewActivity extends AppCompatActivity {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
+
+    @Override
+    public void onBackPressed() {
+
+        WebView myWebView = (WebView) findViewById(R.id.webview);
+
+        if (myWebView.canGoBack()) {
+            myWebView.goBack();
+
+        } else {
+            super.onBackPressed();
+        }
+
+    }
+
 }
