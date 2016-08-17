@@ -34,7 +34,7 @@ dependencies {
     testCompile "junit:junit:${junitVersion}"
     compile "com.android.support:appcompat-v7:${supportLibVersion}"
     compile "com.android.support:design:${supportLibVersion}"
-
+    compile 'com.android.volley:volley:1.0.0'
     testCompile "org.hamcrest:hamcrest-library:${hamcrestVersion}"
 
     compile project(':hipayfullservice')

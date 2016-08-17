@@ -23,23 +23,47 @@ import java.io.IOException;
  */
 public abstract class AbstractReqHandler<T> implements IReqHandler {
 
+    public AbstractReqHandler(T paymentPageRequest, String signature, AbstractRequestCallback callback) {
+
+        this.setRequest(paymentPageRequest);
+        this.setSignature(signature);
+        this.setCallback(callback);
+    }
+
+    public AbstractReqHandler(T paymentPageRequest, AbstractRequestCallback callback) {
+
+        this.setRequest(paymentPageRequest);
+        this.setCallback(callback);
+    }
+
     protected T request;
-    protected AbstractRequestCallback callback;
 
     protected T getRequest() {
         return request;
     }
-
     protected void setRequest(T request) {
         this.request = request;
     }
 
+    protected AbstractRequestCallback callback;
     public AbstractRequestCallback getCallback() {
         return callback;
     }
-
     public void setCallback(AbstractRequestCallback callback) {
         this.callback = callback;
+    }
+
+    protected String signature;
+    public String getSignature() {
+        return signature;
+    }
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+    @Override
+    public String getReqSignatureString() {
+        return this.getSignature();
     }
 
     public abstract String getReqQueryString();

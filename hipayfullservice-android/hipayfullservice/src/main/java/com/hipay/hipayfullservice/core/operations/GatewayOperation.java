@@ -86,6 +86,16 @@ public abstract class GatewayOperation extends AbstractOperation {
     }
 
     @Override
+    protected String getSignature() {
+
+        if (this.getBundle() != null) {
+
+            return this.getBundle().getString("HS_signature");
+        }
+        return null;
+    }
+
+    @Override
     protected HttpURLConnection getHttpURLConnection() throws IOException {
 
         HttpURLConnection urlConnection = (HttpURLConnection) this.getRequestURL().openConnection();

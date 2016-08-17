@@ -56,6 +56,16 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
         }
     }
 
+    protected void createRequest(T request, String signature, AbstractRequestCallback callback) {
+
+        if (this.initReqHandler(request, signature, callback)) {
+            this.launchOperation();
+
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void cancelOperation() {
 
@@ -79,6 +89,7 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
 
         Bundle queryBundle = new Bundle();
         queryBundle.putString("queryParams", this.getQueryParams());
+        queryBundle.putString("HS_signature", this.getSignature());
 
         AppCompatActivity activity = (AppCompatActivity)this.getContext();
         //activity.getSupportLoaderManager().enableDebugLogging(true);
@@ -99,55 +110,64 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
         }
     }
 
+
+    private boolean initReqHandler(T request, String signature, AbstractRequestCallback callback) {
+
+        if (signature != null && !signature.isEmpty()) {
+
+            if (request instanceof PaymentPageRequest
+                    && callback instanceof PaymentPageRequestCallback) {
+
+                PaymentPageRequest paymentPageRequest = (PaymentPageRequest)request;
+                PaymentPageRequestCallback paymentPageRequestCallback = (PaymentPageRequestCallback)callback;
+
+                this.setReqHandler(new PaymentPageReqHandler(paymentPageRequest, signature, paymentPageRequestCallback));
+
+                return true;
+
+            } else if (request instanceof OrderRequest
+                    && callback instanceof OrderRequestCallback) {
+
+                OrderRequest orderRequest = (OrderRequest) request;
+                OrderRequestCallback orderRequestCallback = (OrderRequestCallback)callback;
+
+                this.setReqHandler(new OrderReqHandler(orderRequest, signature, orderRequestCallback));
+
+                return true;
+
+            }  else if (request instanceof String
+                    && callback instanceof TransactionsDetailsCallback) {
+
+                String orderId = (String) request;
+                TransactionsDetailsCallback transactionsDetailsCallback = (TransactionsDetailsCallback)callback;
+
+                this.setReqHandler(new TransactionsReqHandler(orderId, signature, transactionsDetailsCallback));
+
+                return true;
+
+            } else if (request instanceof String
+                    && callback instanceof TransactionDetailsCallback) {
+
+                String transactionReference = (String) request;
+                TransactionDetailsCallback transactionDetailsCallback = (TransactionDetailsCallback)callback;
+
+                this.setReqHandler(new TransactionReqHandler(transactionReference, signature, transactionDetailsCallback));
+
+                return true;
+            }
+        }
+
+        return false;
+    }
     private boolean initReqHandler(T request, AbstractRequestCallback callback) {
 
-        if (request instanceof PaymentPageRequest
-                && callback instanceof PaymentPageRequestCallback) {
-
-            PaymentPageRequest paymentPageRequest = (PaymentPageRequest)request;
-            PaymentPageRequestCallback paymentPageRequestCallback = (PaymentPageRequestCallback)callback;
-
-            this.setReqHandler(new PaymentPageReqHandler(paymentPageRequest, paymentPageRequestCallback));
-
-            return true;
-
-        } else if (request instanceof OrderRequest
-                && callback instanceof OrderRequestCallback) {
-
-            OrderRequest orderRequest = (OrderRequest) request;
-            OrderRequestCallback orderRequestCallback = (OrderRequestCallback)callback;
-
-            this.setReqHandler(new OrderReqHandler(orderRequest, orderRequestCallback));
-
-            return true;
-
-        } else if (request instanceof SecureVaultRequest
+        if (request instanceof SecureVaultRequest
                 && callback instanceof SecureVaultRequestCallback) {
 
             SecureVaultRequest secureVaultRequest = (SecureVaultRequest) request;
             SecureVaultRequestCallback secureVaultRequestCallback = (SecureVaultRequestCallback)callback;
 
             this.setReqHandler(new SecureVaultReqHandler(secureVaultRequest, secureVaultRequestCallback));
-
-            return true;
-
-        } else if (request instanceof String
-                && callback instanceof TransactionsDetailsCallback) {
-
-            String orderId = (String) request;
-            TransactionsDetailsCallback transactionsDetailsCallback = (TransactionsDetailsCallback)callback;
-
-            this.setReqHandler(new TransactionsReqHandler(orderId, transactionsDetailsCallback));
-
-            return true;
-
-        } else if (request instanceof String
-                && callback instanceof TransactionDetailsCallback) {
-
-            String transactionReference = (String) request;
-            TransactionDetailsCallback transactionDetailsCallback = (TransactionDetailsCallback)callback;
-
-            this.setReqHandler(new TransactionReqHandler(transactionReference, transactionDetailsCallback));
 
             return true;
 
@@ -196,6 +216,11 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
         return this.getReqHandler().getReqQueryString();
     }
 
+    protected String getSignature() {
+
+        return this.getReqHandler().getReqSignatureString();
+    }
+
     protected AbstractOperation getOperation(Context context, Bundle bundle) {
 
         return this.getReqHandler().getReqOperation(context, bundle);
@@ -205,6 +230,59 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
 
         return this.getReqHandler().getLoaderId();
     }
+
+    public enum RequestLoaderId {
+
+        GenerateTokenReqLoaderId(0),
+        OrderReqLoaderId(1),
+        PaymentPageReqLoaderId(2),
+        TransactionReqLoaderId(3),
+        TransactionsReqLoaderId(4),
+        SecureVaultReqLoaderId(5),
+        SignatureReqLoaderId(6);
+
+        protected final Integer loaderId;
+
+        RequestLoaderId(Integer loaderId) {
+            this.loaderId = loaderId;
+        }
+
+        public Integer getIntegerValue() {
+            return this.loaderId;
+        }
+
+        public static RequestLoaderId fromIntegerValue(Integer value) {
+
+            if (value == null) return null;
+
+            if (value.equals(GenerateTokenReqLoaderId.getIntegerValue())) {
+                return GenerateTokenReqLoaderId;
+            }
+
+            if (value.equals(OrderReqLoaderId.getIntegerValue())) {
+                return OrderReqLoaderId;
+            }
+
+            if (value.equals(PaymentPageReqLoaderId.getIntegerValue())) {
+                return PaymentPageReqLoaderId;
+            }
+
+            if (value.equals(TransactionReqLoaderId.getIntegerValue())) {
+                return TransactionReqLoaderId;
+            }
+
+            if (value.equals(TransactionsReqLoaderId.getIntegerValue())) {
+                return TransactionsReqLoaderId;
+            }
+
+            if (value.equals(SecureVaultReqLoaderId.getIntegerValue())) {
+                return SecureVaultReqLoaderId;
+            }
+            return null;
+        }
+    }
+
+
 
     protected Context getContext() {
         return contextWeakReference.get();

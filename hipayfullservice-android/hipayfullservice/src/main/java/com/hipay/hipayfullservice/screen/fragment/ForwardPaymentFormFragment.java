@@ -71,13 +71,14 @@ public class ForwardPaymentFormFragment extends AbstractPaymentFormFragment {
 
         final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
         final PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
+        final String signature = args.getString(GatewayClient.SIGNATURE_TAG);
 
         OrderRequest orderRequest = new OrderRequest(paymentPageRequest);
         orderRequest.setPaymentProductCode(paymentProduct.getCode());
 
         mGatewayClient = new GatewayClient(getActivity());
         mCurrentLoading = 1;
-        mGatewayClient.requestNewOrder(orderRequest, new OrderRequestCallback() {
+        mGatewayClient.requestNewOrder(orderRequest, signature, new OrderRequestCallback() {
 
             @Override
             public void onSuccess(final Transaction transaction) {

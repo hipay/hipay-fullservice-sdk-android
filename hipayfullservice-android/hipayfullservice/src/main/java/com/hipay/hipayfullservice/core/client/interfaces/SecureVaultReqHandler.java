@@ -18,9 +18,7 @@ import org.json.JSONObject;
 public class SecureVaultReqHandler extends AbstractReqHandler {
 
     public SecureVaultReqHandler(SecureVaultRequest secureVaultRequest, SecureVaultRequestCallback callback) {
-
-        this.setRequest(secureVaultRequest);
-        this.setCallback(callback);
+        super(secureVaultRequest, callback);
     }
 
     @Override
@@ -41,7 +39,6 @@ public class SecureVaultReqHandler extends AbstractReqHandler {
 
         SecureVaultRequestCallback orderRequestCallback = (SecureVaultRequestCallback)this.getCallback();
         orderRequestCallback.onError(apiException);
-
     }
 
     @Override

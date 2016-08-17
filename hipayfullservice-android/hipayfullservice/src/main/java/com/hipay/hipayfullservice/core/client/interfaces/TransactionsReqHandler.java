@@ -29,10 +29,8 @@ import java.util.Map;
 
 public class TransactionsReqHandler extends AbstractReqHandler {
 
-    public TransactionsReqHandler(String orderId, TransactionsDetailsCallback callback) {
-
-        this.setRequest(orderId);
-        this.setCallback(callback);
+    public TransactionsReqHandler(String orderId, String signature, TransactionsDetailsCallback callback) {
+        super(orderId, signature, callback);
     }
 
     @Override

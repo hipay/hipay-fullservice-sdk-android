@@ -72,6 +72,8 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
         final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
         final PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
 
+        final String signature = args.getString(GatewayClient.SIGNATURE_TAG);
+
         PaymentPageRequest pageRequest = new PaymentPageRequest(paymentPageRequest);
 
         //everything already empty
@@ -83,7 +85,7 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
         this.cancelOperations();
         mGatewayClient = new GatewayClient(getActivity());
         mCurrentLoading = 2;
-        mGatewayClient.createHostedPaymentPageRequest(pageRequest, new PaymentPageRequestCallback() {
+        mGatewayClient.createHostedPaymentPageRequest(pageRequest, signature, new PaymentPageRequestCallback() {
 
             @Override
             public void onError(Exception error) {

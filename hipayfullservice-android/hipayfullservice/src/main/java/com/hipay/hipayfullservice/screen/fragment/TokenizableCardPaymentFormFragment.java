@@ -443,6 +443,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
         final PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
 
+        final String signature = args.getString(GatewayClient.SIGNATURE_TAG);
+
         mSecureVaultClient = new SecureVaultClient(getActivity());
         mCurrentLoading = 0;
         mSecureVaultClient.generateToken(
@@ -453,7 +455,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 this.getYearFromExpiry(mCardExpiration.getText().toString()),
                 mCardOwner.getText().toString(),
                 mCardCVV.getText().toString(),
-                //null,
                 false,
 
                 new SecureVaultRequestCallback() {
@@ -487,7 +488,9 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                             mGatewayClient = new GatewayClient(getActivity());
                             mCurrentLoading = 1;
-                            mGatewayClient.requestNewOrder(orderRequest, new OrderRequestCallback() {
+
+
+                            mGatewayClient.requestNewOrder(orderRequest, signature, new OrderRequestCallback() {
 
                                 @Override
                                 public void onSuccess(final Transaction transaction) {

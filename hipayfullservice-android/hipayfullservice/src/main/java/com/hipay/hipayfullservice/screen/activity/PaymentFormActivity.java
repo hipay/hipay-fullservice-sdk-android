@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
+import com.hipay.hipayfullservice.core.client.GatewayClient;
 import com.hipay.hipayfullservice.core.errors.Errors;
 import com.hipay.hipayfullservice.core.errors.exceptions.ApiException;
 import com.hipay.hipayfullservice.core.errors.exceptions.HttpException;
@@ -45,12 +46,13 @@ import java.util.List;
 public class PaymentFormActivity extends AppCompatActivity implements AbstractPaymentFormFragment.OnCallbackOrderListener {
 
     private CustomTheme customTheme;
+
     private ImageButton mToolbarBack;
     private AlertDialog mDialog;
 
     private List<PaymentMethod> history;
 
-    public static Intent getStartIntent(Context context, Bundle paymentPageRequestBundle, Bundle themeBundle, PaymentProduct paymentProduct) {
+    public static Intent getStartIntent(Context context, Bundle paymentPageRequestBundle, Bundle themeBundle, PaymentProduct paymentProduct, String signature) {
 
         Intent starter = new Intent(context, PaymentFormActivity.class);
 
@@ -60,6 +62,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         starter.putExtra(PaymentProduct.TAG, productBundle);
 
         starter.putExtra(CustomTheme.TAG, themeBundle);
+        starter.putExtra(GatewayClient.SIGNATURE_TAG, signature);
 
         return starter;
     }
@@ -512,9 +515,10 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         super.onCreate(savedInstanceState);
 
         Bundle customThemeBundle = getIntent().getBundleExtra(CustomTheme.TAG);
-        CustomTheme customTheme = CustomTheme.fromBundle(customThemeBundle);
 
+        CustomTheme customTheme = CustomTheme.fromBundle(customThemeBundle);
         this.setCustomTheme(customTheme);
+
 
         setContentView(R.layout.activity_payment_form);
 
@@ -558,9 +562,10 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         if (savedInstanceState == null) {
 
             Bundle paymentPageRequestBundle = getIntent().getBundleExtra(PaymentPageRequest.TAG);
+            String signature = getIntent().getStringExtra(GatewayClient.SIGNATURE_TAG);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.form_fragment_container, AbstractPaymentFormFragment.newInstance(paymentPageRequestBundle, paymentProduct, customThemeBundle)).commit();
+                    .replace(R.id.form_fragment_container, AbstractPaymentFormFragment.newInstance(paymentPageRequestBundle, paymentProduct, signature, customThemeBundle)).commit();
         }
     }
 
@@ -692,5 +697,4 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     public void setCustomTheme(CustomTheme customTheme) {
         this.customTheme = customTheme;
     }
-
 }

@@ -2,7 +2,10 @@ package com.hipay.hipayfullservice.example.fragment;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +15,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.SwitchCompat;
@@ -19,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +32,16 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.hipay.hipayfullservice.core.errors.Errors;
 import com.hipay.hipayfullservice.core.errors.exceptions.ApiException;
 import com.hipay.hipayfullservice.core.models.Transaction;
@@ -39,8 +53,10 @@ import com.hipay.hipayfullservice.screen.activity.PaymentProductsActivity;
 import com.hipay.hipayfullservice.screen.helper.ApiLevelHelper;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * Created by nfillion on 15/03/16.
@@ -48,9 +64,16 @@ import java.util.Calendar;
 
 public class DemoFragment extends Fragment {
 
+    private static final String STATE_IS_LOADING = "isLoading";
+    private static final String TAG = "SignatureTAG";
+
+    RequestQueue mRequestQueue;
+
     private FloatingActionButton mDoneFab;
     private EditText mAmount;
     private CustomTheme customTheme;
+
+    private ProgressBar mProgressBar;
 
     private SwitchCompat mGroupCardSwitch;
     private SwitchCompat mReusableTokenSwitch;
@@ -60,6 +83,8 @@ public class DemoFragment extends Fragment {
 
     private AppCompatButton mPaymentProductsButton;
     protected boolean inhibit_spinner;
+
+    protected boolean mLoadingMode;
 
     public static DemoFragment newInstance() {
 
@@ -117,6 +142,8 @@ public class DemoFragment extends Fragment {
 
             Bundle themeBundle = savedInstanceState.getBundle(CustomTheme.TAG);
             theme = CustomTheme.fromBundle(themeBundle);
+
+            mLoadingMode = savedInstanceState.getBoolean(STATE_IS_LOADING);
         }
 
         inhibit_spinner = true;
@@ -238,6 +265,9 @@ public class DemoFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        DemoActivity demoActivity = (DemoActivity) getActivity();
+        mProgressBar = (ProgressBar)demoActivity.findViewById(R.id.progress);
+
         mDoneFab = (FloatingActionButton) view.findViewById(R.id.done);
         mDoneFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -245,15 +275,17 @@ public class DemoFragment extends Fragment {
                 switch (v.getId()) {
                     case R.id.done:
 
-                        final Activity activity = getActivity();
-                        final PaymentPageRequest paymentPageRequest = buildPageRequest(activity);
+                        if (mRequestQueue != null) {
+                            mRequestQueue.cancelAll(TAG);
+                        }
 
                         removeDoneFab(new Runnable() {
-                            @Override
-                            public void run() {
+                                @Override
+                                public void run() {
 
-                                PaymentProductsActivity.start(activity, paymentPageRequest, getCustomTheme());
-                                mDoneFab.setVisibility(View.INVISIBLE);
+                                if (getActivity() != null) {
+                                    requestSignature();
+                                }
                             }
                         });
                         break;
@@ -295,6 +327,111 @@ public class DemoFragment extends Fragment {
         switchTheme(this.getCustomTheme());
     }
 
+    private void requestSignature() {
+
+        setLoadingMode(true);
+
+        //TODO which decimal format?
+        String amount = mAmount.getText().toString();
+        String currency = (String)mCurrencySpinner.getSelectedItem();
+
+        String url = String.format(getString(R.string.server_url), amount, currency);
+        mRequestQueue = Volley.newRequestQueue(getActivity());
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(response.toString(), response.toString());
+
+                        String orderId = null;
+                        try {
+                            orderId = response.getString("order_id");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        String signature = null;
+                        try {
+                            signature = response.getString("signature");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (getActivity() != null) {
+
+                            DemoActivity activity = (DemoActivity)getActivity();
+                            if (!TextUtils.isEmpty(orderId) && !TextUtils.isEmpty(signature) ) {
+
+                                final PaymentPageRequest paymentPageRequest = buildPageRequest(activity, orderId);
+                                PaymentProductsActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
+                                mDoneFab.setVisibility(View.INVISIBLE);
+
+                            } else {
+
+                                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                };
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                builder.setTitle(R.string.error_title_default)
+                                        .setMessage(R.string.unknown_error)
+                                        .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                                        .setCancelable(false)
+                                        .show();
+                                showDoneFab();
+
+                                //DemoActivity demoActivity = (DemoActivity) getActivity();
+                                //ProgressBar progressBar = (ProgressBar) demoActivity.findViewById(R.id.progress);
+                                //progressBar.setVisibility(View.GONE);
+
+
+                            }
+                        }
+
+                        setLoadingMode(false);
+
+                    }
+
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        if (getActivity() != null) {
+
+                            AppCompatActivity activity = (AppCompatActivity)getActivity();
+                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            };
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setTitle(R.string.error_title_default)
+                                    .setMessage(R.string.error_body_default)
+                                    .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                                    .setCancelable(false)
+                                    .show();
+                            showDoneFab();
+
+
+                        }
+
+                        setLoadingMode(false);
+                    }
+                });
+
+        jsObjRequest.setTag(TAG);
+
+        mRequestQueue.add(jsObjRequest);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -312,14 +449,47 @@ public class DemoFragment extends Fragment {
                 }
             });
         }
+
+        setLoadingMode(mLoadingMode);
     }
 
-    protected PaymentPageRequest buildPageRequest(Activity activity) {
+    private void setLoadingMode(boolean loadingMode) {
+
+        if (getActivity() != null) {
+
+            if (loadingMode) {
+
+                mProgressBar.setVisibility(View.VISIBLE);
+            } else {
+
+                mProgressBar.setVisibility(View.GONE);
+            }
+        }
+
+        mLoadingMode = loadingMode;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (mRequestQueue != null) {
+            mRequestQueue.cancelAll(TAG);
+        }
+
+        if (getActivity() != null) {
+
+            mProgressBar.setVisibility(View.GONE);
+        }
+    }
+
+    protected PaymentPageRequest buildPageRequest(Activity activity, String orderId) {
 
         PaymentPageRequest paymentPageRequest = new PaymentPageRequest();
 
-        StringBuilder stringBuilder = new StringBuilder("TEST_SDK_Android_").append(Calendar.getInstance().getTimeInMillis());
-        paymentPageRequest.setOrderId(stringBuilder.toString());
+        //StringBuilder stringBuilder = new StringBuilder("TEST_SDK_Android_").append(Calendar.getInstance().getTimeInMillis());
+        //paymentPageRequest.setOrderId(stringBuilder.toString());
+        paymentPageRequest.setOrderId(orderId);
 
         paymentPageRequest.setShortDescription("Un beau vêtement.");
         paymentPageRequest.setLongDescription("Un très beau vêtement en soie de couleur bleue.");
@@ -371,6 +541,14 @@ public class DemoFragment extends Fragment {
             window.setStatusBarColor(ContextCompat.getColor(demoActivity,
                     customTheme.getColorPrimaryDarkId()));
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mProgressBar.setIndeterminateTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity(), customTheme.getTextColorPrimaryId())));
+
+        } else {
+            mProgressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), customTheme.getTextColorPrimaryId()), PorterDuff.Mode.SRC_IN);
+        }
+
 
         Toolbar toolbar = (Toolbar) demoActivity.findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryId()));
@@ -427,6 +605,14 @@ public class DemoFragment extends Fragment {
         return true;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBundle(CustomTheme.TAG, this.getCustomTheme().toBundle());
+        outState.putBoolean(STATE_IS_LOADING, mLoadingMode);
+    }
+
     public CustomTheme getCustomTheme() {
         return customTheme;
     }
@@ -435,10 +621,4 @@ public class DemoFragment extends Fragment {
         this.customTheme = customTheme;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putBundle(CustomTheme.TAG, this.getCustomTheme().toBundle());
-    }
 }

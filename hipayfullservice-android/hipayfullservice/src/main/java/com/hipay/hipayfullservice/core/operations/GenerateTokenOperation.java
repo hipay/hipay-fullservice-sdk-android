@@ -85,6 +85,11 @@ public class GenerateTokenOperation extends AbstractOperation {
     }
 
     @Override
+    protected String getSignature() {
+        return null;
+    }
+
+    @Override
     protected HttpResult buildFromHttpResponse(HttpResult httpResult) {
         return httpResult;
     }

@@ -17,10 +17,8 @@ import org.json.JSONObject;
  */
 public class OrderReqHandler extends AbstractReqHandler {
 
-    public OrderReqHandler(OrderRequest orderRequest, OrderRequestCallback callback) {
-
-        this.setRequest(orderRequest);
-        this.setCallback(callback);
+    public OrderReqHandler(OrderRequest orderRequest, String signature, OrderRequestCallback callback) {
+        super(orderRequest, signature, callback);
     }
 
     @Override
