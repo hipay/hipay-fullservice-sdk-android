@@ -11,6 +11,8 @@
     <string name="unknown_error">Erreur inconnue</string>
     <string name="pay">Payer %1$s</string>
 
+    <string name="refresh">Actualiser</string>
+
     <string name="transaction_error_declined_title">Transaction refusée</string>
     <string name="transaction_error_declined">Veuillez vérifier vos informations et réessayer.</string>
     <string name="transaction_error_declined_reset">Merci de bien vouloir utiliser un autre moyen de paiement.</string>

@@ -16,6 +16,8 @@
     <string name="unknown_error">Unknown error</string>
     <string name="pay">Pay %1$s</string>
 
+    <string name="refresh">Refresh</string>
+
     <string name="transaction_error_declined_title">Transaction declined</string>
     <string name="transaction_error_declined">Please check your entries and try again</string>
     <string name="transaction_error_declined_reset">Please use another payment method</string>
@@ -57,6 +59,7 @@
     <string name="card_owner_placeholder" translatable="false">Martin Dupont</string>
 
     <string name="payment_product_card_description">Card</string>
+
 
     <string-array name="card_products_list" translatable="false">
         <item>visa</item>

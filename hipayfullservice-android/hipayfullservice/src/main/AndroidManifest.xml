@@ -13,6 +13,7 @@
             />
 
         <activity android:name=".screen.activity.ForwardWebViewActivity"
+            android:theme="@style/PaymentScreens.ForwardWebViewActivity"
             android:launchMode="singleTop"
             android:configChanges="orientation|screenSize">
 

@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
@@ -32,6 +33,8 @@ import com.hipay.hipayfullservice.screen.fragment.TokenizableCardPaymentFormFrag
 import com.hipay.hipayfullservice.screen.helper.ApiLevelHelper;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
 import com.hipay.hipayfullservice.screen.widget.TextSharedElementCallback;
+
+import org.w3c.dom.Text;
 
 import java.net.URL;
 import java.util.List;
@@ -290,6 +293,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                     builder.setTitle(R.string.error_title_connection)
                             .setMessage(R.string.error_body_default)
                             .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                            .setPositiveButton(R.string.error_button_retry, dialogClickListener)
                             .setCancelable(false)
                             .show();
 
@@ -392,8 +396,15 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
                 if (fragment != null) {
 
+                    TextView titleView = (TextView) findViewById(R.id.payment_product_title);
+
+                    String title = null;
+                    if (!TextUtils.isEmpty(titleView.getText())) {
+                        title = titleView.getText().toString();
+                    }
+
                     AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
-                    abstractPaymentFormFragment.launchHostedPaymentPage(forwardUrl.toString());
+                    abstractPaymentFormFragment.launchHostedPaymentPage(forwardUrl.toString(), title);
                 }
 
                 //dismiss the dialog before launching the forward webview
@@ -464,7 +475,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
         Integer statusCode = exception.getStatusCode();
         Integer apiCode = exception.getApiCode();
-
 
         if (statusCode.equals(Errors.Code.APICheckout.getIntegerValue()) &&
                 apiCode != null &&

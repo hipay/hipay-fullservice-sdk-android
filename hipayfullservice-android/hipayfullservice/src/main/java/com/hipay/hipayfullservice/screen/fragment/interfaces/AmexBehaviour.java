@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
@@ -18,7 +20,7 @@ import com.hipay.hipayfullservice.screen.helper.FormHelper;
 public class AmexBehaviour implements ICardBehaviour {
 
     @Override
-    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, boolean networked, Context context) {
+    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, boolean networked, Context context) {
 
         securityCodeLayout.setVisibility(View.VISIBLE);
 
@@ -34,6 +36,9 @@ public class AmexBehaviour implements ICardBehaviour {
         cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_amex, 0);
         cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeAmericanExpress, context))});
 
+        securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_description_cid));
+        securityCodeInfoImageview.setImageResource(R.drawable.cvc_amex);
+
         //cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_black, 0);
 
         //<string name="card_security_code_placeholder_cvv" translatable="false">123</string>
@@ -43,6 +48,7 @@ public class AmexBehaviour implements ICardBehaviour {
         //cardNumber.setText("371244931714724");
         //cardCVV.setText("1234");
     }
+
 
     @Override
     public boolean isSecurityCodeValid(EditText cardCVV) {

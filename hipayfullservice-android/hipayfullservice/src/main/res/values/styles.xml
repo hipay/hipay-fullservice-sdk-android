@@ -22,6 +22,8 @@
 
     <style name="PaymentScreens.PaymentFormActivity" />
 
+    <style name="PaymentScreens.ForwardWebViewActivity" />
+
     <style name="PaymentScreens.CompoundButton" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:background">@drawable/selector_button</item>
         <item name="android:button">@null</item>
@@ -55,6 +57,10 @@
 
     <style name="PaymentScreens.TextAppearance.ErrorSmallItem" parent="TextAppearance.AppCompat.Small">
         <item name="android:textSize">@dimen/error_item_very_small_size</item>
+    </style>
+
+    <style name="PaymentScreens.TextAppearance.InfoItem" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textSize">@dimen/info_item_text_size</item>
     </style>
 
     <style name="PaymentScreens.TextAppearance.Title" parent="TextAppearance.AppCompat.Title">

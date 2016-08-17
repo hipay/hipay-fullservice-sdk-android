@@ -2,9 +2,6 @@
     <string name="app_name">HiPay demo</string>
     <string name="mcommence_demo">HiPay m-commerce demo</string>
 
-    <string name="username" translatable="false">94656047.stage-secure-gateway.hipay-tpp.com</string>
-    <string name="password" translatable="false">Test_pfS0ojds5ZPu1t8ow8PuASCD</string>
-
     <string name="generate_payment_screen">Generate a payment screen</string>
     <string name="amount_and_currency">Amount and currency</string>
     <string name="group_cards">Group card</string>

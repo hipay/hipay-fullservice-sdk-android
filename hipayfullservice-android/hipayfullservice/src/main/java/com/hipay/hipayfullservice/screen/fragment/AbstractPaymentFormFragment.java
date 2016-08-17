@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
 import com.hipay.hipayfullservice.core.client.GatewayClient;
@@ -61,6 +63,10 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     protected TextInputLayout mCardNumberLayout;
     protected TextInputLayout mCardExpirationLayout;
     protected TextInputLayout mCardOwnerLayout;
+
+    protected LinearLayout mSecurityCodeInfoLayout;
+    protected TextView mSecurityCodeInfoTextview;
+    protected ImageView mSecurityCodeInfoImageview;
 
     protected GatewayClient mGatewayClient;
     protected SecureVaultClient mSecureVaultClient;
@@ -201,10 +207,10 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         return contentView;
     }
 
-    public void launchHostedPaymentPage(String forwardURLString) {
+    public void launchHostedPaymentPage(String forwardURLString, String title) {
 
         final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
-        ForwardWebViewActivity.start(getActivity(), forwardURLString, customThemeBundle);
+        ForwardWebViewActivity.start(getActivity(), forwardURLString, title, customThemeBundle);
     }
 
     @Override

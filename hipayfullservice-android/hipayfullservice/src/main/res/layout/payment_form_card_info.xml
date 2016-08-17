@@ -123,4 +123,34 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/card_cvv_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/card_cvv_info_text"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAppearance="@style/PaymentScreens.TextAppearance.InfoItem"
+            android:text="@string/card_security_code_description_cvv"
+            />
+
+        <ImageView
+            android:id="@+id/card_cvv_info_src"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/cvc_mv"/>
+
+    </LinearLayout>
+
+
 </LinearLayout>
