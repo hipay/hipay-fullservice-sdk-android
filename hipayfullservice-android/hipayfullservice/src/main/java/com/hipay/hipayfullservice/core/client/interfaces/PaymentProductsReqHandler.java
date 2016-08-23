@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.hipay.hipayfullservice.core.client.AbstractClient;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.PaymentProductsCallback;
 import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.core.operations.GatewayOperation;
@@ -28,6 +29,11 @@ public class PaymentProductsReqHandler extends AbstractReqHandler {
     }
 
     @Override
+    protected String getDomain() {
+        return "<Gateway>";
+    }
+
+    @Override
     public String getReqQueryString() {
 
         PaymentPageRequest paymentPageRequest = (PaymentPageRequest)this.getRequest();
@@ -41,18 +47,15 @@ public class PaymentProductsReqHandler extends AbstractReqHandler {
 
     @Override
     public int getLoaderId() {
-        return 5;
+        return AbstractClient.RequestLoaderId.PaymentProductsReqLoaderId.getIntegerValue();
     }
 
     @Override
     public void onSuccess(JSONObject jsonObject) {
 
         //JSONObject transactionJSONObject = DataExtractor.getJSONObjectFromField(jsonObject, "transaction");
-
         //Transaction transaction = Transaction.fromJSONObject(transactionJSONObject);
-
         // work on jsonObject list.
-
         //paymentProductsCallback.onSuccess();
     }
 
@@ -76,6 +79,7 @@ public class PaymentProductsReqHandler extends AbstractReqHandler {
 
     @Override
     public void onError(Exception apiException) {
+        super.onError(apiException);
 
         PaymentProductsCallback paymentProductsCallback = (PaymentProductsCallback)this.getCallback();
         paymentProductsCallback.onError(apiException);

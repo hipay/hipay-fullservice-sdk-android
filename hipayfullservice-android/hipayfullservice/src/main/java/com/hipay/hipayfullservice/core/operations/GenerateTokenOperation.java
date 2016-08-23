@@ -80,7 +80,7 @@ public class GenerateTokenOperation extends AbstractOperation {
     }
 
     @Override
-    protected HttpMethod getRequestType() {
+    public HttpMethod getRequestType() {
         return HttpMethod.POST;
     }
 
@@ -95,7 +95,7 @@ public class GenerateTokenOperation extends AbstractOperation {
     }
 
     @Override
-    protected String concatUrl() {
+    public String concatUrl() {
         return null;
     }
 

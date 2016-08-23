@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.hipay.hipayfullservice.core.client.AbstractClient;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionsDetailsCallback;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.operations.GatewayOperation;
@@ -34,6 +35,11 @@ public class TransactionsReqHandler extends AbstractReqHandler {
     }
 
     @Override
+    protected String getDomain() {
+        return "<Gateway>";
+    }
+
+    @Override
     public String getReqQueryString() {
 
         String orderId = (String)this.getRequest();
@@ -51,7 +57,8 @@ public class TransactionsReqHandler extends AbstractReqHandler {
 
     @Override
     public int getLoaderId() {
-        return 4;
+
+        return AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue();
     }
 
     @Override
@@ -109,6 +116,7 @@ public class TransactionsReqHandler extends AbstractReqHandler {
 
     @Override
     public void onError(Exception apiException) {
+        super.onError(apiException);
 
         Log.i(apiException.toString(), apiException.toString());
         TransactionsDetailsCallback transactionsDetailsCallback = (TransactionsDetailsCallback)this.getCallback();

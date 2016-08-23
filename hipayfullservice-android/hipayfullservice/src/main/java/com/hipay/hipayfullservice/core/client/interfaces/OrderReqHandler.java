@@ -3,6 +3,7 @@ package com.hipay.hipayfullservice.core.client.interfaces;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.hipay.hipayfullservice.core.client.AbstractClient;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.OrderRequestCallback;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.operations.GatewayOperation;
@@ -22,6 +23,11 @@ public class OrderReqHandler extends AbstractReqHandler {
     }
 
     @Override
+    protected String getDomain() {
+        return "<Gateway>";
+    }
+
+    @Override
     public String getReqQueryString() {
 
         OrderRequest orderRequest = (OrderRequest)this.getRequest();
@@ -35,7 +41,7 @@ public class OrderReqHandler extends AbstractReqHandler {
 
     @Override
     public int getLoaderId() {
-        return 1;
+        return AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue();
     }
 
     @Override
@@ -54,6 +60,7 @@ public class OrderReqHandler extends AbstractReqHandler {
 
     @Override
     public void onError(Exception apiException) {
+        super.onError(apiException);
 
         OrderRequestCallback orderRequestCallback = (OrderRequestCallback)this.getCallback();
         orderRequestCallback.onError(apiException);

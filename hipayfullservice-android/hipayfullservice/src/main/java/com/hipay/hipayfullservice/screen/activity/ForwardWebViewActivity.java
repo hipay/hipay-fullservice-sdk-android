@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hipay.hipayfullservice.R;
+import com.hipay.hipayfullservice.core.logging.Logger;
 import com.hipay.hipayfullservice.core.models.Order;
 import com.hipay.hipayfullservice.core.models.Transaction;
 import com.hipay.hipayfullservice.core.requests.order.OrderRelatedRequest;
@@ -144,6 +145,8 @@ public class ForwardWebViewActivity extends AppCompatActivity {
                         )
                 {
 
+                    //TODO build Transaction with data
+
                     transaction = new Transaction();
                     Order order = new Order();
                     order.setOrderId(pathSegments.get(2));
@@ -156,6 +159,8 @@ public class ForwardWebViewActivity extends AppCompatActivity {
 
         if (transaction != null) {
 
+            Logger.d("<Gateway>: Handles valid URL");
+
             Intent transactionIntent = getIntent();
             transactionIntent.putExtra(Transaction.TAG, transaction.toBundle());
             setResult(R.id.transaction_succeed, transactionIntent);
@@ -163,7 +168,7 @@ public class ForwardWebViewActivity extends AppCompatActivity {
 
         } else {
 
-            //fail
+            //fail, should not happen
             finish();
         }
     }

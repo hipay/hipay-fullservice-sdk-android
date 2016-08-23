@@ -23,6 +23,8 @@ import com.hipay.hipayfullservice.core.client.interfaces.callbacks.PaymentProduc
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionDetailsCallback;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.TransactionsDetailsCallback;
+import com.hipay.hipayfullservice.core.logging.Logger;
+import com.hipay.hipayfullservice.core.network.AbstractHttpClient;
 import com.hipay.hipayfullservice.core.network.HttpResult;
 import com.hipay.hipayfullservice.core.operations.AbstractOperation;
 import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
@@ -59,6 +61,7 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
     protected void createRequest(T request, String signature, AbstractRequestCallback callback) {
 
         if (this.initReqHandler(request, signature, callback)) {
+
             this.launchOperation();
 
         } else {
@@ -190,7 +193,16 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
         if (this.getContext() != null) {
 
             this.setOperation(this.getOperation(this.getContext(), bundle));
-            return this.getOperation();
+
+            //performs http request
+            AbstractOperation operation = this.getOperation();
+
+            String httpMethod = operation.getRequestType().getStringValue();
+            String path = operation.concatUrl();
+
+            Logger.d(new StringBuilder("<HTTP:> Performs ").append(httpMethod).append(" ").append(path).toString());
+
+            return operation;
         }
 
         return null;
@@ -238,8 +250,7 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
         PaymentPageReqLoaderId(2),
         TransactionReqLoaderId(3),
         TransactionsReqLoaderId(4),
-        SecureVaultReqLoaderId(5),
-        SignatureReqLoaderId(6);
+        PaymentProductsReqLoaderId(5);
 
         protected final Integer loaderId;
 
@@ -275,8 +286,8 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
                 return TransactionsReqLoaderId;
             }
 
-            if (value.equals(SecureVaultReqLoaderId.getIntegerValue())) {
-                return SecureVaultReqLoaderId;
+            if (value.equals(PaymentProductsReqLoaderId.getIntegerValue())) {
+                return PaymentProductsReqLoaderId;
             }
             return null;
         }

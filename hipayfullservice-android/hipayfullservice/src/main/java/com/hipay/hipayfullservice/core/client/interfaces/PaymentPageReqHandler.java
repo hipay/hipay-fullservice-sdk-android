@@ -3,6 +3,7 @@ package com.hipay.hipayfullservice.core.client.interfaces;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.hipay.hipayfullservice.core.client.AbstractClient;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.PaymentPageRequestCallback;
 import com.hipay.hipayfullservice.core.models.HostedPaymentPage;
 import com.hipay.hipayfullservice.core.operations.GatewayOperation;
@@ -20,6 +21,11 @@ public class PaymentPageReqHandler extends AbstractReqHandler {
 
     public PaymentPageReqHandler(PaymentPageRequest paymentPageRequest, String signature, PaymentPageRequestCallback callback) {
         super(paymentPageRequest, signature, callback);
+    }
+
+    @Override
+    protected String getDomain() {
+        return "<Gateway>";
     }
 
     @Override
@@ -49,6 +55,7 @@ public class PaymentPageReqHandler extends AbstractReqHandler {
 
     @Override
     public void onError(Exception apiException) {
+        super.onError(apiException);
 
         PaymentPageRequestCallback orderRequestCallback = (PaymentPageRequestCallback)this.getCallback();
         orderRequestCallback.onError(apiException);
@@ -56,6 +63,6 @@ public class PaymentPageReqHandler extends AbstractReqHandler {
 
     @Override
     public int getLoaderId() {
-        return 2;
+        return AbstractClient.RequestLoaderId.PaymentPageReqLoaderId.getIntegerValue();
     }
 }
