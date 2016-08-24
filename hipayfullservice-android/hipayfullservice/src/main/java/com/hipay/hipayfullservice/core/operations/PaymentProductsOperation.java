@@ -14,7 +14,7 @@ public class PaymentProductsOperation extends GatewayOperation {
     }
 
     @Override
-    protected String concatUrl() {
+    public String concatUrl() {
         return "available-payment-products";
     }
 
@@ -24,7 +24,7 @@ public class PaymentProductsOperation extends GatewayOperation {
     }
 
     @Override
-    protected HttpMethod getRequestType() {
+    public HttpMethod getRequestType() {
         return HttpMethod.GET;
     }
 

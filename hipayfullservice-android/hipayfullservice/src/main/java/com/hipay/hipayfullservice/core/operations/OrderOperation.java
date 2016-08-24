@@ -14,12 +14,12 @@ public class OrderOperation extends GatewayOperation {
     }
 
     @Override
-    protected HttpMethod getRequestType() {
+    public HttpMethod getRequestType() {
         return HttpMethod.POST;
     }
 
     @Override
-    protected String concatUrl() {
+    public String concatUrl() {
         return "order";
     }
 

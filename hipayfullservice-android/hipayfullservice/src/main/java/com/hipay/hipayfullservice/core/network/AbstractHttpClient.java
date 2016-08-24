@@ -26,10 +26,10 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
     }
 
     protected abstract HttpURLConnection getHttpURLConnection() throws IOException;
-    protected abstract HttpMethod getRequestType();
+    public abstract HttpMethod getRequestType();
     protected abstract String getSignature();
     protected abstract T buildFromHttpResponse(HttpResult httpResult);
-    protected abstract String concatUrl();
+    public abstract String concatUrl();
     protected abstract boolean isV2();
 
     protected HttpResult backgroundOperation() {
@@ -144,7 +144,7 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
         mLastData = null;
     }
 
-    protected enum HttpMethod {
+    public enum HttpMethod {
 
         GET ("GET"),
         POST ("POST");

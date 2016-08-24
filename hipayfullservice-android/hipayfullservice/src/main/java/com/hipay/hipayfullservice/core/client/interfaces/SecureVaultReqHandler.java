@@ -3,6 +3,7 @@ package com.hipay.hipayfullservice.core.client.interfaces;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.hipay.hipayfullservice.core.client.AbstractClient;
 import com.hipay.hipayfullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
 import com.hipay.hipayfullservice.core.models.PaymentCardToken;
 import com.hipay.hipayfullservice.core.operations.GenerateTokenOperation;
@@ -36,9 +37,15 @@ public class SecureVaultReqHandler extends AbstractReqHandler {
 
     @Override
     public void onError(Exception apiException) {
+        super.onError(apiException);
 
         SecureVaultRequestCallback orderRequestCallback = (SecureVaultRequestCallback)this.getCallback();
         orderRequestCallback.onError(apiException);
+    }
+
+    @Override
+    protected String getDomain() {
+        return "<SecureVault>";
     }
 
     @Override
@@ -55,7 +62,7 @@ public class SecureVaultReqHandler extends AbstractReqHandler {
 
     @Override
     public int getLoaderId() {
-        return 0;
+        return AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue();
     }
 
 }

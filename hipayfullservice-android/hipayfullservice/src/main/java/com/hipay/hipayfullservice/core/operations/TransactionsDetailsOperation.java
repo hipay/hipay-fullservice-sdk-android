@@ -14,7 +14,7 @@ public class TransactionsDetailsOperation  extends GatewayOperation {
     }
 
     @Override
-    protected String concatUrl() {
+    public String concatUrl() {
         return "transaction";
     }
 
@@ -24,7 +24,7 @@ public class TransactionsDetailsOperation  extends GatewayOperation {
     }
 
     @Override
-    protected HttpMethod getRequestType() {
+    public HttpMethod getRequestType() {
         return HttpMethod.GET;
     }
 }
