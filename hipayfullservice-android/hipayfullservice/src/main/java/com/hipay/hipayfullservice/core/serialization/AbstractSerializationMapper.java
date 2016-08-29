@@ -17,8 +17,14 @@ import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.hipayfullservice.core.requests.securevault.SecureVaultRequest;
+import com.hipay.hipayfullservice.core.serialization.interfaces.CustomThemeSerialization;
+import com.hipay.hipayfullservice.core.serialization.interfaces.FraudScreeningSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.ISerialization;
+import com.hipay.hipayfullservice.core.serialization.interfaces.PaymentProductSerialization;
+import com.hipay.hipayfullservice.core.serialization.interfaces.ThreeDSecureSerialization;
+import com.hipay.hipayfullservice.core.serialization.interfaces.TransactionSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.order.OrderRequestSerialization;
+import com.hipay.hipayfullservice.core.serialization.interfaces.order.OrderSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.order.PaymentPageRequestSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.payment.CardTokenPaymentMethodRequestSerialization;
 import com.hipay.hipayfullservice.core.serialization.interfaces.securevault.SecureVaultRequestSerialization;
@@ -82,34 +88,33 @@ public abstract class AbstractSerializationMapper {
         if (model instanceof PaymentProduct) {
 
             PaymentProduct paymentProduct = (PaymentProduct) model;
-            this.setSerialization(new PaymentProduct.PaymentProductSerialization(paymentProduct));
+            this.setSerialization(new PaymentProductSerialization(paymentProduct));
 
         } else if (model instanceof CustomTheme) {
 
             CustomTheme customTheme = (CustomTheme) model;
-            this.setSerialization(new CustomTheme.CustomThemeSerialization(customTheme));
+            this.setSerialization(new CustomThemeSerialization(customTheme));
 
         } else if (model instanceof Transaction) {
 
             Transaction transaction = (Transaction) model;
-            this.setSerialization(new Transaction.TransactionSerialization(transaction));
+            this.setSerialization(new TransactionSerialization(transaction));
 
         } else if (model instanceof ThreeDSecure) {
 
             ThreeDSecure threeDSecure = (ThreeDSecure) model;
-            this.setSerialization(new ThreeDSecure.ThreeDSecureSerialization(threeDSecure));
+            this.setSerialization(new ThreeDSecureSerialization(threeDSecure));
 
         } else if (model instanceof FraudScreening) {
 
             FraudScreening fraudScreening = (FraudScreening) model;
-            this.setSerialization(new FraudScreening.FraudScreeningSerialization(fraudScreening));
+            this.setSerialization(new FraudScreeningSerialization(fraudScreening));
 
         } else if (model instanceof Order) {
 
             Order order = (Order) model;
-            this.setSerialization(new Order.OrderSerialization(order));
+            this.setSerialization(new OrderSerialization(order));
         }
-
     }
 
     private void initSerializing(AbstractRequest request) {
@@ -144,14 +149,13 @@ public abstract class AbstractSerializationMapper {
             CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest = (CardTokenPaymentMethodRequest)request;
             this.setSerialization(new CardTokenPaymentMethodRequestSerialization(cardTokenPaymentMethodRequest));
         }
-
     }
 
-    public ISerialization getSerialization() {
+    protected ISerialization getSerialization() {
         return serialization;
     }
 
-    public void setSerialization(ISerialization serialization) {
+    protected void setSerialization(ISerialization serialization) {
         this.serialization = serialization;
     }
 

@@ -1,6 +1,7 @@
 package com.hipay.hipayfullservice.core.models;
 
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
+import com.hipay.hipayfullservice.core.mapper.PaymentCardTokenMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 
 import org.json.JSONObject;
@@ -105,45 +106,5 @@ public class PaymentCardToken extends PaymentMethod {
 
     public void setDomesticNetwork(String domesticNetwork) {
         this.domesticNetwork = domesticNetwork;
-    }
-
-    public static class PaymentCardTokenMapper extends AbstractMapper {
-        public PaymentCardTokenMapper(JSONObject jsonObject) {
-            super(jsonObject);
-        }
-
-        @Override
-        protected boolean isValid() {
-
-            if (this.getBehaviour() instanceof MapMapper) {
-
-                if (this.getStringForKey("token") != null) return true;
-            }
-
-            return false;
-        }
-
-        protected PaymentCardToken mappedObject() {
-
-            PaymentCardToken object = new PaymentCardToken();
-
-            object.setToken(this.getStringForKey("token"));
-            object.setRequestID(this.getStringForKey("request_id"));
-            object.setPan(this.getStringForKey("pan"));
-            object.setBrand(this.getStringForKey("brand"));
-            object.setCardHolder(this.getStringForKey("card_holder"));
-            object.setCardExpiryMonth(this.getIntegerForKey("card_expiry_month"));
-            object.setCardExpiryYear(this.getIntegerForKey("card_expiry_year"));
-            object.setIssuer(this.getStringForKey("issuer"));
-            object.setCountry(this.getStringForKey("country"));
-            object.setDomesticNetwork(this.getStringForKey("domesticNetwork"));
-
-            return object;
-        }
-
-        @Override
-        protected Object mappedObjectFromBundle() {
-            return null;
-        }
     }
 }

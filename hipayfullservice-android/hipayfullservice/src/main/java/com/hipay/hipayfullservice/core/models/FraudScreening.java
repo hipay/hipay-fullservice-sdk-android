@@ -3,6 +3,7 @@ package com.hipay.hipayfullservice.core.models;
 import android.os.Bundle;
 
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
+import com.hipay.hipayfullservice.core.mapper.FraudScreeningMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
 import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
@@ -164,110 +165,4 @@ public class FraudScreening extends AbstractModel {
         }
     }
 
-    public static class FraudScreeningSerialization extends AbstractSerialization {
-
-        public FraudScreeningSerialization(FraudScreening fraudScreening) {
-            super(fraudScreening);
-        }
-
-        @Override
-        public Map<String, String> getSerializedRequest() {
-            return null;
-        }
-
-        @Override
-        public String getQueryString() {
-            return null;
-        }
-
-        @Override
-        public Bundle getSerializedBundle() {
-
-            super.getSerializedBundle();
-
-            FraudScreening fraudScreening = (FraudScreening)this.getModel();
-
-            this.putIntForKey("scoring", fraudScreening.getScoring());
-
-            FraudScreeningResult result = fraudScreening.getResult();
-            if (result != null) {
-                this.putStringForKey("result", result.getStringValue());
-            }
-
-            FraudScreeningReview review = fraudScreening.getReview();
-            if (review != null) {
-                this.putStringForKey("review", review.getStringValue());
-            }
-
-            return this.getBundle();
-        }
-    }
-
-    public static class FraudScreeningMapper extends AbstractMapper {
-
-        public FraudScreeningMapper(Object rawData) {
-            super(rawData);
-        }
-
-        @Override
-        protected boolean isValid() {
-
-            if (this.getBehaviour() instanceof MapMapper) {
-
-                if (    this.getStringForKey("result") != null &&
-                        this.getIntegerForKey("scoring") != null) {
-
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        protected FraudScreening mappedObject() {
-
-            FraudScreening object = new FraudScreening();
-
-            object.setScoring(this.getIntegerForKey("scoring"));
-
-            String resultString = this.getLowercaseStringForKey("result");
-            FraudScreeningResult result = FraudScreeningResult.fromStringValue(resultString);
-            if (result == null) {
-                result = FraudScreeningResult.FraudScreeningResultUnknown;
-            }
-            object.setResult(result);
-            String reviewString = this.getLowercaseStringForKey("review");
-            FraudScreeningReview review = FraudScreeningReview.fromStringValue(reviewString);
-            if (review == null) {
-                review = FraudScreeningReview.FraudScreeningReviewNone;
-            }
-            object.setReview(review);
-
-            return object;
-
-        }
-
-        @Override
-        protected FraudScreening mappedObjectFromBundle() {
-
-            FraudScreening object = new FraudScreening();
-
-            object.setScoring(this.getIntegerForKey("scoring"));
-
-            String resultString = this.getLowercaseStringForKey("result");
-            FraudScreeningResult result = FraudScreeningResult.fromStringValue(resultString);
-            if (result == null) {
-                result = FraudScreeningResult.FraudScreeningResultUnknown;
-            }
-            object.setResult(result);
-            String reviewString = this.getLowercaseStringForKey("review");
-            FraudScreeningReview review = FraudScreeningReview.fromStringValue(reviewString);
-            if (review == null) {
-                review = FraudScreeningReview.FraudScreeningReviewNone;
-            }
-            object.setReview(review);
-
-            return object;
-        }
-    }
 }

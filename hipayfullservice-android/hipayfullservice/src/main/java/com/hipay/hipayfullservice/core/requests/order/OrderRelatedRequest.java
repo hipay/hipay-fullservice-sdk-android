@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.hipay.hipayfullservice.core.client.config.ClientConfig;
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
+import com.hipay.hipayfullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.hipayfullservice.core.requests.AbstractRequest;
 import com.hipay.hipayfullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.hipayfullservice.core.requests.info.PersonalInfoRequest;
@@ -446,8 +447,11 @@ public class OrderRelatedRequest extends AbstractRequest {
         protected boolean isValid() {
 
             //TODO add more validations
-            //if (this.getBehaviour() instanceof BundleMapper) {
-            return true;
+            if (this.getBehaviour() instanceof BundleMapper) {
+                return true;
+            }
+
+            return false;
         }
 
         @Override
@@ -517,67 +521,8 @@ public class OrderRelatedRequest extends AbstractRequest {
         @Override
         protected OrderRelatedRequest mappedObject() {
 
+            return null;
             //actually this won't come from JSON
-
-            OrderRelatedRequest orderRelatedRequest = new OrderRelatedRequest();
-
-            orderRelatedRequest.setOrderId(this.getStringForKey("orderid"));
-
-            Integer operationValue = this.getIntegerForKey("operation");
-            if (operationValue != null) {
-                orderRelatedRequest.setOperation(OrderRequestOperation.fromIntegerValue(operationValue));
-            }
-
-            orderRelatedRequest.setShortDescription(this.getStringForKey("description"));
-            orderRelatedRequest.setLongDescription(this.getStringForKey("long_description"));
-            orderRelatedRequest.setCurrency(this.getStringForKey("currency"));
-            orderRelatedRequest.setAmount(this.getFloatForKey("amount"));
-
-            orderRelatedRequest.setShipping(this.getFloatForKey("shipping"));
-            orderRelatedRequest.setTax(this.getFloatForKey("tax"));
-
-            orderRelatedRequest.setClientId(this.getStringForKey("cid"));
-            orderRelatedRequest.setIpAddress(this.getStringForKey("ipaddr"));
-
-            orderRelatedRequest.setHTTPAccept(this.getStringForKey("http_accept"));
-            orderRelatedRequest.setHTTPUserAgent(this.getStringForKey("http_user_agent"));
-            orderRelatedRequest.setDeviceFingerprint(this.getStringForKey("device_fingerprint"));
-            orderRelatedRequest.setLanguage(this.getStringForKey("language"));
-
-            orderRelatedRequest.setAcceptScheme(this.getStringForKey("accept_url"));
-            orderRelatedRequest.setDeclineScheme(this.getStringForKey("decline_url"));
-            orderRelatedRequest.setPendingScheme(this.getStringForKey("pending_url"));
-            orderRelatedRequest.setExceptionScheme(this.getStringForKey("exception_url"));
-            orderRelatedRequest.setCancelScheme(this.getStringForKey("cancel_url"));
-
-            //TODO handle the custom data serialized json
-
-            orderRelatedRequest.setCdata1(this.getStringForKey("cdata1"));
-            orderRelatedRequest.setCdata2(this.getStringForKey("cdata2"));
-            orderRelatedRequest.setCdata3(this.getStringForKey("cdata3"));
-            orderRelatedRequest.setCdata4(this.getStringForKey("cdata4"));
-            orderRelatedRequest.setCdata5(this.getStringForKey("cdata5"));
-            orderRelatedRequest.setCdata6(this.getStringForKey("cdata6"));
-            orderRelatedRequest.setCdata7(this.getStringForKey("cdata7"));
-            orderRelatedRequest.setCdata8(this.getStringForKey("cdata8"));
-            orderRelatedRequest.setCdata9(this.getStringForKey("cdata9"));
-            orderRelatedRequest.setCdata10(this.getStringForKey("cdata10"));
-
-            JSONObject customerObject = this.getJSONObjectForKey("customer");
-            CustomerInfoRequest customerInfoRequest = null;
-            if (customerObject != null) {
-                customerInfoRequest = CustomerInfoRequest.fromJSONObject(customerObject);
-            }
-            orderRelatedRequest.setCustomer(customerInfoRequest);
-
-            JSONObject personalInfoObject = this.getJSONObjectForKey("shipping_address");
-            PersonalInfoRequest personalInfoRequest = null;
-            if (personalInfoObject != null) {
-                personalInfoRequest = PersonalInfoRequest.fromJSONObject(personalInfoObject);
-            }
-            orderRelatedRequest.setShippingAddress(personalInfoRequest);
-
-            return orderRelatedRequest;
         }
     }
 }

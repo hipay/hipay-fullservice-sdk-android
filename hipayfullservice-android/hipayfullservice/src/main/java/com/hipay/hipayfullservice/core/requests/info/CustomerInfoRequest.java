@@ -2,6 +2,7 @@ package com.hipay.hipayfullservice.core.requests.info;
 
 import android.os.Bundle;
 
+import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.hipayfullservice.core.models.Order;
 import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
 import com.hipay.hipayfullservice.core.utils.Utils;
@@ -31,6 +32,7 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
         CustomerInfoRequestMapper mapper = new CustomerInfoRequestMapper(jsonObject);
         return mapper.mappedObject();
     }
+
     public Bundle toBundle() {
 
         CustomerInfoRequest.CustomerInfoRequestSerializationMapper mapper = new CustomerInfoRequest.CustomerInfoRequestSerializationMapper(this);
@@ -130,9 +132,31 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
 
     public static class CustomerInfoRequestSerialization extends PersonalInfoRequestSerialization {
 
-        //TODO time to put a rawData instead of model/request in initializer
         public CustomerInfoRequestSerialization(CustomerInfoRequest customerInfoRequest) {
             super(customerInfoRequest);
+        }
+
+        private String getBirthDate(Integer birthDateDay, Integer birthDateMonth, Integer birthDateYear) {
+
+            if (
+                    birthDateDay != null &&
+                            birthDateDay.intValue() >= 1 &&
+                            birthDateDay.intValue() <= 31 &&
+
+                            birthDateMonth != null &&
+                            birthDateMonth.intValue() >= 1 &&
+                            birthDateMonth.intValue() <= 12 &&
+
+                            birthDateYear != null &&
+                            birthDateYear.intValue() >= 1 &&
+                            birthDateYear.intValue() <= 3000
+                    ) {
+
+                StringBuilder birthDateBuilder = new StringBuilder(birthDateYear.toString()).append(birthDateMonth.toString()).append(birthDateDay.toString());
+                return birthDateBuilder.toString();
+            }
+
+            return null;
         }
 
         @Override
@@ -145,11 +169,8 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
             personalInfoRequestMap.put("email", customerInfoRequest.getEmail());
             personalInfoRequestMap.put("phone", customerInfoRequest.getPhone());
 
-            //TODO send the full birthDate
-            //TODO key = birthdate
-            //personalInfoRequestMap.put("birthDateDay", String.valueOf(customerInfoRequest.getBirthDateMonth()));
-            //personalInfoRequestMap.put("birthDateMonth", String.valueOf(customerInfoRequest.getBirthDateMonth()));
-            //personalInfoRequestMap.put("birthDateYear", String.valueOf(customerInfoRequest.getBirthDateYear()));
+            String birthDate = this.getBirthDate(customerInfoRequest.getBirthDateDay(), customerInfoRequest.getBirthDateMonth(), customerInfoRequest.getBirthDateYear());
+            personalInfoRequestMap.put("birthdate", birthDate);
 
             Order.Gender gender = customerInfoRequest.getGender();
             if (gender != null && gender != Order.Gender.GenderUndefined) {
@@ -164,7 +185,6 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
 
             //super class put data into the bundle first
             super.getSerializedBundle();
-
 
             CustomerInfoRequest customerInfoRequest = (CustomerInfoRequest)this.getModel();
 
@@ -197,10 +217,17 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
         @Override
         protected boolean isValid() {
 
-            return true;
+            if (getBehaviour() instanceof MapMapper) {
+                return true;
+            }
+
+            return false;
         }
 
+        @Override
         protected CustomerInfoRequest mappedObject() {
+
+            //used in HostedPaymentPageMapper (see on iOS), using OrderMapper
 
             PersonalInfoRequest personalInfoRequest = super.mappedObject();
             CustomerInfoRequest object = this.customerFromPersonalRequest(personalInfoRequest);

@@ -3,6 +3,7 @@ package com.hipay.hipayfullservice.core.models;
 import android.os.Bundle;
 
 import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
+import com.hipay.hipayfullservice.core.mapper.PaymentProductMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
@@ -32,16 +33,12 @@ public class PaymentProduct extends AbstractModel {
     }
 
     public PaymentProduct(Set<String> groupedPaymentProductCodes) {
-        this.groupedPaymentProductCodes = groupedPaymentProductCodes;
 
-        //TODO get payment card from resources, need context.
-        //this.paymentProductDescription = res.getString(R.string.payment_product_group_payment_card);
+        this.groupedPaymentProductCodes = groupedPaymentProductCodes;
         this.paymentProductCategoryCode = PaymentProductCategoryCodeCreditCard;
     }
 
-    public PaymentProduct() {
-
-    }
+    public PaymentProduct() {}
 
     public static PaymentProduct fromJSONObject(JSONObject object) {
 
@@ -276,77 +273,5 @@ public class PaymentProduct extends AbstractModel {
         }
     }
 
-    public static class PaymentProductMapper extends AbstractMapper {
 
-        public PaymentProductMapper(Object rawData) {
-            super(rawData);
-        }
-
-        @Override
-        protected boolean isValid() {
-
-            if (this.getBehaviour() instanceof MapMapper) {
-
-                if (this.getStringForKey("code") != null) return true;
-
-            } else if (getBehaviour() instanceof BundleMapper) {
-
-                return true;
-            }
-
-            return true;
-        }
-
-        protected PaymentProduct mappedObject() {
-
-            PaymentProduct object = new PaymentProduct();
-
-            object.setPaymentProductId(this.getStringForKey("id"));
-            object.setCode(this.getStringForKey("code"));
-            object.setPaymentProductDescription(this.getStringForKey("description"));
-            object.setPaymentProductCategoryCode(this.getStringForKey("payment_product_category_code"));
-            object.setTokenizable(this.getBoolForKey("tokenizable"));
-
-            return object;
-        }
-
-        @Override
-        protected PaymentProduct mappedObjectFromBundle() {
-
-            return this.mappedObject();
-        }
-    }
-
-
-    public static class PaymentProductSerialization extends AbstractSerialization {
-
-        public PaymentProductSerialization(PaymentProduct paymentProduct) {
-            super(paymentProduct);
-        }
-
-        @Override
-        public Map<String, String> getSerializedRequest() {
-            return null;
-        }
-
-        @Override
-        public Bundle getSerializedBundle() {
-            super.getSerializedBundle();
-
-            PaymentProduct paymentProduct = (PaymentProduct)this.getModel();
-
-            this.putStringForKey("id", paymentProduct.getPaymentProductId());
-            this.putStringForKey("code", paymentProduct.getCode());
-            this.putStringForKey("description", paymentProduct.getPaymentProductDescription());
-            this.putStringForKey("payment_product_category_code", paymentProduct.getPaymentProductCategoryCode());
-            this.putBoolForKey("tokenizable", paymentProduct.isTokenizable());
-
-            return this.getBundle();
-        }
-
-        @Override
-        public String getQueryString() {
-            return null;
-        }
-    }
 }

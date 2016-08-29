@@ -72,7 +72,6 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
         }
 
         return httpResult;
-        // first one on s'en tape
 
     }
 

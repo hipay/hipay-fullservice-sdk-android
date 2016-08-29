@@ -1,7 +1,6 @@
 package com.hipay.hipayfullservice.core.models;
 
-import com.hipay.hipayfullservice.core.mapper.AbstractMapper;
-import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
+import com.hipay.hipayfullservice.core.mapper.HostedPaymentPageMapper;
 
 import org.json.JSONObject;
 
@@ -148,59 +147,6 @@ public class HostedPaymentPage extends AbstractModel {
 
     public void setCdata10(String cdata10) {
         this.cdata10 = cdata10;
-    }
-
-
-
-    public static class HostedPaymentPageMapper extends AbstractMapper {
-        public HostedPaymentPageMapper(Object rawdata) {
-            super(rawdata);
-        }
-
-        @Override
-        protected boolean isValid() {
-
-            if (this.getBehaviour() instanceof MapMapper) {
-
-                if (this.getURLForKey("forwardUrl") != null) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        protected HostedPaymentPage mappedObject() {
-
-            HostedPaymentPage object = new HostedPaymentPage();
-
-            //TODO set orderMapper
-            //[object setValue:[[HPFOrderMapper mapperWithRawData:[self getDictionaryForKey:@"order"]] mappedObject] forKey:@"order"];
-
-            object.setCdata1(this.getStringForKey("cdata1"));
-            object.setCdata2(this.getStringForKey("cdata2"));
-            object.setCdata3(this.getStringForKey("cdata3"));
-            object.setCdata4(this.getStringForKey("cdata4"));
-            object.setCdata5(this.getStringForKey("cdata5"));
-            object.setCdata6(this.getStringForKey("cdata6"));
-            object.setCdata7(this.getStringForKey("cdata7"));
-            object.setCdata8(this.getStringForKey("cdata8"));
-            object.setCdata9(this.getStringForKey("cdata9"));
-            object.setCdata10(this.getStringForKey("cdata10"));
-
-            object.setForwardUrl(this.getURLForKey("forwardUrl"));
-            object.setTest(this.getBoolForKey("test"));
-            object.setMid(this.getStringForKey("mid"));
-
-
-            return object;
-
-        }
-
-        @Override
-        protected Object mappedObjectFromBundle() {
-            return null;
-        }
     }
 
 }

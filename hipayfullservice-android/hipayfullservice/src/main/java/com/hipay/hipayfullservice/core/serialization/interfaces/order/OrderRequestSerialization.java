@@ -1,5 +1,7 @@
 package com.hipay.hipayfullservice.core.serialization.interfaces.order;
 
+import android.os.Bundle;
+
 import com.hipay.hipayfullservice.core.requests.order.OrderRequest;
 import com.hipay.hipayfullservice.core.requests.payment.AbstractPaymentMethodRequest;
 import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRequest;
@@ -16,6 +18,7 @@ public class OrderRequestSerialization extends OrderRelatedRequestSerialization 
         super(orderRequest);
     }
 
+    @Override
     public Map<String, String> getSerializedRequest() {
 
         Map<String, String> relatedRequestMap = super.getSerializedRequest();
@@ -25,7 +28,6 @@ public class OrderRequestSerialization extends OrderRelatedRequestSerialization 
         relatedRequestMap.put("payment_product", orderRequest.getPaymentProductCode());
 
         //TODO add payment method
-
         AbstractPaymentMethodRequest paymentMethodRequest = orderRequest.getPaymentMethod();
 
         //TODO the handling better
@@ -40,8 +42,16 @@ public class OrderRequestSerialization extends OrderRelatedRequestSerialization 
         return relatedRequestMap;
     }
 
+    @Override
     public String getQueryString() {
 
         return Utils.queryStringFromMap(this.getSerializedRequest());
+    }
+
+    @Override
+    public Bundle getSerializedBundle() {
+
+        //TODO check about this bundle
+        return super.getSerializedBundle();
     }
 }

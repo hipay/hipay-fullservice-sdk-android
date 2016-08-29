@@ -36,7 +36,11 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         retMap.put("description", orderRelatedRequest.getShortDescription());
         retMap.put("long_description", orderRelatedRequest.getLongDescription());
         retMap.put("currency", orderRelatedRequest.getCurrency());
-        retMap.put("amount", String.valueOf(orderRelatedRequest.getAmount()));
+
+        Float amount = orderRelatedRequest.getAmount();
+        if (amount != null) {
+            retMap.put("amount", String.valueOf(orderRelatedRequest.getAmount()));
+        }
 
         Float shipping = orderRelatedRequest.getShipping();
         if (shipping != null) {
@@ -75,13 +79,13 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         retMap.put("cdata9", orderRelatedRequest.getCdata9());
         retMap.put("cdata10", orderRelatedRequest.getCdata10());
 
-
         CustomerInfoRequest customerInfoRequest = orderRelatedRequest.getCustomer();
-        Map<String, String> customerInfoMap = customerInfoRequest.getSerializedObject();
-        retMap.putAll(customerInfoMap);
+        if (customerInfoRequest != null) {
+            Map<String, String> customerInfoMap = customerInfoRequest.getSerializedObject();
+            retMap.putAll(customerInfoMap);
+        }
 
-        //TODO check about personal info prefix to handle
-
+        //TODO put the "shippingAddress" prefix
         //PersonalInfoRequest personalInfoRequest = orderRelatedRequest.getShippingAddress();
         //Map<String, String> personalInfoMap = personalInfoRequest.getSerializedObject();
         //retMap.putAll(personalInfoMap);

@@ -121,35 +121,4 @@ public class CustomTheme extends AbstractModel {
             return customTheme;
         }
     }
-
-    public static class CustomThemeSerialization extends AbstractSerialization {
-
-        public CustomThemeSerialization(CustomTheme customTheme) {
-            super(customTheme);
-        }
-
-        @Override
-        public Map<String, String> getSerializedRequest() {
-            return null;
-        }
-
-        @Override
-        public Bundle getSerializedBundle() {
-
-            super.getSerializedBundle();
-
-            CustomTheme customTheme = (CustomTheme)this.getModel();
-
-            this.putIntForKey("colorPrimary", customTheme.getColorPrimaryId());
-            this.putIntForKey("colorPrimaryDark", customTheme.getColorPrimaryDarkId());
-            this.putIntForKey("colorTextPrimary", customTheme.getTextColorPrimaryId());
-
-            return this.getBundle();
-        }
-
-        @Override
-        public String getQueryString() {
-            return null;
-        }
-    }
 }

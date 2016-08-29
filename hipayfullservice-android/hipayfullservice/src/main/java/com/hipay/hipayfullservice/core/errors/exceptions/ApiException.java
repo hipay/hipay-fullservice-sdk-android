@@ -72,6 +72,7 @@ public class ApiException extends AbstractException {
             return true;
         }
 
+        @Override
         protected ApiException mappedObject() {
 
             return null;

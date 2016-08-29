@@ -66,43 +66,4 @@ public class Operation extends AbstractModel {
         this.operation = operation;
     }
 
-    public static class OperationMapper extends AbstractMapper {
-
-        public OperationMapper(Object rawData) {
-            super(rawData);
-        }
-
-        @Override
-        protected boolean isValid() {
-
-            if (this.getBehaviour() instanceof MapMapper) {
-
-                if (this.getStringForKey("operation") != null) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        protected Operation mappedObject() {
-
-            Operation object = new Operation();
-
-            String operationTypeString = this.getLowercaseStringForKey("operation");
-            OperationType operationType = OperationType.fromStringValue(operationTypeString);
-            if (operationType == null) {
-                operationType = OperationType.OperationTypeUnknown;
-            }
-            object.setOperation(operationType);
-
-            return object;
-
-        }
-
-        @Override
-        protected Operation mappedObjectFromBundle() {
-            return null;
-        }
-    }
 }

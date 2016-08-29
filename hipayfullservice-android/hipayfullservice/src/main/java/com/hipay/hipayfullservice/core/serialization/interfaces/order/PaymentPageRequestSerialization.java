@@ -9,6 +9,7 @@ import com.hipay.hipayfullservice.core.requests.payment.CardTokenPaymentMethodRe
 import com.hipay.hipayfullservice.core.utils.Utils;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,6 +71,7 @@ public class PaymentPageRequestSerialization extends OrderRelatedRequestSerializ
         //card grouping is not sent to server
 
         //TODO handle the map better
+
         while (relatedRequestMap.values().remove(null));
 
         return relatedRequestMap;
