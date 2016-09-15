@@ -34,14 +34,6 @@ public class DataExtractor {
         return null;
     }
 
-    public static Object getObjectFromField(JSONArray jsonArray, int i) {
-
-        if (checkParams(jsonArray, i)) {
-            return jsonArray.opt(i);
-        }
-        return null;
-    }
-
     public static String getStringFromField(JSONObject jsonObject, String field) {
 
         if (checkParams(jsonObject, field)) {
@@ -49,40 +41,6 @@ public class DataExtractor {
         }
         return null;
     }
-
-    public static int getLengthFromObject(JSONObject jsonObject) {
-
-        if (jsonObject != null) {
-            return jsonObject.length();
-        }
-
-        return 0;
-    }
-
-    public static String getStringFromField(JSONArray jsonArray, int i) {
-
-        if (checkParams(jsonArray, i)) {
-            return jsonArray.optString(i, null);
-        }
-        return null;
-    }
-
-    public static Long getLongFromField(JSONObject jsonObject, String field) {
-
-        if (checkParams(jsonObject, field)) {
-            return jsonObject.optLong(field, -1);
-        }
-        return null;
-    }
-
-    public static Long getLongFromField(JSONArray jsonArray, int i) {
-
-        if (checkParams(jsonArray, i)) {
-            return jsonArray.optLong(i, -1);
-        }
-        return null;
-    }
-
 
     public static Integer getIntegerFromField(JSONObject jsonObject, String field) {
 
@@ -100,22 +58,6 @@ public class DataExtractor {
 
         if (checkParams(jsonArray, i)) {
             return jsonArray.optInt(i, -1);
-        }
-        return null;
-    }
-
-    public static Double getDoubleFromField(JSONObject jsonObject, String field) {
-
-        if (checkParams(jsonObject, field)) {
-            return jsonObject.optDouble(field, -1);
-        }
-        return null;
-    }
-
-    public static Double getDoubleFromField(JSONArray jsonArray, int field) {
-
-        if (checkParams(jsonArray, field)) {
-            return jsonArray.optDouble(field, -1);
         }
         return null;
     }
@@ -147,14 +89,14 @@ public class DataExtractor {
         return null;
     }
 
-    public static JSONArray getJSONArrayFromField(JSONArray jsonArray, int i) {
+    //public static JSONArray getJSONArrayFromField(JSONArray jsonArray, int i) {
 
-        if (checkParams(jsonArray, i)) {
-            return jsonArray.optJSONArray(i);
-        }
+        //if (checkParams(jsonArray, i)) {
+            //return jsonArray.optJSONArray(i);
+        //}
 
-        return null;
-    }
+        //return null;
+    //}
 
     public static Date getDateFromField(JSONObject jsonObject, String field) {
 
@@ -193,4 +135,3 @@ public class DataExtractor {
         return null;
     }
 }
-

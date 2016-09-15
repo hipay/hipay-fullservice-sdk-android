@@ -2,7 +2,6 @@ package com.hipay.hipayfullservice.core.utils;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.os.Bundle;
 import android.text.TextUtils;
 
 import java.io.BufferedReader;
@@ -17,6 +16,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -84,19 +84,8 @@ public class Utils {
             }
         }
 
+        Collections.sort(parameters);
         return TextUtils.join("&", parameters);
-    }
-
-    public static String bundleToString(Bundle bundle) {
-        if (bundle == null) {
-            return null;
-        }
-        String string = "Bundle{";
-        for (String key : bundle.keySet()) {
-            string += " " + key + " => " + bundle.get(key) + ";";
-        }
-        string += " }Bundle";
-        return string;
     }
 
     public static String readStream(InputStream is) {

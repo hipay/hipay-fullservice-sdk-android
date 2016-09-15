@@ -153,17 +153,9 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
             mGatewayClient.reLaunchOperations(mCurrentLoading);
         }
 
-        //TODO need to handle the loadInBackground elements
-
         //----- end magic lines -----
-
-
-        //LoaderManager supportLoaderManager = getActivity().getSupportLoaderManager();
-        //lm = getLoaderManager();
-        //if (supportLoaderManager.getLoader(0) != null) {
-        //supportLoaderManager.initLoader(0, null, getActivity());
-        //}
     }
+
     @Override
     public void onDetach() {
         super.onDetach();

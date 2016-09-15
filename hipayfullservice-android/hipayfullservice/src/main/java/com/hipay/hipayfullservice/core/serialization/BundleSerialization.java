@@ -29,7 +29,9 @@ public class BundleSerialization implements IBundle {
     @Override
     public void putString(String key, String string) {
 
-        this.getBundle().putString(key, string);
+        if (string != null) {
+            this.getBundle().putString(key, string);
+        }
     }
 
     @Override

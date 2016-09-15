@@ -2,6 +2,7 @@ package com.hipay.hipayfullservice.core.models;
 
 import android.os.Bundle;
 
+import com.hipay.hipayfullservice.core.mapper.OrderMapper;
 import com.hipay.hipayfullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.hipayfullservice.core.serialization.AbstractSerializationMapper;
 import com.hipay.hipayfullservice.core.serialization.interfaces.AbstractSerialization;
@@ -200,124 +201,6 @@ public class Order extends AbstractModel {
         @Override
         protected Bundle getSerializedBundle() {
             return super.getSerializedBundle();
-        }
-    }
-
-    public static class OrderSerialization extends AbstractSerialization {
-
-        public OrderSerialization(Order order) {
-            super(order);
-        }
-
-        @Override
-        public Map<String, String> getSerializedRequest() {
-            return null;
-        }
-
-        @Override
-        public Bundle getSerializedBundle() {
-            super.getSerializedBundle();
-
-            Order order = (Order)this.getModel();
-
-            this.putStringForKey("currency", order.getCurrency());
-            this.putStringForKey("customerID", order.getCustomerId());
-            this.putStringForKey("language", order.getLanguage());
-            this.putStringForKey("id", order.getOrderId());
-            this.putIntForKey("attempts", order.getAttemps());
-            this.putFloatForKey("amount", order.getAmount());
-            this.putFloatForKey("shipping", order.getShipping());
-            this.putFloatForKey("tax", order.getTax());
-            this.putIntForKey("decimals", order.getDecimals());
-
-            Gender gender = order.getGender();
-            if (gender != null) {
-                this.putStringForKey("gender", Character.toString(gender.getCharValue()));
-            }
-
-            this.putDateForKey("dateCreated", order.getDateCreated());
-
-            return this.getBundle();
-        }
-
-        @Override
-        public String getQueryString() {
-            return null;
-        }
-    }
-
-    public static class OrderMapper extends PersonalInformation.PersonalInformationMapper {
-        public OrderMapper(Object rawData) {
-            super(rawData);
-        }
-
-        @Override
-        protected boolean isValid() {
-
-            if (this.getBehaviour() instanceof MapMapper) {
-
-                if (super.isValid()) {
-                    if (this.getStringForKey("id") != null) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        @Override
-        protected Order mappedObject() {
-
-            Order object = new Order();
-
-            object.setCurrency(this.getStringForKey("currency"));
-            object.setCustomerId(this.getStringForKey("customerId"));
-            object.setLanguage(this.getStringForKey("language"));
-            object.setOrderId(this.getStringForKey("id"));
-            object.setAttempts(this.getIntegerForKey("attempts"));
-            object.setAmount(this.getFloatForKey("amount"));
-            object.setShipping(this.getFloatForKey("shipping"));
-            object.setTax(this.getFloatForKey("tax"));
-            object.setDecimals(this.getIntegerForKey("decimals"));
-
-            String genderString = this.getEnumCharForKey("gender");
-            Gender gender = Gender.fromStringValue(genderString);
-            if (gender == null) {
-                gender = Gender.GenderUndefined;
-            }
-            object.setGender(gender);
-
-            object.setDateCreated(this.getDateForKey("dateCreated"));
-
-            return object;
-
-        }
-
-        @Override
-        protected Order mappedObjectFromBundle() {
-
-            Order object = new Order();
-
-            object.setCurrency(this.getStringForKey("currency"));
-            object.setCustomerId(this.getStringForKey("customerId"));
-            object.setLanguage(this.getStringForKey("language"));
-            object.setOrderId(this.getStringForKey("id"));
-            object.setAttempts(this.getIntegerForKey("attempts"));
-            object.setAmount(this.getFloatForKey("amount"));
-            object.setShipping(this.getFloatForKey("shipping"));
-            object.setTax(this.getFloatForKey("tax"));
-            object.setDecimals(this.getIntegerForKey("decimals"));
-
-            String genderString = this.getEnumCharForKey("gender");
-            Gender gender = Gender.fromStringValue(genderString);
-            if (gender == null) {
-                gender = Gender.GenderUndefined;
-            }
-            object.setGender(gender);
-            object.setDateCreated(this.getDateForKey("dateCreated"));
-
-            return object;
         }
     }
 }

@@ -37,6 +37,22 @@ public class MapMapper implements IBehaviour {
 
     @Override
     public Float getFloatForKey(String key) {
+
+        Object object = this.getObjectForKey(key);
+        if (object != null ) {
+            if (object instanceof String) {
+                String digits = (String)object;
+
+                Float floatForKey;
+                try {
+                    floatForKey = Float.parseFloat(digits);
+                } catch (NumberFormatException e) {
+                    floatForKey = null;
+                }
+                return floatForKey;
+            }
+        }
+
         return null;
     }
 
@@ -104,7 +120,6 @@ public class MapMapper implements IBehaviour {
     public Date getDateISO8601ForKey(String key) {
 
         String stringDate = this.getStringForKey(key);
-
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ", Locale.US);
 
         Date date = null;
@@ -127,7 +142,6 @@ public class MapMapper implements IBehaviour {
     public Date getDateBasicForKey(String key) {
 
         String stringDate = this.getStringForKey(key);
-
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZZZ", Locale.US);
 
         Date date = null;
@@ -145,7 +159,6 @@ public class MapMapper implements IBehaviour {
 
             return date;
         }
-
     }
 
     @Override
@@ -183,10 +196,10 @@ public class MapMapper implements IBehaviour {
             String string = (String) object;
 
             if (string.equalsIgnoreCase("true")) {
-                return Boolean.valueOf(true);
+                return Boolean.TRUE;
 
             } else if (string.equalsIgnoreCase("false")) {
-                return Boolean.valueOf(true);
+                return Boolean.FALSE;
             }
         } else if (object instanceof Boolean) {
 
@@ -196,8 +209,6 @@ public class MapMapper implements IBehaviour {
         return null;
     }
 
-
-
     public Map getMapForKey(String key) {
 
         Object object = this.getObjectForKey(key);
@@ -206,7 +217,6 @@ public class MapMapper implements IBehaviour {
         }
         return null;
     }
-
 
     public URL getURLForKey(String key) {
 

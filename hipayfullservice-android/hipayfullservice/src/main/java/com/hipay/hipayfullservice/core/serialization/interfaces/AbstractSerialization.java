@@ -35,19 +35,19 @@ public abstract class AbstractSerialization<T> implements ISerialization {
     public abstract String getQueryString();
 
     //TODO it should be Bundle or Map behaviour
-    public IBundle getBundleBehaviour() {
+    private IBundle getBundleBehaviour() {
         return bundleBehaviour;
     }
 
-    public void setBundleBehaviour(IBundle bundleBehaviour) {
+    private void setBundleBehaviour(IBundle bundleBehaviour) {
         this.bundleBehaviour = bundleBehaviour;
     }
 
-    public T getModel() {
+    protected T getModel() {
         return model;
     }
 
-    public void setModel(T model) {
+    private void setModel(T model) {
         this.model = model;
     }
 

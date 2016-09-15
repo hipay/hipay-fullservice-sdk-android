@@ -9,35 +9,41 @@ import android.util.Log;
 public class Logger {
 
     private static final boolean DEBUG = true;
-    private static String TAG = "<HiPay>";
+    public static String TAG = "<HiPay>";
 
-    public static void d(String string) {
+    public static int d(String string) {
         if(DEBUG) {
-            Log.d(TAG, string);
+            return Log.d(TAG, string);
         }
+        return -1;
     }
 
-    public static void v(String string) {
+    public static int v(String string) {
         if(DEBUG) {
-            Log.v(TAG, string);
+            return Log.v(TAG, string);
         }
+
+        return -1;
     }
 
-    public static void i(String string) {
+    public static int i(String string) {
         if(DEBUG) {
-            Log.i(TAG, string);
+            return Log.i(TAG, string);
         }
+        return -1;
     }
 
-    public static void e(String string) {
+    public static int e(String string) {
         if(DEBUG) {
-            Log.e(TAG, string);
+            return Log.e(TAG, string);
         }
+        return -1;
     }
 
-    public static void w(String string) {
+    public static int w(String string) {
         if(DEBUG) {
-            Log.w(TAG, string);
+            return Log.w(TAG, string);
         }
+        return -1;
     }
 }

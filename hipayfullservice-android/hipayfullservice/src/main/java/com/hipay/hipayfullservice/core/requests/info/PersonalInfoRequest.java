@@ -182,7 +182,6 @@ public class PersonalInfoRequest extends AbstractRequest {
 
     public static class PersonalInfoRequestSerialization extends AbstractSerialization {
 
-        //TODO customer doesn't have to setRequest
         public PersonalInfoRequestSerialization(PersonalInfoRequest personalInfoRequest) {
 
             super(personalInfoRequest);
