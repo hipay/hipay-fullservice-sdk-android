@@ -1,6 +1,9 @@
 package com.hipay.hipayfullservice.core.mapper.interfaces;
 
 import android.os.Bundle;
+import android.util.Log;
+
+import com.hipay.hipayfullservice.core.utils.Utils;
 
 import org.json.JSONObject;
 
@@ -103,18 +106,17 @@ public class BundleMapper implements IBehaviour {
     }
 
     @Override
-    public Date getDateISO8601ForKey(String key) {
-        return null;
-    }
-
-    @Override
-    public Date getDateBasicForKey(String key) {
-        return null;
-    }
-
-    @Override
     public Date getDateForKey(String key) {
-        return null;
+
+        String stringDate = this.getStringForKey(key);
+
+        Date date = Utils.getBasicDateFromString(stringDate);
+
+        if (date == null) {
+            date = Utils.getDateISO8601FromString(stringDate);
+        }
+
+        return date;
     }
 
     @Override

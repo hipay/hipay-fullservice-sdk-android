@@ -18,8 +18,7 @@
     <string name="form_payment_products_realtime_banking">Banque temps réel</string>
 
     <string name="error_button_dismiss">@android:string/ok</string>
-
-    <string name="config_parameters_error">N\'oubliez pas de renseigner votre identifiant et mot de passe comme arguments.</string>
+    <string name="config_parameters_error">Vous devez renseigner votre identifiant et mot de passe comme arguments.</string>
 
     <string name="form_payment_products_categories">Moyens de paiement</string>
 

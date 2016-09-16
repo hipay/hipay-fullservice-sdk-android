@@ -4,6 +4,15 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
 
+    signingConfigs {
+        release {
+            storeFile file(String.valueOf(System.getenv("KEYSTORE")))
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
+    }
+
     defaultConfig {
         applicationId "com.hipay.hipayfullservice.example"
         minSdkVersion 14
@@ -17,6 +26,8 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
         }
     }
 }
@@ -42,4 +53,5 @@ dependencies {
     compile "com.android.support:recyclerview-v7:${supportLibVersion}"
     compile "com.android.support:cardview-v7:${supportLibVersion}"
 
+    compile 'net.hockeyapp.android:HockeySDK:4.1.1'
 }

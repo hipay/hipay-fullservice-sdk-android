@@ -1,7 +1,9 @@
 package com.hipay.hipayfullservice.core.utils;
 
 import android.annotation.TargetApi;
+import android.net.ParseException;
 import android.os.Build;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import java.io.BufferedReader;
@@ -15,9 +17,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -86,6 +91,66 @@ public class Utils {
 
         Collections.sort(parameters);
         return TextUtils.join("&", parameters);
+    }
+
+    public static Date getBasicDateFromString(String stringDate) {
+
+        Date date = null;
+
+        if (!TextUtils.isEmpty(stringDate)) {
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZZZ", Locale.US);
+            try {
+                date = dateFormatter.parse(stringDate);
+            } catch (java.text.ParseException e) {
+                return null;
+                //e.printStackTrace();
+            }
+        }
+
+        return date;
+    }
+
+    public static String getStringFromDateISO8601(Date date) {
+
+        String stringDate = null;
+        if (date != null) {
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ", Locale.US);
+            stringDate = dateFormatter.format(date);
+        }
+
+        return stringDate;
+    }
+
+    public static Date getDateISO8601FromString(String stringDate) {
+
+        Date date = null;
+
+        if (!TextUtils.isEmpty(stringDate)) {
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ", Locale.US);
+            try {
+                date = dateFormatter.parse(stringDate);
+            } catch (java.text.ParseException e) {
+                //e.printStackTrace();
+                return null;
+            }
+        }
+
+        return date;
+    }
+
+    public static String bundleToString(Bundle bundle) {
+        if (bundle == null) {
+            return null;
+        }
+        String string = "Bundle{";
+        for (String key : bundle.keySet()) {
+            string += " " + key + " => " + bundle.get(key) + ";";
+        }
+        string += " }Bundle";
+        return string;
     }
 
     public static String readStream(InputStream is) {

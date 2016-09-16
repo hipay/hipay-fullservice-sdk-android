@@ -75,6 +75,8 @@ public class OrderMapperTest {
         BDDMockito.given(TextUtils.isDigitsOnly("2")).willReturn(true);
         BDDMockito.given(TextUtils.isDigitsOnly("8")).willReturn(true);
 
+        BDDMockito.given(TextUtils.isEmpty(null)).willReturn(true);
+
         Order orderTest = orderMapper.mappedObject();
 
         assertEquals(orderTest.getCurrency(), orderCompare.getCurrency());
