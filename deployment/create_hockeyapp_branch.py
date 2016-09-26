@@ -8,7 +8,7 @@ from shutil import move
 from os import remove, close
 
 public_identifier = None;
-bundle_identifier = "com.hipay.hipayfullservice.example." + os.environ.get('CIRCLE_BRANCH')
+bundle_identifier = "com.hipay.fullservice.example." + os.environ.get('CIRCLE_BRANCH')
 bundle_identifier = bundle_identifier.replace('/', '.')
 bundle_identifier = bundle_identifier.replace('-', '')
 

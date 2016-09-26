@@ -14,7 +14,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.hipay.hipayfullservice.example"
+        applicationId "com.hipay.fullservice.example"
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
