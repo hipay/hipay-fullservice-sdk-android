@@ -187,5 +187,7 @@ public class ProductCategoryListFragment extends ListFragment implements Adapter
 
         CheckedTextView checkedTextView = (CheckedTextView)view;
         mCallback.onPaymentProductSelected(position, checkedTextView.isChecked());
+
+        //throw new RuntimeException("This is a crash");
     }
 }

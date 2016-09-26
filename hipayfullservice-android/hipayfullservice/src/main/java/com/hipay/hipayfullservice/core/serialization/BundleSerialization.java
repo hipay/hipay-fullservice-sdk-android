@@ -2,6 +2,8 @@ package com.hipay.hipayfullservice.core.serialization;
 
 import android.os.Bundle;
 
+import com.hipay.hipayfullservice.core.utils.Utils;
+
 import java.net.URL;
 import java.util.Date;
 
@@ -71,7 +73,8 @@ public class BundleSerialization implements IBundle {
 
         if (date != null) {
 
-            this.getBundle().putString(key, date.toString());
+            String stringDate = Utils.getStringFromDateISO8601(date);
+            this.getBundle().putString(key, stringDate);
         }
     }
 

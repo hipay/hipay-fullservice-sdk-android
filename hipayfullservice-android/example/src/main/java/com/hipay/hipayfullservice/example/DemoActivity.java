@@ -1,6 +1,8 @@
 package com.hipay.hipayfullservice.example;
 
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,6 +16,11 @@ import com.hipay.hipayfullservice.core.models.PaymentProduct;
 import com.hipay.hipayfullservice.example.fragment.DemoFragment;
 import com.hipay.hipayfullservice.example.fragment.ProductCategoryListFragment;
 import com.hipay.hipayfullservice.screen.model.CustomTheme;
+
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.Tracking;
+import net.hockeyapp.android.UpdateManager;
+import net.hockeyapp.android.metrics.MetricsManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,6 +74,52 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
             mPaymentProducts.put(PaymentProduct.PaymentProductCategoryCodeEWallet, savedInstanceState.getBoolean(PaymentProduct.PaymentProductCategoryCodeEWallet));
             mPaymentProducts.put(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking, savedInstanceState.getBoolean(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking));
         }
+
+        checkForUpdates();
+        MetricsManager.register(this, getApplication());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        String hockeyAppId = getMetaData("net.hockeyapp.android.appIdentifier");
+        if (hockeyAppId != null) {
+            CrashManager.register(this);
+
+            Tracking.startUsage(this);
+        }
+    }
+
+    private void checkForUpdates() {
+        // Remove this for store builds!
+        UpdateManager.register(this);
+    }
+
+    private void unregisterManagers() {
+        UpdateManager.unregister();
+    }
+
+    private String getMetaData(String name) {
+
+        try {
+
+            ApplicationInfo app = this.getPackageManager().getApplicationInfo(this.getPackageName(),PackageManager.GET_META_DATA);
+            Bundle bundle = app.metaData;
+
+            if(bundle != null) {
+
+                String value = bundle.getString(name);
+
+                if (value != null) {
+                    return value;
+                }
+            }
+
+        } catch (PackageManager.NameNotFoundException e) {
+            //e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -145,5 +198,18 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         }
 
         return list;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterManagers();
+        Tracking.stopUsage(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterManagers();
     }
 }

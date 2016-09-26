@@ -23,9 +23,6 @@ public interface IBehaviour {
     Number getNumberForKey(String key);
     Integer getIntegerForKey(String key);
 
-    Date getDateISO8601ForKey(String key);
-    Date getDateBasicForKey(String key);
-
     Date getDateForKey(String key);
     String getEnumCharForKey(String key);
 

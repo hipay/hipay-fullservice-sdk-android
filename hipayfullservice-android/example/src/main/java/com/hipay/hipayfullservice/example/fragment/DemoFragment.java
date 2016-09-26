@@ -389,7 +389,6 @@ public class DemoFragment extends Fragment {
                                 //ProgressBar progressBar = (ProgressBar) demoActivity.findViewById(R.id.progress);
                                 //progressBar.setVisibility(View.GONE);
 
-
                             }
                         }
 

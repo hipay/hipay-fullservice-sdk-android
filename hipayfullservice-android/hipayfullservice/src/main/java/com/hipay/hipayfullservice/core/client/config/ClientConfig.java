@@ -1,7 +1,5 @@
 package com.hipay.hipayfullservice.core.client.config;
 
-import android.text.TextUtils;
-
 /**
  * Created by nfillion on 21/01/16.
  */
@@ -14,13 +12,20 @@ public class ClientConfig {
     private String password;
     private String userAgent;
 
-    public static final String GatewayClientBaseURLStage = "https://stage-secure-gateway.hipay-tpp.com/rest/v1";
-    public static final String GatewayClientBaseURLNewStage = "https://new-stage-secure-gateway.hipay-tpp.com/rest/v2";
+    //public static final String GatewayClientBaseURLStage = "https://stage-secure-gateway.hipay-tpp.com/rest/v1";
+    public static final String GatewayClientBaseURLStage = "https://preprod-secure-gateway.allopass.com/rest/v1";
+
+    //public static final String GatewayClientBaseURLNewStage = "https://new-stage-secure-gateway.hipay-tpp.com/rest/v2";
+    public static final String GatewayClientBaseURLNewStage = "https://preprod-secure-gateway.allopass.com/rest/v2";
+
     public static final String GatewayClientBaseURLProduction = "https://secure-gateway.hipay-tpp.com/rest/v1";
 
     public static final String SecureVaultClientBaseURLStage = "https://stage-secure-vault.hipay-tpp.com/rest/v1";
     public static final String SecureVaultClientBaseURLProduction = "https://secure-vault.hipay-tpp.com/rest/v1";
 
+    //public static final String SecureVaultClientBaseURLStage = "https://preprod-secure-vault.allopass.com/rest/v1";
+    //public static final String SecureVaultClientBaseURLStage = "https://stage-secure-vault.hipay-tpp.com/rest/v1";
+    //public static final String SecureVaultClientBaseURLProduction = "https://secure-vault.hipay-tpp.com/rest/v1";
 
     private ClientConfig() {
     }

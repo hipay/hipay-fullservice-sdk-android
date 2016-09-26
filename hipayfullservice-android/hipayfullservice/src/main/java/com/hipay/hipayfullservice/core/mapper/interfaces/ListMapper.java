@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.hipay.hipayfullservice.core.mapper.interfaces.IBehaviour;
 import com.hipay.hipayfullservice.core.utils.DataExtractor;
+import com.hipay.hipayfullservice.core.utils.Utils;
 
 import org.json.JSONObject;
 
@@ -97,63 +98,17 @@ public class ListMapper implements IBehaviour {
     }
 
     @Override
-    public Date getDateISO8601ForKey(String key) {
-
-        String stringDate = this.getStringForKey(key);
-
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ", Locale.US);
-
-        Date date = null;
-
-        try {
-
-            date = dateFormatter.parse(stringDate);
-
-        } catch (ParseException e) {
-
-            e.printStackTrace();
-            date = null;
-
-        } finally {
-
-            return date;
-        }
-    }
-
-    @Override
-    public Date getDateBasicForKey(String key) {
-
-        String stringDate = this.getStringForKey(key);
-
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZZZ", Locale.US);
-
-        Date date = null;
-
-        try {
-
-            date = dateFormatter.parse(stringDate);
-
-        } catch (ParseException e) {
-
-            e.printStackTrace();
-            date = null;
-
-        } finally {
-
-            return date;
-        }
-
-    }
-
-    @Override
     public Date getDateForKey(String key) {
 
-        Date date = this.getDateBasicForKey(key);
-        if (date != null) {
-            return date;
+        String stringDate = this.getStringForKey(key);
+
+        Date date = Utils.getBasicDateFromString(stringDate);
+
+        if (date == null) {
+            date = Utils.getDateISO8601FromString(stringDate);
         }
 
-        return this.getDateISO8601ForKey(key);
+        return date;
     }
 
     @Override
