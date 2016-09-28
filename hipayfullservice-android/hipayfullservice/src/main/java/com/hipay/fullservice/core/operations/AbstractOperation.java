@@ -65,11 +65,6 @@ public abstract class AbstractOperation extends AbstractHttpClient<HttpResult> {
             keySign = "HS";
         }
 
-        String str = new StringBuilder(keySign)
-                .append(" ")
-                .append(Base64.encodeToString(b, Base64.NO_WRAP))
-                .toString();
-
         return new StringBuilder(keySign)
                 .append(" ")
                 .append(Base64.encodeToString(b, Base64.NO_WRAP))

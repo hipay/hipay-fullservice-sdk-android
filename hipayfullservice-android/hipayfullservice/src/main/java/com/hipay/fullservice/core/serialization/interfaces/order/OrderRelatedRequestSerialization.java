@@ -86,9 +86,19 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         }
 
         //TODO put the "shippingAddress" prefix
-        //PersonalInfoRequest personalInfoRequest = orderRelatedRequest.getShippingAddress();
-        //Map<String, String> personalInfoMap = personalInfoRequest.getSerializedObject();
-        //retMap.putAll(personalInfoMap);
+        PersonalInfoRequest personalInfoRequest = orderRelatedRequest.getShippingAddress();
+        if (personalInfoRequest != null) {
+
+            Map<String, String> personalInfoMap = personalInfoRequest.getSerializedObject();
+
+            Map<String, String> shipToPersonalInfoMap = new HashMap<>(personalInfoMap.size());
+            for (Map.Entry<String, String> entry : personalInfoMap.entrySet())
+            {
+                shipToPersonalInfoMap.put("shipto_" + entry.getKey(), entry.getValue());
+            }
+
+            retMap.putAll(shipToPersonalInfoMap);
+        }
 
         //TODO check if objects are removed
         while (retMap.values().remove(null));
