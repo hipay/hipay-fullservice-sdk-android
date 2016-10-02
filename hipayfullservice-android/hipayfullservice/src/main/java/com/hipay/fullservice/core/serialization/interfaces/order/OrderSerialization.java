@@ -3,7 +3,7 @@ package com.hipay.fullservice.core.serialization.interfaces.order;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.models.Order;
-import com.hipay.fullservice.core.serialization.interfaces.AbstractSerialization;
+import com.hipay.fullservice.core.serialization.interfaces.PersonalInformationSerialization;
 
 import java.util.Map;
 
@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by nfillion on 08/09/16.
  */
 
-public class OrderSerialization extends AbstractSerialization {
+public class OrderSerialization extends PersonalInformationSerialization {
 
     public OrderSerialization(Order order) {
         super(order);
@@ -25,6 +25,8 @@ public class OrderSerialization extends AbstractSerialization {
     @Override
     public Bundle getSerializedBundle() {
         super.getSerializedBundle();
+
+        //TODO handle that Order extends PersonalInformation
 
         Order order = (Order)this.getModel();
 

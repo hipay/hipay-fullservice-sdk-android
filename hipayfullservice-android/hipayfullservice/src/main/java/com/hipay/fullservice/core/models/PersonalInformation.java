@@ -1,5 +1,12 @@
 package com.hipay.fullservice.core.models;
 
+import android.os.Bundle;
+
+import com.hipay.fullservice.core.mapper.PersonalInformationMapper;
+import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
+
+import org.json.JSONObject;
+
 /**
  * Created by nfillion on 25/01/16.
  */
@@ -17,6 +24,41 @@ public class PersonalInformation extends AbstractModel {
     protected String email;
 
     public PersonalInformation() {
+    }
+
+    protected static class PersonalInformationSerializationMapper extends AbstractSerializationMapper {
+
+        protected PersonalInformationSerializationMapper(PersonalInformation personalInformation) {
+            super(personalInformation);
+        }
+
+        @Override
+        protected String getQueryString() {
+            return super.getQueryString();
+        }
+
+        @Override
+        protected Bundle getSerializedBundle() {
+            return super.getSerializedBundle();
+        }
+    }
+
+    public static PersonalInformation fromJSONObject(JSONObject object) {
+
+        PersonalInformationMapper mapper = new PersonalInformationMapper(object);
+        return mapper.mappedObject();
+    }
+
+    public static PersonalInformation fromBundle(Bundle bundle) {
+
+        PersonalInformationMapper mapper = new PersonalInformationMapper(bundle);
+        return mapper.mappedObjectFromBundle();
+    }
+
+    public Bundle toBundle() {
+
+        PersonalInformationSerializationMapper mapper = new PersonalInformationSerializationMapper(this);
+        return mapper.getSerializedBundle();
     }
 
     public String getFirstname() {

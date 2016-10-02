@@ -23,14 +23,15 @@ public class TransactionMapper extends TransactionRelatedItemMapper {
     @Override
     protected boolean isValid() {
 
-        if (this.getBehaviour() instanceof MapMapper) {
+        //TODO is transaction used as MapMapper?
+        //if (this.getBehaviour() instanceof MapMapper) {
 
             if (super.isValid()) {
 
                 if (this.getStringForKey("state") != null)
                     return true;
             }
-        }
+        //}
 
         return false;
     }

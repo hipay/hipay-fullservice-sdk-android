@@ -3,6 +3,7 @@ package com.hipay.fullservice.core.models;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.OrderMapper;
+import com.hipay.fullservice.core.mapper.PersonalInformationMapper;
 import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 
 import org.json.JSONObject;
@@ -12,7 +13,7 @@ import java.util.Date;
 /**
  * Created by nfillion on 25/01/16.
  */
-public class Order extends AbstractModel {
+public class Order extends PersonalInformation {
 
     protected String orderId;
     protected Date dateCreated;
@@ -184,7 +185,7 @@ public class Order extends AbstractModel {
         }
     }
 
-    protected static class OrderSerializationMapper extends AbstractSerializationMapper {
+    protected static class OrderSerializationMapper extends PersonalInformationSerializationMapper {
 
         protected OrderSerializationMapper(Order order) {
             super(order);

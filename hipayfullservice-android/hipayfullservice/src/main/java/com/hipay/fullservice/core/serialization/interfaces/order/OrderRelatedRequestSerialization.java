@@ -85,7 +85,6 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
             retMap.putAll(customerInfoMap);
         }
 
-        //TODO put the "shippingAddress" prefix
         PersonalInfoRequest personalInfoRequest = orderRelatedRequest.getShippingAddress();
         if (personalInfoRequest != null) {
 
@@ -155,12 +154,10 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         this.putStringForKey("cdata9", orderRelatedRequest.getCdata9());
         this.putStringForKey("cdata10", orderRelatedRequest.getCdata10());
 
-        //TODO put
         CustomerInfoRequest customerInfoRequest = orderRelatedRequest.getCustomer();
         Bundle customerInfoBundle = customerInfoRequest.toBundle();
         this.putBundleForKey("customer", customerInfoBundle);
 
-        //TODO handle the "shipto_" before
         PersonalInfoRequest personalInfoRequest = orderRelatedRequest.getShippingAddress();
         Bundle personalInfoBundle = personalInfoRequest.toBundle();
         this.putBundleForKey("shipping_address", personalInfoBundle);

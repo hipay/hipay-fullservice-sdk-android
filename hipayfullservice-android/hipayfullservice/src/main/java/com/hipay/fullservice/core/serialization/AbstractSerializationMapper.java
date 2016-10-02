@@ -8,6 +8,7 @@ import com.hipay.fullservice.core.models.AbstractModel;
 import com.hipay.fullservice.core.models.FraudScreening;
 import com.hipay.fullservice.core.models.Order;
 import com.hipay.fullservice.core.models.PaymentProduct;
+import com.hipay.fullservice.core.models.PersonalInformation;
 import com.hipay.fullservice.core.models.ThreeDSecure;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.AbstractRequest;
@@ -21,6 +22,7 @@ import com.hipay.fullservice.core.serialization.interfaces.CustomThemeSerializat
 import com.hipay.fullservice.core.serialization.interfaces.FraudScreeningSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.ISerialization;
 import com.hipay.fullservice.core.serialization.interfaces.PaymentProductSerialization;
+import com.hipay.fullservice.core.serialization.interfaces.PersonalInformationSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.ThreeDSecureSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.TransactionSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.order.OrderRequestSerialization;
@@ -114,6 +116,11 @@ public abstract class AbstractSerializationMapper {
 
             Order order = (Order) model;
             this.setSerialization(new OrderSerialization(order));
+
+        } else if (model instanceof PersonalInformation) {
+
+            PersonalInformation personalInformation = (PersonalInformation) model;
+            this.setSerialization(new PersonalInformationSerialization(personalInformation));
         }
     }
 
