@@ -9,10 +9,10 @@ root = tree.getroot()
 
 for string in root.iter('string'):
 	if string.get('name') == 'username':
-		string.text = os.environ.get('HIPAY_FULLSERVICE_PREPROD_API_USERNAME', '')
+		string.text = os.environ.get('HIPAY_FULLSERVICE_STAGE_API_USERNAME', '')
 
 	if string.get('name') == 'password':
-		string.text = os.environ.get('HIPAY_FULLSERVICE_PREPROD_API_PASSWORD', '')
+		string.text = os.environ.get('HIPAY_FULLSERVICE_STAGE_API_PASSWORD', '')
 
 tree.write(path)
 

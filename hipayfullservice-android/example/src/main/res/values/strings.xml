@@ -22,7 +22,7 @@
 
     <string name="config_parameters_error">You must specify your API username and password as arguments.</string>
     
-    <string name="server_url" translatable="false">http://www.hipay-pos-platform.com:8012/index.php/order_info?amount=%1$s&amp;currency=%2$s</string>
+    <string name="server_url" translatable="false">https://developer.hipay.com/misc/public_credentials_signature.php?amount=%1$s&amp;currency=%2$s</string>
 
     <string-array name="array_currencies" translatable="false">
         <item>EUR</item>
