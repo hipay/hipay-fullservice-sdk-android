@@ -7,7 +7,7 @@ import com.hipay.fullservice.core.models.PersonalInformation;
  * Created by nfillion on 08/09/16.
  */
 
-public abstract class PersonalInformationMapper extends AbstractMapper {
+public class PersonalInformationMapper extends AbstractMapper {
     public PersonalInformationMapper(Object rawData) {
         super(rawData);
     }
@@ -23,7 +23,7 @@ public abstract class PersonalInformationMapper extends AbstractMapper {
         return false;
     }
 
-    protected Object mappedObject() {
+    public PersonalInformation mappedObject() {
 
         PersonalInformation object = new PersonalInformation();
 
@@ -43,8 +43,22 @@ public abstract class PersonalInformationMapper extends AbstractMapper {
     }
 
     @Override
-    protected Object mappedObjectFromBundle() {
-        return null;
+    public PersonalInformation mappedObjectFromBundle() {
+
+        PersonalInformation object = new PersonalInformation();
+
+        object.setFirstname(this.getStringForKey("firstname"));
+        object.setLastname(this.getStringForKey("lastname"));
+        object.setStreetAddress(this.getStringForKey("streetAddress"));
+        object.setLocality(this.getStringForKey("streetLocality"));
+        object.setPostalCode(this.getStringForKey("postalCode"));
+        object.setCountry(this.getStringForKey("country"));
+        object.setMsisdn(this.getStringForKey("msisdn"));
+        object.setPhone(this.getStringForKey("phone"));
+        object.setPhoneOperator(this.getStringForKey("phoneOperator"));
+        object.setEmail(this.getStringForKey("email"));
+
+        return object;
     }
 }
 

@@ -15,12 +15,12 @@ public abstract class TransactionRelatedItemMapper extends AbstractMapper {
     @Override
     protected boolean isValid() {
 
-        if (this.getBehaviour() instanceof MapMapper) {
+        //if (this.getBehaviour() instanceof MapMapper) {
 
             if (this.getStringForKey("transactionReference") != null) {
                 return true;
             }
-        }
+        //}
 
         return true;
     }

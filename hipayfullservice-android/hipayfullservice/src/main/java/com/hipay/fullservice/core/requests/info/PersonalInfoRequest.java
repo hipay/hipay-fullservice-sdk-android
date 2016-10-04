@@ -218,7 +218,7 @@ public class PersonalInfoRequest extends AbstractRequest {
             this.putStringForKey("lastname", personalInfoRequest.getLastname());
             this.putStringForKey("streetaddress", personalInfoRequest.getStreetAddress());
             this.putStringForKey("streetaddress2", personalInfoRequest.getStreetAddress2());
-            this.putStringForKey("recipientInfo", personalInfoRequest.getRecipientInfo());
+            this.putStringForKey("recipientinfo", personalInfoRequest.getRecipientInfo());
             this.putStringForKey("city", personalInfoRequest.getCity());
             this.putStringForKey("state", personalInfoRequest.getState());
             this.putStringForKey("zipcode", personalInfoRequest.getZipCode());

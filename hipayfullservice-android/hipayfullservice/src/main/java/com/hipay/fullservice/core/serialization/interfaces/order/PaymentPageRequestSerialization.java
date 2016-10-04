@@ -69,7 +69,7 @@ public class PaymentPageRequestSerialization extends OrderRelatedRequestSerializ
 
         //card grouping is not sent to server
 
-        //TODO handle the map better
+        //TODO handle the map better, particularly with booleans.
 
         while (relatedRequestMap.values().remove(null));
 
