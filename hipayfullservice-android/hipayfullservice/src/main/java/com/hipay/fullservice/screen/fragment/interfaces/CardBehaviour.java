@@ -36,7 +36,6 @@ public class CardBehaviour {
             this.setCardBehaviour(new MaestroBehaviour());
 
         } else if (paymentProductCode.equals(PaymentProduct.PaymentProductCodeAmericanExpress)) {
-
             this.setCardBehaviour(new AmexBehaviour());
 
         } else if (paymentProductCode.equals(PaymentProduct.PaymentProductCodeVisa)) {
@@ -56,6 +55,10 @@ public class CardBehaviour {
             this.setCardBehaviour(new CBBehaviour());
 
         } else  if (paymentProductCode.equals(PaymentProduct.PaymentProductCategoryCodeCard)){
+
+            this.setCardBehaviour(new DefaultBehaviour());
+
+        } else {
 
             this.setCardBehaviour(new DefaultBehaviour());
         }
