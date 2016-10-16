@@ -99,7 +99,6 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
             retMap.putAll(shipToPersonalInfoMap);
         }
 
-        //TODO check if objects are removed
         while (retMap.values().remove(null));
 
         return retMap;

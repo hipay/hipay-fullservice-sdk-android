@@ -22,7 +22,6 @@ public class IDealPaymentMethodRequest extends AbstractPaymentMethodRequest {
         this.issuerBankId = issuerBankId;
     }
 
-    //TODO issuerBanks
     /*
 
     + (NSDictionary *)issuerBanks

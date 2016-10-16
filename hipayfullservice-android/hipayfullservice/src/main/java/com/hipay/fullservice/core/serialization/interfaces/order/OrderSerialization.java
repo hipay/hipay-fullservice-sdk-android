@@ -26,8 +26,6 @@ public class OrderSerialization extends PersonalInformationSerialization {
     public Bundle getSerializedBundle() {
         super.getSerializedBundle();
 
-        //TODO handle that Order extends PersonalInformation
-
         Order order = (Order)this.getModel();
 
         this.putStringForKey("currency", order.getCurrency());

@@ -100,35 +100,18 @@ public class DataExtractor {
 
     public static Date getDateFromField(JSONObject jsonObject, String field) {
 
-        //TODO check the right format
-
+        //not used in fields, converted to string
         if (checkParams(jsonObject, field)) {
-
             //return jsonObject.optLong(field, -1);
         }
 
         return null;
-        /*
-        if ((jsonObject == null) || (field == null))
-            return null;
-        try {
-            long timestamp = jsonObject.getLong(field);
-            Date date = new Date(timestamp * 1000);
-            return date;
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-        */
     }
 
     public static Date getDateFromField(JSONArray jsonArray, int i) {
 
-        //TODO check the right format
-
+        //not used in fields, converted to string
         if (checkParams(jsonArray, i)) {
-
             //return jsonObject.optLong(field, -1);
         }
 

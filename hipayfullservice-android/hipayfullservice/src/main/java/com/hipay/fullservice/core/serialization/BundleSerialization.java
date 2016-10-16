@@ -68,9 +68,6 @@ public class BundleSerialization implements IBundle {
     @Override
     public void putDate(String key, Date date) {
 
-        //TODO set date correctly in a string and put this in bundle
-        // put this timestamp or an iso format.
-
         if (date != null) {
 
             String stringDate = Utils.getStringFromDateISO8601(date);
