@@ -5,6 +5,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +23,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -178,5 +183,20 @@ public class Utils {
         }
 
         return string;
+    }
+
+    public static Map<String, String> jsonToMap(String t) throws JSONException {
+
+        HashMap<String, String> map = new HashMap<>();
+        JSONObject jObject = new JSONObject(t);
+        Iterator<?> keys = jObject.keys();
+
+        while( keys.hasNext() ){
+            String key = (String)keys.next();
+            String value = jObject.getString(key);
+            map.put(key, value);
+        }
+
+        return map;
     }
 }

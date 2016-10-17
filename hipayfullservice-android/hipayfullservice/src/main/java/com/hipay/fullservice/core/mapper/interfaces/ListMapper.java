@@ -147,6 +147,11 @@ public class ListMapper implements IBehaviour {
         return null;
     }
 
+    @Override
+    public Map<String, String> getMapJSONForKey(String key) {
+        return null;
+    }
+
 
     @Override
     public Map getMapForKey(String key) {

@@ -8,7 +8,12 @@ import com.hipay.fullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.fullservice.core.requests.AbstractRequest;
 import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.info.PersonalInfoRequest;
+import com.hipay.fullservice.core.utils.Utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -44,7 +49,7 @@ public class OrderRelatedRequest extends AbstractRequest {
     protected CustomerInfoRequest customer;
     protected PersonalInfoRequest shippingAddress;
 
-    protected Map customData;
+    protected Map<String, String> customData;
 
     protected String cdata1;
     protected String cdata2;
@@ -331,11 +336,11 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.language = language;
     }
 
-    public Map getCustomData() {
+    public Map<String, String> getCustomData() {
         return customData;
     }
 
-    public void setCustomData(Map customData) {
+    public void setCustomData(Map<String, String> customData) {
         this.customData = customData;
     }
 
@@ -486,7 +491,7 @@ public class OrderRelatedRequest extends AbstractRequest {
             orderRelatedRequest.setExceptionScheme(this.getStringForKey("exception_url"));
             orderRelatedRequest.setCancelScheme(this.getStringForKey("cancel_url"));
 
-            //TODO handle the custom data serialized json
+            orderRelatedRequest.setCustomData(this.getMapJSONForKey("custom_data"));
 
             orderRelatedRequest.setCdata1(this.getStringForKey("cdata1"));
             orderRelatedRequest.setCdata2(this.getStringForKey("cdata2"));

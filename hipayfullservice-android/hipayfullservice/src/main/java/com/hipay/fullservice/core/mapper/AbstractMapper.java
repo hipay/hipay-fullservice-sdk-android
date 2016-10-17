@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.security.InvalidParameterException;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by nfillion on 25/01/16.
@@ -119,6 +120,11 @@ public abstract class AbstractMapper<T> {
     protected Bundle getBundleForKey(String key) {
 
         return this.getBehaviour().getBundleForKey(key);
+    }
+
+    protected Map<String, String> getMapJSONForKey(String key) {
+
+        return this.getBehaviour().getMapJSONForKey(key);
     }
 
     public IBehaviour getBehaviour() {

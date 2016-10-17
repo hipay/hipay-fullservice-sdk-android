@@ -123,6 +123,11 @@ public class MapMapper implements IBehaviour {
     }
 
     @Override
+    public Map<String, String> getMapJSONForKey(String key) {
+        return null;
+    }
+
+    @Override
     public Date getDateForKey(String key) {
 
         String stringDate = this.getStringForKey(key);
