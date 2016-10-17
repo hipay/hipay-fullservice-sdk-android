@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hipay.fullservice.R;
+import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.client.SecureVaultClient;
 import com.hipay.fullservice.core.client.interfaces.callbacks.OrderRequestCallback;
@@ -446,7 +447,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         final String signature = args.getString(GatewayClient.SIGNATURE_TAG);
 
         mSecureVaultClient = new SecureVaultClient(getActivity());
-        mCurrentLoading = 0;
+        mCurrentLoading = AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue();
         mSecureVaultClient.generateToken(
 
                 mCardNumber.getText().toString(),
@@ -460,6 +461,9 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 new SecureVaultRequestCallback() {
                     @Override
                     public void onSuccess(PaymentCardToken paymentCardToken) {
+
+                        //secure vault
+                        cancelLoaderId(AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue());
 
                         Log.i(paymentCardToken.toString(), paymentCardToken.toString());
 
@@ -480,15 +484,11 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                         orderRequest.setPaymentMethod(cardTokenPaymentMethodRequest);
 
-                        //secure vault
-                        cancelLoaderId(0);
-
                         //check if activity is still available
                         if (getActivity() != null) {
 
                             mGatewayClient = new GatewayClient(getActivity());
-                            mCurrentLoading = 1;
-
+                            mCurrentLoading = AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue();
 
                             mGatewayClient.requestNewOrder(orderRequest, signature, new OrderRequestCallback() {
 
@@ -496,20 +496,20 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                                 public void onSuccess(final Transaction transaction) {
                                     //Log.i("transaction success", transaction.toString());
 
+                                    cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                                     if (mCallback != null) {
                                         mCallback.onCallbackOrderReceived(transaction, null);
                                     }
 
-                                    cancelLoaderId(1);
                                 }
 
                                 @Override
                                 public void onError(Exception error) {
+                                    cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                                     //Log.i("transaction failed", error.getLocalizedMessage());
                                     if (mCallback != null) {
                                         mCallback.onCallbackOrderReceived(null, error);
                                     }
-                                    cancelLoaderId(1);
                                 }
                             });
                         }
@@ -518,10 +518,10 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                     @Override
                     public void onError(Exception error) {
 
+                        cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                         if (mCallback != null) {
                             mCallback.onCallbackOrderReceived(null, error);
                         }
-                        cancelLoaderId(0);
                     }
                 }
         );

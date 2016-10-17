@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.client.interfaces.callbacks.OrderRequestCallback;
 import com.hipay.fullservice.core.models.PaymentProduct;
@@ -43,7 +44,6 @@ public class ForwardPaymentFormFragment extends AbstractPaymentFormFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("onCreate", "onCreate");
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ForwardPaymentFormFragment extends AbstractPaymentFormFragment {
         orderRequest.setPaymentProductCode(paymentProduct.getCode());
 
         mGatewayClient = new GatewayClient(getActivity());
-        mCurrentLoading = 1;
+        mCurrentLoading = AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue();
         mGatewayClient.requestNewOrder(orderRequest, signature, new OrderRequestCallback() {
 
             @Override
@@ -88,7 +88,7 @@ public class ForwardPaymentFormFragment extends AbstractPaymentFormFragment {
                     mCallback.onCallbackOrderReceived(transaction, null);
                 }
 
-                cancelLoaderId(1);
+                cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
             }
 
             @Override
@@ -97,7 +97,7 @@ public class ForwardPaymentFormFragment extends AbstractPaymentFormFragment {
                 if (mCallback != null) {
                     mCallback.onCallbackOrderReceived(null, error);
                 }
-                cancelLoaderId(1);
+                cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
             }
         });
     }

@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.hipay.fullservice.R;
+import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.client.interfaces.callbacks.PaymentProductsCallback;
 import com.hipay.fullservice.core.models.PaymentProduct;
@@ -105,10 +106,12 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
         final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(paymentPageRequestBundle);
 
         mGatewayClient = new GatewayClient(getActivity());
-        mCurrentLoading = 5;
+        mCurrentLoading = AbstractClient.RequestLoaderId.PaymentProductsReqLoaderId.getIntegerValue();
         mGatewayClient.getPaymentProducts(paymentPageRequest, new PaymentProductsCallback() {
             @Override
             public void onSuccess(List<PaymentProduct> pProducts) {
+
+                cancelOperations();
 
                 if (pProducts != null && !pProducts.isEmpty()) {
 
@@ -138,11 +141,13 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
                             .show();
                 }
 
-                cancelOperations();
             }
 
             @Override
             public void onError(Exception error) {
+
+                // an error occurred
+                cancelOperations();
 
                 if (getActivity() != null) {
 
@@ -165,8 +170,6 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
                             .show();
                 }
 
-                // an error occurred
-                cancelOperations();
             }
         });
     }
