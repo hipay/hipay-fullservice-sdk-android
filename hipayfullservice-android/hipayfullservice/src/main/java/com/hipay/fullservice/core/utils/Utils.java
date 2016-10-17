@@ -185,6 +185,30 @@ public class Utils {
         return string;
     }
 
+    public static String mapToJson(Map<String, String> map) {
+
+        if (map != null) {
+
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(map);
+
+            } catch (Exception exception) {
+                jsonObject = null;
+
+            } finally {
+
+                if (jsonObject != null) {
+
+                    String mapString = jsonObject.toString();
+                    return mapString;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static Map<String, String> jsonToMap(String t) throws JSONException {
 
         HashMap<String, String> map = new HashMap<>();

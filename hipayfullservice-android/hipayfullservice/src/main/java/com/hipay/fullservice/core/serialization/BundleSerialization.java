@@ -66,23 +66,9 @@ public class BundleSerialization implements IBundle {
     @Override
     public void putMapJSON(String key, Map<String,String> map) {
 
-        if (map != null) {
-
-            JSONObject jsonObject = null;
-            try {
-                jsonObject = new JSONObject(map);
-
-            } catch (Exception exception) {
-                jsonObject = null;
-
-            } finally {
-
-                if (jsonObject != null) {
-
-                    String mapString = jsonObject.toString();
-                    this.getBundle().putString(key, mapString);
-                }
-            }
+        String mapString = Utils.mapToJson(map);
+        if (mapString != null) {
+            this.getBundle().putString(key, mapString);
         }
     }
 
@@ -90,7 +76,6 @@ public class BundleSerialization implements IBundle {
     public void putDate(String key, Date date) {
 
         if (date != null) {
-
             String stringDate = Utils.getStringFromDateISO8601(date);
             this.getBundle().putString(key, stringDate);
         }

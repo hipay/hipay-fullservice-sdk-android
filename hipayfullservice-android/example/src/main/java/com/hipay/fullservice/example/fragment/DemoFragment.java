@@ -494,7 +494,7 @@ public class DemoFragment extends Fragment {
 
         paymentPageRequest.getCustomer().setFirstname("Martin");
         paymentPageRequest.getCustomer().setLastname("Dupont");
-        paymentPageRequest.getCustomer().setEmail("nfillion@hipay.com");
+        paymentPageRequest.getCustomer().setEmail("client@domain.com");
 
         paymentPageRequest.getCustomer().setRecipientInfo("Employee");
         paymentPageRequest.getCustomer().setStreetAddress("6 Place du Colonel Bourgoin");

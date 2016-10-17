@@ -6,6 +6,7 @@ import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.info.PersonalInfoRequest;
 import com.hipay.fullservice.core.requests.order.OrderRelatedRequest;
 import com.hipay.fullservice.core.serialization.interfaces.AbstractSerialization;
+import com.hipay.fullservice.core.utils.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +67,8 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         retMap.put("exception_url", orderRelatedRequest.getExceptionScheme());
         retMap.put("cancel_url", orderRelatedRequest.getCancelScheme());
 
-        //TODO custom data json object
+        String cdata = Utils.mapToJson(orderRelatedRequest.getCustomData());
+        retMap.put("custom_data", cdata);
 
         retMap.put("cdata1", orderRelatedRequest.getCdata1());
         retMap.put("cdata2", orderRelatedRequest.getCdata2());
