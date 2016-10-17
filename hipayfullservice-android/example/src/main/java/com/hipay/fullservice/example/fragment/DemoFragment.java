@@ -485,8 +485,6 @@ public class DemoFragment extends Fragment {
 
         PaymentPageRequest paymentPageRequest = new PaymentPageRequest();
 
-        //StringBuilder stringBuilder = new StringBuilder("TEST_SDK_Android_").append(Calendar.getInstance().getTimeInMillis());
-        //paymentPageRequest.setOrderId(stringBuilder.toString());
         paymentPageRequest.setOrderId(orderId);
 
         paymentPageRequest.setShortDescription("Un beau vêtement.");

@@ -101,6 +101,9 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
             retMap.putAll(shipToPersonalInfoMap);
         }
 
+        String source = Utils.mapToJson(orderRelatedRequest.getSource());
+        retMap.put("source", source);
+
         while (retMap.values().remove(null));
 
         return retMap;
@@ -162,6 +165,8 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         PersonalInfoRequest personalInfoRequest = orderRelatedRequest.getShippingAddress();
         Bundle personalInfoBundle = personalInfoRequest.toBundle();
         this.putBundleForKey("shipping_address", personalInfoBundle);
+
+        this.putMapJSONForKey("source", orderRelatedRequest.getSource());
 
         return this.getBundle();
     }

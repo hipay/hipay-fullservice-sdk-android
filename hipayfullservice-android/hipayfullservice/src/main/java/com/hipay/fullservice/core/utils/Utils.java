@@ -187,7 +187,7 @@ public class Utils {
 
     public static String mapToJson(Map<String, String> map) {
 
-        if (map != null) {
+        if (map != null && !map.isEmpty()) {
 
             JSONObject jsonObject = null;
             try {
@@ -221,6 +221,10 @@ public class Utils {
             map.put(key, value);
         }
 
-        return map;
+        if (!map.isEmpty()) {
+            return map;
+        }
+
+        return null;
     }
 }
