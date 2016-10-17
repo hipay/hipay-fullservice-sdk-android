@@ -4,8 +4,11 @@ import android.os.Bundle;
 
 import com.hipay.fullservice.core.utils.Utils;
 
+import org.json.JSONObject;
+
 import java.net.URL;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by nfillion on 18/03/16.
@@ -40,12 +43,7 @@ public class BundleSerialization implements IBundle {
     public void putInt(String key, Integer integer) {
 
         if (integer != null) {
-
             this.getBundle().putInt(key, integer);
-
-        } else {
-
-            //this.getBundle().putInt(key, -1);
         }
     }
 
@@ -62,6 +60,29 @@ public class BundleSerialization implements IBundle {
 
         if (bundle != null) {
             this.getBundle().putBundle(key, bundle);
+        }
+    }
+
+    @Override
+    public void putMapJSON(String key, Map<String,String> map) {
+
+        if (map != null) {
+
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(map);
+
+            } catch (Exception exception) {
+                jsonObject = null;
+
+            } finally {
+
+                if (jsonObject != null) {
+
+                    String mapString = jsonObject.toString();
+                    this.getBundle().putString(key, mapString);
+                }
+            }
         }
     }
 

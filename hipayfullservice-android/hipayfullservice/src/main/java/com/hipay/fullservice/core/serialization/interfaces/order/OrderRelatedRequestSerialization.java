@@ -140,7 +140,7 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         this.putStringForKey("exception_url", orderRelatedRequest.getExceptionScheme());
         this.putStringForKey("cancel_url", orderRelatedRequest.getCancelScheme());
 
-        //TODO custom data json object
+        this.putMapJSONForKey("custom_data", orderRelatedRequest.getCustomData());
 
         this.putStringForKey("cdata1", orderRelatedRequest.getCdata1());
         this.putStringForKey("cdata2", orderRelatedRequest.getCdata2());
