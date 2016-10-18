@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.hipay.fullservice.core.client.interfaces.IReqHandler;
+import com.hipay.fullservice.core.client.interfaces.LookupPaymentCardReqHandler;
 import com.hipay.fullservice.core.client.interfaces.OrderReqHandler;
 import com.hipay.fullservice.core.client.interfaces.PaymentPageReqHandler;
 import com.hipay.fullservice.core.client.interfaces.PaymentProductsReqHandler;
@@ -19,6 +20,7 @@ import com.hipay.fullservice.core.client.interfaces.TransactionReqHandler;
 import com.hipay.fullservice.core.client.interfaces.TransactionsReqHandler;
 import com.hipay.fullservice.core.client.interfaces.UpdatePaymentCardReqHandler;
 import com.hipay.fullservice.core.client.interfaces.callbacks.AbstractRequestCallback;
+import com.hipay.fullservice.core.client.interfaces.callbacks.LookupPaymentCardRequestCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.OrderRequestCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.PaymentPageRequestCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.PaymentProductsCallback;
@@ -32,6 +34,7 @@ import com.hipay.fullservice.core.operations.AbstractOperation;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.securevault.GenerateTokenRequest;
+import com.hipay.fullservice.core.requests.securevault.LookupPaymentCardRequest;
 import com.hipay.fullservice.core.requests.securevault.UpdatePaymentCardRequest;
 
 import java.lang.ref.WeakReference;
@@ -187,6 +190,16 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
 
             return true;
 
+        } if (request instanceof LookupPaymentCardRequest
+                && callback instanceof LookupPaymentCardRequestCallback) {
+
+            LookupPaymentCardRequest lookupPaymentCardRequest = (LookupPaymentCardRequest) request;
+            LookupPaymentCardRequestCallback lookupPaymentCardRequestCallback = (LookupPaymentCardRequestCallback)callback;
+
+            this.setReqHandler(new LookupPaymentCardReqHandler(lookupPaymentCardRequest, lookupPaymentCardRequestCallback));
+
+            return true;
+
         } else if (request instanceof PaymentPageRequest
                 && callback instanceof PaymentProductsCallback) {
 
@@ -264,7 +277,8 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
         TransactionReqLoaderId(3),
         TransactionsReqLoaderId(4),
         PaymentProductsReqLoaderId(5),
-        UpdatePaymentCardLoaderId(6);
+        UpdatePaymentCardLoaderId(6),
+        LookupPaymentCardLoaderId(7);
 
         protected final Integer loaderId;
 
@@ -306,6 +320,10 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
 
             if (value.equals(UpdatePaymentCardLoaderId.getIntegerValue())) {
                 return UpdatePaymentCardLoaderId;
+            }
+
+            if (value.equals(LookupPaymentCardLoaderId.getIntegerValue())) {
+                return LookupPaymentCardLoaderId;
             }
             return null;
         }

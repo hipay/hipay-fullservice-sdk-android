@@ -7,15 +7,15 @@ import android.os.Bundle;
  * Created by nfillion on 08/03/16.
  */
 
-public class UpdatePaymentCardOperation extends SecureVaultOperation {
+public class LookupPaymentCardOperation extends SecureVaultOperation {
 
-    public UpdatePaymentCardOperation(Context context, Bundle bundle) {
+    public LookupPaymentCardOperation(Context context, Bundle bundle) {
         super(context, bundle);
     }
 
     @Override
     public HttpMethod getRequestType() {
-        return HttpMethod.POST;
+        return HttpMethod.GET;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class UpdatePaymentCardOperation extends SecureVaultOperation {
 
     @Override
     public String concatUrl() {
-        return "token/update";
+        return "token";
     }
 
     @Override
@@ -33,3 +33,4 @@ public class UpdatePaymentCardOperation extends SecureVaultOperation {
         return false;
     }
 }
+

@@ -44,7 +44,7 @@ public class GenerateTokenOperationTest {
     @Test
     public void testMethods() throws Exception {
 
-        assertNull(generateTokenOperation.concatUrl());
+        assertEquals(generateTokenOperation.concatUrl(), "token/create");
         assertEquals(generateTokenOperation.getRequestType(), AbstractHttpClient.HttpMethod.POST);
     }
 }
