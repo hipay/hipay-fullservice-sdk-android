@@ -201,7 +201,6 @@ public class PaymentPageRequest extends OrderRelatedRequest {
 
             if (this.getBehaviour() instanceof BundleMapper) {
 
-                //TODO add more validation
                 return true;
             }
             return false;

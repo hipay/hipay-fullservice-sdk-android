@@ -31,11 +31,11 @@ public class Transaction extends TransactionRelatedItem {
     protected ECI eci;
 
     protected String paymentProduct;
-    //TODO paymentMethod
+
+    protected PaymentMethod paymentMethod;
     protected ThreeDSecure threeDSecure;
     protected FraudScreening fraudScreening;
     protected Order order;
-    protected Map debitAgreement;
 
     protected String cdata1;
     protected String cdata2;
@@ -422,14 +422,6 @@ public class Transaction extends TransactionRelatedItem {
         this.order = order;
     }
 
-    public Map getDebitAgreement() {
-        return debitAgreement;
-    }
-
-    public void setDebitAgreement(Map debitAgreement) {
-        this.debitAgreement = debitAgreement;
-    }
-
     public String getCdata1() {
         return cdata1;
     }
@@ -509,6 +501,14 @@ public class Transaction extends TransactionRelatedItem {
     public void setCdata10(String cdata10) {
 
         this.cdata10 = cdata10;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     protected static class TransactionSerializationMapper extends AbstractSerializationMapper {

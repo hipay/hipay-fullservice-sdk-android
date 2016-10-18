@@ -86,7 +86,6 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
     @Override
     public long getItemId(int position) {
 
-        //TODO not useful for now
         return -1;
         //return mPaymentProducts.get(position).getId().hashCode();
     }
@@ -188,7 +187,6 @@ public class PaymentProductsAdapter extends RecyclerView.Adapter<PaymentProducts
 
         mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodePrzelewy24, false));
 
-        //TODO be careful about these
         mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeSofortUberweisung, false));
         mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeSisal, false));
         mPaymentProducts.add(paymentProduct(PaymentProduct.PaymentProductCodeSDD, false));

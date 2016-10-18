@@ -131,8 +131,6 @@ public class PaymentProduct extends AbstractModel {
         }
     }
 
-    //TODO tranform to ENUM type
-
     public final static String PaymentProductCode3xcb                      = "3xcb";
     public final static String PaymentProductCode3xcbNoFees                = "3xcb-no-fees";
     public final static String PaymentProductCode4xcb                      = "4xcb";
@@ -267,6 +265,5 @@ public class PaymentProduct extends AbstractModel {
             return super.getSerializedBundle();
         }
     }
-
 
 }

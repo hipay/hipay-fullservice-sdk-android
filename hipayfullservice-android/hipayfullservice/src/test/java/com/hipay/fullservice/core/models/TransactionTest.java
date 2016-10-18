@@ -35,7 +35,6 @@ public class TransactionTest {
         transaction.getThreeDSecure();
         transaction.getFraudScreening();
         transaction.getOrder();
-        transaction.getDebitAgreement();
 
         transaction.getCdata1();
         transaction.getCdata2();
@@ -69,7 +68,6 @@ public class TransactionTest {
         transaction.setThreeDSecure(null);
         transaction.setFraudScreening(null);
         transaction.setOrder(null);
-        transaction.setDebitAgreement(null);
 
         transaction.setCdata1(null);
         transaction.setCdata2(null);

@@ -72,14 +72,12 @@ public class ClientConfig {
         return environment;
     }
 
-
     public void setConfig(Environment environment, String username, String password) {
 
         this.setEnvironment(environment);
         this.setUsername(username);
         this.setPassword(password);
 
-        //TODO determine useragent
         this.setUserAgent(null);
     }
 

@@ -5,7 +5,6 @@ package com.hipay.fullservice.core.models;
  */
 public class Operation extends AbstractModel {
 
-    //TODO useful for maintenance operations. handle that better
     protected OperationType operation;
 
     public enum OperationType {

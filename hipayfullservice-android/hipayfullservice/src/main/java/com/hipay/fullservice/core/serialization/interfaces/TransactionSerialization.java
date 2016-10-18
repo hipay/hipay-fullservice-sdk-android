@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import com.hipay.fullservice.core.models.FraudScreening;
 import com.hipay.fullservice.core.models.Order;
+import com.hipay.fullservice.core.models.PaymentCardToken;
+import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.ThreeDSecure;
 import com.hipay.fullservice.core.models.Transaction;
 
@@ -87,6 +89,16 @@ public class TransactionSerialization extends TransactionRelatedItemSerializatio
         if (order != null) {
             Bundle bundle = order.toBundle();
             this.putBundleForKey("order", bundle);
+        }
+
+        PaymentMethod paymentMethod = transaction.getPaymentMethod();
+        if (paymentMethod != null) {
+            if (paymentMethod instanceof PaymentCardToken) {
+
+                PaymentCardToken paymentCardToken = (PaymentCardToken) paymentMethod;
+                Bundle bundle = paymentCardToken.toBundle();
+                this.putBundleForKey("paymentMethod", bundle);
+            }
         }
 
         return this.getBundle();
