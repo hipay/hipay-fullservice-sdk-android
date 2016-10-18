@@ -1,7 +1,9 @@
 package com.hipay.fullservice.core.requests.order;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import com.hipay.fullservice.BuildConfig;
 import com.hipay.fullservice.core.client.config.ClientConfig;
 import com.hipay.fullservice.core.mapper.AbstractMapper;
 import com.hipay.fullservice.core.mapper.interfaces.BundleMapper;
@@ -9,6 +11,7 @@ import com.hipay.fullservice.core.requests.AbstractRequest;
 import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.info.PersonalInfoRequest;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -44,7 +47,7 @@ public class OrderRelatedRequest extends AbstractRequest {
     protected CustomerInfoRequest customer;
     protected PersonalInfoRequest shippingAddress;
 
-    protected Map customData;
+    protected Map<String, String> customData;
 
     protected String cdata1;
     protected String cdata2;
@@ -56,6 +59,8 @@ public class OrderRelatedRequest extends AbstractRequest {
     protected String cdata8;
     protected String cdata9;
     protected String cdata10;
+
+    protected Map<String,String> source;
 
     public static final String OrderRelatedRequestRedirectPathAccept = "accept";
     public static final String OrderRelatedRequestRedirectPathDecline = "decline";
@@ -73,11 +78,10 @@ public class OrderRelatedRequest extends AbstractRequest {
 
         this.setCustomer(new CustomerInfoRequest());
         this.setShippingAddress(new PersonalInfoRequest());
+
     }
 
     public OrderRelatedRequest(OrderRelatedRequest orderRelatedRequest) {
-
-        //TODO stop duplicate constructors
 
         this.setLanguage(Locale.getDefault().toString());
         this.setHTTPUserAgent(ClientConfig.getInstance().getUserAgent());
@@ -119,6 +123,20 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.setCdata8(orderRelatedRequest.getCdata8());
         this.setCdata9(orderRelatedRequest.getCdata9());
         this.setCdata10(orderRelatedRequest.getCdata10());
+
+        String source = "CSDK";
+        String brand = "android";
+        String brand_version = Build.VERSION.RELEASE;
+        String integrationVersion = BuildConfig.VERSION_NAME;
+
+        Map<String,String> sourceMap = new HashMap<>(4);
+        sourceMap.put("source", source);
+        sourceMap.put("brand", brand);
+        sourceMap.put("brand_version", brand_version);
+        sourceMap.put("integration_version", integrationVersion);
+
+        this.setSource(sourceMap);
+
     }
 
     private static final String ClientConfigCallbackURLHost = "hipay-fullservice";
@@ -331,11 +349,11 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.language = language;
     }
 
-    public Map getCustomData() {
+    public Map<String, String> getCustomData() {
         return customData;
     }
 
-    public void setCustomData(Map customData) {
+    public void setCustomData(Map<String, String> customData) {
         this.customData = customData;
     }
 
@@ -420,6 +438,14 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.cdata10 = cdata10;
     }
 
+    public Map<String, String> getSource() {
+        return source;
+    }
+
+    private void setSource(Map<String, String> source) {
+        this.source = source;
+    }
+
     public CustomerInfoRequest getCustomer() {
         return customer;
     }
@@ -444,7 +470,6 @@ public class OrderRelatedRequest extends AbstractRequest {
         @Override
         protected boolean isValid() {
 
-            //TODO add more validations
             if (this.getBehaviour() instanceof BundleMapper) {
                 return true;
             }
@@ -486,7 +511,7 @@ public class OrderRelatedRequest extends AbstractRequest {
             orderRelatedRequest.setExceptionScheme(this.getStringForKey("exception_url"));
             orderRelatedRequest.setCancelScheme(this.getStringForKey("cancel_url"));
 
-            //TODO handle the custom data serialized json
+            orderRelatedRequest.setCustomData(this.getMapJSONForKey("custom_data"));
 
             orderRelatedRequest.setCdata1(this.getStringForKey("cdata1"));
             orderRelatedRequest.setCdata2(this.getStringForKey("cdata2"));
@@ -512,6 +537,8 @@ public class OrderRelatedRequest extends AbstractRequest {
                 personalInfoRequest = PersonalInfoRequest.fromBundle(shippingBundle);
             }
             orderRelatedRequest.setShippingAddress(personalInfoRequest);
+
+            orderRelatedRequest.setSource(this.getMapJSONForKey("source"));
 
             return orderRelatedRequest;
         }

@@ -5,6 +5,7 @@ package com.hipay.fullservice.screen.helper;
  */
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.text.TextUtils;
 
 import com.hipay.fullservice.R;
@@ -130,10 +131,19 @@ public class FormHelper {
 
     public static String getStringResourceByName(String aString, Context context) {
 
-        String packageName = context.getPackageName();
+        String resourceName;
 
-        int resId = context.getResources().getIdentifier(aString.replace("-", "_"), "string", packageName);
-        return context.getString(resId);
+        String packageName = context.getPackageName();
+        try {
+            int resId = context.getResources().getIdentifier(aString.replace("-", "_"), "string", packageName);
+            resourceName = context.getString(resId);
+
+        } catch (Resources.NotFoundException exception) {
+
+            resourceName = null;
+        }
+
+        return resourceName;
     }
 
     public static boolean isIndexSpace(Integer index, String productCode, Context context) {
@@ -193,6 +203,9 @@ public class FormHelper {
     public static boolean hasValidCardLength(String plainTextNumber, String productCode, Context context) {
 
         String cardVisaInfoString = FormHelper.getStringResourceByName("card_"+productCode+"_info", context);
+        if (cardVisaInfoString == null) {
+            return false;
+        }
 
         try {
 

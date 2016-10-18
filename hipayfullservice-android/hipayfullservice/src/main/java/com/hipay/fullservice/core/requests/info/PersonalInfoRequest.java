@@ -83,8 +83,6 @@ public class PersonalInfoRequest extends AbstractRequest {
         String firstname = this.getFirstname();
         String lastname = this.getLastname();
 
-        //TODO strim strings
-
         if (firstname != null && lastname != null) {
 
             return new StringBuilder(firstname).append(" ").append(lastname).toString();

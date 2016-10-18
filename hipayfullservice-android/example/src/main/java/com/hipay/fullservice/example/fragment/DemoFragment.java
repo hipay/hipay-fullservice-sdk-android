@@ -485,8 +485,6 @@ public class DemoFragment extends Fragment {
 
         PaymentPageRequest paymentPageRequest = new PaymentPageRequest();
 
-        //StringBuilder stringBuilder = new StringBuilder("TEST_SDK_Android_").append(Calendar.getInstance().getTimeInMillis());
-        //paymentPageRequest.setOrderId(stringBuilder.toString());
         paymentPageRequest.setOrderId(orderId);
 
         paymentPageRequest.setShortDescription("Un beau vêtement.");
@@ -494,7 +492,7 @@ public class DemoFragment extends Fragment {
 
         paymentPageRequest.getCustomer().setFirstname("Martin");
         paymentPageRequest.getCustomer().setLastname("Dupont");
-        paymentPageRequest.getCustomer().setEmail("nfillion@hipay.com");
+        paymentPageRequest.getCustomer().setEmail("client@domain.com");
 
         paymentPageRequest.getCustomer().setRecipientInfo("Employee");
         paymentPageRequest.getCustomer().setStreetAddress("6 Place du Colonel Bourgoin");

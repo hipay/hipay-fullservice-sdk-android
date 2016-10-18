@@ -6,6 +6,7 @@ import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.info.PersonalInfoRequest;
 import com.hipay.fullservice.core.requests.order.OrderRelatedRequest;
 import com.hipay.fullservice.core.serialization.interfaces.AbstractSerialization;
+import com.hipay.fullservice.core.utils.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +67,8 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         retMap.put("exception_url", orderRelatedRequest.getExceptionScheme());
         retMap.put("cancel_url", orderRelatedRequest.getCancelScheme());
 
-        //TODO custom data json object
+        String cdata = Utils.mapToJson(orderRelatedRequest.getCustomData());
+        retMap.put("custom_data", cdata);
 
         retMap.put("cdata1", orderRelatedRequest.getCdata1());
         retMap.put("cdata2", orderRelatedRequest.getCdata2());
@@ -99,7 +101,9 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
             retMap.putAll(shipToPersonalInfoMap);
         }
 
-        //TODO check if objects are removed
+        String source = Utils.mapToJson(orderRelatedRequest.getSource());
+        retMap.put("source", source);
+
         while (retMap.values().remove(null));
 
         return retMap;
@@ -141,7 +145,7 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         this.putStringForKey("exception_url", orderRelatedRequest.getExceptionScheme());
         this.putStringForKey("cancel_url", orderRelatedRequest.getCancelScheme());
 
-        //TODO custom data json object
+        this.putMapJSONForKey("custom_data", orderRelatedRequest.getCustomData());
 
         this.putStringForKey("cdata1", orderRelatedRequest.getCdata1());
         this.putStringForKey("cdata2", orderRelatedRequest.getCdata2());
@@ -161,6 +165,8 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         PersonalInfoRequest personalInfoRequest = orderRelatedRequest.getShippingAddress();
         Bundle personalInfoBundle = personalInfoRequest.toBundle();
         this.putBundleForKey("shipping_address", personalInfoBundle);
+
+        this.putMapJSONForKey("source", orderRelatedRequest.getSource());
 
         return this.getBundle();
     }

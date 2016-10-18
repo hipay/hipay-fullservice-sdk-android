@@ -30,6 +30,8 @@ public interface IBehaviour {
     Boolean getBoolNumberForKey(String key);
     JSONObject getJSONObjectForKey(String key);
 
+    Map<String, String> getMapJSONForKey(String key);
+
     Boolean getBoolForKey(String key);
     Map getMapForKey(String key);
 

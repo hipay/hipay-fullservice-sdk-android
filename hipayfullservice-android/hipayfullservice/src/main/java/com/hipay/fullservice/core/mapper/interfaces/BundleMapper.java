@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.hipay.fullservice.core.utils.Utils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
@@ -44,6 +45,29 @@ public class BundleMapper implements IBehaviour {
     public Boolean getBoolForKey(String key) {
 
         return this.getBundleObject().getBoolean(key);
+    }
+
+    @Override
+    public Map<String, String> getMapJSONForKey(String key) {
+
+        String customDataString = this.getStringForKey(key);
+        if (customDataString != null) {
+
+            Map<String, String> map = null;
+            try {
+                map = Utils.jsonToMap(customDataString);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                map = null;
+
+            } finally {
+
+                return map;
+            }
+        }
+
+        return null;
     }
 
     @Override

@@ -79,6 +79,10 @@ public abstract class AbstractSerialization<T> implements ISerialization {
         this.getBundleBehaviour().putBundle(key, bundle);
     }
 
+    protected void putMapJSONForKey(String key, Map<String, String> map) {
+        this.getBundleBehaviour().putMapJSON(key, map);
+    }
+
     protected Bundle getBundle() {
        return this.getBundleBehaviour().getBundle();
     }
