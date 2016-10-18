@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.hipay.fullservice.core.client.interfaces.PaymentProductsReqHandler;
 import com.hipay.fullservice.core.client.interfaces.SecureVaultReqHandler;
 import com.hipay.fullservice.core.client.interfaces.TransactionReqHandler;
 import com.hipay.fullservice.core.client.interfaces.TransactionsReqHandler;
+import com.hipay.fullservice.core.client.interfaces.UpdatePaymentCardReqHandler;
 import com.hipay.fullservice.core.client.interfaces.callbacks.AbstractRequestCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.OrderRequestCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.PaymentPageRequestCallback;
@@ -23,12 +25,14 @@ import com.hipay.fullservice.core.client.interfaces.callbacks.PaymentProductsCal
 import com.hipay.fullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.TransactionDetailsCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.TransactionsDetailsCallback;
+import com.hipay.fullservice.core.client.interfaces.callbacks.UpdatePaymentCardRequestCallback;
 import com.hipay.fullservice.core.logging.Logger;
 import com.hipay.fullservice.core.network.HttpResult;
 import com.hipay.fullservice.core.operations.AbstractOperation;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
-import com.hipay.fullservice.core.requests.securevault.SecureVaultRequest;
+import com.hipay.fullservice.core.requests.securevault.GenerateTokenRequest;
+import com.hipay.fullservice.core.requests.securevault.UpdatePaymentCardRequest;
 
 import java.lang.ref.WeakReference;
 
@@ -82,7 +86,7 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
 
         //...and it actually brutally destroys the loader
         if (this.getContext() != null) {
-            AppCompatActivity activity = (AppCompatActivity)this.getContext();
+            FragmentActivity activity = (FragmentActivity) this.getContext();
             activity.getSupportLoaderManager().destroyLoader(this.getLoaderId());
         }
     }
@@ -163,13 +167,23 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
     }
     private boolean initReqHandler(T request, AbstractRequestCallback callback) {
 
-        if (request instanceof SecureVaultRequest
+        if (request instanceof GenerateTokenRequest
                 && callback instanceof SecureVaultRequestCallback) {
 
-            SecureVaultRequest secureVaultRequest = (SecureVaultRequest) request;
+            GenerateTokenRequest generateTokenRequest = (GenerateTokenRequest) request;
             SecureVaultRequestCallback secureVaultRequestCallback = (SecureVaultRequestCallback)callback;
 
-            this.setReqHandler(new SecureVaultReqHandler(secureVaultRequest, secureVaultRequestCallback));
+            this.setReqHandler(new SecureVaultReqHandler(generateTokenRequest, secureVaultRequestCallback));
+
+            return true;
+
+        } if (request instanceof UpdatePaymentCardRequest
+                && callback instanceof UpdatePaymentCardRequestCallback) {
+
+            UpdatePaymentCardRequest updatePaymentCardRequest = (UpdatePaymentCardRequest) request;
+            UpdatePaymentCardRequestCallback updatePaymentCardRequestCallback = (UpdatePaymentCardRequestCallback)callback;
+
+            this.setReqHandler(new UpdatePaymentCardReqHandler(updatePaymentCardRequest, updatePaymentCardRequestCallback));
 
             return true;
 
@@ -249,7 +263,8 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
         PaymentPageReqLoaderId(2),
         TransactionReqLoaderId(3),
         TransactionsReqLoaderId(4),
-        PaymentProductsReqLoaderId(5);
+        PaymentProductsReqLoaderId(5),
+        UpdatePaymentCardLoaderId(6);
 
         protected final Integer loaderId;
 
@@ -287,6 +302,10 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
 
             if (value.equals(PaymentProductsReqLoaderId.getIntegerValue())) {
                 return PaymentProductsReqLoaderId;
+            }
+
+            if (value.equals(UpdatePaymentCardLoaderId.getIntegerValue())) {
+                return UpdatePaymentCardLoaderId;
             }
             return null;
         }

@@ -17,7 +17,8 @@ import com.hipay.fullservice.core.requests.info.PersonalInfoRequest;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
-import com.hipay.fullservice.core.requests.securevault.SecureVaultRequest;
+import com.hipay.fullservice.core.requests.securevault.GenerateTokenRequest;
+import com.hipay.fullservice.core.requests.securevault.UpdatePaymentCardRequest;
 import com.hipay.fullservice.core.serialization.interfaces.CustomThemeSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.FraudScreeningSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.ISerialization;
@@ -30,6 +31,7 @@ import com.hipay.fullservice.core.serialization.interfaces.order.OrderSerializat
 import com.hipay.fullservice.core.serialization.interfaces.order.PaymentPageRequestSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.payment.CardTokenPaymentMethodRequestSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.securevault.SecureVaultRequestSerialization;
+import com.hipay.fullservice.core.serialization.interfaces.securevault.UpdatePaymentCardRequestSerialization;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
 import java.util.Map;
@@ -146,10 +148,15 @@ public abstract class AbstractSerializationMapper {
             PersonalInfoRequest personalInfoRequest = (PersonalInfoRequest)request;
             this.setSerialization(new PersonalInfoRequest.PersonalInfoRequestSerialization(personalInfoRequest));
 
-        } else if (request instanceof SecureVaultRequest) {
+        } else if (request instanceof GenerateTokenRequest) {
 
-            SecureVaultRequest secureVaultRequest = (SecureVaultRequest)request;
-            this.setSerialization(new SecureVaultRequestSerialization(secureVaultRequest));
+            GenerateTokenRequest generateTokenRequest = (GenerateTokenRequest)request;
+            this.setSerialization(new SecureVaultRequestSerialization(generateTokenRequest));
+
+        } else if (request instanceof UpdatePaymentCardRequest) {
+
+            UpdatePaymentCardRequest updatePaymentCardRequest = (UpdatePaymentCardRequest) request;
+            this.setSerialization(new UpdatePaymentCardRequestSerialization(updatePaymentCardRequest));
 
         } else if (request instanceof CardTokenPaymentMethodRequest) {
 

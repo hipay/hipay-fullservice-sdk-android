@@ -2,7 +2,7 @@ package com.hipay.fullservice.core.serialization.interfaces.securevault;
 
 import android.os.Bundle;
 
-import com.hipay.fullservice.core.requests.securevault.SecureVaultRequest;
+import com.hipay.fullservice.core.requests.securevault.GenerateTokenRequest;
 import com.hipay.fullservice.core.serialization.interfaces.AbstractSerialization;
 import com.hipay.fullservice.core.utils.Utils;
 
@@ -14,22 +14,22 @@ import java.util.Map;
  */
 public class SecureVaultRequestSerialization extends AbstractSerialization {
 
-    public SecureVaultRequestSerialization(SecureVaultRequest secureVaultRequest) {
+    public SecureVaultRequestSerialization(GenerateTokenRequest generateTokenRequest) {
 
-        super(secureVaultRequest);
+        super(generateTokenRequest);
     }
 
     public Map<String, String> getSerializedRequest() {
 
-        SecureVaultRequest secureVaultRequest = (SecureVaultRequest)this.getModel();
+        GenerateTokenRequest generateTokenRequest = (GenerateTokenRequest)this.getModel();
 
         Map<String, String> retMap = new HashMap<>();
-        retMap.put("card_number", secureVaultRequest.getCardNumber());
-        retMap.put("card_expiry_month", secureVaultRequest.getCardExpiryMonth());
-        retMap.put("card_expiry_year", secureVaultRequest.getCardExpiryYear());
-        retMap.put("card_holder", secureVaultRequest.getCardHolder());
-        retMap.put("cvc", secureVaultRequest.getCardCVC());
-        retMap.put("multi_use", String.valueOf(secureVaultRequest.getMultiUse() ? 1 : 0) );
+        retMap.put("card_number", generateTokenRequest.getCardNumber());
+        retMap.put("card_expiry_month", generateTokenRequest.getCardExpiryMonth());
+        retMap.put("card_expiry_year", generateTokenRequest.getCardExpiryYear());
+        retMap.put("card_holder", generateTokenRequest.getCardHolder());
+        retMap.put("cvc", generateTokenRequest.getCardCVC());
+        retMap.put("multi_use", String.valueOf(generateTokenRequest.getMultiUse() ? 1 : 0) );
 
         while (retMap.values().remove(null));
 
