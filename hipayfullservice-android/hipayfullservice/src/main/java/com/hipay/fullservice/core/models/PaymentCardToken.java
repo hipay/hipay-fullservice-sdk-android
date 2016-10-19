@@ -1,6 +1,9 @@
 package com.hipay.fullservice.core.models;
 
+import android.os.Bundle;
+
 import com.hipay.fullservice.core.mapper.PaymentCardTokenMapper;
+import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 
 import org.json.JSONObject;
 
@@ -14,8 +17,8 @@ public class PaymentCardToken extends PaymentMethod {
     protected String requestID;
     protected String pan;
     protected String cardHolder;
-    protected Number cardExpiryMonth;
-    protected Number cardExpiryYear;
+    protected Integer cardExpiryMonth;
+    protected Integer cardExpiryYear;
     protected String issuer;
     protected String country;
     protected String domesticNetwork;
@@ -24,6 +27,18 @@ public class PaymentCardToken extends PaymentMethod {
 
         PaymentCardTokenMapper mapper = new PaymentCardTokenMapper(object);
         return mapper.mappedObject();
+    }
+
+    public static PaymentCardToken fromBundle(Bundle bundle) {
+
+        PaymentCardTokenMapper mapper = new PaymentCardTokenMapper(bundle);
+        return mapper.mappedObjectFromBundle();
+    }
+
+    public Bundle toBundle() {
+
+        PaymentCardToken.PaymentCardTokenSerializationMapper mapper = new PaymentCardToken.PaymentCardTokenSerializationMapper(this);
+        return mapper.getSerializedBundle();
     }
 
     public String getToken() {
@@ -66,19 +81,19 @@ public class PaymentCardToken extends PaymentMethod {
         this.cardHolder = cardHolder;
     }
 
-    public Number getCardExpiryMonth() {
+    public Integer getCardExpiryMonth() {
         return cardExpiryMonth;
     }
 
-    public void setCardExpiryMonth(Number cardExpiryMonth) {
+    public void setCardExpiryMonth(Integer cardExpiryMonth) {
         this.cardExpiryMonth = cardExpiryMonth;
     }
 
-    public Number getCardExpiryYear() {
+    public Integer getCardExpiryYear() {
         return cardExpiryYear;
     }
 
-    public void setCardExpiryYear(Number cardExpiryYear) {
+    public void setCardExpiryYear(Integer cardExpiryYear) {
         this.cardExpiryYear = cardExpiryYear;
     }
 
@@ -104,5 +119,24 @@ public class PaymentCardToken extends PaymentMethod {
 
     public void setDomesticNetwork(String domesticNetwork) {
         this.domesticNetwork = domesticNetwork;
+    }
+
+    protected static class PaymentCardTokenSerializationMapper extends AbstractSerializationMapper {
+
+        protected PaymentCardTokenSerializationMapper(PaymentCardToken paymentProduct) {
+            super(paymentProduct);
+        }
+
+        @Override
+        protected String getQueryString() {
+
+            return super.getQueryString();
+        }
+
+        @Override
+        protected Bundle getSerializedBundle() {
+
+            return super.getSerializedBundle();
+        }
     }
 }

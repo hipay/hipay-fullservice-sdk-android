@@ -309,7 +309,6 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
         getActivity().supportStartPostponedEnterTransition();
         super.onResume();
 
-        //TODO
         setLoadingMode(mLoadingMode);
     }
 

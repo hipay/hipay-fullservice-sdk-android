@@ -55,8 +55,6 @@ public abstract class AbstractMapper<T> {
 
             } else if (rawData instanceof JSONArray) {
 
-                //TODO not using JSONArray for now
-
                 //JSONArray list = (JSONArray)this.getRawData();
                 //this.setBehaviour(new ListMapper(list));
 

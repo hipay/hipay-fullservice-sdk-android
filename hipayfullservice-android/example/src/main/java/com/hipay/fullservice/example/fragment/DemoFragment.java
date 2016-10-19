@@ -330,7 +330,6 @@ public class DemoFragment extends Fragment {
 
         setLoadingMode(true);
 
-        //TODO which decimal format?
         String amount = mAmount.getText().toString();
         String currency = (String)mCurrencySpinner.getSelectedItem();
 

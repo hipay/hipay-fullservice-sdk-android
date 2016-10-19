@@ -22,7 +22,7 @@ public abstract class AbstractSerialization<T> implements ISerialization {
         this.setModel(model);
     }
 
-    //TODO add the Map<String,String> behaviour
+    //add the Map<String,String> behaviour
 
     public abstract Map<String, String> getSerializedRequest();
 
@@ -34,7 +34,7 @@ public abstract class AbstractSerialization<T> implements ISerialization {
 
     public abstract String getQueryString();
 
-    //TODO it should be Bundle or Map behaviour
+    //it should be Bundle or Map behaviour
     private IBundle getBundleBehaviour() {
         return bundleBehaviour;
     }

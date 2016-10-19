@@ -166,19 +166,12 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
         //important for the magic lines
         setRetainInstance(true);
-
-        //TODO no need to putState if setRetainInstance is true
-        //if (savedInstanceState != null) {
-            //mLoadingMode = savedInstanceState.getBoolean(STATE_IS_LOADING);
-            //mCurrentLoading = savedInstanceState.getInt(CURRENT_LOADER_ID, -1);
-        //}
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        //TODO not needed because of retainInstance
         this.setLoadingMode(mLoadingMode, false);
     }
 
