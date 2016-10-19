@@ -7,15 +7,15 @@ import android.os.Bundle;
  * Created by nfillion on 08/03/16.
  */
 
-public class GenerateTokenOperation extends SecureVaultOperation {
+public class LookupPaymentCardOperation extends SecureVaultOperation {
 
-    public GenerateTokenOperation(Context context, Bundle bundle) {
+    public LookupPaymentCardOperation(Context context, Bundle bundle) {
         super(context, bundle);
     }
 
     @Override
     public HttpMethod getRequestType() {
-        return HttpMethod.POST;
+        return HttpMethod.GET;
     }
 
     @Override
@@ -25,12 +25,12 @@ public class GenerateTokenOperation extends SecureVaultOperation {
 
     @Override
     public String concatUrl() {
-        return "token/create";
+        return "token";
     }
 
     @Override
     protected boolean isV2() {
         return false;
     }
-
 }
+

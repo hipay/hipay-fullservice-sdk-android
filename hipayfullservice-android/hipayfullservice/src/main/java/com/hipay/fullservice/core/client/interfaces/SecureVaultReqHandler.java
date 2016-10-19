@@ -7,7 +7,7 @@ import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
 import com.hipay.fullservice.core.models.PaymentCardToken;
 import com.hipay.fullservice.core.operations.GenerateTokenOperation;
-import com.hipay.fullservice.core.requests.securevault.SecureVaultRequest;
+import com.hipay.fullservice.core.requests.securevault.GenerateTokenRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,8 +18,8 @@ import org.json.JSONObject;
 
 public class SecureVaultReqHandler extends AbstractReqHandler {
 
-    public SecureVaultReqHandler(SecureVaultRequest secureVaultRequest, SecureVaultRequestCallback callback) {
-        super(secureVaultRequest, callback);
+    public SecureVaultReqHandler(GenerateTokenRequest generateTokenRequest, SecureVaultRequestCallback callback) {
+        super(generateTokenRequest, callback);
     }
 
     @Override
@@ -51,8 +51,8 @@ public class SecureVaultReqHandler extends AbstractReqHandler {
     @Override
     public String getReqQueryString() {
 
-        SecureVaultRequest secureVaultRequest = (SecureVaultRequest)this.getRequest();
-        return secureVaultRequest.getStringParameters();
+        GenerateTokenRequest generateTokenRequest = (GenerateTokenRequest)this.getRequest();
+        return generateTokenRequest.getStringParameters();
     }
 
     @Override

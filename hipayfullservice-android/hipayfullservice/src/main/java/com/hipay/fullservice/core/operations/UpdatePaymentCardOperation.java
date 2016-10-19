@@ -7,9 +7,9 @@ import android.os.Bundle;
  * Created by nfillion on 08/03/16.
  */
 
-public class GenerateTokenOperation extends SecureVaultOperation {
+public class UpdatePaymentCardOperation extends SecureVaultOperation {
 
-    public GenerateTokenOperation(Context context, Bundle bundle) {
+    public UpdatePaymentCardOperation(Context context, Bundle bundle) {
         super(context, bundle);
     }
 
@@ -25,12 +25,11 @@ public class GenerateTokenOperation extends SecureVaultOperation {
 
     @Override
     public String concatUrl() {
-        return "token/create";
+        return "token/update";
     }
 
     @Override
     protected boolean isV2() {
         return false;
     }
-
 }

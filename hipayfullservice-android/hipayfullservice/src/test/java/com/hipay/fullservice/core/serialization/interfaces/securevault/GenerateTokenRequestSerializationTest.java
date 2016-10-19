@@ -2,7 +2,7 @@ package com.hipay.fullservice.core.serialization.interfaces.securevault;
 
 import android.text.TextUtils;
 
-import com.hipay.fullservice.core.requests.securevault.SecureVaultRequest;
+import com.hipay.fullservice.core.requests.securevault.GenerateTokenRequest;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({TextUtils.class})
 
-public class SecureVaultRequestSerializationTest {
+public class GenerateTokenRequestSerializationTest {
 
     @Before
     public void setup() throws Exception {
@@ -48,23 +48,23 @@ public class SecureVaultRequestSerializationTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
-    SecureVaultRequest secureVaultRequest;
+    GenerateTokenRequest generateTokenRequest;
 
     @Test
     public void testMethods() throws Exception {
 
-        SecureVaultRequestSerialization secureVaultRequestSerialization = new SecureVaultRequestSerialization(secureVaultRequest);
+        SecureVaultRequestSerialization secureVaultRequestSerialization = new SecureVaultRequestSerialization(generateTokenRequest);
         assertNotNull(secureVaultRequestSerialization);
 
         //always returns null
         assertNull(secureVaultRequestSerialization.getSerializedBundle());
 
-        when(secureVaultRequest.getCardNumber()).thenReturn("1234");
-        when(secureVaultRequest.getCardExpiryMonth()).thenReturn("12");
-        when(secureVaultRequest.getCardHolder()).thenReturn("Martin Dupont");
-        when(secureVaultRequest.getCardCVC()).thenReturn("123");
-        when(secureVaultRequest.getMultiUse()).thenReturn(Boolean.TRUE);
-        when(secureVaultRequest.getCardExpiryYear()).thenReturn("20");
+        when(generateTokenRequest.getCardNumber()).thenReturn("1234");
+        when(generateTokenRequest.getCardExpiryMonth()).thenReturn("12");
+        when(generateTokenRequest.getCardHolder()).thenReturn("Martin Dupont");
+        when(generateTokenRequest.getCardCVC()).thenReturn("123");
+        when(generateTokenRequest.getMultiUse()).thenReturn(Boolean.TRUE);
+        when(generateTokenRequest.getCardExpiryYear()).thenReturn("20");
 
         Map<String, String> testMap = new HashMap<>(6);
         testMap.put("card_expiry_month", "12");

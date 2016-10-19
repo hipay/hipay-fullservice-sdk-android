@@ -6,9 +6,9 @@ import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 /**
  * Created by nfillion on 09/03/16.
  */
-public class SecureVaultRequest extends AbstractRequest {
+public class GenerateTokenRequest extends AbstractRequest {
 
-    public SecureVaultRequest(String cardNumber, String cardExpiryMonth, String cardExpiryYear, String cardHolder, String cardCVV, boolean multiUse) {
+    public GenerateTokenRequest(String cardNumber, String cardExpiryMonth, String cardExpiryYear, String cardHolder, String cardCVV, boolean multiUse) {
 
         this.setCardNumber(cardNumber);
         this.setCardExpiryMonth(cardExpiryMonth);
@@ -27,7 +27,7 @@ public class SecureVaultRequest extends AbstractRequest {
 
     public String getStringParameters() {
 
-        SecureVaultRequest.SecureVaultRequestSerializationMapper mapper = new SecureVaultRequest.SecureVaultRequestSerializationMapper(this);
+        GenerateTokenRequest.SecureVaultRequestSerializationMapper mapper = new GenerateTokenRequest.SecureVaultRequestSerializationMapper(this);
         return mapper.getQueryString();
     }
 
