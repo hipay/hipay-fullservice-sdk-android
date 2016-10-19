@@ -27,10 +27,9 @@ public class OrderRequestSerialization extends OrderRelatedRequestSerialization 
 
         relatedRequestMap.put("payment_product", orderRequest.getPaymentProductCode());
 
-        //TODO add payment method
         AbstractPaymentMethodRequest paymentMethodRequest = orderRequest.getPaymentMethod();
 
-        //TODO the handling better
+        //we don't have qiwi wallet token or ideal for now
         if (paymentMethodRequest instanceof CardTokenPaymentMethodRequest) {
 
             CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest = (CardTokenPaymentMethodRequest)paymentMethodRequest;
@@ -51,7 +50,7 @@ public class OrderRequestSerialization extends OrderRelatedRequestSerialization 
     @Override
     public Bundle getSerializedBundle() {
 
-        //TODO check about this bundle
+        //check about this bundle
         return super.getSerializedBundle();
     }
 }

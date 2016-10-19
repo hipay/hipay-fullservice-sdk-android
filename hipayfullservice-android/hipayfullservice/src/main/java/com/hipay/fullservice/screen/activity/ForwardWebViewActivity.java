@@ -141,8 +141,6 @@ public class ForwardWebViewActivity extends AppCompatActivity {
                         )
                 {
 
-                    //TODO build Transaction with data
-
                     transaction = new Transaction();
                     Order order = new Order();
                     order.setOrderId(pathSegments.get(2));

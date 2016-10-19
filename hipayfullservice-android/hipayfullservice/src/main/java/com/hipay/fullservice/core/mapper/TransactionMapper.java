@@ -5,6 +5,8 @@ import android.os.Bundle;
 import com.hipay.fullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.fullservice.core.models.FraudScreening;
 import com.hipay.fullservice.core.models.Order;
+import com.hipay.fullservice.core.models.PaymentCardToken;
+import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.ThreeDSecure;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.models.TransactionRelatedItem;
@@ -23,15 +25,11 @@ public class TransactionMapper extends TransactionRelatedItemMapper {
     @Override
     protected boolean isValid() {
 
-        //TODO is transaction used as MapMapper?
-        //if (this.getBehaviour() instanceof MapMapper) {
+        if (super.isValid()) {
 
-            if (super.isValid()) {
-
-                if (this.getStringForKey("state") != null)
-                    return true;
-            }
-        //}
+            if (this.getStringForKey("state") != null)
+                return true;
+        }
 
         return false;
     }
@@ -112,8 +110,15 @@ public class TransactionMapper extends TransactionRelatedItemMapper {
         }
         object.setOrder(order);
 
-        return object;
+        Bundle paymentMethodBundle = this.getBundleForKey("paymentMethod");
+        PaymentMethod paymentMethod = null;
+        if (paymentMethodBundle != null) {
+            // check if it's a paymentCardToken
+            paymentMethod = PaymentCardToken.fromBundle(paymentMethodBundle);
+        }
+        object.setPaymentMethod(paymentMethod);
 
+        return object;
     }
 
     @Override
@@ -185,7 +190,19 @@ public class TransactionMapper extends TransactionRelatedItemMapper {
         }
         object.setOrder(order);
 
-        //TODO look for debitAgreement and paymentMethod
+        JSONObject paymentMethodObject = this.getJSONObjectForKey("paymentMethod");
+        PaymentMethod paymentMethod = null;
+        if (paymentMethodObject != null) {
+            paymentMethod = PaymentCardToken.fromJSONObject(paymentMethodObject);
+        }
+        object.setPaymentMethod(paymentMethod);
+
+        JSONObject threeDSecureObject = this.getJSONObjectForKey("threeDSecure");
+        ThreeDSecure threeDSecure = null;
+        if (threeDSecure != null) {
+            threeDSecure = ThreeDSecure.fromJSONObject(threeDSecureObject);
+        }
+        object.setThreeDSecure(threeDSecure);
 
         return object;
 

@@ -93,7 +93,6 @@ public class CustomTheme extends AbstractModel {
 
             if (this.getBehaviour() instanceof BundleMapper) {
 
-                //TODO add more validation
                 return true;
             }
 

@@ -322,7 +322,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
             } else if (i == R.id.card_expiration) {
 
-                //TODO handle editext expiration
                 //check how to handle the add or suppression in the middle of the string
                 //check how to handle a copy paste (remove x chars, add y chars...)
 
@@ -634,7 +633,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                 if (TextUtils.isDigitsOnly(expiryDate)) {
 
-                    //TODO finish this
                     return FormHelper.validateExpiryDate(expiryDate);
                 }
 
