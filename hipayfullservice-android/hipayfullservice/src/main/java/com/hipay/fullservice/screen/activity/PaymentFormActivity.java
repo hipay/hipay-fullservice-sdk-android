@@ -216,6 +216,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         if (this.isOrderAlreadyPaid(apiException)) {
 
             return FormResult.FormActionBackgroundReload;
+
         }
 
         // Final error (ex. max attempts exceeded)

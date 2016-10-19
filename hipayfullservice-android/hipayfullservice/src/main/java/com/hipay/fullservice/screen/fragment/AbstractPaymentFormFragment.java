@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hipay.fullservice.R;
+import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.client.SecureVaultClient;
 import com.hipay.fullservice.core.client.interfaces.callbacks.TransactionDetailsCallback;
@@ -35,8 +36,8 @@ import java.util.List;
 
 public abstract class AbstractPaymentFormFragment extends Fragment {
 
-    private static final String STATE_IS_LOADING = "isLoading";
-    private static final String CURRENT_LOADER_ID = "currentLoaderId";
+    //private static final String STATE_IS_LOADING = "isLoading";
+    //private static final String CURRENT_LOADER_ID = "currentLoaderId";
 
     protected ProgressBar mProgressBar;
     OnCallbackOrderListener mCallback;
@@ -138,7 +139,6 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i("onActivityCreated", "onActivityCreated");
 
         // ---- magic lines starting here -----
         // call this to re-connect with an existing
@@ -207,8 +207,8 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(STATE_IS_LOADING, mLoadingMode);
-        outState.putInt(CURRENT_LOADER_ID, mCurrentLoading);
+        //outState.putBoolean(STATE_IS_LOADING, mLoadingMode);
+        //outState.putInt(CURRENT_LOADER_ID, mCurrentLoading);
     }
 
     @Override
@@ -236,7 +236,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
             Bundle args = getArguments();
             final String signature = args.getString(GatewayClient.SIGNATURE_TAG);
 
-            mCurrentLoading = 3;
+            mCurrentLoading = AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue();
             mGatewayClient = new GatewayClient(getActivity());
                     mGatewayClient.getTransactionWithReference(transactionReference, signature, new TransactionDetailsCallback() {
 
@@ -244,19 +244,19 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
                         public void onSuccess(final Transaction transaction) {
                             Log.i("transaction success", transaction.toString());
 
+                            cancelLoaderId(AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue());
                             if (mCallback != null) {
                                 mCallback.onCallbackOrderReceived(transaction, null);
                             }
-                            cancelLoaderId(3);
                         }
 
                         @Override
                         public void onError(Exception error) {
                             Log.i("transaction failed", error.getLocalizedMessage());
+                            cancelLoaderId(AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue());
                             if (mCallback != null) {
                                 mCallback.onCallbackOrderReceived(null, error);
                             }
-                            cancelLoaderId(3);
                         }
                     });
         }
@@ -267,7 +267,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
             final String signature = args.getString(GatewayClient.SIGNATURE_TAG);
 
             String orderId = paymentPageRequest.getOrderId();
-            mCurrentLoading = 4;
+            mCurrentLoading = AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue();
             mGatewayClient = new GatewayClient(getActivity());
             mGatewayClient.getTransactionsWithOrderId(orderId, signature, new TransactionsDetailsCallback() {
 
@@ -276,20 +276,19 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
                     Log.i("transaction success", transactions.toString());
 
+                    cancelLoaderId(AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue());
                     if (mCallback != null) {
                         mCallback.onCallbackOrderReceived(transactions.get(0), null);
                     }
-                    cancelLoaderId(4);
                 }
-
 
                 @Override
                 public void onError(Exception error) {
                     Log.i("transaction failed", error.getLocalizedMessage());
+                    cancelLoaderId(AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue());
                     if (mCallback != null) {
                         mCallback.onCallbackOrderReceived(null, error);
                     }
-                    cancelLoaderId(4);
                 }
             });
         }
@@ -301,7 +300,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
         switch (loaderId) {
 
-            //securevault
+            //securevault generateToken
             case 0: {
 
                 if (mSecureVaultClient != null) {
@@ -311,46 +310,14 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
             } break;
 
-            //order
-            case 1: {
+            //anything else
+            default: {
 
                 if (mGatewayClient != null) {
                     mGatewayClient.cancelOperation();
                     mGatewayClient = null;
                 }
-
-            } break;
-
-            //paymentPageRequest
-            case 2: {
-
-                if (mGatewayClient != null) {
-                    mGatewayClient.cancelOperation();
-                    mGatewayClient = null;
-                }
-
-            } break;
-
-
-            //transaction reference
-            case 3: {
-
-                if (mGatewayClient != null) {
-                    mGatewayClient.cancelOperation();
-                    mGatewayClient = null;
-                }
-
-            } break;
-
-            //transaction orderid
-            case 4: {
-
-                if (mGatewayClient != null) {
-                    mGatewayClient.cancelOperation();
-                    mGatewayClient = null;
-                }
-
-            } break;
+            }
         }
     }
 
