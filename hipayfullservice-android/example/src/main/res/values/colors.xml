@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <!--
+    <color name="colorPrimaryDark">#000000</color>
+    -->
+    <color name="colorAccent">#424242</color>
+
+    <!-- theme colors -->
+    <color name="theme_blue_primary">#03a9f4</color>
+    <color name="theme_blue_text">@color/hpf_light</color>
+    <color name="theme_blue_primary_dark">#038dcc</color>
+
+    <color name="theme_green_primary">#1de9b6</color>
+    <color name="theme_green_text">@color/hpf_text</color>
+    <color name="theme_green_primary_dark">#19cc9f</color>
+
+    <color name="theme_purple_primary">#7e57c2</color>
+    <color name="theme_purple_text">@color/hpf_light</color>
+    <color name="theme_purple_primary_dark">#6c4aa6</color>
+
+    <color name="theme_red_primary">#ff5252</color>
+    <color name="theme_red_text">@color/hpf_light</color>
+    <color name="theme_red_primary_dark">#e64a4a</color>
+
+    <color name="theme_yellow_primary">#ffeb3b</color>
+    <color name="theme_yellow_text">@color/hpf_text</color>
+    <color name="theme_yellow_primary_dark">#e6d335</color>
+</resources>

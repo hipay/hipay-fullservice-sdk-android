@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Démo HiPay</string>
+    <string name="mcommence_demo">Démo m-commerce Hipay</string>
+
+    <string name="generate_payment_screen">Générer un écran de paiement</string>
+    <string name="amount_and_currency">Montant et devise</string>
+    <string name="group_cards">Regrouper les cartes</string>
+    <string name="reusable_token">Token réutilisable</string>
+
+    <string name="three_ds">3DS Authentification</string>
+    <string name="color">Couleur</string>
+
+    <string name="form_payment_products_credit_card">Carte de crédit</string>
+    <string name="form_payment_products_debit_card">Carte de débit</string>
+    <string name="form_payment_products_ewallet">Portefeuille électronique</string>
+    <string name="form_payment_products_realtime_banking">Banque temps réel</string>
+
+    <string name="error_button_dismiss">@android:string/ok</string>
+    <string name="config_parameters_error">Vous devez renseigner votre identifiant et mot de passe comme arguments.</string>
+
+    <string name="form_payment_products_categories">Moyens de paiement</string>
+
+    <string-array name="array_threeds">
+        <item>Défaut</item>
+        <item>Non</item>
+        <item>Si disp.</item>
+        <item>Oblig.</item>
+    </string-array>
+
+    <string-array name="array_colors_theme">
+        <item>Défaut</item>
+        <item>Bleu</item>
+        <item>Vert</item>
+        <item>Violet</item>
+        <item>Rouge</item>
+        <item>Jaune</item>
+    </string-array>
+
+</resources>

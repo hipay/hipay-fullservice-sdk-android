@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:transitionGroup="false"
+    android:orientation="vertical"
+    tools:ignore="Overdraw,UnusedAttribute">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_payment_products"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        style="@style/PaymentScreens.TextAppearance.Title"
+        android:elevation="@dimen/elevation_header"
+        tools:ignore="UnusedAttribute">
+
+        <TextView android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="PrivateResource"
+            style="@style/PaymentScreens.TextAppearance.Title"
+            android:layout_gravity="center_vertical|start" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout android:id="@+id/payment_products_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".screen.activity.PaymentProductsActivity"
+        tools:ignore="MergeRootFrame">
+
+    </FrameLayout>
+
+</LinearLayout>

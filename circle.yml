@@ -1,0 +1,29 @@
+general:
+  build_dir: hipayfullservice-android
+
+machine:
+  environment:
+    KEYSTORE: ${HOME}/${CIRCLE_PROJECT_REPONAME}/signing.keystore
+
+dependencies:
+  pre:
+    - echo y | android update sdk --no-ui --all --filter "tools,platform-tools,android-23"
+    - echo y | android update sdk --no-ui --all --filter "build-tools-23.0.3"
+    - bash ../deployment/download_keystore.sh
+
+checkout:
+  post:
+    - python ../deployment/create_hockeyapp_branch.py
+    - python ../deployment/set_credentials.py
+    - python ../deployment/set_version_code.py
+
+test:
+  override:
+    - ./gradlew build check
+
+deployment:
+  distribution:
+    branch: "/.*/"
+    commands:
+       - python ../deployment/get_identifier.py > $CIRCLE_ARTIFACTS/app_identifier
+       - sh ../deployment/deploy.sh

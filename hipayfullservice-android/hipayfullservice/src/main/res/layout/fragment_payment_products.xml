@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:transitionGroup="false"
+    android:orientation="vertical"
+    tools:ignore="Overdraw,UnusedAttribute">
+
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/products"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_nano"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"
+        app:layoutManager="android.support.v7.widget.GridLayoutManager"
+        android:transitionGroup="false"
+        android:visibility="gone"
+        app:spanCount="2" tools:ignore="UnusedAttribute" />
+
+    <ProgressBar android:id="@+id/progress"
+        android:layout_width="@dimen/min_height_touch_target"
+        android:layout_height="@dimen/min_height_touch_target"
+        android:layout_centerInParent="true"
+        android:indeterminateOnly="true" />
+
+</RelativeLayout>

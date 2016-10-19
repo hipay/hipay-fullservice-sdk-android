@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="touch_effect">#9ccc</color>
+
+    <color name="hpf_primary">#3F51B5</color>
+    <color name="hpf_primary_dark">#303F9F</color>
+    <color name="hpf_accent">@color/hpf_blank</color>
+
+    <color name="hpf_light">@android:color/white</color>
+    <color name="hpf_text">#606060</color>
+    <color name="hpf_blank">#424242</color>
+
+    <color name="hpf_error">#FFD50000</color>
+    <color name="hpf_placeholder">#ccc</color>
+
+    <color name="green">#00e676</color>
+    <color name="red">#ff5252</color>
+    <color name="dark_grey">#aaa</color>
+    <color name="light_grey">#ddd</color>
+
+</resources>

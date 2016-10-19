@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">HiPay demo</string>
+    <string name="mcommence_demo">HiPay m-commerce demo</string>
+
+    <string name="generate_payment_screen">Generate a payment screen</string>
+    <string name="amount_and_currency">Amount and currency</string>
+    <string name="group_cards">Group card</string>
+    <string name="reusable_token">Reusable token</string>
+
+    <string name="three_ds">3DS Authentication</string>
+    <string name="color">Color</string>
+
+    <string name="amount_default" translatable="false">60.00</string>
+
+    <string name="form_payment_products_credit_card">Credit card</string>
+    <string name="form_payment_products_debit_card">Debit card</string>
+    <string name="form_payment_products_ewallet">E-Wallet</string>
+    <string name="form_payment_products_realtime_banking">Real-time banking</string>
+
+    <string name="form_payment_products_categories">Payment product categories</string>
+    <string name="error_button_dismiss">@android:string/ok</string>
+
+    <string name="config_parameters_error">You must specify your API username and password as arguments.</string>
+    
+    <string name="server_url" translatable="false">https://developer.hipay.com/misc/public_credentials_signature.php?amount=%1$s&amp;currency=%2$s</string>
+
+    <string-array name="array_currencies" translatable="false">
+        <item>EUR</item>
+        <item>USD</item>
+        <item>BRL</item>
+        <item>RUB</item>
+    </string-array>
+
+    <string-array name="array_threeds">
+        <item>Default</item>
+        <item>None</item>
+        <item>If avail.</item>
+        <item>Oblig.</item>
+    </string-array>
+
+    <string-array name="array_colors_theme">
+        <item>Default</item>
+        <item>Blue</item>
+        <item>Green</item>
+        <item>Purple</item>
+        <item>Red</item>
+        <item>Yellow</item>
+    </string-array>
+
+</resources>
