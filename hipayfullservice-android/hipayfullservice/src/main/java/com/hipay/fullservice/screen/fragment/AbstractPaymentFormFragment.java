@@ -235,7 +235,6 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
                         @Override
                         public void onSuccess(final Transaction transaction) {
-                            Log.i("transaction success", transaction.toString());
 
                             cancelLoaderId(AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue());
                             if (mCallback != null) {
@@ -245,7 +244,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
                         @Override
                         public void onError(Exception error) {
-                            Log.i("transaction failed", error.getLocalizedMessage());
+
                             cancelLoaderId(AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue());
                             if (mCallback != null) {
                                 mCallback.onCallbackOrderReceived(null, error);
@@ -266,9 +265,6 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
                 @Override
                 public void onSuccess(List<Transaction> transactions) {
-
-                    Log.i("transaction success", transactions.toString());
-
                     cancelLoaderId(AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue());
                     if (mCallback != null) {
                         mCallback.onCallbackOrderReceived(transactions.get(0), null);
@@ -277,7 +273,6 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
                 @Override
                 public void onError(Exception error) {
-                    Log.i("transaction failed", error.getLocalizedMessage());
                     cancelLoaderId(AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue());
                     if (mCallback != null) {
                         mCallback.onCallbackOrderReceived(null, error);

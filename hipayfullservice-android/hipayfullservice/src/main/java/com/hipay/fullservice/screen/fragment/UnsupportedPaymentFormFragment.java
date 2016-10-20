@@ -90,15 +90,17 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
             @Override
             public void onError(Exception error) {
 
+                cancelLoaderId(2);
                 if (mCallback != null) {
                     mCallback.onCallbackOrderReceived(null, error);
                 }
-                cancelLoaderId(2);
             }
 
             @Override
             public void onSuccess(HostedPaymentPage hostedPaymentPage) {
 
+                mLoadingMode = false;
+                cancelLoaderId(2);
                 if (mCallback != null) {
 
                     URL forwardUrl = hostedPaymentPage.getForwardUrl();
@@ -108,9 +110,6 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
                         ForwardWebViewActivity.start(getActivity(), forwardUrl.toString(), paymentProduct.getPaymentProductDescription(), customThemeBundle);
                     }
                 }
-
-                mLoadingMode = false;
-                cancelLoaderId(2);
             }
         });
     }
