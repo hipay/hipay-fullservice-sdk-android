@@ -1,6 +1,8 @@
 package com.hipay.fullservice.screen.fragment.interfaces;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.hipay.fullservice.screen.helper.FormHelper;
  */
 public class MaestroBehaviour implements ICardBehaviour {
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, boolean networked, Context context) {
 
@@ -25,7 +28,15 @@ public class MaestroBehaviour implements ICardBehaviour {
         securityCodeLayout.setVisibility(View.GONE);
 
         cardNumber.setHint(context.getString(R.string.card_number_placeholder_maestro_bcmc));
-        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, networked? R.drawable.ic_credit_card_bcmc:R.drawable.ic_credit_card_maestro, 0);
+
+        int card = networked? R.drawable.ic_credit_card_bcmc:R.drawable.ic_credit_card_maestro;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            cardNumber.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, card, 0);
+        } else {
+            cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, card, 0);
+        }
+
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_description_cvv));
