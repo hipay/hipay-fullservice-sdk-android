@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.client.interfaces.callbacks.PaymentPageRequestCallback;
 import com.hipay.fullservice.core.models.HostedPaymentPage;
@@ -90,7 +91,7 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
             @Override
             public void onError(Exception error) {
 
-                cancelLoaderId(2);
+                cancelLoaderId(AbstractClient.RequestLoaderId.PaymentPageReqLoaderId.getIntegerValue());
                 if (mCallback != null) {
                     mCallback.onCallbackOrderReceived(null, error);
                 }
@@ -100,7 +101,7 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
             public void onSuccess(HostedPaymentPage hostedPaymentPage) {
 
                 mLoadingMode = false;
-                cancelLoaderId(2);
+                cancelLoaderId(AbstractClient.RequestLoaderId.PaymentPageReqLoaderId.getIntegerValue());
                 if (mCallback != null) {
 
                     URL forwardUrl = hostedPaymentPage.getForwardUrl();

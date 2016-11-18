@@ -1,6 +1,8 @@
 package com.hipay.fullservice.screen.fragment.interfaces;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -19,6 +21,7 @@ import com.hipay.fullservice.screen.helper.FormHelper;
  */
 public class MastercardBehaviour implements ICardBehaviour {
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, boolean networked, Context context) {
 
@@ -30,7 +33,14 @@ public class MastercardBehaviour implements ICardBehaviour {
         cardCVV.setHint(context.getString(R.string.card_security_code_placeholder_cvv));
 
         cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeMasterCard, context))});
-        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, networked?R.drawable.ic_credit_card_cb:R.drawable.ic_credit_card_mastercard, 0);
+
+        int card = networked?R.drawable.ic_credit_card_cb:R.drawable.ic_credit_card_mastercard;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            cardNumber.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, card, 0);
+        } else {
+            cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, card, 0);
+        }
 
         securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_description_cvv));
         securityCodeInfoImageview.setImageResource(R.drawable.cvc_mv);
