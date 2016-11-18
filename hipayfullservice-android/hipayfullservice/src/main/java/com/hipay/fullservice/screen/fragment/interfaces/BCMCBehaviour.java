@@ -1,6 +1,8 @@
 package com.hipay.fullservice.screen.fragment.interfaces;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.hipay.fullservice.screen.helper.FormHelper;
  */
 public class BCMCBehaviour implements ICardBehaviour {
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, boolean networked, Context context) {
 
@@ -29,7 +32,12 @@ public class BCMCBehaviour implements ICardBehaviour {
         cardNumber.setHint(context.getString(R.string.card_number_placeholder_maestro_bcmc));
 
         //cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeAmericanExpress, context))});
-        cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_bcmc, 0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            cardNumber.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_bcmc, 0);
+        } else {
+            cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_bcmc, 0);
+        }
+
 
         securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_description_cvv));
         securityCodeInfoImageview.setImageResource(R.drawable.cvc_mv);

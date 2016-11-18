@@ -13,10 +13,8 @@ public class ClientConfig {
     private String userAgent;
 
     public static final String GatewayClientBaseURLStage = "https://stage-secure-gateway.hipay-tpp.com/rest/v1";
-    //public static final String GatewayClientBaseURLStage = "https://preprod-secure-gateway.allopass.com/rest/v1";
 
-    public static final String GatewayClientBaseURLNewStage = "https://new-stage-secure-gateway.hipay-tpp.com/rest/v2";
-    //public static final String GatewayClientBaseURLNewStage = "https://preprod-secure-gateway.allopass.com/rest/v2";
+    public static final String GatewayClientBaseURLNewStage = "https://stage-secure-gateway.hipay-tpp.com/rest/v2";
 
     public static final String GatewayClientBaseURLProduction = "https://secure-gateway.hipay-tpp.com/rest/v1";
 

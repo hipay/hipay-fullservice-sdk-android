@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -56,6 +57,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by nfillion on 15/03/16.
@@ -177,7 +180,14 @@ public class DemoFragment extends Fragment {
         m3DSSpinner.setSelection(1);
 
         mPaymentProductsButton = (AppCompatButton) contentView.findViewById(R.id.payment_products_button);
-
+        mPaymentProductsButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                clickOnCategories();
+            }
+        });
 
         AppCompatSpinner colorSpinner = (AppCompatSpinner) contentView.findViewById(R.id.color_spinner);
         ArrayAdapter<CharSequence> adapterColorSpinner = ArrayAdapter.createFromResource(getActivity(),
@@ -251,6 +261,23 @@ public class DemoFragment extends Fragment {
         });
 
         return contentView;
+    }
+
+    private void clickOnCategories() {
+
+        DemoActivity demoActivity = (DemoActivity)getActivity();
+        Map<String,Boolean> paymentProducts = demoActivity.getPaymentProducts();
+
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                //.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                //.setCustomAnimations(android.R.anim.in_from_left, android.R.anim.out_to_right, android.R.anim.in_from_right, android.R.anim.out_to_left)
+
+                .replace(R.id.demo_container, ProductCategoryListFragment.newInstance(paymentProducts, customTheme))
+                //.add(R.id.demo_container, ProductCategoryListFragment.newInstance(mPaymentProducts, this))
+                .addToBackStack(null)
+                .commit();
     }
 
     private void makeCustomTheme(int primaryColor, int primaryDarkColor, int textColor) {
