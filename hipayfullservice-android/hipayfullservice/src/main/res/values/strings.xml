@@ -51,7 +51,7 @@
     <string name="card_security_code_description_cid">The CID is the four-digit number on the front of your American Express card.</string>
 
     <string name="card_number_placeholder_visa_mastercard" translatable="false">4321 9876 5432 1098</string>
-    <string name="card_number_placeholder_amex" translatable="false">3782 8224 6310 005</string>
+    <string name="card_number_placeholder_amex" translatable="false">3782 822463 10005</string>
     <string name="card_number_placeholder_maestro_bcmc" translatable="false">6703 1233 2143 27863</string>
     <string name="card_number_placeholder_diners" translatable="false">3056 9918 2259 04</string>
 
