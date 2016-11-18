@@ -23,7 +23,7 @@ public class PaymentProduct extends AbstractModel {
     protected Boolean tokenizable;
     protected Set<String> groupedPaymentProductCodes;
 
-    public PaymentProduct(String code) {
+    public PaymentProduct(String code){
         this.code = code;
     }
 

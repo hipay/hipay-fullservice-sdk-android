@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class DemoActivity extends AppCompatActivity implements ProductCategoryListFragment.OnPaymentProductSelectedListener {
 
-    private Map<String,Boolean> mPaymentProducts;
+    private Map<String,Boolean> paymentProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,23 +56,23 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
                 password
         );
 
-        mPaymentProducts = new HashMap<>(4);
+        paymentProducts = new HashMap<>(4);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.demo_container, DemoFragment.newInstance()).commit();
 
-            mPaymentProducts.put(PaymentProduct.PaymentProductCategoryCodeCreditCard, Boolean.TRUE);
-            mPaymentProducts.put(PaymentProduct.PaymentProductCategoryCodeDebitCard, Boolean.TRUE);
-            mPaymentProducts.put(PaymentProduct.PaymentProductCategoryCodeEWallet, Boolean.TRUE);
-            mPaymentProducts.put(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking, Boolean.TRUE);
+            paymentProducts.put(PaymentProduct.PaymentProductCategoryCodeCreditCard, Boolean.TRUE);
+            paymentProducts.put(PaymentProduct.PaymentProductCategoryCodeDebitCard, Boolean.TRUE);
+            paymentProducts.put(PaymentProduct.PaymentProductCategoryCodeEWallet, Boolean.TRUE);
+            paymentProducts.put(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking, Boolean.TRUE);
 
         } else {
 
-            mPaymentProducts.put(PaymentProduct.PaymentProductCategoryCodeCreditCard,savedInstanceState.getBoolean(PaymentProduct.PaymentProductCategoryCodeCreditCard));
-            mPaymentProducts.put(PaymentProduct.PaymentProductCategoryCodeDebitCard,savedInstanceState.getBoolean(PaymentProduct.PaymentProductCategoryCodeDebitCard));
-            mPaymentProducts.put(PaymentProduct.PaymentProductCategoryCodeEWallet, savedInstanceState.getBoolean(PaymentProduct.PaymentProductCategoryCodeEWallet));
-            mPaymentProducts.put(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking, savedInstanceState.getBoolean(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking));
+            paymentProducts.put(PaymentProduct.PaymentProductCategoryCodeCreditCard,savedInstanceState.getBoolean(PaymentProduct.PaymentProductCategoryCodeCreditCard));
+            paymentProducts.put(PaymentProduct.PaymentProductCategoryCodeDebitCard,savedInstanceState.getBoolean(PaymentProduct.PaymentProductCategoryCodeDebitCard));
+            paymentProducts.put(PaymentProduct.PaymentProductCategoryCodeEWallet, savedInstanceState.getBoolean(PaymentProduct.PaymentProductCategoryCodeEWallet));
+            paymentProducts.put(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking, savedInstanceState.getBoolean(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking));
         }
 
         if (isHockeyAppActive()) {
@@ -108,31 +108,31 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeCreditCard, mPaymentProducts.get(PaymentProduct.PaymentProductCategoryCodeCreditCard));
-        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeDebitCard, mPaymentProducts.get(PaymentProduct.PaymentProductCategoryCodeDebitCard));
-        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeEWallet, mPaymentProducts.get(PaymentProduct.PaymentProductCategoryCodeEWallet));
-        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking, mPaymentProducts.get(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking));
+        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeCreditCard, paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeCreditCard));
+        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeDebitCard, paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeDebitCard));
+        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeEWallet, paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeEWallet));
+        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking, paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking));
     }
 
-    public void onClickPaymentProducts(View view) {
+    //public void onClickPaymentProducts(View view) {
 
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.demo_container);
-            if (fragment != null && fragment instanceof DemoFragment) {
+            //Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.demo_container);
+            //if (fragment != null && fragment instanceof DemoFragment) {
 
-                CustomTheme customTheme = ((DemoFragment) fragment).getCustomTheme();
-
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        //.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                //CustomTheme customTheme = ((DemoFragment) fragment).getCustomTheme();
+//
+                //getSupportFragmentManager()
+                        //.beginTransaction()
+                        //.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        ////.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                         //.setCustomAnimations(android.R.anim.in_from_left, android.R.anim.out_to_right, android.R.anim.in_from_right, android.R.anim.out_to_left)
 
-                        .replace(R.id.demo_container, ProductCategoryListFragment.newInstance(mPaymentProducts, customTheme))
+                        //.replace(R.id.demo_container, ProductCategoryListFragment.newInstance(mPaymentProducts, customTheme))
                         //.add(R.id.demo_container, ProductCategoryListFragment.newInstance(mPaymentProducts, this))
-                        .addToBackStack(null)
-                        .commit();
-            }
-    }
+                        //.addToBackStack(null)
+                        //.commit();
+            //}
+    //}
 
     @Override
     public void onPaymentProductSelected(int position, boolean isChecked) {
@@ -140,19 +140,19 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         switch (position) {
 
             case 0:
-                mPaymentProducts.put(PaymentProduct.PaymentProductCategoryCodeCreditCard, isChecked);
+                paymentProducts.put(PaymentProduct.PaymentProductCategoryCodeCreditCard, isChecked);
             break;
 
             case 1:
-                mPaymentProducts.put(PaymentProduct.PaymentProductCategoryCodeDebitCard, isChecked);
+                paymentProducts.put(PaymentProduct.PaymentProductCategoryCodeDebitCard, isChecked);
             break;
 
             case 2:
-                mPaymentProducts.put(PaymentProduct.PaymentProductCategoryCodeEWallet, isChecked);
+                paymentProducts.put(PaymentProduct.PaymentProductCategoryCodeEWallet, isChecked);
             break;
 
             case 3:
-                mPaymentProducts.put(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking, isChecked);
+                paymentProducts.put(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking, isChecked);
             break;
 
         }
@@ -161,7 +161,7 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
     public ArrayList<String> getPaymentProductsAsList() {
 
         ArrayList<String> list = new ArrayList<>();
-        for (Map.Entry<String, Boolean> entry : mPaymentProducts.entrySet())
+        for (Map.Entry<String, Boolean> entry : paymentProducts.entrySet())
         {
 
             if (entry.getValue().equals(Boolean.TRUE)) {
@@ -214,6 +214,15 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         }
         return null;
     }
+
+    public Map<String, Boolean> getPaymentProducts() {
+        return paymentProducts;
+    }
+
+    public void setPaymentProducts(Map<String, Boolean> paymentProducts) {
+        this.paymentProducts = paymentProducts;
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
