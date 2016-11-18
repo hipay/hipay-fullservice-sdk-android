@@ -461,6 +461,18 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     @Override
     public void updatePaymentProduct(String title) {
 
+        title = title.substring(0, 1).toUpperCase() + title.substring(1);
+
+        int index = title.indexOf('_');
+        if (index != -1) {
+
+            String firstPart = title.substring(0, index);
+            String secondPart = title.substring(index, index+2).toUpperCase() + title.substring(index+2);
+
+            title = firstPart + secondPart;
+            title = title.replace('_',' ');
+        }
+
         TextView titleView = (TextView) findViewById(R.id.payment_product_title);
         titleView.setText(title);
     }
