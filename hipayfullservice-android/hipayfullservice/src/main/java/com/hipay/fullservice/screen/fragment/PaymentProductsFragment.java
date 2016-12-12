@@ -337,7 +337,9 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
         ActivityCompat.startActivityForResult(activity,
                 startIntent,
                 PaymentPageRequest.REQUEST_ORDER,
-                transitionBundle);
+                //transitionBundle);
+                //avoid glitch problem
+                null);
     }
 
     @Override
