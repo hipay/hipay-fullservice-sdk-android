@@ -469,7 +469,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                         OrderRequest orderRequest = new OrderRequest(paymentPageRequest);
 
                         String productCode = paymentProduct.getCode();
-                        if (productCode.equals(PaymentProduct.PaymentProductCategoryCodeCard)) {
+                        if (productCode.equals(PaymentProduct.PaymentProductCategoryCodeCard) || !productCode.equals(inferedPaymentProduct)) {
                             productCode = mCardBehaviour.getProductCode();
                         }
 
