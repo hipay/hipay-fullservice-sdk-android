@@ -12,7 +12,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Window;
 import android.widget.TextView;
@@ -28,9 +27,10 @@ import com.hipay.fullservice.screen.model.CustomTheme;
 import java.util.List;
 
 /**
- * Created by nfillion on 25/02/16.
+ * Created by nfillion on 21/12/2016.
  */
-public class PaymentProductsActivity extends PaymentScreenActivity {
+
+public class PaymentCardsActivity extends PaymentScreenActivity {
 
     private CustomTheme customTheme;
 
@@ -58,7 +58,7 @@ public class PaymentProductsActivity extends PaymentScreenActivity {
     @NonNull
     static Intent getStartIntent(Context context, PaymentPageRequest paymentPageRequest, String signature, CustomTheme theme) {
 
-        Intent starter = new Intent(context, PaymentProductsActivity.class);
+        Intent starter = new Intent(context, PaymentCardsActivity.class);
 
         Bundle bundle = paymentPageRequest.toBundle();
         starter.putExtra(PaymentPageRequest.TAG, bundle);
@@ -173,4 +173,3 @@ public class PaymentProductsActivity extends PaymentScreenActivity {
         this.customTheme = customTheme;
     }
 }
-

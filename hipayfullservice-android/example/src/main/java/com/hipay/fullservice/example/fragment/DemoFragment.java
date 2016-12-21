@@ -50,6 +50,7 @@ import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest
 import com.hipay.fullservice.example.DemoActivity;
 import com.hipay.fullservice.example.R;
 import com.hipay.fullservice.screen.activity.PaymentProductsActivity;
+import com.hipay.fullservice.screen.activity.PaymentScreenActivity;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
@@ -390,7 +391,9 @@ public class DemoFragment extends Fragment {
                             if (!TextUtils.isEmpty(orderId) && !TextUtils.isEmpty(signature) ) {
 
                                 final PaymentPageRequest paymentPageRequest = buildPageRequest(activity, orderId);
-                                PaymentProductsActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
+                                //PaymentProductsActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
+
+                                PaymentScreenActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
                                 mDoneFab.setVisibility(View.INVISIBLE);
 
                             } else {
