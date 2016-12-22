@@ -1,22 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:paddingBottom="@dimen/spacing_double"
     android:paddingLeft="@dimen/spacing_double"
     android:paddingRight="@dimen/spacing_double"
-    android:paddingTop="@dimen/spacing_double">
+    android:paddingTop="@dimen/spacing_double"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <ListView
-        android:id="@android:id/list"
+    <LinearLayout
+        android:id="@+id/card_info_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@android:id/empty"
+        <TextView
+            android:id="@+id/select_card_textview"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/red"
+            android:elevation="@dimen/elevation_header"
+            android:gravity="center_vertical"
+            android:text="Sélectionner une carte"
+            android:clipToPadding="false"
+            tools:ignore="UnusedAttribute,NewApi" />
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/pay_button_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </TextView>
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_weight="0"
+        style="@style/PaymentScreens.Button"
+        android:gravity="center"
+        android:enabled="false"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:visibility="visible"
+        >
+
+        <Button
+            android:id="@+id/pay_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:drawableLeft="@drawable/ic_lock_black"
+            android:drawableStart="@drawable/ic_lock_black"
+            android:drawableTint="@color/hpf_light"
+            android:drawablePadding="@dimen/spacing_normal"
+            android:textAppearance="@style/PaymentScreens.TextAppearance.AmountItem"
+            android:layout_gravity="center"
+            android:enabled="false"
+
+            android:background="@null"
+            android:clickable="false"
+            android:focusable="false"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            />
+
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/empty"
+        android:layout_width="@dimen/min_height_touch_target"
+        android:layout_height="@dimen/min_height_touch_target"
+        android:layout_gravity="bottom|center"
+        android:visibility="gone"
+        android:layout_margin="@dimen/spacing_double"
+        tools:ignore="UnusedAttribute" />
+
 </LinearLayout>

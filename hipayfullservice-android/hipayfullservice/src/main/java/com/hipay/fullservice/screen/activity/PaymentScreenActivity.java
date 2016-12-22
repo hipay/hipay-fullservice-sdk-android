@@ -19,7 +19,7 @@ public abstract class PaymentScreenActivity extends AppCompatActivity {
 
         if (isCardStorageEnabled)
         {
-            PaymentProductsActivity.start(activity, paymentPageRequest, signature, theme);
+            PaymentCardsActivity.start(activity, paymentPageRequest, signature, theme);
 
         } else
         {

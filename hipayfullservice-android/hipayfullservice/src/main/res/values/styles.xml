@@ -22,6 +22,8 @@
 
     <style name="PaymentScreens.PaymentFormActivity" />
 
+    <style name="PaymentScreens.PaymentCardsActivity" />
+
     <style name="PaymentScreens.ForwardWebViewActivity" />
 
     <style name="PaymentScreens.CompoundButton" parent="Widget.AppCompat.Button.Borderless">

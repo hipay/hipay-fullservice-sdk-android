@@ -18,19 +18,16 @@ import android.widget.TextView;
 
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.GatewayClient;
-import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
-import com.hipay.fullservice.screen.fragment.PaymentProductsFragment;
+import com.hipay.fullservice.screen.fragment.PaymentCardsFragment;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
-
-import java.util.List;
 
 /**
  * Created by nfillion on 21/12/2016.
  */
 
-public class PaymentCardsActivity extends PaymentScreenActivity {
+public class PaymentCardsActivity extends PaymentScreenActivity implements PaymentCardsFragment.OnPaymentCardSelectedListener {
 
     private CustomTheme customTheme;
 
@@ -89,15 +86,15 @@ public class PaymentCardsActivity extends PaymentScreenActivity {
 
             } else {
 
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.payment_products_container);
-                if (fragment != null) {
+                //Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.payment_cards_container);
+                //if (fragment != null) {
 
-                    PaymentProductsFragment paymentProductsFragment = (PaymentProductsFragment) fragment;
-                    List<PaymentProduct> paymentProducts = paymentProductsFragment.getPaymentProducts();
-                    if (paymentProducts == null || paymentProducts.isEmpty()) {
-                        finish();
-                    }
-                }
+                    //PaymentProductsFragment paymentProductsFragment = (PaymentProductsFragment) fragment;
+                    //List<PaymentProduct> paymentProducts = paymentProductsFragment.getPaymentProducts();
+                    //if (paymentProducts == null || paymentProducts.isEmpty()) {
+                        ////finish();
+                    //}
+                //}
             }
         }
     }
@@ -106,7 +103,7 @@ public class PaymentCardsActivity extends PaymentScreenActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_payment_products);
+        setContentView(R.layout.activity_payment_cards);
 
         Bundle customThemeBundle = getIntent().getBundleExtra(CustomTheme.TAG);
         CustomTheme customTheme = CustomTheme.fromBundle(customThemeBundle);
@@ -115,11 +112,11 @@ public class PaymentCardsActivity extends PaymentScreenActivity {
 
         setUpToolbar();
         if (savedInstanceState == null) {
-            attachProductGridFragment();
+            attachPaymentCardsListFragment();
         }
 
         //useful when this activity is gonna be called with makeTransition
-        supportPostponeEnterTransition();
+        //supportPostponeEnterTransition();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -132,7 +129,7 @@ public class PaymentCardsActivity extends PaymentScreenActivity {
                     this.getCustomTheme().getColorPrimaryDarkId()));
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_payment_products);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_payment_cards);
         toolbar.setBackgroundColor(ContextCompat.getColor(this, this.getCustomTheme().getColorPrimaryId()));
         setSupportActionBar(toolbar);
 
@@ -143,11 +140,11 @@ public class PaymentCardsActivity extends PaymentScreenActivity {
         textView.setTextColor(ContextCompat.getColor(this, this.getCustomTheme().getTextColorPrimaryId()));
     }
 
-    private void attachProductGridFragment() {
+    private void attachPaymentCardsListFragment() {
 
         FragmentManager supportFragmentManager = getSupportFragmentManager();
-        Fragment fragment = supportFragmentManager.findFragmentById(R.id.payment_products_container);
-        if (!(fragment instanceof PaymentProductsFragment)) {
+        Fragment fragment = supportFragmentManager.findFragmentById(R.id.payment_cards_container);
+        if (!(fragment instanceof PaymentCardsFragment)) {
 
             Bundle paymentPageRequestBundle = getIntent().getBundleExtra(PaymentPageRequest.TAG);
 
@@ -155,13 +152,13 @@ public class PaymentCardsActivity extends PaymentScreenActivity {
 
             String signature = getIntent().getStringExtra(GatewayClient.SIGNATURE_TAG);
 
-            fragment = PaymentProductsFragment.newInstance(paymentPageRequestBundle, signature, customThemeBundle);
+            fragment = PaymentCardsFragment.newInstance(null, customTheme);
 
             //fragment.setArguments(paymentPageRequestBundle);
         }
 
         supportFragmentManager.beginTransaction()
-                .replace(R.id.payment_products_container, fragment)
+                .replace(R.id.payment_cards_container, fragment)
                 .commit();
     }
 
@@ -171,5 +168,10 @@ public class PaymentCardsActivity extends PaymentScreenActivity {
 
     public void setCustomTheme(CustomTheme customTheme) {
         this.customTheme = customTheme;
+    }
+
+    @Override
+    public void onPaymentCardSelected(int position, boolean isChecked) {
+
     }
 }
