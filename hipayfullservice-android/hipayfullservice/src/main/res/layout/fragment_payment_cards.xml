@@ -22,7 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             style="@style/TextAppearance.AppCompat.Title"
-            android:textColor="@color/red"
             android:elevation="@dimen/elevation_header"
             android:gravity="center_vertical"
             android:text="Sélectionner une carte"
@@ -47,6 +46,7 @@
         android:enabled="false"
         android:layout_gravity="bottom"
         android:layout_marginTop="@dimen/spacing_normal"
+        android:layout_marginBottom="@dimen/spacing_normal"
         android:visibility="visible"
         >
 
@@ -61,6 +61,7 @@
             android:drawablePadding="@dimen/spacing_normal"
             android:textAppearance="@style/PaymentScreens.TextAppearance.AmountItem"
             android:layout_gravity="center"
+            android:gravity="center"
             android:enabled="false"
 
             android:background="@null"
@@ -71,6 +72,26 @@
             />
 
     </FrameLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/payment_products_button"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_weight="0"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textAllCaps="false"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:background="@color/dark_grey"
+        style="?attr/borderlessButtonStyle"
+        android:text="Autre moyen de paiement"
+        android:textColor="@color/hpf_light"
+        android:gravity="center"
+        android:drawableEnd="@drawable/ic_navigate_next_black"
+        android:drawableRight="@drawable/ic_navigate_next_black"
+        android:drawableTint="@color/hpf_light"
+        android:minHeight="?android:attr/actionBarSize"
+        tools:ignore="UnusedAttribute" />
 
     <ProgressBar
         android:id="@+id/empty"
