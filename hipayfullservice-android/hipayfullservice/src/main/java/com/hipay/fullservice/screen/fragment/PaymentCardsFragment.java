@@ -113,6 +113,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
                 "411111******2226",
                 "411111******2226",
                 "411111******2226",
+                "411111******2226",
                 "411111******1111"
         );
 
@@ -145,13 +146,11 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         mPayButton = (Button)view.findViewById(R.id.pay_button);
         mPayButtonLayout = (FrameLayout)view.findViewById(R.id.pay_button_layout);
 
+        mSelectCardTextview = (TextView) view.findViewById(R.id.select_card_textview);
+        mSelectCardTextview.setTextColor(ContextCompat.getColor(getActivity(), customTheme.getColorPrimaryDarkId()));
+
         //handle the screen orientation
         validatePayButton(true);
-
-
-        TextView textView = (TextView) view.findViewById(R.id.select_card_textview);
-        textView.setTextColor(ContextCompat.getColor(getActivity(), customTheme.getColorPrimaryDarkId()));
-
 
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
         //Currency c = Currency.getInstance(paymentPageRequest.getCurrency());
@@ -192,7 +191,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         private final List<String> list;
 
         public PaymentCardsArrayAdapter(Context context, List<String> list) {
-            super(context, android.R.layout.simple_list_item_multiple_choice, list);
+            super(context, R.layout.item_payment_card, list);
             this.context = context;
             this.list = list;
         }
@@ -211,7 +210,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
                 LayoutInflater inflater = ((Activity)context).getLayoutInflater();
 
-                rowView = inflater.inflate(R.layout.item_card_category, parent, false);
+                rowView = inflater.inflate(R.layout.item_payment_card, parent, false);
 
                 ViewHolder viewHolder = new ViewHolder();
                 viewHolder.text = (TextView) rowView.findViewById(R.id.text1);

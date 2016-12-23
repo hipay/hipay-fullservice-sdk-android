@@ -31,6 +31,7 @@
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
+            android:choiceMode="singleChoice"
             android:layout_height="wrap_content" >
         </ListView>
 
@@ -46,7 +47,7 @@
         android:enabled="false"
         android:layout_gravity="bottom"
         android:layout_marginTop="@dimen/spacing_normal"
-        android:layout_marginBottom="@dimen/spacing_normal"
+        android:layout_marginBottom="@dimen/spacing_double"
         android:visibility="visible"
         >
 
@@ -82,14 +83,13 @@
         android:textAllCaps="false"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
-        android:background="@color/dark_grey"
         style="?attr/borderlessButtonStyle"
         android:text="Autre moyen de paiement"
-        android:textColor="@color/hpf_light"
+        android:textColor="@color/hpf_primary"
         android:gravity="center"
         android:drawableEnd="@drawable/ic_navigate_next_black"
         android:drawableRight="@drawable/ic_navigate_next_black"
-        android:drawableTint="@color/hpf_light"
+        android:drawableTint="@color/hpf_primary"
         android:minHeight="?android:attr/actionBarSize"
         tools:ignore="UnusedAttribute" />
 
