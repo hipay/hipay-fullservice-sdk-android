@@ -14,7 +14,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +31,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hipay.fullservice.R;
-import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
 import java.text.NumberFormat;
@@ -54,6 +56,8 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         PaymentCardsFragment fragment = new PaymentCardsFragment();
 
         Bundle args = new Bundle();
+
+        //TODO il faudra donner la liste des cards au bundle.
 
         /*
         String key = PaymentProduct.PaymentProductCategoryCodeCreditCard;
@@ -83,12 +87,6 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
@@ -106,7 +104,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
         ListView listView = getListView();
         listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        listView.setItemsCanFocus(false);
+        listView.setItemsCanFocus(true);
         listView.setOnItemClickListener(this);
 
         List<String> list = Arrays.asList(
@@ -122,16 +120,16 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
         Bundle args = getArguments();
 
-        Boolean creditCard = args.getBoolean(PaymentProduct.PaymentProductCategoryCodeCreditCard);
-        Boolean debitCard = args.getBoolean(PaymentProduct.PaymentProductCategoryCodeDebitCard);
-        Boolean eWallet = args.getBoolean(PaymentProduct.PaymentProductCategoryCodeEWallet);
-        Boolean realTime = args.getBoolean(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking);
+        // args
 
-        listView.setItemChecked(0, creditCard);
-        listView.setItemChecked(1, debitCard);
-        listView.setItemChecked(2, eWallet);
-        listView.setItemChecked(3, realTime);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        boolean cardChecked = getListView().getCheckedItemCount() > 0;
+        validatePayButton(cardChecked);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -149,8 +147,11 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         mSelectCardTextview = (TextView) view.findViewById(R.id.select_card_textview);
         mSelectCardTextview.setTextColor(ContextCompat.getColor(getActivity(), customTheme.getColorPrimaryDarkId()));
 
-        //handle the screen orientation
-        validatePayButton(true);
+        //AppCompatButton paymentProductsButton = (AppCompatButton) view.findViewById(R.id.payment_products_button);
+        //paymentProductsButton.setTextColor(ContextCompat.getColor(getActivity(), customTheme.getColorPrimaryDarkId()));
+        //Drawable wrapDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_navigate_next_black, null);
+        //DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), customTheme.getColorPrimaryDarkId()));
+        //paymentProductsButton.setCompoundDrawablesWithIntrinsicBounds(null, null, wrapDrawable ,null);
 
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
         //Currency c = Currency.getInstance(paymentPageRequest.getCurrency());
@@ -172,18 +173,9 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
                 //launchRequest();
             }
         });
-        //PaymentCardsActivity paymentCardsActivity = (PaymentCardsActivity) getActivity();
 
-        //if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.LOLLIPOP)) {
+        //handle the screen orientation
 
-            //Window window = paymentCardsActivity.getWindow();
-            //window.setStatusBarColor(ContextCompat.getColor(paymentCardsActivity,
-                    //customTheme.getColorPrimaryDarkId()));
-        //}
-
-        //Toolbar toolbar = (Toolbar) paymentCardsActivity.findViewById(R.id.toolbar);
-        //toolbar.setBackgroundColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryId()));
-        //toolbar.setTitleTextColor(ContextCompat.getColor(demoActivity, customTheme.getTextColorPrimaryId()));
     }
 
     private class PaymentCardsArrayAdapter extends ArrayAdapter<String> {
@@ -200,7 +192,6 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
             public TextView text;
         }
 
-        //*
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -222,14 +213,16 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
             return rowView;
         }
-        //*/
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 
         CheckedTextView checkedTextView = (CheckedTextView)view;
-        mCallback.onPaymentCardSelected(position, checkedTextView.isChecked());
+
+        //TODO no need to call the activity, just enable the payButton.
+        //mCallback.onPaymentCardSelected(position, checkedTextView.isChecked());
+        validatePayButton(checkedTextView.isChecked());
     }
 
     protected void validatePayButton(boolean validate) {

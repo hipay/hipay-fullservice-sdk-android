@@ -136,7 +136,7 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         TextView textView = (TextView) toolbar.findViewById(R.id.title);
-        textView.setText(R.string.payment_products_title);
+        textView.setText(R.string.payment_cards_title);
         textView.setTextColor(ContextCompat.getColor(this, this.getCustomTheme().getTextColorPrimaryId()));
     }
 

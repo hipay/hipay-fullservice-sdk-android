@@ -7,6 +7,7 @@
     <string name="content_description" translatable="false">Content description</string>
 
     <string name="payment_products_title">Payment</string>
+    <string name="payment_cards_title">Payment Cards</string>
 
     <string name="card_owner">Card holder</string>
     <string name="card_number">Number</string>
@@ -60,6 +61,8 @@
 
     <string name="payment_product_card_description">Card</string>
 
+    <string name="card_stored_selection">Select a payment card</string>
+    <string name="card_stored_another_selection">Another payment method</string>
 
     <string-array name="card_products_list" translatable="false">
         <item>visa</item>

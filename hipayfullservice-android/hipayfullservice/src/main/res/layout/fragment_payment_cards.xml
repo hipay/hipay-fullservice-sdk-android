@@ -24,7 +24,7 @@
             style="@style/TextAppearance.AppCompat.Title"
             android:elevation="@dimen/elevation_header"
             android:gravity="center_vertical"
-            android:text="Sélectionner une carte"
+            android:text="@string/card_stored_selection"
             android:clipToPadding="false"
             tools:ignore="UnusedAttribute,NewApi" />
 
@@ -84,14 +84,17 @@
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
         style="?attr/borderlessButtonStyle"
-        android:text="Autre moyen de paiement"
-        android:textColor="@color/hpf_primary"
+        android:text="@string/card_stored_another_selection"
         android:gravity="center"
         android:drawableEnd="@drawable/ic_navigate_next_black"
         android:drawableRight="@drawable/ic_navigate_next_black"
-        android:drawableTint="@color/hpf_primary"
         android:minHeight="?android:attr/actionBarSize"
         tools:ignore="UnusedAttribute" />
+
+    <!--
+    android:textColor="@color/hpf_primary"
+    android:drawableTint="@color/hpf_primary"
+    -->
 
     <ProgressBar
         android:id="@+id/empty"

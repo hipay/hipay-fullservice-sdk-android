@@ -2,6 +2,7 @@
 <resources>
 
     <string name="payment_products_title">Paiement</string>
+    <string name="payment_cards_title">Cartes enregistrées</string>
 
     <string name="card_owner">Nom du titulaire</string>
     <string name="card_number">Numéro de carte</string>
@@ -57,5 +58,8 @@
     <string name="prompt_continue">Continuer</string>
 
     <string name="payment_product_card_description">Carte</string>
+
+    <string name="card_stored_selection">Sélectionner une carte</string>
+    <string name="card_stored_another_selection">Autre moyen de paiement</string>
 
 </resources>
