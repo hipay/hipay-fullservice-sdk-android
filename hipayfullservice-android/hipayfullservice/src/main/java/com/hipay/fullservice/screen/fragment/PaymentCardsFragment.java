@@ -14,10 +14,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +29,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hipay.fullservice.R;
+import com.hipay.fullservice.core.client.GatewayClient;
+import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
+import com.hipay.fullservice.screen.activity.PaymentProductsActivity;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
 import java.text.NumberFormat;
@@ -38,24 +39,29 @@ import java.util.Arrays;
 import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class PaymentCardsFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
     OnPaymentCardSelectedListener mCallback;
     private Button mPayButton;
+    private AppCompatButton mPaymentProductsButton;
     private FrameLayout mPayButtonLayout;
     private TextView mSelectCardTextview;
+
+    private CustomTheme mCustomTheme;
+    private PaymentPageRequest mPaymentPageRequest;
+    private String mSignature;
 
     public interface OnPaymentCardSelectedListener {
         void onPaymentCardSelected(int position, boolean isChecked);
     }
 
-    public static PaymentCardsFragment newInstance(Map<String, Boolean> paymentCards, CustomTheme customTheme) {
+    public static PaymentCardsFragment newInstance(Bundle args) {
 
         PaymentCardsFragment fragment = new PaymentCardsFragment();
+        fragment.setArguments(args);
 
-        Bundle args = new Bundle();
+        //Bundle args = new Bundle();
 
         //TODO il faudra donner la liste des cards au bundle.
 
@@ -73,9 +79,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         args.putBoolean(key, paymentCards.get(key));
 
         */
-        args.putBundle(CustomTheme.TAG, customTheme.toBundle());
-
-        fragment.setArguments(args);
+        //args.putBundle(CustomTheme.TAG, customTheme.toBundle());
 
         return fragment;
     }
@@ -83,6 +87,17 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_payment_cards, container, false);
+
+        Bundle args = getArguments();
+
+        final Bundle customThemeBundle = args.getBundle(CustomTheme.TAG);
+        mCustomTheme = CustomTheme.fromBundle(customThemeBundle);
+
+        final Bundle paymentPageRequestBundle = args.getBundle(PaymentPageRequest.TAG);
+        mPaymentPageRequest = PaymentPageRequest.fromBundle(paymentPageRequestBundle);
+
+        mSignature = args.getString(GatewayClient.SIGNATURE_TAG);
+
         return view;
     }
 
@@ -118,10 +133,6 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         ArrayAdapter adapter = new PaymentCardsArrayAdapter(getActivity(), list);
         setListAdapter(adapter);
 
-        Bundle args = getArguments();
-
-        // args
-
     }
 
     @Override
@@ -137,15 +148,11 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Bundle args = getArguments();
-        Bundle customThemeBundle = args.getBundle(CustomTheme.TAG);
-        CustomTheme customTheme = CustomTheme.fromBundle(customThemeBundle);
-
         mPayButton = (Button)view.findViewById(R.id.pay_button);
         mPayButtonLayout = (FrameLayout)view.findViewById(R.id.pay_button_layout);
 
         mSelectCardTextview = (TextView) view.findViewById(R.id.select_card_textview);
-        mSelectCardTextview.setTextColor(ContextCompat.getColor(getActivity(), customTheme.getColorPrimaryDarkId()));
+        mSelectCardTextview.setTextColor(ContextCompat.getColor(getActivity(), mCustomTheme.getColorPrimaryDarkId()));
 
         //AppCompatButton paymentProductsButton = (AppCompatButton) view.findViewById(R.id.payment_products_button);
         //paymentProductsButton.setTextColor(ContextCompat.getColor(getActivity(), customTheme.getColorPrimaryDarkId()));
@@ -154,11 +161,9 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         //paymentProductsButton.setCompoundDrawablesWithIntrinsicBounds(null, null, wrapDrawable ,null);
 
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
-        //Currency c = Currency.getInstance(paymentPageRequest.getCurrency());
-        Currency c = Currency.getInstance("EUR");
+        Currency c = Currency.getInstance(mPaymentPageRequest.getCurrency());
         currencyFormatter.setCurrency(c);
-        //String moneyFormatted = currencyFormatter.format(paymentPageRequest.getAmount());
-        String moneyFormatted = currencyFormatter.format(2.0);
+        String moneyFormatted = currencyFormatter.format(mPaymentPageRequest.getAmount());
 
         String moneyString = getString(R.string.pay, moneyFormatted);
 
@@ -171,10 +176,17 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
                 //setLoadingMode(true,false);
                 //launchRequest();
+
             }
         });
 
-        //handle the screen orientation
+        mPaymentProductsButton = (AppCompatButton)view.findViewById(R.id.payment_products_button);
+        mPaymentProductsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PaymentProductsActivity.start(getActivity(), mPaymentPageRequest, mSignature, mCustomTheme);
+            }
+        });
 
     }
 
@@ -229,17 +241,14 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
         if (validate) {
 
-            final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
-            CustomTheme theme = CustomTheme.fromBundle(customThemeBundle);
-
-            mPayButton.setTextColor(ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
+            mPayButton.setTextColor(ContextCompat.getColor(getActivity(), mCustomTheme.getTextColorPrimaryId()));
             mPayButtonLayout.setEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                mPayButtonLayout.setBackground(makeSelector(theme));
+                mPayButtonLayout.setBackground(makeSelector(mCustomTheme));
 
                 Drawable[] drawables = mPayButton.getCompoundDrawables();
                 Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
-                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
+                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), mCustomTheme.getTextColorPrimaryId()));
             }
 
         } else {

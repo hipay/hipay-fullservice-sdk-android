@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.GatewayClient;
+import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.screen.fragment.PaymentCardsFragment;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
@@ -147,12 +148,21 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
         if (!(fragment instanceof PaymentCardsFragment)) {
 
             Bundle paymentPageRequestBundle = getIntent().getBundleExtra(PaymentPageRequest.TAG);
-
             Bundle customThemeBundle = getIntent().getBundleExtra(CustomTheme.TAG);
-
             String signature = getIntent().getStringExtra(GatewayClient.SIGNATURE_TAG);
 
-            fragment = PaymentCardsFragment.newInstance(null, customTheme);
+            Bundle args = new Bundle();
+            args.putBundle(PaymentPageRequest.TAG, paymentPageRequestBundle);
+
+            //args.putBundle(PaymentProduct.TAG, paymentProduct.toBundle());
+
+
+            args.putBundle(CustomTheme.TAG, customThemeBundle);
+            args.putString(GatewayClient.SIGNATURE_TAG, signature);
+
+            //fragment.setArguments(args);
+
+            fragment = PaymentCardsFragment.newInstance(args);
 
             //fragment.setArguments(paymentPageRequestBundle);
         }

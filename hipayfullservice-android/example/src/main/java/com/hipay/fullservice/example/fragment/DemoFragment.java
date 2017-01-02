@@ -272,11 +272,8 @@ public class DemoFragment extends Fragment {
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                //.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                //.setCustomAnimations(android.R.anim.in_from_left, android.R.anim.out_to_right, android.R.anim.in_from_right, android.R.anim.out_to_left)
 
                 .replace(R.id.demo_container, ProductCategoryListFragment.newInstance(paymentProducts, customTheme))
-                //.add(R.id.demo_container, ProductCategoryListFragment.newInstance(mPaymentProducts, this))
                 .addToBackStack(null)
                 .commit();
     }
