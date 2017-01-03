@@ -61,5 +61,9 @@
 
     <string name="card_stored_selection">Sélectionner une carte</string>
     <string name="card_stored_another_selection">Autre moyen de paiement</string>
+    <string name="no_payment_card_stored">Aucune carte enregistrée</string>
+
+    <string name="alert_deleting_payment_card_title">Suppression de carte</string>
+    <string name="alert_deleting_payment_card_body">Êtes-vous sûr de vouloir supprimer cette carte de paiment ?</string>
 
 </resources>

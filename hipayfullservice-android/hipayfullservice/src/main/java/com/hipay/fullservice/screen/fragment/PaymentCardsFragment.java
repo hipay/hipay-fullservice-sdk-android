@@ -128,6 +128,14 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
         ArrayAdapter adapter = new PaymentCardsArrayAdapter(getActivity(), mPaymentCardTokens);
         setListAdapter(adapter);
+
+        if (savedInstanceState != null) {
+            mSelectedCard = savedInstanceState.getInt("selectedCard");
+
+            if (mSelectedCard != -1) {
+                mListView.setItemChecked(mSelectedCard, true);
+            }
+        }
     }
 
     @Override
@@ -181,14 +189,6 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
                 PaymentProductsActivity.start(getActivity(), mPaymentPageRequest, mSignature, mCustomTheme);
             }
         });
-
-        if (savedInstanceState != null) {
-            mSelectedCard = savedInstanceState.getInt("selectedCard");
-        }
-
-        if (mSelectedCard != -1) {
-            mListView.setItemChecked(mSelectedCard, true);
-        }
 
     }
 
@@ -276,6 +276,8 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
                         if (mPaymentCardTokens.size() == 0) {
 
+                            //TODO reinit this in setupCard method
+                            mSelectCardTextview.setText(R.string.no_payment_card_stored);
                         }
 
                     }
@@ -289,10 +291,10 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.alert_transaction_loading_title)
-                .setMessage(R.string.alert_transaction_loading_body)
-                .setNegativeButton(R.string.alert_transaction_loading_no, dialogClickListener)
-                .setPositiveButton(R.string.alert_transaction_loading_yes, dialogClickListener)
+        builder.setTitle(R.string.alert_deleting_payment_card_title)
+                .setMessage(R.string.alert_deleting_payment_card_body)
+                .setNegativeButton(android.R.string.cancel, dialogClickListener)
+                .setPositiveButton(android.R.string.yes, dialogClickListener)
                 .setCancelable(false)
                 .show();
 
