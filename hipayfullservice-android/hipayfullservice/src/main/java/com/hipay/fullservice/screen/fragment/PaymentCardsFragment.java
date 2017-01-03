@@ -7,6 +7,7 @@ package com.hipay.fullservice.screen.fragment;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,12 +39,11 @@ import com.hipay.fullservice.screen.model.CustomTheme;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 
-public class PaymentCardsFragment extends ListFragment implements AdapterView.OnItemClickListener {
+public class PaymentCardsFragment extends ListFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     OnPaymentCardSelectedListener mCallback;
     private Button mPayButton;
@@ -54,7 +55,11 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     private PaymentPageRequest mPaymentPageRequest;
     private String mSignature;
 
-    private List<PaymentCardToken> paymentCardTokens;
+    private List<PaymentCardToken> mPaymentCardTokens;
+    private ListView mListView;
+
+    private int mSelectedCard = -1;
+
 
     public interface OnPaymentCardSelectedListener {
         void onPaymentCardSelected(int position, boolean isChecked);
@@ -64,26 +69,6 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
         PaymentCardsFragment fragment = new PaymentCardsFragment();
         fragment.setArguments(args);
-
-        //Bundle args = new Bundle();
-
-        //TODO il faudra donner la liste des cards au bundle.
-
-        /*
-        String key = PaymentProduct.PaymentProductCategoryCodeCreditCard;
-        args.putBoolean(key, paymentCards.get(key));
-
-        key = PaymentProduct.PaymentProductCategoryCodeDebitCard;
-        args.putBoolean(key, paymentCards.get(key));
-
-        key = PaymentProduct.PaymentProductCategoryCodeEWallet;
-        args.putBoolean(key, paymentCards.get(key));
-
-        key = PaymentProduct.PaymentProductCategoryCodeRealtimeBanking;
-        args.putBoolean(key, paymentCards.get(key));
-
-        */
-        //args.putBundle(CustomTheme.TAG, customTheme.toBundle());
 
         return fragment;
     }
@@ -121,38 +106,28 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ListView listView = getListView();
-        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        listView.setItemsCanFocus(true);
-        listView.setOnItemClickListener(this);
+        mListView = getListView();
+        mListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        mListView.setItemsCanFocus(true);
+        mListView.setOnItemClickListener(this);
+        mListView.setOnItemLongClickListener(this);
 
-
-        paymentCardTokens = new ArrayList<>();
+        mPaymentCardTokens = new ArrayList<>();
 
         PaymentCardToken paymentCardToken = new PaymentCardToken();
-        paymentCardToken.setPan("4111 1011 1111 1111");
-        paymentCardTokens.add(paymentCardToken);
+        paymentCardToken.setPan("4111 1111 1111 1111");
+        mPaymentCardTokens.add(paymentCardToken);
 
         PaymentCardToken paymentCardToken2 = new PaymentCardToken();
-        paymentCardToken2.setPan("4000 03000 0000 0000");
-        paymentCardTokens.add(paymentCardToken2);
+        paymentCardToken2.setPan("4222 2222 2222 2222");
+        mPaymentCardTokens.add(paymentCardToken2);
 
         PaymentCardToken paymentCardToken3 = new PaymentCardToken();
-        paymentCardToken3.setPan("4000 00000 1000 0000");
-        paymentCardTokens.add(paymentCardToken3);
-        /*
-        List<String> list = Arrays.asList(
-                "411111******2226",
-                "411111******2226",
-                "411111******2226",
-                "411111******2226",
-                "411111******1111"
-        );
-        */
+        paymentCardToken3.setPan("4333 3333 3333 3333");
+        mPaymentCardTokens.add(paymentCardToken3);
 
-        ArrayAdapter adapter = new PaymentCardsArrayAdapter(getActivity(), paymentCardTokens);
+        ArrayAdapter adapter = new PaymentCardsArrayAdapter(getActivity(), mPaymentCardTokens);
         setListAdapter(adapter);
-
     }
 
     @Override
@@ -196,7 +171,6 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
                 //setLoadingMode(true,false);
                 //launchRequest();
-
             }
         });
 
@@ -207,6 +181,14 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
                 PaymentProductsActivity.start(getActivity(), mPaymentPageRequest, mSignature, mCustomTheme);
             }
         });
+
+        if (savedInstanceState != null) {
+            mSelectedCard = savedInstanceState.getInt("selectedCard");
+        }
+
+        if (mSelectedCard != -1) {
+            mListView.setItemChecked(mSelectedCard, true);
+        }
 
     }
 
@@ -253,10 +235,68 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 
         CheckedTextView checkedTextView = (CheckedTextView)view;
+        if (checkedTextView.isChecked() == true) {
+            mSelectedCard = position;
+        }
 
-        //TODO no need to call the activity, just enable the payButton.
-        //mCallback.onPaymentCardSelected(position, checkedTextView.isChecked());
         validatePayButton(checkedTextView.isChecked());
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE: {
+                        dialog.dismiss();
+
+                        mListView.clearChoices();
+                        mPaymentCardTokens.remove(position);
+
+                        if (mSelectedCard == position) {
+
+                            mSelectedCard = -1;
+                            validatePayButton(false);
+                        }
+
+                        if (mSelectedCard != -1) {
+
+                            if (mSelectedCard > position) {
+
+                                // index decreases after removing
+                                mSelectedCard = mSelectedCard - 1;
+                            }
+
+                            mListView.setItemChecked(mSelectedCard, true);
+                        }
+
+                        ((ArrayAdapter)getListAdapter()).notifyDataSetChanged();
+
+                        if (mPaymentCardTokens.size() == 0) {
+
+                        }
+
+                    }
+                    break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.alert_transaction_loading_title)
+                .setMessage(R.string.alert_transaction_loading_body)
+                .setNegativeButton(R.string.alert_transaction_loading_no, dialogClickListener)
+                .setPositiveButton(R.string.alert_transaction_loading_yes, dialogClickListener)
+                .setCancelable(false)
+                .show();
+
+        return true;
     }
 
     protected void validatePayButton(boolean validate) {
@@ -293,5 +333,12 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         res.addState(new int[]{android.R.attr.state_pressed}, new ColorDrawable(ContextCompat.getColor(getActivity(), theme.getColorPrimaryDarkId())));
         res.addState(new int[]{}, new ColorDrawable(ContextCompat.getColor(getActivity(), theme.getColorPrimaryId())));
         return res;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt("selectedCard", mSelectedCard);
     }
 }
