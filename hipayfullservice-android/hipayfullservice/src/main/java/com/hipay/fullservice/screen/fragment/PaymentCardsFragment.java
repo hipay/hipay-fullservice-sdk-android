@@ -30,11 +30,13 @@ import android.widget.TextView;
 
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.GatewayClient;
+import com.hipay.fullservice.core.models.PaymentCardToken;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.screen.activity.PaymentProductsActivity;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Currency;
 import java.util.List;
@@ -51,6 +53,8 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     private CustomTheme mCustomTheme;
     private PaymentPageRequest mPaymentPageRequest;
     private String mSignature;
+
+    private List<PaymentCardToken> paymentCardTokens;
 
     public interface OnPaymentCardSelectedListener {
         void onPaymentCardSelected(int position, boolean isChecked);
@@ -122,6 +126,21 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         listView.setItemsCanFocus(true);
         listView.setOnItemClickListener(this);
 
+
+        paymentCardTokens = new ArrayList<>();
+
+        PaymentCardToken paymentCardToken = new PaymentCardToken();
+        paymentCardToken.setPan("4111 1011 1111 1111");
+        paymentCardTokens.add(paymentCardToken);
+
+        PaymentCardToken paymentCardToken2 = new PaymentCardToken();
+        paymentCardToken2.setPan("4000 03000 0000 0000");
+        paymentCardTokens.add(paymentCardToken2);
+
+        PaymentCardToken paymentCardToken3 = new PaymentCardToken();
+        paymentCardToken3.setPan("4000 00000 1000 0000");
+        paymentCardTokens.add(paymentCardToken3);
+        /*
         List<String> list = Arrays.asList(
                 "411111******2226",
                 "411111******2226",
@@ -129,8 +148,9 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
                 "411111******2226",
                 "411111******1111"
         );
+        */
 
-        ArrayAdapter adapter = new PaymentCardsArrayAdapter(getActivity(), list);
+        ArrayAdapter adapter = new PaymentCardsArrayAdapter(getActivity(), paymentCardTokens);
         setListAdapter(adapter);
 
     }
@@ -190,11 +210,11 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
     }
 
-    private class PaymentCardsArrayAdapter extends ArrayAdapter<String> {
+    private class PaymentCardsArrayAdapter extends ArrayAdapter<PaymentCardToken> {
         private final Context context;
-        private final List<String> list;
+        private final List<PaymentCardToken> list;
 
-        public PaymentCardsArrayAdapter(Context context, List<String> list) {
+        public PaymentCardsArrayAdapter(Context context, List<PaymentCardToken> list) {
             super(context, R.layout.item_payment_card, list);
             this.context = context;
             this.list = list;
@@ -221,7 +241,9 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
             }
 
             ViewHolder holder = (ViewHolder) rowView.getTag();
-            holder.text.setText(list.get(position));
+
+            PaymentCardToken cardToken = list.get(position);
+            holder.text.setText(cardToken.getPan());
 
             return rowView;
         }

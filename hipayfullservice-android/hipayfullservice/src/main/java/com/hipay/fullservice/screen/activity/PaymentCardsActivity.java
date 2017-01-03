@@ -18,11 +18,13 @@ import android.widget.TextView;
 
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.GatewayClient;
-import com.hipay.fullservice.core.models.PaymentProduct;
+import com.hipay.fullservice.core.models.PaymentCardToken;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.screen.fragment.PaymentCardsFragment;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
+
+import java.util.ArrayList;
 
 /**
  * Created by nfillion on 21/12/2016.
@@ -113,6 +115,7 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
 
         setUpToolbar();
         if (savedInstanceState == null) {
+
             attachPaymentCardsListFragment();
         }
 
@@ -153,18 +156,10 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
 
             Bundle args = new Bundle();
             args.putBundle(PaymentPageRequest.TAG, paymentPageRequestBundle);
-
-            //args.putBundle(PaymentProduct.TAG, paymentProduct.toBundle());
-
-
             args.putBundle(CustomTheme.TAG, customThemeBundle);
             args.putString(GatewayClient.SIGNATURE_TAG, signature);
 
-            //fragment.setArguments(args);
-
             fragment = PaymentCardsFragment.newInstance(args);
-
-            //fragment.setArguments(paymentPageRequestBundle);
         }
 
         supportFragmentManager.beginTransaction()
