@@ -28,12 +28,18 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hipay.fullservice.R;
+import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
+import com.hipay.fullservice.core.client.interfaces.callbacks.OrderRequestCallback;
 import com.hipay.fullservice.core.models.PaymentCardToken;
+import com.hipay.fullservice.core.models.Transaction;
+import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
+import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.screen.activity.PaymentProductsActivity;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
@@ -59,6 +65,9 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     private ListView mListView;
 
     private int mSelectedCard = -1;
+
+    private GatewayClient mGatewayClient;
+    private ProgressBar mProgressBar;
 
 
     public interface OnPaymentCardSelectedListener {
@@ -177,7 +186,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
             @Override
             public void onClick(View v) {
 
-                //setLoadingMode(true,false);
+                setLoadingMode(true);
                 //launchRequest();
             }
         });
@@ -190,6 +199,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
             }
         });
 
+        mProgressBar = (ProgressBar)view.findViewById(R.id.progress);
     }
 
     private class PaymentCardsArrayAdapter extends ArrayAdapter<PaymentCardToken> {
@@ -335,6 +345,92 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         res.addState(new int[]{android.R.attr.state_pressed}, new ColorDrawable(ContextCompat.getColor(getActivity(), theme.getColorPrimaryDarkId())));
         res.addState(new int[]{}, new ColorDrawable(ContextCompat.getColor(getActivity(), theme.getColorPrimaryId())));
         return res;
+    }
+
+    public void setLoadingMode(boolean loadingMode) {
+
+        if (loadingMode) {
+
+            mProgressBar.setVisibility(View.VISIBLE);
+            mPayButtonLayout.setVisibility(View.GONE);
+
+        } else {
+
+            mProgressBar.setVisibility(View.GONE);
+            mPayButtonLayout.setVisibility(View.VISIBLE);
+        }
+
+        //mLoadingMode = loadingMode;
+    }
+
+    public void launchRequest() {
+
+        OrderRequest orderRequest = new OrderRequest(mPaymentPageRequest);
+
+        // get the brand to get the
+        // String productCode = paymentCardToken.getbrand();
+        //orderRequest.setPaymentProductCode(paymentProduct.getCode());
+
+        //CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest =
+                //new CardTokenPaymentMethodRequest(
+                        //paymentCardToken.getToken(),
+                        //paymentPageRequest.getEci(),
+                        //paymentPageRequest.getAuthenticationIndicator());
+
+        //orderRequest.setPaymentMethod(cardTokenPaymentMethodRequest);
+
+
+        mGatewayClient = new GatewayClient(getActivity());
+        //mCurrentLoading = AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue();
+        mGatewayClient.requestNewOrder(orderRequest, mSignature, new OrderRequestCallback() {
+
+            @Override
+            public void onSuccess(final Transaction transaction) {
+                //Log.i("transaction success", transaction.toString());
+
+                if (mCallback != null) {
+                    //mCallback.onCallbackOrderReceived(transaction, null);
+                }
+
+                cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
+            }
+
+            @Override
+            public void onError(Exception error) {
+                if (mCallback != null) {
+                    //mCallback.onCallbackOrderReceived(null, error);
+                }
+                cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
+            }
+        });
+    }
+
+
+    protected void cancelLoaderId(int loaderId) {
+
+        //mCurrentLoading = -1;
+
+        switch (loaderId) {
+
+            //securevault generateToken
+            case 0: {
+
+                //if (mSecureVaultClient != null) {
+                    //mSecureVaultClient.cancelOperation();
+                    //mSecureVaultClient = null;
+                //}
+
+            } break;
+
+            //anything else
+            default: {
+
+                if (mGatewayClient != null) {
+                    mGatewayClient.cancelOperation();
+                    mGatewayClient = null;
+                }
+            }
+        }
     }
 
     @Override

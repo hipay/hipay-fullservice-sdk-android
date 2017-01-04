@@ -74,6 +74,16 @@
 
     </FrameLayout>
 
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:layout_marginBottom="@dimen/spacing_double"
+        android:visibility="gone"
+        tools:ignore="UnusedAttribute" />
+
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/payment_products_button"
         android:layout_width="match_parent"
@@ -95,14 +105,5 @@
     android:textColor="@color/hpf_primary"
     android:drawableTint="@color/hpf_primary"
     -->
-
-    <ProgressBar
-        android:id="@+id/empty"
-        android:layout_width="@dimen/min_height_touch_target"
-        android:layout_height="@dimen/min_height_touch_target"
-        android:layout_gravity="bottom|center"
-        android:visibility="gone"
-        android:layout_margin="@dimen/spacing_double"
-        tools:ignore="UnusedAttribute" />
 
 </LinearLayout>
