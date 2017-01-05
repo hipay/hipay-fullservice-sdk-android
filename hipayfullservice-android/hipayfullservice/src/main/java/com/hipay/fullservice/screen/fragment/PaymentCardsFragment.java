@@ -8,6 +8,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
@@ -40,6 +41,7 @@ import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.screen.activity.PaymentProductsActivity;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
@@ -48,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class PaymentCardsFragment extends ListFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
@@ -121,19 +124,22 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
 
-        mPaymentCardTokens = new ArrayList<>();
+        SharedPreferences settings = getActivity().getSharedPreferences("HiPay", Context.MODE_PRIVATE);
+        Set<String> paymentCardsStringSet = settings.getStringSet("ok", null);
 
-        PaymentCardToken paymentCardToken = new PaymentCardToken();
-        paymentCardToken.setPan("4111 1111 1111 1111");
-        mPaymentCardTokens.add(paymentCardToken);
+        if (paymentCardsStringSet != null && !paymentCardsStringSet.isEmpty()) {
 
-        PaymentCardToken paymentCardToken2 = new PaymentCardToken();
-        paymentCardToken2.setPan("4222 2222 2222 2222");
-        mPaymentCardTokens.add(paymentCardToken2);
+            mPaymentCardTokens = new ArrayList<>();
 
-        PaymentCardToken paymentCardToken3 = new PaymentCardToken();
-        paymentCardToken3.setPan("4333 3333 3333 3333");
-        mPaymentCardTokens.add(paymentCardToken3);
+            for (String paymentCardTokenString : paymentCardsStringSet) {
+
+                Bundle paymentCardTokenBundle = Utils.fromJSONString(paymentCardTokenString);
+                if (paymentCardTokenBundle != null) {
+                    PaymentCardToken paymentCardToken = PaymentCardToken.fromBundle(paymentCardTokenBundle);
+                    mPaymentCardTokens.add(paymentCardToken);
+                }
+            }
+        }
 
         ArrayAdapter adapter = new PaymentCardsArrayAdapter(getActivity(), mPaymentCardTokens);
         setListAdapter(adapter);

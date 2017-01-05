@@ -1,11 +1,13 @@
 package com.hipay.fullservice.screen.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -38,14 +40,18 @@ import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.screen.fragment.interfaces.CardBehaviour;
 import com.hipay.fullservice.screen.helper.FormHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Currency;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.prefs.Preferences;
 
 /**
  * Created by nfillion on 20/04/16.
@@ -461,6 +467,9 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                     @Override
                     public void onSuccess(PaymentCardToken paymentCardToken) {
 
+
+
+
                         //secure vault
                         cancelLoaderId(AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue());
 
@@ -485,6 +494,21 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                         //check if activity is still available
                         if (getActivity() != null) {
+
+                            //put a database in there
+
+                            SharedPreferences settings = getActivity().getSharedPreferences("HiPay", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = settings.edit();
+                            //editor.putBoolean("silentMode", mSilentMode);
+
+                            String paymentCardTokenString = Utils.fromBundle(paymentCardToken.toBundle());
+                            if (paymentCardTokenString != null) {
+                                Set<String> hello = new HashSet<>(Arrays.asList(paymentCardTokenString));
+                                editor.putStringSet("ok",hello);
+
+                                //editor.commit();
+                                editor.apply();
+                            }
 
                             mGatewayClient = new GatewayClient(getActivity());
                             mCurrentLoading = AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue();
