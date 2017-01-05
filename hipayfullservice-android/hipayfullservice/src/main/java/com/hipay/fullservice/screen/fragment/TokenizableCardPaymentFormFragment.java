@@ -40,6 +40,7 @@ import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.utils.PaymentCardTokenDatabase;
 import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.screen.fragment.interfaces.CardBehaviour;
 import com.hipay.fullservice.screen.helper.FormHelper;
@@ -467,9 +468,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                     @Override
                     public void onSuccess(PaymentCardToken paymentCardToken) {
 
-
-
-
                         //secure vault
                         cancelLoaderId(AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue());
 
@@ -495,20 +493,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                         //check if activity is still available
                         if (getActivity() != null) {
 
-                            //put a database in there
-
-                            SharedPreferences settings = getActivity().getSharedPreferences("HiPay", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = settings.edit();
-                            //editor.putBoolean("silentMode", mSilentMode);
-
-                            String paymentCardTokenString = Utils.fromBundle(paymentCardToken.toBundle());
-                            if (paymentCardTokenString != null) {
-                                Set<String> hello = new HashSet<>(Arrays.asList(paymentCardTokenString));
-                                editor.putStringSet("ok",hello);
-
-                                //editor.commit();
-                                editor.apply();
-                            }
+                            PaymentCardTokenDatabase.getInstance().save(getActivity(), paymentCardToken, paymentPageRequest.getCurrency());
 
                             mGatewayClient = new GatewayClient(getActivity());
                             mCurrentLoading = AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue();

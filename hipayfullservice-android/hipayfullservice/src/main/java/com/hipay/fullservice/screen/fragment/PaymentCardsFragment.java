@@ -8,7 +8,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
@@ -40,7 +39,7 @@ import com.hipay.fullservice.core.models.PaymentCardToken;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
-import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.utils.PaymentCardTokenDatabase;
 import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.screen.activity.PaymentProductsActivity;
 import com.hipay.fullservice.screen.model.CustomTheme;
@@ -124,23 +123,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
 
-        SharedPreferences settings = getActivity().getSharedPreferences("HiPay", Context.MODE_PRIVATE);
-        Set<String> paymentCardsStringSet = settings.getStringSet("ok", null);
-
-        if (paymentCardsStringSet != null && !paymentCardsStringSet.isEmpty()) {
-
-            mPaymentCardTokens = new ArrayList<>();
-
-            for (String paymentCardTokenString : paymentCardsStringSet) {
-
-                Bundle paymentCardTokenBundle = Utils.fromJSONString(paymentCardTokenString);
-                if (paymentCardTokenBundle != null) {
-                    PaymentCardToken paymentCardToken = PaymentCardToken.fromBundle(paymentCardTokenBundle);
-                    mPaymentCardTokens.add(paymentCardToken);
-                }
-            }
-        }
-
+        mPaymentCardTokens = new ArrayList<>();
         ArrayAdapter adapter = new PaymentCardsArrayAdapter(getActivity(), mPaymentCardTokens);
         setListAdapter(adapter);
 
@@ -159,6 +142,8 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
         boolean cardChecked = getListView().getCheckedItemCount() > 0;
         validatePayButton(cardChecked);
+
+        reloadList();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -269,7 +254,6 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
                         dialog.dismiss();
 
                         mListView.clearChoices();
-                        mPaymentCardTokens.remove(position);
 
                         if (mSelectedCard == position) {
 
@@ -288,11 +272,11 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
                             mListView.setItemChecked(mSelectedCard, true);
                         }
 
-                        ((ArrayAdapter)getListAdapter()).notifyDataSetChanged();
+                        PaymentCardTokenDatabase.getInstance().delete(getActivity(), mPaymentCardTokens.get(position), mPaymentPageRequest.getCurrency());
+                        reloadList();
 
                         if (mPaymentCardTokens.size() == 0) {
 
-                            //TODO reinit this in setupCard method
                             mSelectCardTextview.setText(R.string.no_payment_card_stored);
                         }
 
@@ -315,6 +299,23 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
                 .show();
 
         return true;
+    }
+
+    private void reloadList() {
+
+        mPaymentCardTokens.clear();
+
+        Set<String> set = PaymentCardTokenDatabase.getInstance().getPaymentCardTokens(getActivity(), mPaymentPageRequest.getCurrency());
+        for (String paymentCardTokenString : set) {
+
+            Bundle paymentCardTokenBundle = Utils.fromJSONString(paymentCardTokenString);
+            if (paymentCardTokenBundle != null) {
+                PaymentCardToken paymentCardToken = PaymentCardToken.fromBundle(paymentCardTokenBundle);
+                mPaymentCardTokens.add(paymentCardToken);
+            }
+        }
+
+        ((ArrayAdapter)getListAdapter()).notifyDataSetChanged();
     }
 
     protected void validatePayButton(boolean validate) {
