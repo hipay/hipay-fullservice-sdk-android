@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -39,6 +40,7 @@ import com.hipay.fullservice.core.models.PaymentCardToken;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
+import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.core.utils.PaymentCardTokenDatabase;
 import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.screen.activity.PaymentProductsActivity;
@@ -53,7 +55,6 @@ import java.util.Set;
 
 public class PaymentCardsFragment extends ListFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
-    OnPaymentCardSelectedListener mCallback;
     private Button mPayButton;
     private AppCompatButton mPaymentProductsButton;
     private FrameLayout mPayButtonLayout;
@@ -71,9 +72,14 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     private GatewayClient mGatewayClient;
     private ProgressBar mProgressBar;
 
+    protected int mCurrentLoading = -1;
+    protected boolean mLoadingMode = false;
 
-    public interface OnPaymentCardSelectedListener {
-        void onPaymentCardSelected(int position, boolean isChecked);
+    OnCallbackOrderListener mCallback;
+
+    public interface OnCallbackOrderListener {
+
+        void onCallbackOrderReceived(Transaction transaction, Exception exception);
     }
 
     public static PaymentCardsFragment newInstance(Bundle args) {
@@ -82,6 +88,14 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //important for the magic lines
+        setRetainInstance(true);
     }
 
     @Override
@@ -106,16 +120,26 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         super.onAttach(context);
 
         try {
-            mCallback = (OnPaymentCardSelectedListener) context;
+            mCallback = (OnCallbackOrderListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement OnPaymentCardSelectedListener");
+                    + " must implement OnCallbackOrderListener");
         }
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        // ---- magic lines starting here -----
+        // call this to re-connect with an existing
+        // loader (after screen configuration changes for e.g!)
+
+        if (mGatewayClient != null && mCurrentLoading > 0 ) {
+            mGatewayClient.reLaunchOperations(mCurrentLoading);
+        }
+
+        //----- end magic lines -----
 
         mListView = getListView();
         mListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
@@ -142,6 +166,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
         boolean cardChecked = getListView().getCheckedItemCount() > 0;
         validatePayButton(cardChecked);
+        this.setLoadingMode(mLoadingMode);
 
         reloadList();
     }
@@ -177,8 +202,12 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
             @Override
             public void onClick(View v) {
 
-                setLoadingMode(true);
-                //launchRequest();
+                int checkedIndex = mListView.getCheckedItemPosition();
+                if (checkedIndex != AbsListView.INVALID_POSITION) {
+
+                    setLoadingMode(true);
+                    launchRequest();
+                }
             }
         });
 
@@ -306,12 +335,15 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         mPaymentCardTokens.clear();
 
         Set<String> set = PaymentCardTokenDatabase.getInstance().getPaymentCardTokens(getActivity(), mPaymentPageRequest.getCurrency());
-        for (String paymentCardTokenString : set) {
 
-            Bundle paymentCardTokenBundle = Utils.fromJSONString(paymentCardTokenString);
-            if (paymentCardTokenBundle != null) {
-                PaymentCardToken paymentCardToken = PaymentCardToken.fromBundle(paymentCardTokenBundle);
-                mPaymentCardTokens.add(paymentCardToken);
+        if (set != null && !set.isEmpty()) {
+            for (String paymentCardTokenString : set) {
+
+                Bundle paymentCardTokenBundle = Utils.fromJSONString(paymentCardTokenString);
+                if (paymentCardTokenBundle != null) {
+                    PaymentCardToken paymentCardToken = PaymentCardToken.fromBundle(paymentCardTokenBundle);
+                    mPaymentCardTokens.add(paymentCardToken);
+                }
             }
         }
 
@@ -367,28 +399,31 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
             mPayButtonLayout.setVisibility(View.VISIBLE);
         }
 
-        //mLoadingMode = loadingMode;
+        mLoadingMode = loadingMode;
     }
 
     public void launchRequest() {
 
-        OrderRequest orderRequest = new OrderRequest(mPaymentPageRequest);
+        int checkedIndex = mListView.getCheckedItemPosition();
+        PaymentCardToken paymentCardToken = mPaymentCardTokens.get(checkedIndex);
 
         // get the brand to get the
-        // String productCode = paymentCardToken.getbrand();
-        //orderRequest.setPaymentProductCode(paymentProduct.getCode());
+        String productCode = paymentCardToken.getBrand();
+        productCode = productCode.replace(" ", "_");
 
-        //CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest =
-                //new CardTokenPaymentMethodRequest(
-                        //paymentCardToken.getToken(),
-                        //paymentPageRequest.getEci(),
-                        //paymentPageRequest.getAuthenticationIndicator());
+        OrderRequest orderRequest = new OrderRequest(mPaymentPageRequest);
+        orderRequest.setPaymentProductCode(productCode.toLowerCase(Locale.US));
 
-        //orderRequest.setPaymentMethod(cardTokenPaymentMethodRequest);
+        CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest =
+                new CardTokenPaymentMethodRequest(
+                        paymentCardToken.getToken(),
+                        Transaction.ECI.RecurringECommerce,
+                        mPaymentPageRequest.getAuthenticationIndicator());
 
+        orderRequest.setPaymentMethod(cardTokenPaymentMethodRequest);
 
         mGatewayClient = new GatewayClient(getActivity());
-        //mCurrentLoading = AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue();
+        mCurrentLoading = AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue();
         mGatewayClient.requestNewOrder(orderRequest, mSignature, new OrderRequestCallback() {
 
             @Override
@@ -396,7 +431,8 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
                 //Log.i("transaction success", transaction.toString());
 
                 if (mCallback != null) {
-                    //mCallback.onCallbackOrderReceived(transaction, null);
+
+                    mCallback.onCallbackOrderReceived(transaction, null);
                 }
 
                 cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
@@ -405,7 +441,8 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
             @Override
             public void onError(Exception error) {
                 if (mCallback != null) {
-                    //mCallback.onCallbackOrderReceived(null, error);
+
+                    mCallback.onCallbackOrderReceived(null, error);
                 }
                 cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
             }
@@ -415,28 +452,11 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
     protected void cancelLoaderId(int loaderId) {
 
-        //mCurrentLoading = -1;
+        mCurrentLoading = -1;
 
-        switch (loaderId) {
-
-            //securevault generateToken
-            case 0: {
-
-                //if (mSecureVaultClient != null) {
-                    //mSecureVaultClient.cancelOperation();
-                    //mSecureVaultClient = null;
-                //}
-
-            } break;
-
-            //anything else
-            default: {
-
-                if (mGatewayClient != null) {
-                    mGatewayClient.cancelOperation();
-                    mGatewayClient = null;
-                }
-            }
+        if (mGatewayClient != null) {
+            mGatewayClient.cancelOperation();
+            mGatewayClient = null;
         }
     }
 
