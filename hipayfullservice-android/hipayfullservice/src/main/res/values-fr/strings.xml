@@ -66,4 +66,6 @@
     <string name="alert_deleting_payment_card_title">Suppression de carte</string>
     <string name="alert_deleting_payment_card_body">Êtes-vous sûr de vouloir supprimer cette carte de paiment ?</string>
 
+    <string name="card_storage_switch_description">Enregistrer cette carte</string>
+
 </resources>

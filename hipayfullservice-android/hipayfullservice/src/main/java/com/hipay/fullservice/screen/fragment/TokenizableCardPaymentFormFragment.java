@@ -1,18 +1,17 @@
 package com.hipay.fullservice.screen.fragment;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -31,6 +30,7 @@ import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.client.SecureVaultClient;
+import com.hipay.fullservice.core.client.config.ClientConfig;
 import com.hipay.fullservice.core.client.interfaces.callbacks.OrderRequestCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
 import com.hipay.fullservice.core.models.PaymentCardToken;
@@ -41,18 +41,14 @@ import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.core.utils.PaymentCardTokenDatabase;
-import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.screen.fragment.interfaces.CardBehaviour;
 import com.hipay.fullservice.screen.helper.FormHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
 import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.Currency;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-import java.util.prefs.Preferences;
 
 /**
  * Created by nfillion on 20/04/16.
@@ -66,6 +62,9 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     private String inferedPaymentProduct;
 
     private CardBehaviour mCardBehaviour;
+
+    private SwitchCompat mCardStorageSwitch;
+    private LinearLayout mCardStorageSwitchLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -99,6 +98,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         Bundle args = getArguments();
         final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
+
+
 
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
         Currency c = Currency.getInstance(paymentPageRequest.getCurrency());
@@ -153,6 +154,13 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         basicPaymentProduct = paymentProduct;
         inferedPaymentProduct = paymentProduct.getCode();
+
+        mCardStorageSwitch = (SwitchCompat) view.findViewById(R.id.card_storage_switch);
+        mCardStorageSwitchLayout = (LinearLayout) view.findViewById(R.id.card_storage_layout);
+
+        //switch visible or gone
+        boolean isPaymentCardStorageSwitchVisible = this.isPaymentCardStorageConfigEnabled() && this.isPaymentCardStorageEnabled();
+        mCardStorageSwitchLayout.setVisibility(isPaymentCardStorageSwitchVisible ? View.VISIBLE : View.GONE);
 
         mCardBehaviour = new CardBehaviour(paymentProduct);
         mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, false, getActivity());
@@ -625,6 +633,31 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         return false;
     }
+
+    private boolean isPaymentCardStorageConfigEnabled()
+    {
+        boolean paymentCardEnabled = ClientConfig.getInstance().isPaymentCardStorageEnabled();
+
+        Bundle args = getArguments();
+        PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
+        boolean paymentPageRequestECI = paymentPageRequest.getEci() == Transaction.ECI.SecureECommerce ? true : false;
+
+        return paymentCardEnabled && paymentPageRequestECI;
+    }
+
+    private boolean isPaymentCardStorageEnabled()
+    {
+        String paymentProduct;
+
+        if (inferedPaymentProduct != null) {
+            paymentProduct = inferedPaymentProduct;
+        } else {
+            paymentProduct = mCardBehaviour.getProductCode();
+        }
+
+        return PaymentProduct.isPaymentCardStorageEnabledForPaymentProductCode(paymentProduct);
+    }
+
 
     protected boolean isExpiryDateValid() {
 

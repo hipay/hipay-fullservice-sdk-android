@@ -68,6 +68,8 @@
     <string name="alert_deleting_payment_card_title">Deleting payment card</string>
     <string name="alert_deleting_payment_card_body">Are you sure that you want to delete this payment card?</string>
 
+    <string name="card_storage_switch_description">Store this card for future use</string>
+
     <string-array name="card_products_list" translatable="false">
         <item>visa</item>
         <item>mastercard</item>
