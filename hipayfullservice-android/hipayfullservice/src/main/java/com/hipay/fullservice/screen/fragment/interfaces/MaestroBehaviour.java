@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hipay.fullservice.R;
@@ -22,7 +23,7 @@ public class MaestroBehaviour implements ICardBehaviour {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
-    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, boolean networked, Context context) {
+    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, LinearLayout switchLayout, boolean networked, Context context) {
 
         cardCVV.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
         securityCodeLayout.setVisibility(View.GONE);
@@ -43,6 +44,7 @@ public class MaestroBehaviour implements ICardBehaviour {
         securityCodeInfoImageview.setImageResource(R.drawable.cvc_mv);
 
         cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeMaestro, context))});
+        switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
         //Maestro
         //"6759 4111 0000 0008",
         //cardCVV.setText("123");
@@ -68,5 +70,10 @@ public class MaestroBehaviour implements ICardBehaviour {
     @Override
     public String getProductCode() {
         return PaymentProduct.PaymentProductCodeMaestro;
+    }
+
+    @Override
+    public boolean isCardStorageEnabled() {
+        return false;
     }
 }

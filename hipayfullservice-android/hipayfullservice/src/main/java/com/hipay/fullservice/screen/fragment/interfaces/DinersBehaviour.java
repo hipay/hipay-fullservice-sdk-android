@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hipay.fullservice.R;
@@ -23,7 +24,7 @@ public class DinersBehaviour implements ICardBehaviour {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
-    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, boolean networked, Context context) {
+    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, LinearLayout switchLayout, boolean networked, Context context) {
 
         securityCodeLayout.setVisibility(View.VISIBLE);
 
@@ -43,6 +44,7 @@ public class DinersBehaviour implements ICardBehaviour {
         securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_description_cvv));
         securityCodeInfoImageview.setImageResource(R.drawable.cvc_mv);
 
+        switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
         //no test card
         //Diners Club International
         //"3608 2634 5678 90" does not work
@@ -79,5 +81,10 @@ public class DinersBehaviour implements ICardBehaviour {
     @Override
     public String getProductCode() {
         return PaymentProduct.PaymentProductCodeDiners;
+    }
+
+    @Override
+    public boolean isCardStorageEnabled() {
+        return true;
     }
 }

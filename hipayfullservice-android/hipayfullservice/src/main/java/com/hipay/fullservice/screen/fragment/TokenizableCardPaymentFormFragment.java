@@ -163,7 +163,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         mCardStorageSwitchLayout.setVisibility(isPaymentCardStorageSwitchVisible ? View.VISIBLE : View.GONE);
 
         mCardBehaviour = new CardBehaviour(paymentProduct);
-        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, false, getActivity());
+        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, mCardStorageSwitchLayout, false, getActivity());
 
         CustomerInfoRequest customerInfoRequest = paymentPageRequest.getCustomer();
         String displayName = customerInfoRequest.getDisplayName();
@@ -762,13 +762,13 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                         //on garde le inferedPaymentProduct (VISA) mais on met l'image et titre de CB
                         mCallback.updatePaymentProduct(basicPaymentProduct.getPaymentProductDescription());
                         mCardBehaviour.updatePaymentProduct(inferedPaymentProduct);
-                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, false, getActivity());
+                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, mCardStorageSwitchLayout, false, getActivity());
 
                     } else {
 
                         mCallback.updatePaymentProduct(inferedPaymentProduct);
                         mCardBehaviour.updatePaymentProduct(inferedPaymentProduct);
-                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, false, getActivity());
+                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, mCardStorageSwitchLayout, false, getActivity());
                     }
 
                     this.putEverythingInRed();
@@ -783,18 +783,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         this.mCardNumber.setTextColor(ContextCompat.getColor(getActivity(), color));
     }
-
-    /*
-    private void backtoOrigin() {
-
-        mCallback.updatePaymentProduct(basicPaymentProduct.getPaymentProductDescription());
-
-        mCardBehaviour.updatePaymentProduct(basicPaymentProduct.getCode());
-        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, getActivity());
-
-        inferedPaymentProduct = basicPaymentProduct.getCode();
-    }
-    */
 
     private boolean isInferedOrCardDomesticNetwork(String product) {
 
