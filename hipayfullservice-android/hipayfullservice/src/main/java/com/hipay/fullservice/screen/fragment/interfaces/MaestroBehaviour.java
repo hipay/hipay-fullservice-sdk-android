@@ -44,7 +44,9 @@ public class MaestroBehaviour implements ICardBehaviour {
         securityCodeInfoImageview.setImageResource(R.drawable.cvc_mv);
 
         cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeMaestro, context))});
-        switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
+        if (switchLayout != null) {
+            switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
+        }
         //Maestro
         //"6759 4111 0000 0008",
         //cardCVV.setText("123");

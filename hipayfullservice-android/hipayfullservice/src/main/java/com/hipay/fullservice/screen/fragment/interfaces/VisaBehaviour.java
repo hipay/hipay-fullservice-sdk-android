@@ -46,7 +46,9 @@ public class VisaBehaviour implements ICardBehaviour {
         securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_description_cvv));
         securityCodeInfoImageview.setImageResource(R.drawable.cvc_mv);
 
-        switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
+        if (switchLayout != null) {
+            switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
+        }
         //visa
         //"4111 1111 1111 1111",
         //"4000 0000 0000 0002",

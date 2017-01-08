@@ -100,15 +100,6 @@ public class PaymentProduct extends AbstractModel {
         }
     }
 
-    public static boolean isPaymentCardStorageEnabledForPaymentProductCode(String paymentProductCode) {
-
-        if (paymentProductCode!= null && paymentProductCode.equals(PaymentProductCodeBCMC) || paymentProductCode.equals(PaymentProductCodeMaestro)) {
-            return false;
-        }
-
-        return true;
-    }
-
     protected boolean isEqual(Object object) {
 
         return this.isEqualToPaymentProduct(object);

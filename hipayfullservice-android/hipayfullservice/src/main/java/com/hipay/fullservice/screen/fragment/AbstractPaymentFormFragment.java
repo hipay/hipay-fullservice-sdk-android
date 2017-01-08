@@ -21,6 +21,7 @@ import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.client.SecureVaultClient;
 import com.hipay.fullservice.core.client.interfaces.callbacks.TransactionDetailsCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.TransactionsDetailsCallback;
+import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
@@ -73,6 +74,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
 
     protected abstract boolean isInputDataValid();
+    public abstract void savePaymentMethod(PaymentMethod method);
 
     public static AbstractPaymentFormFragment newInstance(Bundle paymentPageRequestBundle, PaymentProduct paymentProduct, String signature, Bundle customTheme) {
 

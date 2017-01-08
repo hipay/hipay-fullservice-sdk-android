@@ -34,6 +34,7 @@ import com.hipay.fullservice.core.client.config.ClientConfig;
 import com.hipay.fullservice.core.client.interfaces.callbacks.OrderRequestCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
 import com.hipay.fullservice.core.models.PaymentCardToken;
+import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
@@ -50,6 +51,9 @@ import java.util.Currency;
 import java.util.Locale;
 import java.util.Set;
 
+import static com.hipay.fullservice.core.models.PaymentProduct.PaymentProductCodeBCMC;
+import static com.hipay.fullservice.core.models.PaymentProduct.PaymentProductCodeMaestro;
+
 /**
  * Created by nfillion on 20/04/16.
  */
@@ -65,6 +69,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
     private SwitchCompat mCardStorageSwitch;
     private LinearLayout mCardStorageSwitchLayout;
+
+    private PaymentCardToken mPaymentCardToken;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -159,7 +165,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         mCardStorageSwitchLayout = (LinearLayout) view.findViewById(R.id.card_storage_layout);
 
         //switch visible or gone
-        boolean isPaymentCardStorageSwitchVisible = this.isPaymentCardStorageConfigEnabled() && this.isPaymentCardStorageEnabled();
+        boolean isPaymentCardStorageSwitchVisible = this.isPaymentCardStorageConfigEnabled();
         mCardStorageSwitchLayout.setVisibility(isPaymentCardStorageSwitchVisible ? View.VISIBLE : View.GONE);
 
         mCardBehaviour = new CardBehaviour(paymentProduct);
@@ -189,6 +195,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 mCardCVV.setEnabled(false);
                 mCardExpiration.setEnabled(false);
                 mCardNumber.setEnabled(false);
+                mCardStorageSwitch.setEnabled(false);
 
             } else {
 
@@ -199,6 +206,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 mCardCVV.setEnabled(true);
                 mCardExpiration.setEnabled(true);
                 mCardNumber.setEnabled(true);
+                mCardStorageSwitch.setEnabled(true);
+
             }
         }
 
@@ -460,6 +469,11 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         final String signature = args.getString(GatewayClient.SIGNATURE_TAG);
 
+        if (this.isPaymentCardStorageConfigEnabled() && this.isPaymentCardStorageEnabled() && mCardStorageSwitch.isChecked())
+        {
+            paymentPageRequest.setMultiUse(true);
+        }
+
         mSecureVaultClient = new SecureVaultClient(getActivity());
         mCurrentLoading = AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue();
         mSecureVaultClient.generateToken(
@@ -470,16 +484,16 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 this.getYearFromExpiry(mCardExpiration.getText().toString()),
                 mCardOwner.getText().toString(),
                 mCardCVV.getText().toString(),
-                false,
+                paymentPageRequest.getMultiUse(),
 
                 new SecureVaultRequestCallback() {
                     @Override
                     public void onSuccess(PaymentCardToken paymentCardToken) {
 
+                        mPaymentCardToken = paymentCardToken;
+
                         //secure vault
                         cancelLoaderId(AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue());
-
-                        Log.i(paymentCardToken.toString(), paymentCardToken.toString());
 
                         OrderRequest orderRequest = new OrderRequest(paymentPageRequest);
 
@@ -492,7 +506,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                         CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest =
                                 new CardTokenPaymentMethodRequest(
-                                        paymentCardToken.getToken(),
+                                        mPaymentCardToken.getToken(),
                                         paymentPageRequest.getEci(),
                                         paymentPageRequest.getAuthenticationIndicator());
 
@@ -500,8 +514,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                         //check if activity is still available
                         if (getActivity() != null) {
-
-                            PaymentCardTokenDatabase.getInstance().save(getActivity(), paymentCardToken, paymentPageRequest.getCurrency());
 
                             mGatewayClient = new GatewayClient(getActivity());
                             mCurrentLoading = AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue();
@@ -541,6 +553,25 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                     }
                 }
         );
+    }
+
+    @Override
+    public void savePaymentMethod(PaymentMethod paymentMethod) {
+
+        if (paymentMethod instanceof PaymentCardToken) {
+            PaymentCardToken paymentCardToken = (PaymentCardToken)paymentMethod;
+
+            if (mPaymentCardToken != null && mPaymentCardToken.equals(paymentCardToken)) {
+
+                if (this.isPaymentCardStorageConfigEnabled() && this.isPaymentCardStorageEnabled() && mCardStorageSwitch.isChecked()) {
+
+                    Bundle args = getArguments();
+
+                    final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
+                    PaymentCardTokenDatabase.getInstance().save(getActivity(), paymentCardToken, paymentPageRequest.getCurrency());
+                }
+            }
+        }
     }
 
     private String getMonthFromExpiry(String expiryString) {
@@ -655,9 +686,12 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             paymentProduct = mCardBehaviour.getProductCode();
         }
 
-        return PaymentProduct.isPaymentCardStorageEnabledForPaymentProductCode(paymentProduct);
-    }
+        if (paymentProduct.equals(PaymentProductCodeBCMC) || paymentProduct.equals(PaymentProductCodeMaestro)) {
+            return false;
+        }
 
+        return true;
+    }
 
     protected boolean isExpiryDateValid() {
 
@@ -757,19 +791,24 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                     inferedPaymentProduct = things[0];
 
+                    // we do pass switchLayout as a parameter if config is enabled
+                    LinearLayout switchLayout = this.isPaymentCardStorageConfigEnabled() ? mCardStorageSwitchLayout : null;
+
                     if (isDomesticNetwork(inferedPaymentProduct)) {
 
                         //on garde le inferedPaymentProduct (VISA) mais on met l'image et titre de CB
                         mCallback.updatePaymentProduct(basicPaymentProduct.getPaymentProductDescription());
                         mCardBehaviour.updatePaymentProduct(inferedPaymentProduct);
-                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, mCardStorageSwitchLayout, false, getActivity());
+
+                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, switchLayout, false, getActivity());
 
                     } else {
 
                         mCallback.updatePaymentProduct(inferedPaymentProduct);
                         mCardBehaviour.updatePaymentProduct(inferedPaymentProduct);
-                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, mCardStorageSwitchLayout, false, getActivity());
+                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, switchLayout, false, getActivity());
                     }
+
 
                     this.putEverythingInRed();
 
@@ -777,6 +816,10 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                 // on va essayer d'atteindre la taille max.
 
+            } else {
+
+                //textfield is empty
+                mCardStorageSwitch.setChecked(false);
             }
 
         }
@@ -787,14 +830,14 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     private boolean isInferedOrCardDomesticNetwork(String product) {
 
         return product.equals(PaymentProduct.PaymentProductCodeCB) ||
-                product.equals(PaymentProduct.PaymentProductCodeBCMC) ||
+                product.equals(PaymentProductCodeBCMC) ||
                 product.equals(PaymentProduct.PaymentProductCategoryCodeCard);
     }
 
     private boolean isDomesticNetwork() {
 
         return basicPaymentProduct.getCode().equals(PaymentProduct.PaymentProductCodeCB) ||
-                basicPaymentProduct.getCode().equals(PaymentProduct.PaymentProductCodeBCMC);
+                basicPaymentProduct.getCode().equals(PaymentProductCodeBCMC);
     }
 
     private boolean isDomesticNetwork(String paymentProductCode) {
@@ -803,9 +846,9 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         if (isDomesticNetwork()) {
 
-            if (basicProductCode.equals(PaymentProduct.PaymentProductCodeBCMC)) {
+            if (basicProductCode.equals(PaymentProductCodeBCMC)) {
 
-                return paymentProductCode.equals(PaymentProduct.PaymentProductCodeMaestro);
+                return paymentProductCode.equals(PaymentProductCodeMaestro);
 
             } else if (basicProductCode.equals(PaymentProduct.PaymentProductCodeCB)) {
 

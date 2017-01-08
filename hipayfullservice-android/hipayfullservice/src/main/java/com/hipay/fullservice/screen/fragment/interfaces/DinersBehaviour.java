@@ -44,7 +44,9 @@ public class DinersBehaviour implements ICardBehaviour {
         securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_description_cvv));
         securityCodeInfoImageview.setImageResource(R.drawable.cvc_mv);
 
-        switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
+        if (switchLayout != null) {
+            switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
+        }
         //no test card
         //Diners Club International
         //"3608 2634 5678 90" does not work

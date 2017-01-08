@@ -46,7 +46,9 @@ public class MastercardBehaviour implements ICardBehaviour {
         securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_description_cvv));
         securityCodeInfoImageview.setImageResource(R.drawable.cvc_mv);
 
-        switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
+        if (switchLayout != null) {
+            switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
+        }
         //Mastercard
         //"5399 9999 9999 9999",
         //cardNumber.setText("5399999999999999");

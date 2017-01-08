@@ -48,10 +48,10 @@ public class AmexBehaviour implements ICardBehaviour {
         securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_description_cid));
         securityCodeInfoImageview.setImageResource(R.drawable.cvc_amex);
 
-        switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
+        if (switchLayout != null) {
+            switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
+        }
         //cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_black, 0);
-
-        //<string name="card_security_code_placeholder_cvv" translatable="false">123</string>
 
         //American Express
         //"3712 449317 14724",
