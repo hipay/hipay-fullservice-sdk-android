@@ -7,7 +7,7 @@
     <string name="generate_payment_screen">Générer un écran de paiement</string>
     <string name="amount_and_currency">Montant et devise</string>
     <string name="group_cards">Regrouper les cartes</string>
-    <string name="reusable_token">Token réutilisable</string>
+    <string name="card_storage">Enregistrement de carte</string>
 
     <string name="three_ds">3DS Authentification</string>
     <string name="color">Couleur</string>

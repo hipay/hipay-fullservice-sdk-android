@@ -41,7 +41,7 @@ public class DefaultBehaviour implements ICardBehaviour {
             cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_black, 0);
         }
 
-        securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_placeholder_cvv));
+        securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_description_cvv));
         securityCodeInfoImageview.setImageResource(R.drawable.cvc_mv);
         if (switchLayout != null) {
             switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
