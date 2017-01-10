@@ -294,7 +294,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
             case 0: {
 
                 if (mSecureVaultClient != null) {
-                    mSecureVaultClient.cancelOperation();
+                    mSecureVaultClient.cancelOperation(getActivity());
                     mSecureVaultClient = null;
                 }
 
@@ -304,7 +304,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
             default: {
 
                 if (mGatewayClient != null) {
-                    mGatewayClient.cancelOperation();
+                    mGatewayClient.cancelOperation(getActivity());
                     mGatewayClient = null;
                 }
             }
@@ -314,12 +314,12 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     public void cancelOperations() {
 
         if (mGatewayClient != null) {
-            mGatewayClient.cancelOperation();
+            mGatewayClient.cancelOperation(getActivity());
             mGatewayClient = null;
         }
 
         if (mSecureVaultClient != null) {
-            mSecureVaultClient.cancelOperation();
+            mSecureVaultClient.cancelOperation(getActivity());
             mSecureVaultClient = null;
         }
     }

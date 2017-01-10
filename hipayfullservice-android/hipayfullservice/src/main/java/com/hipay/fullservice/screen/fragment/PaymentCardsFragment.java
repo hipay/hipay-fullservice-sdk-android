@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
@@ -36,6 +37,8 @@ import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.client.interfaces.callbacks.OrderRequestCallback;
+import com.hipay.fullservice.core.client.interfaces.callbacks.TransactionDetailsCallback;
+import com.hipay.fullservice.core.client.interfaces.callbacks.TransactionsDetailsCallback;
 import com.hipay.fullservice.core.models.PaymentCardToken;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
@@ -131,16 +134,6 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // ---- magic lines starting here -----
-        // call this to re-connect with an existing
-        // loader (after screen configuration changes for e.g!)
-
-        if (mGatewayClient != null && mCurrentLoading > 0 ) {
-            mGatewayClient.reLaunchOperations(mCurrentLoading);
-        }
-
-        //----- end magic lines -----
-
         mListView = getListView();
         mListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         mListView.setItemsCanFocus(true);
@@ -158,6 +151,27 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
                 mListView.setItemChecked(mSelectedCard, true);
             }
         }
+
+        reloadList();
+
+        // ---- magic lines starting here -----
+        // call this to re-connect with an existing
+        // loader (after screen configuration changes for e.g!)
+
+        if (mGatewayClient != null && mCurrentLoading > 0 ) {
+
+            if (mGatewayClient.canRelaunch()) {
+                mGatewayClient.reLaunchOperations(mCurrentLoading);
+
+            } else {
+
+                cancelLoaderId(mCurrentLoading);
+                launchRequest();
+            }
+        }
+
+        //----- end magic lines -----
+
     }
 
     @Override
@@ -167,8 +181,6 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         boolean cardChecked = getListView().getCheckedItemCount() > 0;
         validatePayButton(cardChecked);
         this.setLoadingMode(mLoadingMode);
-
-        reloadList();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -214,7 +226,8 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         mPaymentProductsButton = (AppCompatButton)view.findViewById(R.id.payment_products_button);
         mPaymentProductsButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 PaymentProductsActivity.start(getActivity(), mPaymentPageRequest, mSignature, mCustomTheme);
             }
         });
@@ -393,13 +406,33 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
             mProgressBar.setVisibility(View.VISIBLE);
             mPayButtonLayout.setVisibility(View.GONE);
 
+            mPaymentProductsButton.setTextColor(ContextCompat.getColor(getActivity(),R.color.dark_grey));
+
+            Drawable wrapDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_navigate_next_black, null);
+            DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), R.color.dark_grey));
+            mPaymentProductsButton.setCompoundDrawablesWithIntrinsicBounds(null, null, wrapDrawable ,null);
+
         } else {
 
             mProgressBar.setVisibility(View.GONE);
             mPayButtonLayout.setVisibility(View.VISIBLE);
+
+            mPaymentProductsButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.hpf_accent));
+
+            Drawable wrapDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_navigate_next_black, null);
+            DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), R.color.hpf_accent));
+            mPaymentProductsButton.setCompoundDrawablesWithIntrinsicBounds(null, null, wrapDrawable ,null);
         }
 
+        mPaymentProductsButton.setEnabled(!loadingMode);
+
+        mListView.setEnabled(!loadingMode);
+
         mLoadingMode = loadingMode;
+    }
+
+    public boolean getLoadingMode() {
+        return mLoadingMode;
     }
 
     public void launchRequest() {
@@ -430,32 +463,100 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
             public void onSuccess(final Transaction transaction) {
                 //Log.i("transaction success", transaction.toString());
 
+                cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                 if (mCallback != null) {
-
                     mCallback.onCallbackOrderReceived(transaction, null);
                 }
 
-                cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
             }
 
             @Override
             public void onError(Exception error) {
+                cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                 if (mCallback != null) {
-
                     mCallback.onCallbackOrderReceived(null, error);
                 }
-                cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
             }
         });
     }
 
+
+    public void launchBackgroundReload(Transaction transaction) {
+
+        if (transaction != null) {
+
+            String transactionReference = transaction.getTransactionReference();
+
+            Bundle args = getArguments();
+            final String signature = args.getString(GatewayClient.SIGNATURE_TAG);
+
+            mCurrentLoading = AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue();
+            mGatewayClient = new GatewayClient(getActivity());
+            mGatewayClient.getTransactionWithReference(transactionReference, signature, new TransactionDetailsCallback() {
+
+                @Override
+                public void onSuccess(final Transaction transaction) {
+
+                    cancelLoaderId(AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue());
+                    if (mCallback != null) {
+                        mCallback.onCallbackOrderReceived(transaction, null);
+                    }
+                }
+
+                @Override
+                public void onError(Exception error) {
+
+                    cancelLoaderId(AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue());
+                    if (mCallback != null) {
+                        mCallback.onCallbackOrderReceived(null, error);
+                    }
+                }
+            });
+        }
+        else {
+
+            Bundle args = getArguments();
+            final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
+            final String signature = args.getString(GatewayClient.SIGNATURE_TAG);
+
+            String orderId = paymentPageRequest.getOrderId();
+            mCurrentLoading = AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue();
+            mGatewayClient = new GatewayClient(getActivity());
+            mGatewayClient.getTransactionsWithOrderId(orderId, signature, new TransactionsDetailsCallback() {
+
+                @Override
+                public void onSuccess(List<Transaction> transactions) {
+                    cancelLoaderId(AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue());
+                    if (mCallback != null) {
+                        mCallback.onCallbackOrderReceived(transactions.get(0), null);
+                    }
+                }
+
+                @Override
+                public void onError(Exception error) {
+                    cancelLoaderId(AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue());
+                    if (mCallback != null) {
+                        mCallback.onCallbackOrderReceived(null, error);
+                    }
+                }
+            });
+        }
+    }
 
     protected void cancelLoaderId(int loaderId) {
 
         mCurrentLoading = -1;
 
         if (mGatewayClient != null) {
-            mGatewayClient.cancelOperation();
+            mGatewayClient.cancelOperation(getActivity());
+            mGatewayClient = null;
+        }
+    }
+
+    public void cancelOperations() {
+
+        if (mGatewayClient != null) {
+            mGatewayClient.cancelOperation(getActivity());
             mGatewayClient = null;
         }
     }
@@ -465,5 +566,12 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         super.onSaveInstanceState(outState);
 
         outState.putInt("selectedCard", mSelectedCard);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        this.cancelOperations();
     }
 }

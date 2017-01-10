@@ -89,18 +89,6 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
 
                 setResult(R.id.transaction_failed, data);
                 finish();
-
-            } else {
-
-                //Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.payment_cards_container);
-                //if (fragment != null) {
-
-                    //PaymentProductsFragment paymentProductsFragment = (PaymentProductsFragment) fragment;
-                    //List<PaymentProduct> paymentProducts = paymentProductsFragment.getPaymentProducts();
-                    //if (paymentProducts == null || paymentProducts.isEmpty()) {
-                        ////finish();
-                    //}
-                //}
             }
         }
     }
@@ -285,11 +273,6 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-
-                        //TODO this will be tokenizable, it's card only
-                        //if (!isPaymentTokenizable()) {
-                            //forceBackPressed();
-                        //}
                     }
                 };
 
@@ -545,17 +528,72 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
 
     private void transactionNeedsReload(Transaction transaction) {
 
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.payment_cards_container);
         if (fragment != null) {
 
             PaymentCardsFragment paymentCardsFragment = (PaymentCardsFragment) fragment;
 
             //in loading mode already
-            //abstractPaymentFormFragment.setLoadingMode(true);
+            paymentCardsFragment.setLoadingMode(true);
 
             //TODO need to know when that happens
-            //paymentCardsFragment.launchBackgroundReload(transaction);
+            paymentCardsFragment.launchBackgroundReload(transaction);
         }
     }
 
+    private void forceBackPressed() {
+
+        //is it different from finish?
+        super.onBackPressed();
+        //finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.payment_cards_container);
+        if (fragment != null) {
+
+            final PaymentCardsFragment paymentCardsFragment = (PaymentCardsFragment) fragment;
+
+            boolean loadingMode = paymentCardsFragment.getLoadingMode();
+            if (loadingMode == true) {
+
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE: {
+                                dialog.dismiss();
+
+                                paymentCardsFragment.cancelOperations();
+
+                                forceBackPressed();
+                            }
+                            break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                dialog.dismiss();
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.alert_transaction_loading_title)
+                        .setMessage(R.string.alert_transaction_loading_body)
+                        .setNegativeButton(R.string.alert_transaction_loading_no, dialogClickListener)
+                        .setPositiveButton(R.string.alert_transaction_loading_yes, dialogClickListener)
+                        .setCancelable(false)
+                        .show();
+
+            } else {
+
+                super.onBackPressed();
+            }
+
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

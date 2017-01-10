@@ -352,7 +352,7 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
     public void cancelOperations() {
 
         if (mGatewayClient != null) {
-            mGatewayClient.cancelOperation();
+            mGatewayClient.cancelOperation(getActivity());
             mGatewayClient = null;
         }
 

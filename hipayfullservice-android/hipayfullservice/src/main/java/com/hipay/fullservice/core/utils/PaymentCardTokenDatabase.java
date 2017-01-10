@@ -35,6 +35,7 @@ public class PaymentCardTokenDatabase {
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove("paymentCardToken_" + currency);
+        editor.commit();
     }
 
     public void clearPaymentCardTokens(Context context) {
@@ -51,13 +52,17 @@ public class PaymentCardTokenDatabase {
     public Set<String> getPaymentCardTokens(Context context, String currency) {
 
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-        return preferences.getStringSet("paymentCardToken_" + currency, null);
+
+        //return a copy to avoid the bug
+        return new HashSet<>(preferences.getStringSet("paymentCardToken_" + currency, null));
     }
 
     private Set<String> getPaymentCardTokensCurrencyList(Context context) {
 
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-        return preferences.getStringSet("paymentCardTokenCurrencyList", null);
+
+        //return a copy to avoid the bug
+        return new HashSet<>(preferences.getStringSet("paymentCardTokenCurrencyList", null));
     }
 
     private void deleteCurrencyInList(Context context, String currency) {
