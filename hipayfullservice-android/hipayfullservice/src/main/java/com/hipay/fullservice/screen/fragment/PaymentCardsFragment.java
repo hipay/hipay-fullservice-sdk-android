@@ -27,10 +27,11 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.hipay.fullservice.R;
@@ -70,7 +71,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     private List<PaymentCardToken> mPaymentCardTokens;
     private ListView mListView;
 
-    private int mSelectedCard = -1;
+    private int mSelectedCard = AbsListView.INVALID_POSITION;
 
     private GatewayClient mGatewayClient;
     private ProgressBar mProgressBar;
@@ -144,14 +145,6 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         ArrayAdapter adapter = new PaymentCardsArrayAdapter(getActivity(), mPaymentCardTokens);
         setListAdapter(adapter);
 
-        if (savedInstanceState != null) {
-            mSelectedCard = savedInstanceState.getInt("selectedCard");
-
-            if (mSelectedCard != -1) {
-                mListView.setItemChecked(mSelectedCard, true);
-            }
-        }
-
         reloadList();
 
         // ---- magic lines starting here -----
@@ -178,8 +171,8 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     public void onResume() {
         super.onResume();
 
-        boolean cardChecked = getListView().getCheckedItemCount() > 0;
-        validatePayButton(cardChecked);
+        boolean isSelected = mSelectedCard != AbsListView.INVALID_POSITION;
+        validatePayButton(isSelected);
         this.setLoadingMode(mLoadingMode);
     }
 
@@ -214,8 +207,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
             @Override
             public void onClick(View v) {
 
-                int checkedIndex = mListView.getCheckedItemPosition();
-                if (checkedIndex != AbsListView.INVALID_POSITION) {
+                if (mSelectedCard != AbsListView.INVALID_POSITION) {
 
                     setLoadingMode(true);
                     launchRequest();
@@ -246,7 +238,9 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         }
 
         private class ViewHolder {
-            public TextView text;
+            public TextView textView;
+            public ImageView imageView;
+            public RadioButton radioButton;
         }
 
         @Override
@@ -261,14 +255,23 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
                 rowView = inflater.inflate(R.layout.item_payment_card, parent, false);
 
                 ViewHolder viewHolder = new ViewHolder();
-                viewHolder.text = (TextView) rowView.findViewById(R.id.text1);
+                viewHolder.textView = (TextView) rowView.findViewById(R.id.text1);
+                viewHolder.imageView = (ImageView) rowView.findViewById(R.id.image1);
+                viewHolder.radioButton = (RadioButton) rowView.findViewById(R.id.radio1);
+
                 rowView.setTag(viewHolder);
             }
 
             ViewHolder holder = (ViewHolder) rowView.getTag();
 
             PaymentCardToken cardToken = list.get(position);
-            holder.text.setText(cardToken.getPan());
+            holder.textView.setText(cardToken.getPan());
+
+            if (mSelectedCard == position) {
+                holder.radioButton.setChecked(true);
+            } else {
+                holder.radioButton.setChecked(false);
+            }
 
             return rowView;
         }
@@ -277,12 +280,18 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 
-        CheckedTextView checkedTextView = (CheckedTextView)view;
-        if (checkedTextView.isChecked() == true) {
+        if (mSelectedCard == position) {
+            mSelectedCard = AbsListView.INVALID_POSITION;
+        } else {
             mSelectedCard = position;
         }
 
-        validatePayButton(checkedTextView.isChecked());
+        ((ArrayAdapter)mListView.getAdapter()).notifyDataSetChanged();
+
+        //validatePayButton(checkedTextView.isChecked());
+
+        boolean isSelected = mSelectedCard != AbsListView.INVALID_POSITION;
+        validatePayButton(isSelected);
     }
 
     @Override
@@ -295,15 +304,15 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
                     case DialogInterface.BUTTON_POSITIVE: {
                         dialog.dismiss();
 
-                        mListView.clearChoices();
+                        //mListView.clearChoices();
 
                         if (mSelectedCard == position) {
 
-                            mSelectedCard = -1;
+                            mSelectedCard = AbsListView.INVALID_POSITION;
                             validatePayButton(false);
                         }
 
-                        if (mSelectedCard != -1) {
+                        if (mSelectedCard != AbsListView.INVALID_POSITION) {
 
                             if (mSelectedCard > position) {
 
@@ -437,7 +446,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
     public void launchRequest() {
 
-        int checkedIndex = mListView.getCheckedItemPosition();
+        int checkedIndex = mSelectedCard;
         PaymentCardToken paymentCardToken = mPaymentCardTokens.get(checkedIndex);
 
         // get the brand to get the
@@ -463,8 +472,8 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
             public void onSuccess(final Transaction transaction) {
                 //Log.i("transaction success", transaction.toString());
 
-                cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                 if (mCallback != null) {
+                    cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                     mCallback.onCallbackOrderReceived(transaction, null);
                 }
 
@@ -472,8 +481,8 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
             @Override
             public void onError(Exception error) {
-                cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                 if (mCallback != null) {
+                    cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                     mCallback.onCallbackOrderReceived(null, error);
                 }
             }
@@ -497,8 +506,8 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
                 @Override
                 public void onSuccess(final Transaction transaction) {
 
-                    cancelLoaderId(AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue());
                     if (mCallback != null) {
+                        cancelLoaderId(AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue());
                         mCallback.onCallbackOrderReceived(transaction, null);
                     }
                 }
@@ -506,8 +515,8 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
                 @Override
                 public void onError(Exception error) {
 
-                    cancelLoaderId(AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue());
                     if (mCallback != null) {
+                        cancelLoaderId(AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue());
                         mCallback.onCallbackOrderReceived(null, error);
                     }
                 }
@@ -526,16 +535,16 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
                 @Override
                 public void onSuccess(List<Transaction> transactions) {
-                    cancelLoaderId(AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue());
                     if (mCallback != null) {
+                        cancelLoaderId(AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue());
                         mCallback.onCallbackOrderReceived(transactions.get(0), null);
                     }
                 }
 
                 @Override
                 public void onError(Exception error) {
-                    cancelLoaderId(AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue());
                     if (mCallback != null) {
+                        cancelLoaderId(AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue());
                         mCallback.onCallbackOrderReceived(null, error);
                     }
                 }
@@ -545,7 +554,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
     protected void cancelLoaderId(int loaderId) {
 
-        mCurrentLoading = -1;
+        mCurrentLoading = AbsListView.INVALID_POSITION;
 
         if (mGatewayClient != null) {
             mGatewayClient.cancelOperation(getActivity());
@@ -565,7 +574,8 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putInt("selectedCard", mSelectedCard);
+        //don't need that anymore
+        //outState.putInt("selectedCard", mSelectedCard);
     }
 
     @Override
