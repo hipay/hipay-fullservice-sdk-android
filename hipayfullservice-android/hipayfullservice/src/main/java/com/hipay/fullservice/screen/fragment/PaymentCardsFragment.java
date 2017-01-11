@@ -41,6 +41,7 @@ import com.hipay.fullservice.core.client.interfaces.callbacks.OrderRequestCallba
 import com.hipay.fullservice.core.client.interfaces.callbacks.TransactionDetailsCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.TransactionsDetailsCallback;
 import com.hipay.fullservice.core.models.PaymentCardToken;
+import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
@@ -239,6 +240,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
         private class ViewHolder {
             public TextView textView;
+            public TextView textView2;
             public ImageView imageView;
             public RadioButton radioButton;
         }
@@ -256,6 +258,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
                 ViewHolder viewHolder = new ViewHolder();
                 viewHolder.textView = (TextView) rowView.findViewById(R.id.text1);
+                viewHolder.textView2 = (TextView) rowView.findViewById(R.id.text2);
                 viewHolder.imageView = (ImageView) rowView.findViewById(R.id.image1);
                 viewHolder.radioButton = (RadioButton) rowView.findViewById(R.id.radio1);
 
@@ -267,14 +270,54 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
             PaymentCardToken cardToken = list.get(position);
             holder.textView.setText(cardToken.getPan());
 
+            String issuer = cardToken.getIssuer();
+            if (issuer == null || issuer.isEmpty()) {
+                holder.textView2.setVisibility(View.GONE);
+            } else {
+                holder.textView2.setVisibility(View.VISIBLE);
+            }
+
+            holder.textView2.setText(cardToken.getIssuer());
+
             if (mSelectedCard == position) {
                 holder.radioButton.setChecked(true);
             } else {
                 holder.radioButton.setChecked(false);
             }
 
+            holder.imageView.setImageResource(brandToImage(cardToken.getBrand()));
+
             return rowView;
         }
+    }
+
+    private int brandToImage(String brand) {
+
+        if (brand != null && !brand.isEmpty()) {
+
+            if (brand.equalsIgnoreCase(PaymentProduct.PaymentProductCodeMasterCard))
+            {
+                return R.drawable.ic_credit_card_mastercard;
+
+            } else if (brand.equalsIgnoreCase(PaymentProduct.PaymentProductCodeVisa))
+            {
+                return R.drawable.ic_credit_card_visa;
+
+            } else if (brand.equalsIgnoreCase(PaymentProduct.PaymentProductCodeAmericanExpress))
+            {
+                return R.drawable.ic_credit_card_amex;
+
+            } else if (brand.equalsIgnoreCase(PaymentProduct.PaymentProductCodeDiners))
+            {
+                return R.drawable.ic_credit_card_diners;
+
+            } else if (brand.equalsIgnoreCase(PaymentProduct.PaymentProductCodeMaestro))
+            {
+                return R.drawable.ic_credit_card_maestro;
+            }
+        }
+
+        return R.drawable.ic_credit_card_cb;
     }
 
     @Override
@@ -287,8 +330,6 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         }
 
         ((ArrayAdapter)mListView.getAdapter()).notifyDataSetChanged();
-
-        //validatePayButton(checkedTextView.isChecked());
 
         boolean isSelected = mSelectedCard != AbsListView.INVALID_POSITION;
         validatePayButton(isSelected);

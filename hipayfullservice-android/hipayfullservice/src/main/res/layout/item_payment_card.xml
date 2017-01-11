@@ -1,43 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="?android:attr/listPreferredItemHeight"
     android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/image1"
         android:layout_width="wrap_content"
+        android:layout_weight="0"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:paddingTop="@dimen/spacing_normal"
-        android:paddingBottom="@dimen/spacing_normal"
+        android:src="@drawable/ic_credit_card_black"
+        android:layout_margin="@dimen/spacing_double"
         android:contentDescription="@string/content_description" />
 
-    <TextView
-        android:id="@+id/text1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:textAppearance="@style/PaymentScreens.TextAppearance.PaymentProductItem"
-        android:singleLine="true"
-        android:padding="@dimen/spacing_double" />
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/PaymentScreens.TextAppearance.ListItem"
+            android:textStyle="bold"
+            android:maxLines="1" />
+
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/PaymentScreens.TextAppearance.ListItemSecondary"
+            android:maxLines="1" />
+
+
+    </LinearLayout>
 
     <RadioButton
         android:id="@+id/radio1"
         android:layout_width="wrap_content"
+        android:layout_weight="0"
+        android:layout_gravity="center"
         android:layout_height="wrap_content" />
 
 </LinearLayout>
-    <!--
-    <CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/text1"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/listPreferredItemHeight"
-        android:textAppearance="?android:attr/textAppearanceListItem"
-        android:gravity="center_vertical"
-        android:drawableLeft="@drawable/ic_credit_card_visa"
-        android:checkMark="?android:attr/listChoiceIndicatorSingle"
-        android:paddingRight="?android:attr/listPreferredItemPaddingEnd"
-        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd" />
-        -->
