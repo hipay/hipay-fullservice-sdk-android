@@ -53,16 +53,26 @@ public class PaymentCardTokenDatabase {
 
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
 
-        //return a copy to avoid the bug
-        return new HashSet<>(preferences.getStringSet("paymentCardToken_" + currency, null));
+        //return a copy to avoid the Android bug
+        Set<String> set = preferences.getStringSet("paymentCardToken_" + currency, null);
+        if (set != null && !set.isEmpty()) {
+            return new HashSet<>(set);
+        }
+
+        return null;
     }
 
     private Set<String> getPaymentCardTokensCurrencyList(Context context) {
 
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
 
-        //return a copy to avoid the bug
-        return new HashSet<>(preferences.getStringSet("paymentCardTokenCurrencyList", null));
+        //return a copy to avoid the Android bug
+        Set<String> set = preferences.getStringSet("paymentCardTokenCurrencyList", null);
+        if (set != null && !set.isEmpty()) {
+            return new HashSet<>(set);
+        }
+
+        return null;
     }
 
     private void deleteCurrencyInList(Context context, String currency) {
