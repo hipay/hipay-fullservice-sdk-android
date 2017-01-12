@@ -96,6 +96,11 @@ public class ApiException extends AbstractException {
 
             return object;
         }
+
+        @Override
+        protected Object mappedObjectFromUri() {
+            return null;
+        }
     }
 
     public static class ApiExceptionSerialization extends AbstractSerialization {

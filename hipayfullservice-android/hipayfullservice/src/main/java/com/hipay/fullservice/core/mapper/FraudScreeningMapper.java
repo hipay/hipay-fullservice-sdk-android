@@ -86,5 +86,10 @@ public class FraudScreeningMapper extends AbstractMapper {
 
         return object;
     }
+
+    @Override
+    protected Object mappedObjectFromUri() {
+        return null;
+    }
 }
 

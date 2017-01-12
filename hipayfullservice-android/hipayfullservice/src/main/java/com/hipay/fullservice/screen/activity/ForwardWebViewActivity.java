@@ -116,21 +116,6 @@ public class ForwardWebViewActivity extends AppCompatActivity {
 
             List<String> pathSegments = data.getPathSegments();
 
-            String lastPathSegment = data.getLastPathSegment();
-
-            transaction = Transaction.fromUri(data);
-
-            /*
-            UrlQuerySanitizer.ValueSanitizer sanitizer = UrlQuerySanitizer.getAllButNulLegal();
-// remember to decide if you want the first or last parameter with the same name
-// If you want the first call setPreferFirstRepeatedParameter(true);
-            sanitizer.sanitize(data.toString());
-            */
-
-            UrlQuerySanitizer sanitizer = new UrlQuerySanitizer(data.toString());
-            String value = sanitizer.getValue("state");
-
-
             Map<String, Transaction.TransactionState> transactionStatus = new HashMap<>(5);
 
             transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathAccept,Transaction.TransactionState.TransactionStateCompleted);
@@ -158,12 +143,21 @@ public class ForwardWebViewActivity extends AppCompatActivity {
                         )
                 {
 
-                    transaction = new Transaction();
-                    Order order = new Order();
-                    order.setOrderId(pathSegments.get(2));
-                    transaction.setOrder(order);
-                    transaction.setState(transactionStatus.get(pathSegments.get(3)));
-                    //orderId a setter transaction.setOrder pathSegments.get(3)
+                    transaction = Transaction.fromUri(data);
+
+                    // fail
+                    if (transaction.getState() == null) {
+
+                        Logger.d("<Forward>: The option \"Feedback Parameters\" is disabled on your HiPay Fullservice back office. It means that when a transaction finishes, the SDK is unable to receive all the transaction parameters, such as fraud screening and 3DS results, etc. This option is not mandatory in order for the SDK to run properly. However, if you wish to receive transactions with a comprehensive set of proporties filled in your transaction callback methods, go in your HiPay Fullservice back office > Integration > Redirect Pages and enable the  \"Feedback Parameters\" option.");
+
+                        transaction = new Transaction();
+                        Order order = new Order();
+
+                        order.setOrderId(pathSegments.get(2));
+                        transaction.setOrder(order);
+                        transaction.setState(transactionStatus.get(pathSegments.get(3)));
+                        //orderId a setter transaction.setOrder pathSegments.get(3)
+                    }
                 }
             }
         }

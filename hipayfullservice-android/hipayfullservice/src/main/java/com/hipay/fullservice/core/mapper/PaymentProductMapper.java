@@ -48,5 +48,10 @@ public class PaymentProductMapper extends AbstractMapper {
 
         return this.mappedObject();
     }
+
+    @Override
+    protected Object mappedObjectFromUri() {
+        return null;
+    }
 }
 

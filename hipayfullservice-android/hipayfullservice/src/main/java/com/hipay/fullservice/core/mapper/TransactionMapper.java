@@ -336,10 +336,14 @@ public class TransactionMapper extends TransactionRelatedItemMapper {
 
             paymentCardToken.setToken(cardToken);
 
-            paymentCardToken.setPan(this.getStringForKey("cardpan"));
+            String cardPan = this.getStringForKey("cardpan");
+
+            if (cardPan != null) {
+                paymentCardToken.setPan(cardPan.replace("X", "*"));
+            }
+
             paymentCardToken.setBrand(this.getStringForKey("cardbrand"));
             paymentCardToken.setCountry(this.getStringForKey("cardcountry"));
-
 
             String dateString = this.getStringForKey("cardexpiry");
             Date expiryDate = Utils.getYearAndMonthFromString(dateString);

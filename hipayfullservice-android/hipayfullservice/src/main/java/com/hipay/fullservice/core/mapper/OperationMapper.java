@@ -44,5 +44,10 @@ public class OperationMapper extends AbstractMapper {
     protected Operation mappedObjectFromBundle() {
         return null;
     }
+
+    @Override
+    protected Object mappedObjectFromUri() {
+        return null;
+    }
 }
 
