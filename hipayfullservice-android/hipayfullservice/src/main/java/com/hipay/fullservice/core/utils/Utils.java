@@ -147,6 +147,24 @@ public class Utils {
         return date;
     }
 
+    public static Date getYearAndMonthFromString(String stringDate) {
+
+        Date date = null;
+
+        if (!TextUtils.isEmpty(stringDate)) {
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyyMM", Locale.US);
+            try {
+                date = dateFormatter.parse(stringDate);
+            } catch (java.text.ParseException e) {
+                //e.printStackTrace();
+                return null;
+            }
+        }
+
+        return date;
+    }
+
     public static String bundleToString(Bundle bundle) {
         if (bundle == null) {
             return null;

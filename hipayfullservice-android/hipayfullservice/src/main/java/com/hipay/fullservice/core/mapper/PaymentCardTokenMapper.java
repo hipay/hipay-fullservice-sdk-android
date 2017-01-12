@@ -55,5 +55,10 @@ public class PaymentCardTokenMapper extends AbstractMapper {
 
         return object;
     }
+
+    @Override
+    protected Object mappedObjectFromUri() {
+        return null;
+    }
 }
 

@@ -1,6 +1,7 @@
 package com.hipay.fullservice.core.mapper;
 
 import android.os.Bundle;
+import android.text.format.DateFormat;
 
 import com.hipay.fullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.fullservice.core.models.FraudScreening;
@@ -10,8 +11,11 @@ import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.ThreeDSecure;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.models.TransactionRelatedItem;
+import com.hipay.fullservice.core.utils.Utils;
 
 import org.json.JSONObject;
+
+import java.util.Date;
 
 /**
  * Created by nfillion on 08/09/16.
@@ -304,62 +308,71 @@ public class TransactionMapper extends TransactionRelatedItemMapper {
         }
 
 
+        String enrollmentStatus = this.getEnumCharForKey("veres");
+        if (enrollmentStatus != null) {
 
+            ThreeDSecure threeDSecure = new ThreeDSecure();
 
+            ThreeDSecure.ThreeDSecureEnrollmentStatus threeDSStatus = ThreeDSecure.ThreeDSecureEnrollmentStatus.fromStringValue(enrollmentStatus);
+            if (threeDSStatus == null) {
+                threeDSStatus = ThreeDSecure.ThreeDSecureEnrollmentStatus.ThreeDSecureEnrollmentStatusUnknown;
+            }
+            threeDSecure.setEnrollmentStatus(threeDSStatus);
 
+            String authenticationStatus = this.getEnumCharForKey("pares");
+            ThreeDSecure.ThreeDSecureAuthenticationStatus authStatus = ThreeDSecure.ThreeDSecureAuthenticationStatus.fromStringValue(authenticationStatus);
+            if (authStatus == null) {
+                authStatus = ThreeDSecure.ThreeDSecureAuthenticationStatus.ThreeDSecureAuthenticationStatusUnknown;
+            }
+            threeDSecure.setAuthenticationStatus(authStatus);
 
-
-        //TODO a lot to do here
-        String enrollmentStatus = sanitizer.getValue("veres");
-        String authenticationStatus = sanitizer.getValue("pares");
-
-        //TODO a lot to do here
-        String cardToken = sanitizer.getValue("cardtoken");
-        String cardPan = sanitizer.getValue("cardpan");
-        String cardBrand = sanitizer.getValue("cardbrand");
-        String cardCountry = sanitizer.getValue("cardcountry");
-
-        String cardExpiry = sanitizer.getValue("cardexpiry");
-
-
-
-
-
-
-        if (uri != null) {
-
-            UrlQuerySanitizer sanitizer = new UrlQuerySanitizer(uri.toString());
-
-            //on va build un Bundle de gg.
-
-            Bundle bundle = new Bundle();
-
+            transaction.setThreeDSecure(threeDSecure);
         }
 
+        String cardToken = this.getStringForKey("cardtoken");
+        if (cardToken != null) {
+
+            PaymentCardToken paymentCardToken = new PaymentCardToken();
+
+            paymentCardToken.setToken(cardToken);
+
+            paymentCardToken.setPan(this.getStringForKey("cardpan"));
+            paymentCardToken.setBrand(this.getStringForKey("cardbrand"));
+            paymentCardToken.setCountry(this.getStringForKey("cardcountry"));
+
+
+            String dateString = this.getStringForKey("cardexpiry");
+            Date expiryDate = Utils.getYearAndMonthFromString(dateString);
+
+            if (expiryDate != null) {
+
+                String month = (String)DateFormat.format("MM", expiryDate);
+                Integer integerMonth;
+                try {
+                    integerMonth = Integer.parseInt(month);
+                } catch (NumberFormatException e) {
+                    integerMonth = null;
+                }
+
+                paymentCardToken.setCardExpiryMonth(integerMonth);
+
+                String year = (String)DateFormat.format("yyyy", expiryDate);
+                Integer integerYear;
+                try {
+                    integerYear = Integer.parseInt(year);
+                } catch (NumberFormatException e) {
+                    integerYear = null;
+                }
+
+                paymentCardToken.setCardExpiryYear(integerYear);
+
+            }
+
+            transaction.setPaymentMethod(paymentCardToken);
+        }
+
+
         return transaction;
-
-
-
-
-
-        TransactionRelatedItem transactionRelatedItem = super.mappedObject();
-        Transaction object = this.transactionFromRelatedItem(transactionRelatedItem);
-
-        object.setCdata1(this.getStringForKey("cdata1"));
-        object.setCdata2(this.getStringForKey("cdata2"));
-        object.setCdata3(this.getStringForKey("cdata3"));
-        object.setCdata4(this.getStringForKey("cdata4"));
-        object.setCdata5(this.getStringForKey("cdata5"));
-        object.setCdata6(this.getStringForKey("cdata6"));
-        object.setCdata7(this.getStringForKey("cdata7"));
-        object.setCdata8(this.getStringForKey("cdata8"));
-        object.setCdata9(this.getStringForKey("cdata9"));
-        object.setCdata10(this.getStringForKey("cdata10"));
-
-
-        //nothing for now
-
-        return object;
 
     }
 
