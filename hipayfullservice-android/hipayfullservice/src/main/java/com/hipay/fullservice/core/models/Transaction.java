@@ -1,5 +1,7 @@
 package com.hipay.fullservice.core.models;
 
+import android.net.Uri;
+import android.net.UrlQuerySanitizer;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.TransactionMapper;
@@ -7,6 +9,7 @@ import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 
 import org.json.JSONObject;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 
@@ -65,6 +68,13 @@ public class Transaction extends TransactionRelatedItem {
 
         TransactionMapper mapper = new TransactionMapper(bundle);
         return mapper.mappedObjectFromBundle();
+    }
+
+    public static Transaction fromUri(Uri uri) {
+
+        TransactionMapper mapper = new TransactionMapper(uri);
+        return mapper.mappedObjectFromUri();
+
     }
 
     public Bundle toBundle() {

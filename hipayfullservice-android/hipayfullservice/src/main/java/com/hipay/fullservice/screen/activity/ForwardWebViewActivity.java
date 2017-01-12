@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.net.UrlQuerySanitizer;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
+import java.net.URI;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
@@ -113,6 +115,21 @@ public class ForwardWebViewActivity extends AppCompatActivity {
         if (data != null) {
 
             List<String> pathSegments = data.getPathSegments();
+
+            String lastPathSegment = data.getLastPathSegment();
+
+            transaction = Transaction.fromUri(data);
+
+            /*
+            UrlQuerySanitizer.ValueSanitizer sanitizer = UrlQuerySanitizer.getAllButNulLegal();
+// remember to decide if you want the first or last parameter with the same name
+// If you want the first call setPreferFirstRepeatedParameter(true);
+            sanitizer.sanitize(data.toString());
+            */
+
+            UrlQuerySanitizer sanitizer = new UrlQuerySanitizer(data.toString());
+            String value = sanitizer.getValue("state");
+
 
             Map<String, Transaction.TransactionState> transactionStatus = new HashMap<>(5);
 

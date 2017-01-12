@@ -208,6 +208,161 @@ public class TransactionMapper extends TransactionRelatedItemMapper {
 
     }
 
+    @Override
+    public Transaction mappedObjectFromUri() {
+
+        Transaction transaction = new Transaction();
+
+        transaction.setTransactionReference(this.getStringForKey("reference"));
+
+        String stateString = this.getStringForKey("state");
+        Transaction.TransactionState state = Transaction.TransactionState.fromStringValue(stateString);
+        if (state == null) {
+            state = Transaction.TransactionState.TransactionStateError;
+        }
+        transaction.setState(state);
+
+        Integer statusInteger = this.getIntegerForKey("status");
+        TransactionRelatedItem.TransactionStatus status = TransactionRelatedItem.TransactionStatus.fromIntegerValue(statusInteger);
+        if (status == null) {
+            status = TransactionRelatedItem.TransactionStatus.TransactionStatusUnknown;
+        }
+        transaction.setStatus(status);
+
+        transaction.setTest(this.getBoolForKey("test"));
+
+        transaction.setIpAddress(this.getStringForKey("ip"));
+
+        transaction.setIpCountry(this.getStringForKey("country"));
+
+
+        String avsString = this.getEnumCharForKey("avscheck");
+        Transaction.AVSResult avsResult = Transaction.AVSResult.fromStringValue(avsString);
+        if (avsResult == null) {
+            avsResult = Transaction.AVSResult.AVSResultNotApplicable;
+        }
+        transaction.setAvsResult(avsResult);
+
+        String cvcResultString = this.getEnumCharForKey("cvccheck");
+        Transaction.CVCResult cvcResult = Transaction.CVCResult.fromStringValue(cvcResultString);
+        if (cvcResult == null) {
+            cvcResult = Transaction.CVCResult.CVCResultNotApplicable;
+        }
+        transaction.setCvcResult(cvcResult);
+
+        transaction.setPaymentProduct(this.getStringForKey("pp"));
+
+        transaction.setReason(this.getStringForKey("reason"));
+
+        transaction.setCdata1(this.getStringForKey("cdata1"));
+        transaction.setCdata2(this.getStringForKey("cdata2"));
+        transaction.setCdata3(this.getStringForKey("cdata3"));
+        transaction.setCdata4(this.getStringForKey("cdata4"));
+        transaction.setCdata5(this.getStringForKey("cdata5"));
+        transaction.setCdata6(this.getStringForKey("cdata6"));
+        transaction.setCdata7(this.getStringForKey("cdata7"));
+        transaction.setCdata8(this.getStringForKey("cdata8"));
+        transaction.setCdata9(this.getStringForKey("cdata9"));
+        transaction.setCdata10(this.getStringForKey("cdata10"));
+
+
+        String orderId = this.getStringForKey("orderid");
+        if (orderId != null)
+        {
+            Order order = new Order();
+
+            order.setOrderId(orderId);
+            order.setLanguage(this.getStringForKey("lang"));
+            order.setEmail(this.getStringForKey("email"));
+            order.setCustomerId(this.getStringForKey("cid"));
+
+            transaction.setOrder(order);
+        }
+
+        String scoring = this.getStringForKey("score");
+        if (scoring != null) {
+
+            FraudScreening fraudScreening = new FraudScreening();
+
+            fraudScreening.setScoring(this.getIntegerForKey("score"));
+
+            String resultString = this.getLowercaseStringForKey("fraud");
+            FraudScreening.FraudScreeningResult result = FraudScreening.FraudScreeningResult.fromStringValue(resultString);
+            if (result == null) {
+                result = FraudScreening.FraudScreeningResult.FraudScreeningResultUnknown;
+            }
+            fraudScreening.setResult(result);
+
+            String reviewString = this.getLowercaseStringForKey("review");
+            FraudScreening.FraudScreeningReview review = FraudScreening.FraudScreeningReview.fromStringValue(reviewString);
+            if (review == null) {
+                review = FraudScreening.FraudScreeningReview.FraudScreeningReviewNone;
+            }
+            fraudScreening.setReview(review);
+
+            transaction.setFraudScreening(fraudScreening);
+        }
+
+
+
+
+
+
+
+        //TODO a lot to do here
+        String enrollmentStatus = sanitizer.getValue("veres");
+        String authenticationStatus = sanitizer.getValue("pares");
+
+        //TODO a lot to do here
+        String cardToken = sanitizer.getValue("cardtoken");
+        String cardPan = sanitizer.getValue("cardpan");
+        String cardBrand = sanitizer.getValue("cardbrand");
+        String cardCountry = sanitizer.getValue("cardcountry");
+
+        String cardExpiry = sanitizer.getValue("cardexpiry");
+
+
+
+
+
+
+        if (uri != null) {
+
+            UrlQuerySanitizer sanitizer = new UrlQuerySanitizer(uri.toString());
+
+            //on va build un Bundle de gg.
+
+            Bundle bundle = new Bundle();
+
+        }
+
+        return transaction;
+
+
+
+
+
+        TransactionRelatedItem transactionRelatedItem = super.mappedObject();
+        Transaction object = this.transactionFromRelatedItem(transactionRelatedItem);
+
+        object.setCdata1(this.getStringForKey("cdata1"));
+        object.setCdata2(this.getStringForKey("cdata2"));
+        object.setCdata3(this.getStringForKey("cdata3"));
+        object.setCdata4(this.getStringForKey("cdata4"));
+        object.setCdata5(this.getStringForKey("cdata5"));
+        object.setCdata6(this.getStringForKey("cdata6"));
+        object.setCdata7(this.getStringForKey("cdata7"));
+        object.setCdata8(this.getStringForKey("cdata8"));
+        object.setCdata9(this.getStringForKey("cdata9"));
+        object.setCdata10(this.getStringForKey("cdata10"));
+
+
+        //nothing for now
+
+        return object;
+
+    }
+
     private Transaction transactionFromRelatedItem(TransactionRelatedItem transactionRelatedItem) {
 
         Transaction transaction = new Transaction();
