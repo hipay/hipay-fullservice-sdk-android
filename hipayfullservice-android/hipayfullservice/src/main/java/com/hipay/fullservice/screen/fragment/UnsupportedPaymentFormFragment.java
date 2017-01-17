@@ -92,7 +92,7 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
 
         this.cancelOperations();
         mGatewayClient = new GatewayClient(getActivity());
-        mCurrentLoading = 2;
+        mCurrentLoading = AbstractClient.RequestLoaderId.PaymentPageReqLoaderId.getIntegerValue();
         mGatewayClient.createHostedPaymentPageRequest(pageRequest, signature, new PaymentPageRequestCallback() {
 
             @Override

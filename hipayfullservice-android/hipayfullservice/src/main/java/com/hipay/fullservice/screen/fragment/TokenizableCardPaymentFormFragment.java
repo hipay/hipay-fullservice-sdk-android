@@ -51,9 +51,6 @@ import java.util.Currency;
 import java.util.Locale;
 import java.util.Set;
 
-import static com.hipay.fullservice.core.models.PaymentProduct.PaymentProductCodeBCMC;
-import static com.hipay.fullservice.core.models.PaymentProduct.PaymentProductCodeMaestro;
-
 /**
  * Created by nfillion on 20/04/16.
  */
@@ -71,6 +68,12 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     private LinearLayout mCardStorageSwitchLayout;
 
     private PaymentCardToken mPaymentCardToken;
+
+    private String mCardNumberCache;
+    private String mMonthExpiryCache;
+    private String mYearExpiryCache;
+    private String mCardOwnerCache;
+    private String mCardCVVCache;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -183,6 +186,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
     @Override
     public void setLoadingMode(boolean loadingMode, boolean delay) {
+
+        setElementsCache(loadingMode);
 
         if (!delay) {
 
@@ -459,6 +464,40 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         Log.i("onCreate", "onCreate");
     }
 
+    private void setElementsCache(boolean bool) {
+
+        if (bool) {
+
+            if (mCardNumberCache == null) {
+                mCardNumberCache = mCardNumber.getText().toString();
+            }
+
+            if (mMonthExpiryCache == null) {
+                mMonthExpiryCache = this.getMonthFromExpiry(mCardExpiration.getText().toString());
+            }
+
+            if (mYearExpiryCache == null) {
+                mYearExpiryCache = this.getYearFromExpiry(mCardExpiration.getText().toString());
+            }
+
+            if (mCardCVVCache == null) {
+                mCardCVVCache = mCardCVV.getText().toString();
+            }
+
+            if (mCardOwnerCache == null) {
+                mCardOwnerCache = mCardOwner.getText().toString();
+            }
+
+        } else {
+
+            mCardNumberCache = null;
+            mMonthExpiryCache = null;
+            mYearExpiryCache = null;
+            mCardCVVCache = null;
+            mCardOwnerCache = null;
+        }
+    }
+
     @Override
     public void launchRequest() {
 
@@ -476,14 +515,16 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         mSecureVaultClient = new SecureVaultClient(getActivity());
         mCurrentLoading = AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue();
+
+        setElementsCache(true);
+
         mSecureVaultClient.generateToken(
 
-                mCardNumber.getText().toString(),
-
-                this.getMonthFromExpiry(mCardExpiration.getText().toString()),
-                this.getYearFromExpiry(mCardExpiration.getText().toString()),
-                mCardOwner.getText().toString(),
-                mCardCVV.getText().toString(),
+                mCardNumberCache,
+                mMonthExpiryCache,
+                mYearExpiryCache,
+                mCardOwnerCache,
+                mCardCVVCache,
                 paymentPageRequest.getMultiUse(),
 
                 new SecureVaultRequestCallback() {
@@ -686,7 +727,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             paymentProduct = mCardBehaviour.getProductCode();
         }
 
-        if (paymentProduct.equals(PaymentProductCodeBCMC) || paymentProduct.equals(PaymentProductCodeMaestro)) {
+        if (paymentProduct.equals(PaymentProduct.PaymentProductCodeBCMC) || paymentProduct.equals(PaymentProduct.PaymentProductCodeMaestro)) {
             return false;
         }
 
@@ -830,14 +871,14 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     private boolean isInferedOrCardDomesticNetwork(String product) {
 
         return product.equals(PaymentProduct.PaymentProductCodeCB) ||
-                product.equals(PaymentProductCodeBCMC) ||
+                product.equals(PaymentProduct.PaymentProductCodeBCMC) ||
                 product.equals(PaymentProduct.PaymentProductCategoryCodeCard);
     }
 
     private boolean isDomesticNetwork() {
 
         return basicPaymentProduct.getCode().equals(PaymentProduct.PaymentProductCodeCB) ||
-                basicPaymentProduct.getCode().equals(PaymentProductCodeBCMC);
+                basicPaymentProduct.getCode().equals(PaymentProduct.PaymentProductCodeBCMC);
     }
 
     private boolean isDomesticNetwork(String paymentProductCode) {
@@ -846,9 +887,9 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         if (isDomesticNetwork()) {
 
-            if (basicProductCode.equals(PaymentProductCodeBCMC)) {
+            if (basicProductCode.equals(PaymentProduct.PaymentProductCodeBCMC)) {
 
-                return paymentProductCode.equals(PaymentProductCodeMaestro);
+                return paymentProductCode.equals(PaymentProduct.PaymentProductCodeMaestro);
 
             } else if (basicProductCode.equals(PaymentProduct.PaymentProductCodeCB)) {
 
