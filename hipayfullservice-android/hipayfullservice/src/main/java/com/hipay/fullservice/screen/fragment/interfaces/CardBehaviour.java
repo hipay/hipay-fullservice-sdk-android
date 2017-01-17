@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.design.widget.TextInputLayout;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hipay.fullservice.core.models.PaymentProduct;
@@ -72,9 +73,9 @@ public class CardBehaviour {
         this.cardBehaviour = cardBehaviour;
     }
 
-    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, boolean networked, Context context) {
+    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, LinearLayout switchLayout, boolean networked, Context context) {
 
-        this.getCardBehaviour().updateForm(cardNumber, cardCVV, cardExpiry, securityCodeLayout, securityCodeInfoTextview, securityCodeInfoImageview, networked, context);
+        this.getCardBehaviour().updateForm(cardNumber, cardCVV, cardExpiry, securityCodeLayout, securityCodeInfoTextview, securityCodeInfoImageview, switchLayout, networked, context);
     }
 
     public boolean isSecurityCodeValid(EditText cardCVV) {

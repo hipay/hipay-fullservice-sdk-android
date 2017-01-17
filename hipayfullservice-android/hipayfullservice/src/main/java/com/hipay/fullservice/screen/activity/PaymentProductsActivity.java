@@ -12,7 +12,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Window;
 import android.widget.TextView;
@@ -30,7 +29,7 @@ import java.util.List;
 /**
  * Created by nfillion on 25/02/16.
  */
-public class PaymentProductsActivity extends AppCompatActivity {
+public class PaymentProductsActivity extends PaymentScreenActivity {
 
     private CustomTheme customTheme;
 

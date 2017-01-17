@@ -20,6 +20,10 @@
         <item name="android:windowBackground">@color/hpf_light</item>
     </style>
 
+    <style name="PaymentScreens.PaymentCardsActivity">
+        <item name="android:windowBackground">@color/hpf_light</item>
+    </style>
+
     <style name="PaymentScreens.ForwardWebViewActivity">
         <item name="android:windowBackground">@color/hpf_light</item>
     </style>

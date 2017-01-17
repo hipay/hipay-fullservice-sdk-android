@@ -12,6 +12,8 @@ public class ClientConfig {
     private String password;
     private String userAgent;
 
+    private boolean paymentCardStorageEnabled;
+
     public static final String GatewayClientBaseURLStage = "https://stage-secure-gateway.hipay-tpp.com/rest/v1";
 
     public static final String GatewayClientBaseURLNewStage = "https://stage-secure-gateway.hipay-tpp.com/rest/v2";
@@ -32,6 +34,7 @@ public class ClientConfig {
         if(mInstance == null)
         {
             mInstance = new ClientConfig();
+            mInstance.setPaymentCardStorageEnabled(false);
         }
         return mInstance;
     }
@@ -70,11 +73,25 @@ public class ClientConfig {
         return environment;
     }
 
+    /**
+     * @deprecated use {@link #setConfig(Environment, String, String, boolean)} instead.
+     */
+    @Deprecated
     public void setConfig(Environment environment, String username, String password) {
 
         this.setEnvironment(environment);
         this.setUsername(username);
         this.setPassword(password);
+
+        this.setUserAgent(null);
+    }
+
+    public void setConfig(Environment environment, String username, String password, boolean paymentCardStorageEnabled) {
+
+        this.setEnvironment(environment);
+        this.setUsername(username);
+        this.setPassword(password);
+        this.setPaymentCardStorageEnabled(paymentCardStorageEnabled);
 
         this.setUserAgent(null);
     }
@@ -105,5 +122,13 @@ public class ClientConfig {
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
+    }
+
+    public boolean isPaymentCardStorageEnabled() {
+        return paymentCardStorageEnabled;
+    }
+
+    public void setPaymentCardStorageEnabled(boolean paymentCardStorageEnabled) {
+        this.paymentCardStorageEnabled = paymentCardStorageEnabled;
     }
 }

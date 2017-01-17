@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Created by nfillion on 25/01/16.
@@ -145,6 +147,24 @@ public class Utils {
         return date;
     }
 
+    public static Date getYearAndMonthFromString(String stringDate) {
+
+        Date date = null;
+
+        if (!TextUtils.isEmpty(stringDate)) {
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyyMM", Locale.US);
+            try {
+                date = dateFormatter.parse(stringDate);
+            } catch (java.text.ParseException e) {
+                //e.printStackTrace();
+                return null;
+            }
+        }
+
+        return date;
+    }
+
     public static String bundleToString(Bundle bundle) {
         if (bundle == null) {
             return null;
@@ -226,5 +246,72 @@ public class Utils {
         }
 
         return null;
+    }
+
+    public static Bundle fromJSONString(String jsonString){
+
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            if (jsonObject != null) {
+                return fromJSON(jsonObject);
+            }
+
+        } catch (JSONException ignored) {}
+
+        return null;
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private static JSONObject fromBundleToJSON(Bundle bundle) {
+
+        JSONObject json = new JSONObject();
+        Set<String> keys = bundle.keySet();
+        for (String key : keys) {
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    json.put(key, JSONObject.wrap(bundle.get(key)));
+                } else {
+                    json.put(key, bundle.get(key));
+                }
+            } catch(JSONException e) {
+                //Handle exception here
+                json = null;
+            }
+        }
+
+        return json;
+    }
+
+    public static String fromBundle(Bundle bundle) {
+
+        JSONObject jsonObject = fromBundleToJSON(bundle);
+        if (jsonObject != null) {
+            return jsonObject.toString();
+        }
+
+        return null;
+    }
+
+    private static Bundle fromJSON(JSONObject jsonObject) throws JSONException {
+
+        Bundle bundle = new Bundle();
+
+        Iterator iter = jsonObject.keys();
+
+        while(iter.hasNext()){
+
+            String key = (String)iter.next();
+
+            Object object = jsonObject.get(key);
+            if (object instanceof String) {
+                bundle.putString(key, (String)object);
+            }
+
+            if (object instanceof Integer) {
+                bundle.putInt(key, (Integer)object);
+            }
+        }
+
+        return bundle;
     }
 }

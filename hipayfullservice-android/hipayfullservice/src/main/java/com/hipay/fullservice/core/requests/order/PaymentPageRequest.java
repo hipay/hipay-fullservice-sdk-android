@@ -40,7 +40,7 @@ public class PaymentPageRequest extends OrderRelatedRequest {
 
     public PaymentPageRequest() {
 
-        this.setEci(Transaction.ECI.Undefined);
+        this.setEci(Transaction.ECI.SecureECommerce);
         this.setMultiUse(false);
         this.setDisplaySelector(false);
         this.setPaymentCardGroupingEnabled(false);

@@ -42,6 +42,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.hipay.fullservice.core.client.config.ClientConfig;
 import com.hipay.fullservice.core.errors.Errors;
 import com.hipay.fullservice.core.errors.exceptions.ApiException;
 import com.hipay.fullservice.core.models.Transaction;
@@ -50,6 +51,7 @@ import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest
 import com.hipay.fullservice.example.DemoActivity;
 import com.hipay.fullservice.example.R;
 import com.hipay.fullservice.screen.activity.PaymentProductsActivity;
+import com.hipay.fullservice.screen.activity.PaymentScreenActivity;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
@@ -78,7 +80,7 @@ public class DemoFragment extends Fragment {
     private ProgressBar mProgressBar;
 
     private SwitchCompat mGroupCardSwitch;
-    private SwitchCompat mReusableTokenSwitch;
+    private SwitchCompat mCardStorageSwitch;
 
     private AppCompatSpinner mCurrencySpinner;
     private AppCompatSpinner m3DSSpinner;
@@ -161,10 +163,10 @@ public class DemoFragment extends Fragment {
         final View contentView = inflater.inflate(R.layout.fragment_demo, container, false);
 
         mGroupCardSwitch = (SwitchCompat) contentView.findViewById(R.id.group_card_switch);
-        mReusableTokenSwitch = (SwitchCompat) contentView.findViewById(R.id.reusable_token_switch);
+        mCardStorageSwitch = (SwitchCompat) contentView.findViewById(R.id.card_storage_switch);
 
         mGroupCardSwitch.setTextColor(ContextCompat.getColor(getActivity(), customTheme.getColorPrimaryDarkId()));
-        mReusableTokenSwitch.setTextColor(ContextCompat.getColor(getActivity(), customTheme.getColorPrimaryDarkId()));
+        mCardStorageSwitch.setTextColor(ContextCompat.getColor(getActivity(), customTheme.getColorPrimaryDarkId()));
 
         mCurrencySpinner = (AppCompatSpinner) contentView.findViewById(R.id.currency_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
@@ -271,11 +273,8 @@ public class DemoFragment extends Fragment {
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                //.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                //.setCustomAnimations(android.R.anim.in_from_left, android.R.anim.out_to_right, android.R.anim.in_from_right, android.R.anim.out_to_left)
 
                 .replace(R.id.demo_container, ProductCategoryListFragment.newInstance(paymentProducts, customTheme))
-                //.add(R.id.demo_container, ProductCategoryListFragment.newInstance(mPaymentProducts, this))
                 .addToBackStack(null)
                 .commit();
     }
@@ -350,6 +349,8 @@ public class DemoFragment extends Fragment {
         mAmount = (EditText)view.findViewById(R.id.amountEditText);
         mAmount.addTextChangedListener(textWatcher);
 
+        mCardStorageSwitch.setChecked(ClientConfig.getInstance().isPaymentCardStorageEnabled());
+
         switchTheme(this.getCustomTheme());
     }
 
@@ -390,7 +391,8 @@ public class DemoFragment extends Fragment {
                             if (!TextUtils.isEmpty(orderId) && !TextUtils.isEmpty(signature) ) {
 
                                 final PaymentPageRequest paymentPageRequest = buildPageRequest(activity, orderId);
-                                PaymentProductsActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
+
+                                PaymentScreenActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
                                 mDoneFab.setVisibility(View.INVISIBLE);
 
                             } else {
@@ -533,7 +535,11 @@ public class DemoFragment extends Fragment {
         paymentPageRequest.setShipping(1.56f);
 
         paymentPageRequest.setPaymentCardGroupingEnabled(mGroupCardSwitch.isChecked());
-        paymentPageRequest.setMultiUse(mReusableTokenSwitch.isChecked());
+
+        boolean multiUse = mCardStorageSwitch.isChecked();
+        paymentPageRequest.setMultiUse(multiUse);
+        ClientConfig.getInstance().setPaymentCardStorageEnabled(multiUse);
+
         paymentPageRequest.setAmount(Float.parseFloat(mAmount.getText().toString()));
 
         String selectedItem = (String)mCurrencySpinner.getSelectedItem();
@@ -582,7 +588,7 @@ public class DemoFragment extends Fragment {
         ((TextView) demoActivity.findViewById(R.id.color_textview)).setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
 
         mGroupCardSwitch.setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
-        mReusableTokenSwitch.setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
+        mCardStorageSwitch.setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
         mPaymentProductsButton.setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
 
     }

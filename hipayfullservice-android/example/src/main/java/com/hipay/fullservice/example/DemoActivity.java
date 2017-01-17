@@ -5,17 +5,14 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.hipay.fullservice.core.client.config.ClientConfig;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.example.fragment.DemoFragment;
 import com.hipay.fullservice.example.fragment.ProductCategoryListFragment;
-import com.hipay.fullservice.screen.model.CustomTheme;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.Tracking;
@@ -53,7 +50,8 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         ClientConfig.getInstance().setConfig(
                 ClientConfig.Environment.Stage,
                 username,
-                password
+                password,
+                true
         );
 
         paymentProducts = new HashMap<>(4);

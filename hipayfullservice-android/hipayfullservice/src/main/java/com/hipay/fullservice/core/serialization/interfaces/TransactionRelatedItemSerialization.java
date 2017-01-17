@@ -31,7 +31,7 @@ public abstract class TransactionRelatedItemSerialization extends AbstractSerial
     public Bundle getSerializedBundle() {
         super.getSerializedBundle();
 
-        TransactionRelatedItem object = new TransactionRelatedItem();
+        TransactionRelatedItem object = (TransactionRelatedItem) this.getModel();
 
         this.putBoolForKey("test", object.getTest());
         this.putStringForKey("mid", object.getMid());

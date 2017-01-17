@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.net.UrlQuerySanitizer;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
+import java.net.URI;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
@@ -141,12 +143,21 @@ public class ForwardWebViewActivity extends AppCompatActivity {
                         )
                 {
 
-                    transaction = new Transaction();
-                    Order order = new Order();
-                    order.setOrderId(pathSegments.get(2));
-                    transaction.setOrder(order);
-                    transaction.setState(transactionStatus.get(pathSegments.get(3)));
-                    //orderId a setter transaction.setOrder pathSegments.get(3)
+                    transaction = Transaction.fromUri(data);
+
+                    // fail
+                    if (transaction.getState() == null) {
+
+                        Logger.d("<Forward>: The option \"Feedback Parameters\" is disabled on your HiPay Fullservice back office. It means that when a transaction finishes, the SDK is unable to receive all the transaction parameters, such as fraud screening and 3DS results, etc. This option is not mandatory in order for the SDK to run properly. However, if you wish to receive transactions with a comprehensive set of proporties filled in your transaction callback methods, go in your HiPay Fullservice back office > Integration > Redirect Pages and enable the  \"Feedback Parameters\" option.");
+
+                        transaction = new Transaction();
+                        Order order = new Order();
+
+                        order.setOrderId(pathSegments.get(2));
+                        transaction.setOrder(order);
+                        transaction.setState(transactionStatus.get(pathSegments.get(3)));
+                        //orderId a setter transaction.setOrder pathSegments.get(3)
+                    }
                 }
             }
         }

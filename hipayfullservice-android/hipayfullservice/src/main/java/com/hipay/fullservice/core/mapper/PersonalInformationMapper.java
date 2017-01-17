@@ -60,6 +60,11 @@ public class PersonalInformationMapper extends AbstractMapper {
 
         return object;
     }
+
+    @Override
+    protected Object mappedObjectFromUri() {
+        return null;
+    }
 }
 
 

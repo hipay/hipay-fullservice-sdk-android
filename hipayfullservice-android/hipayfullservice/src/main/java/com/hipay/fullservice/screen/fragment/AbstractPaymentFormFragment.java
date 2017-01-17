@@ -21,6 +21,7 @@ import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.client.SecureVaultClient;
 import com.hipay.fullservice.core.client.interfaces.callbacks.TransactionDetailsCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.TransactionsDetailsCallback;
+import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
@@ -73,6 +74,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
 
     protected abstract boolean isInputDataValid();
+    public abstract void savePaymentMethod(PaymentMethod method);
 
     public static AbstractPaymentFormFragment newInstance(Bundle paymentPageRequestBundle, PaymentProduct paymentProduct, String signature, Bundle customTheme) {
 
@@ -144,12 +146,32 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         // call this to re-connect with an existing
         // loader (after screen configuration changes for e.g!)
 
-        if (mSecureVaultClient != null && mCurrentLoading == 0) {
-            mSecureVaultClient.reLaunchOperations(0);
+        if (mSecureVaultClient != null && mCurrentLoading == AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue()) {
+
+            if (mSecureVaultClient.canRelaunch()) {
+                mSecureVaultClient.reLaunchOperations(AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue());
+
+            } else {
+
+                cancelLoaderId(AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue());
+
+                //check if launchRequest
+                cancelOperations();
+                launchRequest();
+            }
         }
 
-        if (mGatewayClient != null && mCurrentLoading > 0 ) {
-            mGatewayClient.reLaunchOperations(mCurrentLoading);
+        if (mGatewayClient != null && mCurrentLoading > AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue() ) {
+
+            if (mGatewayClient.canRelaunch()) {
+                mGatewayClient.reLaunchOperations(mCurrentLoading);
+
+            } else {
+
+                //cancelLoaderId(mCurrentLoading);
+                cancelOperations();
+                launchRequest();
+            }
         }
 
         //----- end magic lines -----
@@ -236,8 +258,8 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
                         @Override
                         public void onSuccess(final Transaction transaction) {
 
-                            cancelLoaderId(AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue());
                             if (mCallback != null) {
+                                cancelLoaderId(AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue());
                                 mCallback.onCallbackOrderReceived(transaction, null);
                             }
                         }
@@ -245,8 +267,8 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
                         @Override
                         public void onError(Exception error) {
 
-                            cancelLoaderId(AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue());
                             if (mCallback != null) {
+                                cancelLoaderId(AbstractClient.RequestLoaderId.TransactionReqLoaderId.getIntegerValue());
                                 mCallback.onCallbackOrderReceived(null, error);
                             }
                         }
@@ -265,16 +287,16 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
                 @Override
                 public void onSuccess(List<Transaction> transactions) {
-                    cancelLoaderId(AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue());
                     if (mCallback != null) {
+                        cancelLoaderId(AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue());
                         mCallback.onCallbackOrderReceived(transactions.get(0), null);
                     }
                 }
 
                 @Override
                 public void onError(Exception error) {
-                    cancelLoaderId(AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue());
                     if (mCallback != null) {
+                        cancelLoaderId(AbstractClient.RequestLoaderId.TransactionsReqLoaderId.getIntegerValue());
                         mCallback.onCallbackOrderReceived(null, error);
                     }
                 }
@@ -292,7 +314,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
             case 0: {
 
                 if (mSecureVaultClient != null) {
-                    mSecureVaultClient.cancelOperation();
+                    mSecureVaultClient.cancelOperation(getActivity());
                     mSecureVaultClient = null;
                 }
 
@@ -302,7 +324,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
             default: {
 
                 if (mGatewayClient != null) {
-                    mGatewayClient.cancelOperation();
+                    mGatewayClient.cancelOperation(getActivity());
                     mGatewayClient = null;
                 }
             }
@@ -312,12 +334,12 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     public void cancelOperations() {
 
         if (mGatewayClient != null) {
-            mGatewayClient.cancelOperation();
+            mGatewayClient.cancelOperation(getActivity());
             mGatewayClient = null;
         }
 
         if (mSecureVaultClient != null) {
-            mSecureVaultClient.cancelOperation();
+            mSecureVaultClient.cancelOperation(getActivity());
             mSecureVaultClient = null;
         }
     }

@@ -8,6 +8,7 @@ import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.client.interfaces.callbacks.PaymentPageRequestCallback;
 import com.hipay.fullservice.core.models.HostedPaymentPage;
+import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.screen.activity.ForwardWebViewActivity;
@@ -41,6 +42,12 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
     @Override
     protected boolean isInputDataValid() {
         return true;
+    }
+
+    @Override
+    public void savePaymentMethod(PaymentMethod method)
+    {
+        //no-op
     }
 
     @Override
@@ -85,7 +92,7 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
 
         this.cancelOperations();
         mGatewayClient = new GatewayClient(getActivity());
-        mCurrentLoading = 2;
+        mCurrentLoading = AbstractClient.RequestLoaderId.PaymentPageReqLoaderId.getIntegerValue();
         mGatewayClient.createHostedPaymentPageRequest(pageRequest, signature, new PaymentPageRequestCallback() {
 
             @Override

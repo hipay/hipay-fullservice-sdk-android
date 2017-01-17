@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hipay.fullservice.R;
@@ -22,7 +23,7 @@ public class BCMCBehaviour implements ICardBehaviour {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
-    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, boolean networked, Context context) {
+    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, LinearLayout switchLayout, boolean networked, Context context) {
 
         cardCVV.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
         //hide the security code for bcmc
@@ -42,6 +43,9 @@ public class BCMCBehaviour implements ICardBehaviour {
         securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_description_cvv));
         securityCodeInfoImageview.setImageResource(R.drawable.cvc_mv);
 
+        if (switchLayout != null) {
+            switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
+        }
         //bcmc
         //"6703 0000 0000 00003",
         //cardNumber.setText("67030000000000003");
@@ -67,5 +71,10 @@ public class BCMCBehaviour implements ICardBehaviour {
     @Override
     public String getProductCode() {
         return PaymentProduct.PaymentProductCodeBCMC;
+    }
+
+    @Override
+    public boolean isCardStorageEnabled() {
+        return false;
     }
 }
