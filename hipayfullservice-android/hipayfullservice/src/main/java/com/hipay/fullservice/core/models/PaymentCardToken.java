@@ -121,6 +121,17 @@ public class PaymentCardToken extends PaymentMethod {
         this.domesticNetwork = domesticNetwork;
     }
 
+    @Override
+    public boolean equals(Object object) {
+
+        if (object != null && object instanceof PaymentCardToken && this.getToken() != null)
+        {
+            return ((PaymentCardToken) object).getToken().equals(this.getToken());
+        }
+
+        return false;
+    }
+
     protected static class PaymentCardTokenSerializationMapper extends AbstractSerializationMapper {
 
         protected PaymentCardTokenSerializationMapper(PaymentCardToken paymentProduct) {

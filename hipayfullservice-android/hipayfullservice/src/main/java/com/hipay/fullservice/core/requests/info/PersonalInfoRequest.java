@@ -276,5 +276,10 @@ public class PersonalInfoRequest extends AbstractRequest {
 
             return object;
         }
+
+        @Override
+        protected Object mappedObjectFromUri() {
+            return null;
+        }
     }
 }

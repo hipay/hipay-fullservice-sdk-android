@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hipay.fullservice.R;
@@ -23,7 +24,7 @@ public class MastercardBehaviour implements ICardBehaviour {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
-    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, boolean networked, Context context) {
+    public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, LinearLayout switchLayout, boolean networked, Context context) {
 
         securityCodeLayout.setVisibility(View.VISIBLE);
         cardNumber.setHint(context.getString(R.string.card_number_placeholder_visa_mastercard));
@@ -45,6 +46,9 @@ public class MastercardBehaviour implements ICardBehaviour {
         securityCodeInfoTextview.setText(context.getString(R.string.card_security_code_description_cvv));
         securityCodeInfoImageview.setImageResource(R.drawable.cvc_mv);
 
+        if (switchLayout != null) {
+            switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
+        }
         //Mastercard
         //"5399 9999 9999 9999",
         //cardNumber.setText("5399999999999999");
@@ -78,5 +82,10 @@ public class MastercardBehaviour implements ICardBehaviour {
     @Override
     public String getProductCode() {
         return PaymentProduct.PaymentProductCodeMasterCard;
+    }
+
+    @Override
+    public boolean isCardStorageEnabled() {
+        return true;
     }
 }

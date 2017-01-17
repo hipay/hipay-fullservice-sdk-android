@@ -74,11 +74,11 @@
 
     <android.support.v7.widget.SwitchCompat
 
-        android:id="@+id/reusable_token_switch"
+        android:id="@+id/card_storage_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
-        android:text="@string/reusable_token"
+        android:text="@string/card_storage"
         android:textColor="@color/colorPrimaryDark"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         />

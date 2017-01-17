@@ -22,6 +22,8 @@
 
     <style name="PaymentScreens.PaymentFormActivity" />
 
+    <style name="PaymentScreens.PaymentCardsActivity" />
+
     <style name="PaymentScreens.ForwardWebViewActivity" />
 
     <style name="PaymentScreens.CompoundButton" parent="Widget.AppCompat.Button.Borderless">
@@ -79,7 +81,10 @@
         <item name="android:textColor">@color/hpf_primary</item>
     </style>
 
+    <!--
     <style name="PaymentScreens.TextAppearance.ListItem" parent="TextAppearance.AppCompat.Subhead" />
-    <style name="PaymentScreens.TextAppearance.ListItemSecondary" parent="TextAppearance.AppCompat.Body1" />
+    -->
+    <style name="PaymentScreens.TextAppearance.ListItem" parent="TextAppearance.AppCompat.Subhead" />
+    <style name="PaymentScreens.TextAppearance.ListItemSecondary" parent="TextAppearance.AppCompat.Caption" />
 
 </resources>

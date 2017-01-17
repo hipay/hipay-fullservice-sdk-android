@@ -78,6 +78,11 @@ public class ThreeDSecureMapper extends AbstractMapper {
 
         return object;
     }
+
+    @Override
+    protected Object mappedObjectFromUri() {
+        return null;
+    }
 }
 
 

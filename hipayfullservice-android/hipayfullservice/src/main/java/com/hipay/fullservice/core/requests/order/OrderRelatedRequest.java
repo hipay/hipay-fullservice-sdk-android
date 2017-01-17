@@ -544,6 +544,11 @@ public class OrderRelatedRequest extends AbstractRequest {
         }
 
         @Override
+        protected Object mappedObjectFromUri() {
+            return null;
+        }
+
+        @Override
         protected OrderRelatedRequest mappedObject() {
 
             return null;

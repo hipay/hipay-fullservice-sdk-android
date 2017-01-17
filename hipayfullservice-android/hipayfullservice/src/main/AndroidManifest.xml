@@ -7,6 +7,10 @@
             android:theme="@style/PaymentScreens.PaymentProductsActivity"
             />
 
+        <activity android:name=".screen.activity.PaymentCardsActivity"
+            android:theme="@style/PaymentScreens.PaymentCardsActivity"
+            />
+
         <activity android:name=".screen.activity.PaymentFormActivity"
             android:theme="@style/PaymentScreens.PaymentFormActivity"
             android:windowSoftInputMode="adjustPan"
@@ -17,17 +21,6 @@
             android:launchMode="singleTop"
             android:configChanges="orientation|screenSize">
 
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <data android:scheme="@string/hipay_scheme"
-                    android:host="@string/hipay_host"
-                    />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-            </intent-filter>
-            -->
         </activity>
 
     </application>

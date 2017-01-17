@@ -1,10 +1,12 @@
 package com.hipay.fullservice.core.mapper;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.fullservice.core.mapper.interfaces.IBehaviour;
 import com.hipay.fullservice.core.mapper.interfaces.MapMapper;
+import com.hipay.fullservice.core.mapper.interfaces.UriMapper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,6 +25,7 @@ public abstract class AbstractMapper<T> {
 
     protected abstract Object mappedObject();
     protected abstract Object mappedObjectFromBundle();
+    protected abstract Object mappedObjectFromUri();
     protected abstract boolean isValid();
 
     public AbstractMapper(T rawData) {
@@ -62,6 +65,11 @@ public abstract class AbstractMapper<T> {
 
                 Bundle bundle = (Bundle)rawData;
                 this.setBehaviour(new BundleMapper(bundle));
+
+            } else if (rawData instanceof Uri) {
+
+                Uri uri = (Uri)rawData;
+                this.setBehaviour(new UriMapper(uri));
             }
         }
 

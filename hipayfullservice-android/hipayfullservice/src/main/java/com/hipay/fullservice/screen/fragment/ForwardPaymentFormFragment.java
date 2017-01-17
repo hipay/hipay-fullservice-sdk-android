@@ -2,7 +2,6 @@ package com.hipay.fullservice.screen.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -10,6 +9,7 @@ import android.widget.FrameLayout;
 import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.client.interfaces.callbacks.OrderRequestCallback;
+import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
@@ -106,5 +106,10 @@ public class ForwardPaymentFormFragment extends AbstractPaymentFormFragment {
     protected boolean isInputDataValid() {
 
         return true;
+    }
+
+    @Override
+    public void savePaymentMethod(PaymentMethod method) {
+        // do nothing
     }
 }

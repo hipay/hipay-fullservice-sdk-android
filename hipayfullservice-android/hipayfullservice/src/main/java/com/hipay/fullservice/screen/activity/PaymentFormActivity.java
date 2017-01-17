@@ -351,6 +351,16 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
     }
 
+    private void savePaymentMethod(PaymentMethod paymentMethod) {
+
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
+        if (fragment != null)
+        {
+            AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment) fragment;
+            abstractPaymentFormFragment.savePaymentMethod(paymentMethod);
+        }
+    }
+
     private FormResult manageTransactionState(Transaction transaction) {
 
         FormResult formResult = null;
@@ -365,6 +375,13 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                 setResult(R.id.transaction_succeed, intent);
 
                 formResult = FormResult.FormActionQuit;
+
+                //save payment card
+                PaymentMethod paymentMethod = transaction.getPaymentMethod();
+                if (paymentMethod != null)
+                {
+                    this.savePaymentMethod(paymentMethod);
+                }
 
             } break;
 

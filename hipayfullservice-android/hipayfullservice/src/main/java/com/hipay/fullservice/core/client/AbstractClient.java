@@ -76,7 +76,7 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public void cancelOperation() {
+    public void cancelOperation(Context context) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 
@@ -88,10 +88,12 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
         }
 
         //...and it actually brutally destroys the loader
-        if (this.getContext() != null) {
-            FragmentActivity activity = (FragmentActivity) this.getContext();
-            activity.getSupportLoaderManager().destroyLoader(this.getLoaderId());
+        if (this.getContext() == null) {
+            contextWeakReference = new WeakReference<>(context);
         }
+
+        FragmentActivity activity = (FragmentActivity) this.getContext();
+        activity.getSupportLoaderManager().destroyLoader(this.getLoaderId());
     }
 
     protected void launchOperation() {
@@ -107,6 +109,8 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
         }
     }
 
+
+
     public void reLaunchOperations(int loaderId) {
 
         AppCompatActivity activity = (AppCompatActivity)this.getContext();
@@ -119,6 +123,15 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
         }
     }
 
+    public boolean canRelaunch() {
+
+        Context context = this.getContext();
+        if (context != null) {
+            return true;
+        }
+
+        return false;
+    }
 
     private boolean initReqHandler(T request, String signature, AbstractRequestCallback callback) {
 

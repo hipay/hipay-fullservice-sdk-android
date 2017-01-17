@@ -51,6 +51,11 @@ public class HostedPaymentPageMapper extends AbstractMapper {
     protected Object mappedObjectFromBundle() {
         return null;
     }
+
+    @Override
+    protected Object mappedObjectFromUri() {
+        return null;
+    }
 }
 
 

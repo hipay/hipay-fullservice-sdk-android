@@ -32,7 +32,7 @@
             android:drawablePadding="@dimen/spacing_double"
             android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:maxLength="30"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textColorHint="@color/hpf_placeholder"
             android:imeOptions="actionNext"
             android:inputType="textPersonName|textCapWords|textNoSuggestions"
@@ -128,8 +128,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginStart="@dimen/spacing_normal"
-        android:layout_marginEnd="@dimen/spacing_normal"
         android:visibility="gone"
         >
 
@@ -152,5 +150,33 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/card_storage_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:id="@+id/card_storage_text"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="right"
+            android:textAppearance="@style/PaymentScreens.TextAppearance.InfoItem"
+            android:text="@string/card_storage_switch_description"
+            />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/card_storage_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="?android:attr/actionBarSize"
+            android:layout_marginLeft="@dimen/spacing_double"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            />
+
+    </LinearLayout>
 
 </LinearLayout>
