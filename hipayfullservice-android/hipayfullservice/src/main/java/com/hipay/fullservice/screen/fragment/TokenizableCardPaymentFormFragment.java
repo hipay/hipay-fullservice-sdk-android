@@ -469,7 +469,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         if (bool) {
 
             if (mCardNumberCache == null) {
-                mCardNumberCache = mCardNumber.getText().toString();
+                mCardNumberCache = mCardNumber.getText().toString().replaceAll(" ", "");
             }
 
             if (mMonthExpiryCache == null) {
