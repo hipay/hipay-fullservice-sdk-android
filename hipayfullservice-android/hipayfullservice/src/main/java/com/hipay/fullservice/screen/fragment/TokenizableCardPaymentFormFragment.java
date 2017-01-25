@@ -1,6 +1,7 @@
 package com.hipay.fullservice.screen.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.SwitchCompat;
@@ -42,6 +45,7 @@ import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.core.utils.PaymentCardTokenDatabase;
+import com.hipay.fullservice.screen.activity.PaymentFormActivity;
 import com.hipay.fullservice.screen.fragment.interfaces.CardBehaviour;
 import com.hipay.fullservice.screen.helper.FormHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
@@ -50,6 +54,9 @@ import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
 import java.util.Set;
+
+import io.card.payment.CardIOActivity;
+import io.card.payment.CreditCard;
 
 /**
  * Created by nfillion on 20/04/16.
@@ -86,8 +93,44 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     public void onResume() {
         super.onResume();
 
-        validatePayButton(isInputDataValid());
-        putEverythingInRed();
+
+        /*
+        if (mMonthExpiryCache != null) {
+            mMonthExpiryCache = this.getMonthFromExpiry(mCardExpiration.getText().toString());
+        }
+
+        if (mYearExpiryCache != null) {
+            mYearExpiryCache = this.getYearFromExpiry(mCardExpiration.getText().toString());
+        }
+
+        if (mCardCVVCache != null) {
+            mCardCVVCache = mCardCVV.getText().toString();
+        }
+
+        if (mCardOwnerCache != null) {
+            mCardOwnerCache = mCardOwner.getText().toString();
+        }
+        */
+
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PaymentFormActivity.MY_SCAN_REQUEST_CODE) {
+
+            if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
+                CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
+                mCardNumber.setText(scanResult.getFormattedCardNumber());
+            }
+            else {
+
+                //resultDisplayStr = "Scan was canceled.";
+            }
+        }
     }
 
     @Override
@@ -122,14 +165,17 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         mPayButtonLayout.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+                //TODO
+                //setLoadingMode(true,false);
+                //launchRequest();
 
-                setLoadingMode(true,false);
-                launchRequest();
+                launchScanCard();
             }
         });
-        View.OnFocusChangeListener focusChangeListener = this.focusChangeListener();
 
+        View.OnFocusChangeListener focusChangeListener = this.focusChangeListener();
 
         mCardOwner = (TextInputEditText) view.findViewById(R.id.card_owner);
 
@@ -182,6 +228,54 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         mCardNumber.requestFocus();
 
+        setElementsCache(true);
+        if (mCardNumberCache != null) {
+            mCardNumber.setText(mCardNumberCache);
+            //mCardNumberCache = mCardNumber.getText().toString().replaceAll(" ", "");
+        }
+
+        validatePayButton(isInputDataValid());
+        putEverythingInRed();
+
+        if (mCardNumberCache != null) {
+            mCardNumber.setText(mCardNumberCache);
+            //mCardNumberCache = mCardNumber.getText().toString().replaceAll(" ", "");
+        }
+
+    }
+
+    private void launchScanCard() {
+
+        //TODO just for testing
+        Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
+
+        //scanIntent.putExtra(CardIOActivity.EXTRA_NO_CAMERA, true);
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_RESTRICT_POSTAL_CODE_TO_NUMERIC_ONLY, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CARDHOLDER_NAME, false);
+
+        // hides the manual entry button
+        // if set, developers should provide their own manual entry mechanism in the app
+        scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_MANUAL_ENTRY, true);
+
+        // matches the theme of your application
+        scanIntent.putExtra(CardIOActivity.EXTRA_KEEP_APPLICATION_THEME, true);
+
+        scanIntent.putExtra(CardIOActivity.EXTRA_HIDE_CARDIO_LOGO, true);
+        scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_SCAN, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_RETURN_CARD_IMAGE, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_CAPTURED_CARD_IMAGE, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_SCAN_OVERLAY_LAYOUT_ID, true);
+        scanIntent.putExtra(CardIOActivity.EXTRA_USE_PAYPAL_ACTIONBAR_ICON, false);
+
+        scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_CONFIRMATION, true);
+
+        // MY_SCAN_REQUEST_CODE is arbitrary and is only used within this activity.
+        //startActivityForResult(scanIntent, PaymentFormActivity.MY_SCAN_REQUEST_CODE);
+
+        ActivityCompat.startActivityForResult(getActivity(), scanIntent, PaymentFormActivity.MY_SCAN_REQUEST_CODE, null);
     }
 
     @Override
@@ -339,6 +433,10 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                 putCardOwnerInRed(false);
 
+                //TODO start this
+                //launchScanCard();
+
+
             } else if (i == R.id.card_cvv) {
 
                 // the condition to say it is wrong
@@ -469,6 +567,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         if (bool) {
 
             if (mCardNumberCache == null) {
+
                 mCardNumberCache = mCardNumber.getText().toString().replaceAll(" ", "");
             }
 
@@ -617,21 +716,28 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
     private String getMonthFromExpiry(String expiryString) {
 
-        return expiryString.substring(0,2);
+        if (expiryString != null && !expiryString.isEmpty()) {
+            return expiryString.substring(0,2);
+        }
+
+        return null;
     }
 
     private String getYearFromExpiry(String expiryString) {
 
-        String year = null;
-        if (expiryString.length() == 5 && expiryString.charAt(2) == '/') {
-            year = expiryString.substring(3,5);
+        if (expiryString != null && !expiryString.isEmpty()) {
 
-        } else if (expiryString.length() == 4 && TextUtils.isDigitsOnly(expiryString)) {
-            year = expiryString.substring(2,4);
-        }
+            String year = null;
+            if (expiryString.length() == 5 && expiryString.charAt(2) == '/') {
+                year = expiryString.substring(3,5);
 
-        if (year != null) {
-            return String.valueOf(FormHelper.normalizeYear(Integer.valueOf(year)));
+            } else if (expiryString.length() == 4 && TextUtils.isDigitsOnly(expiryString)) {
+                year = expiryString.substring(2,4);
+            }
+
+            if (year != null) {
+                return String.valueOf(FormHelper.normalizeYear(Integer.valueOf(year)));
+            }
         }
 
         return null;
