@@ -289,8 +289,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_CONFIRMATION, true);
 
         // SCAN_REQUEST_CODE is arbitrary and is only used within this activity.
-        //startActivityForResult(scanIntent, PaymentFormActivity.SCAN_REQUEST_CODE);
-
         ActivityCompat.startActivityForResult(getActivity(), scanIntent, PaymentFormActivity.SCAN_REQUEST_CODE, null);
     }
 
@@ -376,7 +374,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             mPayButton.setTextColor(ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
             mPayButtonLayout.setEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                //mPayButton.setBackground(makeSelector(theme));
                 mPayButtonLayout.setBackground(makeSelector(theme));
 
                 Drawable[] drawables = mPayButton.getCompoundDrawables();
@@ -390,14 +387,11 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             mPayButtonLayout.setEnabled(false);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 CustomTheme greyTheme = new CustomTheme(R.color.dark_grey, R.color.dark_grey, R.color.dark_grey);
-                //mPayButton.setBackground(makeSelector(greyTheme));
                 mPayButtonLayout.setBackground(makeSelector(greyTheme));
-                //mPayButton.getDra
 
                 Drawable[] drawables = mPayButton.getCompoundDrawables();
                 Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
                 DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), android.R.color.white));
-                //DrawableCompat.setTint(wrapDrawable, getResources().getColor(android.R.color.holo_red_dark));
             }
         }
     }
