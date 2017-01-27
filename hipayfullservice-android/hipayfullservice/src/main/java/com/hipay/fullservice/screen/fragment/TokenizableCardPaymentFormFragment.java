@@ -1,13 +1,16 @@
 package com.hipay.fullservice.screen.fragment;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
@@ -184,7 +187,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             @Override
             public void onClick(View v)
             {
-                launchScanCard();
+                //launchScanCard();
+                askForScanPermission();
             }
         });
 
@@ -259,6 +263,56 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             //mCardNumberCache = mCardNumber.getText().toString().replaceAll(" ", "");
         }
 
+    }
+
+    private void askForScanPermission() {
+
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.CAMERA)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+                Snackbar snackbar = Snackbar.make(mPayButton, "Hello world",
+                        Snackbar.LENGTH_SHORT);
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackgroundColor((ContextCompat.getColor(getActivity(),
+                        android.R.color.holo_green_light)));
+                snackbar.show();
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.CAMERA},
+                        PaymentFormActivity.SCAN_PERMISSION_REQUEST_CODE);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        if (requestCode == PaymentFormActivity.SCAN_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    launchScanCard();
+                }
+        }
     }
 
     private void launchScanCard() {
@@ -476,10 +530,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             if (i == R.id.card_owner) {
 
                 putCardOwnerInRed(false);
-
-                //TODO start this
-                //launchScanCard();
-
 
             } else if (i == R.id.card_cvv) {
 
