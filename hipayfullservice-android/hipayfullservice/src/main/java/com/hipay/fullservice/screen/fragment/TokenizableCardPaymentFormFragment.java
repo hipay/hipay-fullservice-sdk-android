@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.SwitchCompat;
@@ -63,6 +62,9 @@ import io.card.payment.CreditCard;
  */
 public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragment {
 
+    private Button mScanButton;
+    private FrameLayout mScanButtonLayout;
+
     private Button mPayButton;
     private FrameLayout mPayButtonLayout;
 
@@ -93,7 +95,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     public void onResume() {
         super.onResume();
 
-
         /*
         if (mMonthExpiryCache != null) {
             mMonthExpiryCache = this.getMonthFromExpiry(mCardExpiration.getText().toString());
@@ -112,7 +113,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         }
         */
 
-
     }
 
     @Override
@@ -120,7 +120,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PaymentFormActivity.MY_SCAN_REQUEST_CODE) {
+        if (requestCode == PaymentFormActivity.SCAN_REQUEST_CODE) {
 
             if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                 CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
@@ -136,6 +136,11 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     @Override
     protected void initContentViews(View view) {
         super.initContentViews(view);
+
+        mScanButton = (Button) view.findViewById(R.id.scan_button);
+        mScanButtonLayout = (FrameLayout) view.findViewById(R.id.scan_button_layout);
+
+        mScanButtonLayout.setVisibility(View.VISIBLE);
 
         mPayButton = (Button) view.findViewById(R.id.pay_button);
         mPayButtonLayout = (FrameLayout) view.findViewById(R.id.pay_button_layout);
@@ -167,13 +172,22 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             @Override
             public void onClick(View v)
             {
-                //TODO
-                //setLoadingMode(true,false);
-                //launchRequest();
+                setLoadingMode(true,false);
+                launchRequest();
+            }
+        });
 
+        mScanButton.setText(getString(R.string.scan_card));
+
+        mScanButtonLayout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v)
+            {
                 launchScanCard();
             }
         });
+
 
         View.OnFocusChangeListener focusChangeListener = this.focusChangeListener();
 
@@ -235,6 +249,9 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         }
 
         validatePayButton(isInputDataValid());
+
+        validateScanButton(true);
+
         putEverythingInRed();
 
         if (mCardNumberCache != null) {
@@ -246,7 +263,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
     private void launchScanCard() {
 
-        //TODO just for testing
         Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
 
         //scanIntent.putExtra(CardIOActivity.EXTRA_NO_CAMERA, true);
@@ -272,10 +288,10 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_CONFIRMATION, true);
 
-        // MY_SCAN_REQUEST_CODE is arbitrary and is only used within this activity.
-        //startActivityForResult(scanIntent, PaymentFormActivity.MY_SCAN_REQUEST_CODE);
+        // SCAN_REQUEST_CODE is arbitrary and is only used within this activity.
+        //startActivityForResult(scanIntent, PaymentFormActivity.SCAN_REQUEST_CODE);
 
-        ActivityCompat.startActivityForResult(getActivity(), scanIntent, PaymentFormActivity.MY_SCAN_REQUEST_CODE, null);
+        ActivityCompat.startActivityForResult(getActivity(), scanIntent, PaymentFormActivity.SCAN_REQUEST_CODE, null);
     }
 
     @Override
@@ -308,6 +324,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 mCardStorageSwitch.setEnabled(true);
 
             }
+
+            validateScanButton(!loadingMode);
         }
 
         mLoadingMode = loadingMode;
@@ -380,6 +398,38 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
                 DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), android.R.color.white));
                 //DrawableCompat.setTint(wrapDrawable, getResources().getColor(android.R.color.holo_red_dark));
+            }
+        }
+    }
+
+    protected void validateScanButton(boolean validate) {
+
+        if (validate) {
+
+            final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
+            CustomTheme theme = CustomTheme.fromBundle(customThemeBundle);
+
+            mScanButton.setTextColor(ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
+            mScanButtonLayout.setEnabled(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                mScanButtonLayout.setBackground(makeSelector(theme));
+
+                Drawable[] drawables = mScanButton.getCompoundDrawables();
+                Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
+                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
+            }
+
+        } else {
+
+            mScanButton.setTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
+            mScanButtonLayout.setEnabled(false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                CustomTheme greyTheme = new CustomTheme(R.color.dark_grey, R.color.dark_grey, R.color.dark_grey);
+                mScanButtonLayout.setBackground(makeSelector(greyTheme));
+
+                Drawable[] drawables = mScanButton.getCompoundDrawables();
+                Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
+                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), android.R.color.white));
             }
         }
     }

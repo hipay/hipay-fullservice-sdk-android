@@ -20,6 +20,7 @@
         android:enabled="false"
         android:layout_gravity="bottom"
         android:visibility="visible"
+        android:layout_marginBottom="@dimen/spacing_double"
         >
 
         <Button

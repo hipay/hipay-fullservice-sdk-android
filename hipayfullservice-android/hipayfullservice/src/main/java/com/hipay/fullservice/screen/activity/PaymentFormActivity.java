@@ -38,13 +38,12 @@ import com.hipay.fullservice.screen.widget.TextSharedElementCallback;
 import java.net.URL;
 import java.util.List;
 
-import io.card.payment.CardIOActivity;
-import io.card.payment.CreditCard;
-
 /**
  * Created by nfillion on 29/02/16.
  */
 public class PaymentFormActivity extends AppCompatActivity implements AbstractPaymentFormFragment.OnCallbackOrderListener {
+
+    public static int SCAN_REQUEST_CODE = 0x2200; // arbitrary int
 
     private CustomTheme customTheme;
 
@@ -68,7 +67,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         return starter;
     }
 
-    public static int MY_SCAN_REQUEST_CODE = 100; // arbitrary int
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -99,7 +97,8 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                     forceBackPressed();
                 }
             }
-        } else if (requestCode == MY_SCAN_REQUEST_CODE) {
+
+        } else if (requestCode == SCAN_REQUEST_CODE) {
 
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
             if (fragment != null) {

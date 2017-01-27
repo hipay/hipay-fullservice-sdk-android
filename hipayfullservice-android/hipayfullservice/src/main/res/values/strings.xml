@@ -17,6 +17,8 @@
     <string name="unknown_error">Unknown error</string>
     <string name="pay">Pay %1$s</string>
 
+    <string name="scan_card">Scan your payment card</string>
+
     <string name="refresh">Refresh</string>
 
     <string name="transaction_error_declined_title">Transaction declined</string>
