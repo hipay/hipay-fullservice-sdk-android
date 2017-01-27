@@ -4,11 +4,14 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
@@ -48,6 +51,7 @@ import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.core.utils.PaymentCardTokenDatabase;
 import com.hipay.fullservice.screen.activity.PaymentFormActivity;
+import com.hipay.fullservice.screen.adapter.PaymentProductsAdapter;
 import com.hipay.fullservice.screen.fragment.interfaces.CardBehaviour;
 import com.hipay.fullservice.screen.helper.FormHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
@@ -267,38 +271,40 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
     private void askForScanPermission() {
 
-        // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                     Manifest.permission.CAMERA)) {
 
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
+                View.OnClickListener clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                Snackbar snackbar = Snackbar.make(mPayButton, "Hello world",
-                        Snackbar.LENGTH_SHORT);
-                View snackBarView = snackbar.getView();
-                snackBarView.setBackgroundColor((ContextCompat.getColor(getActivity(),
-                        android.R.color.holo_green_light)));
-                snackbar.show();
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    }
+                };
+
+                Snackbar.make(getView(), getString(R.string.scan_card_permission), Snackbar.LENGTH_SHORT)
+                        .setAction(getString(R.string.settings), clickListener)
+                        .setActionTextColor(Color.YELLOW)
+                        .show();
 
             } else {
-
-                // No explanation needed, we can request the permission.
 
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.CAMERA},
                         PaymentFormActivity.SCAN_PERMISSION_REQUEST_CODE);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
+
+        } else {
+
+            launchScanCard();
         }
     }
 

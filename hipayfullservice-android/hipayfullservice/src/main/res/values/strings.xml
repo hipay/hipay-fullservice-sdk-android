@@ -18,6 +18,8 @@
     <string name="pay">Pay %1$s</string>
 
     <string name="scan_card">Scan your payment card</string>
+    <string name="scan_card_permission">To scan your payment card, allow camera permission.</string>
+    <string name="settings">Settings</string>
 
     <string name="refresh">Refresh</string>
 
