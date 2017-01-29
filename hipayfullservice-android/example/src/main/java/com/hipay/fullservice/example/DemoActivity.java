@@ -54,6 +54,8 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
                 true
         );
 
+        ClientConfig.getInstance().setPaymentCardScanEnabled(true);
+
         paymentProducts = new HashMap<>(4);
 
         if (savedInstanceState == null) {

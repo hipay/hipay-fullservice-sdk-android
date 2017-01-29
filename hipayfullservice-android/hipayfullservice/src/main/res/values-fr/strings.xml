@@ -13,7 +13,7 @@
     <string name="pay">Payer %1$s</string>
 
     <string name="scan_card">Scanner votre carte</string>
-    <string name="scan_card_permission">Pour scanner votre carte, autorizez la permission Appareil photo.</string>
+    <string name="scan_card_permission">Pour scanner votre carte, activez la permission Appareil photo.</string>
     <string name="settings">Paramètres</string>
 
     <string name="refresh">Actualiser</string>
