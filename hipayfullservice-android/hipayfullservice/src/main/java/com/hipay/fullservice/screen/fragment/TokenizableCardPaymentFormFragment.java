@@ -196,6 +196,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             }
         });
 
+        boolean isPaymentCardScanButtonVisible = this.isPaymentCardScanConfigEnabled();
+        mScanButtonLayout.setVisibility(isPaymentCardScanButtonVisible ? View.VISIBLE : View.GONE);
 
         View.OnFocusChangeListener focusChangeListener = this.focusChangeListener();
 
@@ -764,8 +766,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                                 public void onSuccess(final Transaction transaction) {
                                     //Log.i("transaction success", transaction.toString());
 
-                                    cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                                     if (mCallback != null) {
+                                        cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                                         mCallback.onCallbackOrderReceived(transaction, null);
                                     }
 
@@ -773,9 +775,9 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                                 @Override
                                 public void onError(Exception error) {
-                                    cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                                     //Log.i("transaction failed", error.getLocalizedMessage());
                                     if (mCallback != null) {
+                                        cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                                         mCallback.onCallbackOrderReceived(null, error);
                                     }
                                 }
@@ -786,8 +788,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                     @Override
                     public void onError(Exception error) {
 
-                        cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                         if (mCallback != null) {
+                            cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                             mCallback.onCallbackOrderReceived(null, error);
                         }
                     }
@@ -910,6 +912,12 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         }
 
         return false;
+    }
+
+    private boolean isPaymentCardScanConfigEnabled()
+    {
+        boolean paymentCardScanEnabled = ClientConfig.getInstance().isPaymentCardScanEnabled();
+        return paymentCardScanEnabled;
     }
 
     private boolean isPaymentCardStorageConfigEnabled()

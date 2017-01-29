@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
@@ -27,8 +28,8 @@ public class ForwardPaymentFormFragment extends AbstractPaymentFormFragment {
 
         mCardInfoLayout.setVisibility(View.GONE);
 
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mProgressBar.getLayoutParams();
-        layoutParams.gravity = Gravity.CENTER;
+        //RelativeLayout layoutParams = (RelativeLayout) mProgressBar.getLayoutParams();
+        //layoutParams.gravity = Gravity.CENTER;
 
         if (getLoadingMode() == false) {
             setLoadingMode(true, false);
@@ -85,19 +86,19 @@ public class ForwardPaymentFormFragment extends AbstractPaymentFormFragment {
                 //Log.i("transaction success", transaction.toString());
 
                 if (mCallback != null) {
+                    cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                     mCallback.onCallbackOrderReceived(transaction, null);
                 }
 
-                cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
             }
 
             @Override
             public void onError(Exception error) {
                 //Log.i("transaction failed", error.getLocalizedMessage());
                 if (mCallback != null) {
+                    cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                     mCallback.onCallbackOrderReceived(null, error);
                 }
-                cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
             }
         });
     }
