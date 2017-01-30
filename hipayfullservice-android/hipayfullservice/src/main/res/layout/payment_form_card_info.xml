@@ -13,12 +13,12 @@
 
     <FrameLayout
         android:id="@+id/scan_button_layout"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         style="@style/PaymentScreens.Button"
         android:gravity="center"
         android:enabled="false"
-        android:layout_gravity="bottom"
+        android:layout_gravity="left"
         android:visibility="gone"
         android:layout_marginBottom="@dimen/spacing_double"
         >
@@ -35,7 +35,8 @@
             android:textAppearance="@style/PaymentScreens.TextAppearance.AmountItem"
             android:layout_gravity="center"
             android:enabled="false"
-
+            android:layout_marginRight="@dimen/spacing_double"
+            android:layout_marginLeft="@dimen/spacing_double"
             android:background="@null"
             android:clickable="false"
             android:focusable="false"

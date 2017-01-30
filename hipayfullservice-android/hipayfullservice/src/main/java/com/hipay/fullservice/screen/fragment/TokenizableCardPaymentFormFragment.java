@@ -21,6 +21,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -102,23 +103,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     public void onResume() {
         super.onResume();
 
-        /*
-        if (mMonthExpiryCache != null) {
-            mMonthExpiryCache = this.getMonthFromExpiry(mCardExpiration.getText().toString());
-        }
 
-        if (mYearExpiryCache != null) {
-            mYearExpiryCache = this.getYearFromExpiry(mCardExpiration.getText().toString());
-        }
-
-        if (mCardCVVCache != null) {
-            mCardCVVCache = mCardCVV.getText().toString();
-        }
-
-        if (mCardOwnerCache != null) {
-            mCardOwnerCache = mCardOwner.getText().toString();
-        }
-        */
 
     }
 
@@ -131,6 +116,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
             if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                 CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
+
+                mCardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(Integer.MAX_VALUE)});
                 mCardNumber.setText(scanResult.getFormattedCardNumber());
             }
             else {
@@ -232,7 +219,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
 
         basicPaymentProduct = paymentProduct;
-        inferedPaymentProduct = paymentProduct.getCode();
 
         mCardStorageSwitch = (SwitchCompat) view.findViewById(R.id.card_storage_switch);
         mCardStorageSwitchLayout = (LinearLayout) view.findViewById(R.id.card_storage_layout);
@@ -241,7 +227,14 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         boolean isPaymentCardStorageSwitchVisible = this.isPaymentCardStorageConfigEnabled();
         mCardStorageSwitchLayout.setVisibility(isPaymentCardStorageSwitchVisible ? View.VISIBLE : View.GONE);
 
-        mCardBehaviour = new CardBehaviour(paymentProduct);
+        if (inferedPaymentProduct == null) {
+            inferedPaymentProduct = paymentProduct.getCode();
+        }
+
+        if (mCardBehaviour == null) {
+            mCardBehaviour = new CardBehaviour(paymentProduct);
+        }
+
         mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, isPaymentCardStorageSwitchVisible ? mCardStorageSwitchLayout : null, false, getActivity());
 
         CustomerInfoRequest customerInfoRequest = paymentPageRequest.getCustomer();
@@ -253,21 +246,12 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         mCardNumber.requestFocus();
 
         setElementsCache(true);
-        if (mCardNumberCache != null) {
-            mCardNumber.setText(mCardNumberCache);
-            //mCardNumberCache = mCardNumber.getText().toString().replaceAll(" ", "");
-        }
 
         validatePayButton(isInputDataValid());
 
         validateScanButton(true);
 
         putEverythingInRed();
-
-        if (mCardNumberCache != null) {
-            mCardNumber.setText(mCardNumberCache);
-            //mCardNumberCache = mCardNumber.getText().toString().replaceAll(" ", "");
-        }
 
     }
 
