@@ -37,6 +37,11 @@
         <item name="android:background">@drawable/selector_button</item>
         <item name="android:button">@null</item>
     </style>
+
+    <style name="PaymentScreens.ScanButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@drawable/selector_scan_button</item>
+    </style>
+
     <style name="PaymentScreens.CompoundButton.Radio" parent="PaymentScreens.CompoundButton">
         <item name="android:background">@drawable/selector_checkable</item>
     </style>

@@ -11,40 +11,22 @@
     android:paddingTop="@dimen/spacing_double"
     tools:showIn="@layout/fragment_payment_form">
 
-    <FrameLayout
-        android:id="@+id/scan_button_layout"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/scan_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/PaymentScreens.Button"
-        android:gravity="center"
-        android:enabled="false"
-        android:layout_gravity="left"
-        android:visibility="gone"
-        android:layout_marginBottom="@dimen/spacing_double"
-        >
 
-        <Button
-            android:id="@+id/scan_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_photo_camera_black"
+        android:drawableStart="@drawable/ic_photo_camera_black"
 
-            android:drawableLeft="@drawable/ic_photo_camera_black"
-            android:drawableStart="@drawable/ic_photo_camera_black"
-            android:drawableTint="@color/hpf_light"
-            android:drawablePadding="@dimen/spacing_normal"
-            android:textAppearance="@style/PaymentScreens.TextAppearance.AmountItem"
-            android:layout_gravity="center"
-            android:enabled="false"
-            android:layout_marginRight="@dimen/spacing_double"
-            android:layout_marginLeft="@dimen/spacing_double"
-            android:background="@null"
-            android:clickable="false"
-            android:focusable="false"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            />
+        style="@style/PaymentScreens.ScanButton"
 
-    </FrameLayout>
+        android:text="@string/scan_card"
+
+        android:paddingLeft="@dimen/spacing_double"
+        android:paddingRight="@dimen/spacing_double"
+
+        android:layout_marginBottom="@dimen/spacing_double" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/card_owner_support"

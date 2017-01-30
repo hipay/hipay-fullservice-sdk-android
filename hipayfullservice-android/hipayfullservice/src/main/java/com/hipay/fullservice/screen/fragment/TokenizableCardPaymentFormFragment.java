@@ -71,7 +71,6 @@ import io.card.payment.CreditCard;
 public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragment {
 
     private Button mScanButton;
-    private FrameLayout mScanButtonLayout;
 
     private Button mPayButton;
     private FrameLayout mPayButtonLayout;
@@ -132,9 +131,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         super.initContentViews(view);
 
         mScanButton = (Button) view.findViewById(R.id.scan_button);
-        mScanButtonLayout = (FrameLayout) view.findViewById(R.id.scan_button_layout);
-
-        mScanButtonLayout.setVisibility(View.VISIBLE);
 
         mPayButton = (Button) view.findViewById(R.id.pay_button);
         mPayButtonLayout = (FrameLayout) view.findViewById(R.id.pay_button_layout);
@@ -171,20 +167,17 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             }
         });
 
-        mScanButton.setText(getString(R.string.scan_card));
-
-        mScanButtonLayout.setOnClickListener(new View.OnClickListener() {
+        mScanButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v)
             {
-                //launchScanCard();
                 askForScanPermission();
             }
         });
 
         boolean isPaymentCardScanButtonVisible = this.isPaymentCardScanConfigEnabled();
-        mScanButtonLayout.setVisibility(isPaymentCardScanButtonVisible ? View.VISIBLE : View.GONE);
+        mScanButton.setVisibility(isPaymentCardScanButtonVisible ? View.VISIBLE : View.GONE);
 
         View.OnFocusChangeListener focusChangeListener = this.focusChangeListener();
 
@@ -445,32 +438,10 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     protected void validateScanButton(boolean validate) {
 
         if (validate) {
-
-            final Bundle customThemeBundle = getArguments().getBundle(CustomTheme.TAG);
-            CustomTheme theme = CustomTheme.fromBundle(customThemeBundle);
-
-            mScanButton.setTextColor(ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
-            mScanButtonLayout.setEnabled(true);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                mScanButtonLayout.setBackground(makeSelector(theme));
-
-                Drawable[] drawables = mScanButton.getCompoundDrawables();
-                Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
-                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
-            }
+            mScanButton.setEnabled(true);
 
         } else {
-
-            mScanButton.setTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
-            mScanButtonLayout.setEnabled(false);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                CustomTheme greyTheme = new CustomTheme(R.color.dark_grey, R.color.dark_grey, R.color.dark_grey);
-                mScanButtonLayout.setBackground(makeSelector(greyTheme));
-
-                Drawable[] drawables = mScanButton.getCompoundDrawables();
-                Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
-                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), android.R.color.white));
-            }
+            mScanButton.setEnabled(false);
         }
     }
 
