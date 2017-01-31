@@ -5,6 +5,9 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.IsoDep;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,6 +23,8 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.github.devnied.emvnfccard.model.EmvCard;
+import com.github.devnied.emvnfccard.parser.EmvParser;
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.errors.Errors;
@@ -29,12 +34,19 @@ import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
+import com.hipay.fullservice.core.utils.NFCUtils;
+import com.hipay.fullservice.core.utils.Provider;
+import com.hipay.fullservice.core.utils.SimpleAsyncTask;
 import com.hipay.fullservice.screen.fragment.AbstractPaymentFormFragment;
 import com.hipay.fullservice.screen.fragment.TokenizableCardPaymentFormFragment;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 import com.hipay.fullservice.screen.widget.TextSharedElementCallback;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -52,6 +64,40 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     private AlertDialog mDialog;
 
     private List<PaymentMethod> history;
+
+
+    private NFCUtils mNfcUtils;
+    private Provider mProvider = new Provider();
+
+    /**
+     * Emv card
+     */
+    private EmvCard mReadCard;
+
+    /**
+     * Reference for refreshable content
+     */
+    //private WeakReference<IRefreshable> mRefreshableContent;
+
+    /**
+     * last selected Menu
+     */
+    //private int mLastSelectedMenu = -1;
+
+    /**
+     * Tint manager
+     */
+    //private SystemBarTintManager tintManager;
+
+    /**
+     * Last Ats
+     */
+    private byte[] lastAts;
+
+
+
+
+
 
     public static Intent getStartIntent(Context context, Bundle paymentPageRequestBundle, Bundle themeBundle, PaymentProduct paymentProduct, String signature) {
 
@@ -80,7 +126,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                 fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         }
-
     }
 
     @Override
@@ -124,6 +169,13 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                 }
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        mNfcUtils.disableDispatch();
     }
 
     private boolean isPaymentTokenizable() {
@@ -623,7 +675,134 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.form_fragment_container, AbstractPaymentFormFragment.newInstance(paymentPageRequestBundle, paymentProduct, signature, customThemeBundle)).commit();
         }
+
+
+        // init NfcUtils
+        mNfcUtils = new NFCUtils(this);
+
+        // Read card on launch
+        if (getIntent().getAction() == NfcAdapter.ACTION_TECH_DISCOVERED) {
+            onNewIntent(getIntent());
+        }
     }
+
+    @Override
+    protected void onNewIntent(final Intent intent) {
+        super.onNewIntent(intent);
+        final Tag mTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        if (mTag != null) {
+
+            new SimpleAsyncTask() {
+
+                /**
+                 * Tag comm
+                 */
+                private IsoDep mTagcomm;
+
+                /**
+                 * Emv Card
+                 */
+                private EmvCard mCard;
+
+                /**
+                 * Boolean to indicate exception
+                 */
+                private boolean mException;
+
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+
+                    //backToHomeScreen();
+                    mProvider.getLog().setLength(0);
+                    // Show dialog
+                    //if (mDialog == null) {
+                    //mDialog = ProgressDialog.show(HomeActivity.this, getString(R.string.card_reading),
+                    //getString(R.string.card_reading_desc), true, false);
+                    //} else {
+                    //mDialog.show();
+                    //}
+                }
+
+                @Override
+                protected void doInBackground() {
+
+                    mTagcomm = IsoDep.get(mTag);
+                    if (mTagcomm == null) {
+                        //CroutonUtils.display(HomeActivity.this, getText(R.string.error_communication_nfc), CoutonColor.BLACK);
+                        return;
+                    }
+                    mException = false;
+
+                    try {
+                        mReadCard = null;
+                        // Open connection
+                        try {
+                            mTagcomm.connect();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        lastAts = getAts(mTagcomm);
+
+                        mProvider.setmTagCom(mTagcomm);
+
+                        EmvParser parser = new EmvParser(mProvider, true);
+                        mCard = parser.readEmvCard();
+                        if (mCard != null) {
+                            //mCard.setAtrDescription(extractAtsDescription(lastAts));
+                        }
+
+                    } catch (IOException e) {
+                        mException = true;
+                    } finally {
+                        // close tagcomm
+                        IOUtils.closeQuietly(mTagcomm);
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(final Object result) {
+
+                    if (!mException) {
+                        if (mCard != null) {
+                            if (StringUtils.isNotBlank(mCard.getCardNumber())) {
+
+                                String cardNumber = mCard.getCardNumber();
+
+                                mReadCard = mCard;
+                            } else if (mCard.isNfcLocked()) {
+                            }
+                        }
+                    }
+
+                }
+
+            }.execute();
+        }
+
+    }
+
+
+    /**
+     * Get ATS from isoDep
+     *
+     * @param pIso
+     *            isodep
+     * @return ATS byte array
+     */
+    private byte[] getAts(final IsoDep pIso) {
+        byte[] ret = null;
+        if (pIso.isConnected()) {
+            // Extract ATS from NFC-A
+            ret = pIso.getHistoricalBytes();
+            if (ret == null) {
+                // Extract ATS from NFC-B
+                ret = pIso.getHiLayerResponse();
+            }
+        }
+        return ret;
+    }
+
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void initToolbar(PaymentProduct paymentProduct) {
@@ -663,6 +842,13 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     @Override
     protected void onResume() {
         super.onResume();
+
+        mNfcUtils.enableDispatch();
+
+        // Check if NFC is available
+        if (!NFCUtils.isNfcAvailable(getApplicationContext())) {
+
+        }
     }
 
     final View.OnClickListener mOnClickListener = new View.OnClickListener() {
