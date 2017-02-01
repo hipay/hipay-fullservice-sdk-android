@@ -129,6 +129,18 @@ public class Utils {
         return stringDate;
     }
 
+    public static String getPaymentFormStringFromDate(Date date) {
+
+        String stringDate = null;
+        if (date != null) {
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/yy", Locale.US);
+            stringDate = dateFormatter.format(date);
+        }
+
+        return stringDate;
+    }
+
     public static Date getDateISO8601FromString(String stringDate) {
 
         Date date = null;

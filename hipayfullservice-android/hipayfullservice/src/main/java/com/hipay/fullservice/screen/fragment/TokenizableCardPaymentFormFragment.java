@@ -51,6 +51,7 @@ import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.core.utils.PaymentCardTokenDatabase;
+import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.screen.activity.PaymentFormActivity;
 import com.hipay.fullservice.screen.adapter.PaymentProductsAdapter;
 import com.hipay.fullservice.screen.fragment.interfaces.CardBehaviour;
@@ -59,6 +60,7 @@ import com.hipay.fullservice.screen.model.CustomTheme;
 
 import java.text.NumberFormat;
 import java.util.Currency;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
@@ -432,6 +434,16 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
                 DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), android.R.color.white));
             }
+        }
+    }
+
+    public void fillCardNumber(String cardNumberText, Date expiryDate) {
+
+        mCardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(Integer.MAX_VALUE)});
+        mCardNumber.setText(cardNumberText);
+
+        if (expiryDate != null) {
+            mCardExpiration.setText(Utils.getPaymentFormStringFromDate(expiryDate));
         }
     }
 

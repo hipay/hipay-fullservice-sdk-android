@@ -18,6 +18,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 
 import com.github.devnied.emvnfccard.model.EmvCard;
 import com.github.devnied.emvnfccard.parser.EmvParser;
+import com.github.devnied.emvnfccard.utils.AtrUtils;
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.errors.Errors;
@@ -48,7 +50,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
+
+import fr.devnied.bitlib.BytesUtils;
 
 /**
  * Created by nfillion on 29/02/16.
@@ -68,36 +73,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
     private NFCUtils mNfcUtils;
     private Provider mProvider = new Provider();
-
-    /**
-     * Emv card
-     */
-    private EmvCard mReadCard;
-
-    /**
-     * Reference for refreshable content
-     */
-    //private WeakReference<IRefreshable> mRefreshableContent;
-
-    /**
-     * last selected Menu
-     */
-    //private int mLastSelectedMenu = -1;
-
-    /**
-     * Tint manager
-     */
-    //private SystemBarTintManager tintManager;
-
-    /**
-     * Last Ats
-     */
-    private byte[] lastAts;
-
-
-
-
-
 
     public static Intent getStartIntent(Context context, Bundle paymentPageRequestBundle, Bundle themeBundle, PaymentProduct paymentProduct, String signature) {
 
@@ -714,7 +689,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                     super.onPreExecute();
 
                     //backToHomeScreen();
-                    mProvider.getLog().setLength(0);
+                    //mProvider.getLog().setLength(0);
                     // Show dialog
                     //if (mDialog == null) {
                     //mDialog = ProgressDialog.show(HomeActivity.this, getString(R.string.card_reading),
@@ -729,27 +704,28 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
                     mTagcomm = IsoDep.get(mTag);
                     if (mTagcomm == null) {
+
                         //CroutonUtils.display(HomeActivity.this, getText(R.string.error_communication_nfc), CoutonColor.BLACK);
                         return;
                     }
                     mException = false;
 
                     try {
-                        mReadCard = null;
                         // Open connection
-                        try {
-                            mTagcomm.connect();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        lastAts = getAts(mTagcomm);
+                        mTagcomm.connect();
+                        //lastAts = getAts(mTagcomm);
 
                         mProvider.setmTagCom(mTagcomm);
 
                         EmvParser parser = new EmvParser(mProvider, true);
                         mCard = parser.readEmvCard();
                         if (mCard != null) {
-                            //mCard.setAtrDescription(extractAtsDescription(lastAts));
+
+                            Log.i("hello", "hello");
+                            Log.i("hello", "hello");
+
+                            Collection<String> col = extractAtsDescription(getAts(mTagcomm));
+                            mCard.setAtrDescription(col);
                         }
 
                     } catch (IOException e) {
@@ -768,8 +744,16 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                             if (StringUtils.isNotBlank(mCard.getCardNumber())) {
 
                                 String cardNumber = mCard.getCardNumber();
+                                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
+                                if (fragment != null) {
 
-                                mReadCard = mCard;
+                                    AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
+                                    if ( (abstractPaymentFormFragment instanceof TokenizableCardPaymentFormFragment)) {
+                                        TokenizableCardPaymentFormFragment formFragment = (TokenizableCardPaymentFormFragment) abstractPaymentFormFragment;
+                                        formFragment.fillCardNumber(cardNumber, mCard.getExpireDate());
+                                    }
+                                }
+
                             } else if (mCard.isNfcLocked()) {
                             }
                         }
@@ -781,7 +765,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         }
 
     }
-
 
     /**
      * Get ATS from isoDep
@@ -803,6 +786,9 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         return ret;
     }
 
+    public Collection<String> extractAtsDescription(final byte[] pAts) {
+        return AtrUtils.getDescriptionFromAts(BytesUtils.bytesToString(pAts));
+    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void initToolbar(PaymentProduct paymentProduct) {
