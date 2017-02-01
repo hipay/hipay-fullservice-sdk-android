@@ -11,6 +11,23 @@
     android:paddingTop="@dimen/spacing_double"
     tools:showIn="@layout/fragment_payment_form">
 
+    <Button
+        android:id="@+id/scan_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:drawableLeft="@drawable/ic_photo_camera_black"
+        android:drawableStart="@drawable/ic_photo_camera_black"
+
+        style="@style/PaymentScreens.ScanButton"
+
+        android:text="@string/scan_card"
+
+        android:paddingLeft="@dimen/spacing_double"
+        android:paddingRight="@dimen/spacing_double"
+
+        android:layout_marginBottom="@dimen/spacing_double" />
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/card_owner_support"
         app:errorTextAppearance="@style/PaymentScreens.TextAppearance.ErrorSmallItem"
@@ -163,7 +180,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="right"
+            android:gravity="end"
             android:textAppearance="@style/PaymentScreens.TextAppearance.InfoItem"
             android:text="@string/card_storage_switch_description"
             />
@@ -174,6 +191,7 @@
             android:layout_height="wrap_content"
             android:minHeight="?android:attr/actionBarSize"
             android:layout_marginLeft="@dimen/spacing_double"
+            android:layout_marginStart="@dimen/spacing_double"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             />
 

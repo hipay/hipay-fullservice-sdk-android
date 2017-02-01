@@ -14,6 +14,8 @@ public class ClientConfig {
 
     private boolean paymentCardStorageEnabled;
 
+    private boolean paymentCardScanEnabled;
+
     public static final String GatewayClientBaseURLStage = "https://stage-secure-gateway.hipay-tpp.com/rest/v1";
 
     public static final String GatewayClientBaseURLNewStage = "https://stage-secure-gateway.hipay-tpp.com/rest/v2";
@@ -35,6 +37,7 @@ public class ClientConfig {
         {
             mInstance = new ClientConfig();
             mInstance.setPaymentCardStorageEnabled(false);
+            mInstance.setPaymentCardScanEnabled(false);
         }
         return mInstance;
     }
@@ -130,5 +133,13 @@ public class ClientConfig {
 
     public void setPaymentCardStorageEnabled(boolean paymentCardStorageEnabled) {
         this.paymentCardStorageEnabled = paymentCardStorageEnabled;
+    }
+
+    public boolean isPaymentCardScanEnabled() {
+        return paymentCardScanEnabled;
+    }
+
+    public void setPaymentCardScanEnabled(boolean paymentCardScanEnabled) {
+        this.paymentCardScanEnabled = paymentCardScanEnabled;
     }
 }

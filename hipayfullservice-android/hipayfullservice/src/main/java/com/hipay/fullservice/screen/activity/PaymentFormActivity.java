@@ -43,6 +43,9 @@ import java.util.List;
  */
 public class PaymentFormActivity extends AppCompatActivity implements AbstractPaymentFormFragment.OnCallbackOrderListener {
 
+    public static int SCAN_PERMISSION_REQUEST_CODE = 0x2100; // arbitrary int
+    public static int SCAN_REQUEST_CODE = 0x2200; // arbitrary int
+
     private CustomTheme customTheme;
 
     private ImageButton mToolbarBack;
@@ -65,6 +68,20 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         return starter;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
+        if (fragment != null) {
+
+            AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
+            if ( (abstractPaymentFormFragment instanceof TokenizableCardPaymentFormFragment)) {
+                fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
+
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -93,6 +110,17 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                 //back pressed
                 if (!isPaymentTokenizable()) {
                     forceBackPressed();
+                }
+            }
+
+        } else if (requestCode == SCAN_REQUEST_CODE) {
+
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
+            if (fragment != null) {
+
+                AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
+                if ( (abstractPaymentFormFragment instanceof TokenizableCardPaymentFormFragment)) {
+                    fragment.onActivityResult(requestCode, resultCode, data);
                 }
             }
         }

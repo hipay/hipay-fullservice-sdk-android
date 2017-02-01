@@ -1,18 +1,27 @@
 package com.hipay.fullservice.screen.fragment;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -42,6 +51,8 @@ import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.core.utils.PaymentCardTokenDatabase;
+import com.hipay.fullservice.screen.activity.PaymentFormActivity;
+import com.hipay.fullservice.screen.adapter.PaymentProductsAdapter;
 import com.hipay.fullservice.screen.fragment.interfaces.CardBehaviour;
 import com.hipay.fullservice.screen.helper.FormHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
@@ -51,10 +62,15 @@ import java.util.Currency;
 import java.util.Locale;
 import java.util.Set;
 
+import io.card.payment.CardIOActivity;
+import io.card.payment.CreditCard;
+
 /**
  * Created by nfillion on 20/04/16.
  */
 public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragment {
+
+    private Button mScanButton;
 
     private Button mPayButton;
     private FrameLayout mPayButtonLayout;
@@ -86,13 +102,35 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     public void onResume() {
         super.onResume();
 
-        validatePayButton(isInputDataValid());
-        putEverythingInRed();
+
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PaymentFormActivity.SCAN_REQUEST_CODE) {
+
+            if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
+                CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
+
+                mCardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(Integer.MAX_VALUE)});
+                mCardNumber.setText(scanResult.getFormattedCardNumber());
+            }
+            else {
+
+                //resultDisplayStr = "Scan was canceled.";
+            }
+        }
     }
 
     @Override
     protected void initContentViews(View view) {
         super.initContentViews(view);
+
+        mScanButton = (Button) view.findViewById(R.id.scan_button);
 
         mPayButton = (Button) view.findViewById(R.id.pay_button);
         mPayButtonLayout = (FrameLayout) view.findViewById(R.id.pay_button_layout);
@@ -122,14 +160,26 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         mPayButtonLayout.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
-
+            public void onClick(View v)
+            {
                 setLoadingMode(true,false);
                 launchRequest();
             }
         });
-        View.OnFocusChangeListener focusChangeListener = this.focusChangeListener();
 
+        mScanButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v)
+            {
+                askForScanPermission();
+            }
+        });
+
+        boolean isPaymentCardScanButtonVisible = this.isPaymentCardScanConfigEnabled();
+        mScanButton.setVisibility(isPaymentCardScanButtonVisible ? View.VISIBLE : View.GONE);
+
+        View.OnFocusChangeListener focusChangeListener = this.focusChangeListener();
 
         mCardOwner = (TextInputEditText) view.findViewById(R.id.card_owner);
 
@@ -162,7 +212,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         PaymentProduct paymentProduct = PaymentProduct.fromBundle(args.getBundle(PaymentProduct.TAG));
 
         basicPaymentProduct = paymentProduct;
-        inferedPaymentProduct = paymentProduct.getCode();
 
         mCardStorageSwitch = (SwitchCompat) view.findViewById(R.id.card_storage_switch);
         mCardStorageSwitchLayout = (LinearLayout) view.findViewById(R.id.card_storage_layout);
@@ -171,7 +220,14 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         boolean isPaymentCardStorageSwitchVisible = this.isPaymentCardStorageConfigEnabled();
         mCardStorageSwitchLayout.setVisibility(isPaymentCardStorageSwitchVisible ? View.VISIBLE : View.GONE);
 
-        mCardBehaviour = new CardBehaviour(paymentProduct);
+        if (inferedPaymentProduct == null) {
+            inferedPaymentProduct = paymentProduct.getCode();
+        }
+
+        if (mCardBehaviour == null) {
+            mCardBehaviour = new CardBehaviour(paymentProduct);
+        }
+
         mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, isPaymentCardStorageSwitchVisible ? mCardStorageSwitchLayout : null, false, getActivity());
 
         CustomerInfoRequest customerInfoRequest = paymentPageRequest.getCustomer();
@@ -182,6 +238,97 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         mCardNumber.requestFocus();
 
+        setElementsCache(true);
+
+        validatePayButton(isInputDataValid());
+
+        validateScanButton(true);
+
+        putEverythingInRed();
+
+    }
+
+    private void askForScanPermission() {
+
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.CAMERA)) {
+
+                View.OnClickListener clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    }
+                };
+
+                Snackbar.make(getView(), getString(R.string.scan_card_permission), Snackbar.LENGTH_SHORT)
+                        .setAction(getString(R.string.settings), clickListener)
+                        .setActionTextColor(Color.YELLOW)
+                        .show();
+
+            } else {
+
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.CAMERA},
+                        PaymentFormActivity.SCAN_PERMISSION_REQUEST_CODE);
+            }
+
+        } else {
+
+            launchScanCard();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        if (requestCode == PaymentFormActivity.SCAN_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    launchScanCard();
+                }
+        }
+    }
+
+    private void launchScanCard() {
+
+        Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
+
+        //scanIntent.putExtra(CardIOActivity.EXTRA_NO_CAMERA, true);
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_RESTRICT_POSTAL_CODE_TO_NUMERIC_ONLY, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CARDHOLDER_NAME, false);
+
+        // hides the manual entry button
+        // if set, developers should provide their own manual entry mechanism in the app
+        scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_MANUAL_ENTRY, true);
+
+        // matches the theme of your application
+        scanIntent.putExtra(CardIOActivity.EXTRA_KEEP_APPLICATION_THEME, true);
+
+        scanIntent.putExtra(CardIOActivity.EXTRA_HIDE_CARDIO_LOGO, true);
+        scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_SCAN, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_RETURN_CARD_IMAGE, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_CAPTURED_CARD_IMAGE, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_SCAN_OVERLAY_LAYOUT_ID, true);
+        scanIntent.putExtra(CardIOActivity.EXTRA_USE_PAYPAL_ACTIONBAR_ICON, false);
+
+        scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_CONFIRMATION, true);
+
+        // SCAN_REQUEST_CODE is arbitrary and is only used within this activity.
+        ActivityCompat.startActivityForResult(getActivity(), scanIntent, PaymentFormActivity.SCAN_REQUEST_CODE, null);
     }
 
     @Override
@@ -214,6 +361,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 mCardStorageSwitch.setEnabled(true);
 
             }
+
+            validateScanButton(!loadingMode);
         }
 
         mLoadingMode = loadingMode;
@@ -264,7 +413,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             mPayButton.setTextColor(ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
             mPayButtonLayout.setEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                //mPayButton.setBackground(makeSelector(theme));
                 mPayButtonLayout.setBackground(makeSelector(theme));
 
                 Drawable[] drawables = mPayButton.getCompoundDrawables();
@@ -278,15 +426,22 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             mPayButtonLayout.setEnabled(false);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 CustomTheme greyTheme = new CustomTheme(R.color.dark_grey, R.color.dark_grey, R.color.dark_grey);
-                //mPayButton.setBackground(makeSelector(greyTheme));
                 mPayButtonLayout.setBackground(makeSelector(greyTheme));
-                //mPayButton.getDra
 
                 Drawable[] drawables = mPayButton.getCompoundDrawables();
                 Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
                 DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), android.R.color.white));
-                //DrawableCompat.setTint(wrapDrawable, getResources().getColor(android.R.color.holo_red_dark));
             }
+        }
+    }
+
+    protected void validateScanButton(boolean validate) {
+
+        if (validate) {
+            mScanButton.setEnabled(true);
+
+        } else {
+            mScanButton.setEnabled(false);
         }
     }
 
@@ -469,6 +624,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         if (bool) {
 
             if (mCardNumberCache == null) {
+
                 mCardNumberCache = mCardNumber.getText().toString().replaceAll(" ", "");
             }
 
@@ -565,8 +721,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                                 public void onSuccess(final Transaction transaction) {
                                     //Log.i("transaction success", transaction.toString());
 
-                                    cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                                     if (mCallback != null) {
+                                        cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                                         mCallback.onCallbackOrderReceived(transaction, null);
                                     }
 
@@ -574,9 +730,9 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                                 @Override
                                 public void onError(Exception error) {
-                                    cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                                     //Log.i("transaction failed", error.getLocalizedMessage());
                                     if (mCallback != null) {
+                                        cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                                         mCallback.onCallbackOrderReceived(null, error);
                                     }
                                 }
@@ -587,8 +743,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                     @Override
                     public void onError(Exception error) {
 
-                        cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                         if (mCallback != null) {
+                            cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                             mCallback.onCallbackOrderReceived(null, error);
                         }
                     }
@@ -617,21 +773,28 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
     private String getMonthFromExpiry(String expiryString) {
 
-        return expiryString.substring(0,2);
+        if (expiryString != null && !expiryString.isEmpty()) {
+            return expiryString.substring(0,2);
+        }
+
+        return null;
     }
 
     private String getYearFromExpiry(String expiryString) {
 
-        String year = null;
-        if (expiryString.length() == 5 && expiryString.charAt(2) == '/') {
-            year = expiryString.substring(3,5);
+        if (expiryString != null && !expiryString.isEmpty()) {
 
-        } else if (expiryString.length() == 4 && TextUtils.isDigitsOnly(expiryString)) {
-            year = expiryString.substring(2,4);
-        }
+            String year = null;
+            if (expiryString.length() == 5 && expiryString.charAt(2) == '/') {
+                year = expiryString.substring(3,5);
 
-        if (year != null) {
-            return String.valueOf(FormHelper.normalizeYear(Integer.valueOf(year)));
+            } else if (expiryString.length() == 4 && TextUtils.isDigitsOnly(expiryString)) {
+                year = expiryString.substring(2,4);
+            }
+
+            if (year != null) {
+                return String.valueOf(FormHelper.normalizeYear(Integer.valueOf(year)));
+            }
         }
 
         return null;
@@ -704,6 +867,12 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         }
 
         return false;
+    }
+
+    private boolean isPaymentCardScanConfigEnabled()
+    {
+        boolean paymentCardScanEnabled = ClientConfig.getInstance().isPaymentCardScanEnabled();
+        return paymentCardScanEnabled;
     }
 
     private boolean isPaymentCardStorageConfigEnabled()

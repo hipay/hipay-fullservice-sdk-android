@@ -98,8 +98,8 @@ public class UnsupportedPaymentFormFragment extends AbstractPaymentFormFragment 
             @Override
             public void onError(Exception error) {
 
-                cancelLoaderId(AbstractClient.RequestLoaderId.PaymentPageReqLoaderId.getIntegerValue());
                 if (mCallback != null) {
+                    cancelLoaderId(AbstractClient.RequestLoaderId.PaymentPageReqLoaderId.getIntegerValue());
                     mCallback.onCallbackOrderReceived(null, error);
                 }
             }
