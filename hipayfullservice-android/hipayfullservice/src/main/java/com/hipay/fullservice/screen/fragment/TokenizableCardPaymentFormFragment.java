@@ -53,7 +53,6 @@ import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest
 import com.hipay.fullservice.core.utils.PaymentCardTokenDatabase;
 import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.screen.activity.PaymentFormActivity;
-import com.hipay.fullservice.screen.adapter.PaymentProductsAdapter;
 import com.hipay.fullservice.screen.fragment.interfaces.CardBehaviour;
 import com.hipay.fullservice.screen.helper.FormHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
@@ -103,9 +102,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     @Override
     public void onResume() {
         super.onResume();
-
-
-
     }
 
     @Override
@@ -120,10 +116,19 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                 mCardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(Integer.MAX_VALUE)});
                 mCardNumber.setText(scanResult.getFormattedCardNumber());
+
+                if (scanResult.isExpiryValid()) {
+
+                    String expiryYear = String.valueOf(scanResult.expiryYear);
+                    if (expiryYear.length() == 4 && TextUtils.isDigitsOnly(expiryYear)) {
+
+                        mCardExpiration.setText(scanResult.expiryMonth + "/" + expiryYear.substring(2,4));
+                    }
+                }
             }
             else {
 
-                //resultDisplayStr = "Scan was canceled.";
+                //no-op, scan was canceled.
             }
         }
     }
@@ -307,7 +312,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
 
         //scanIntent.putExtra(CardIOActivity.EXTRA_NO_CAMERA, true);
-        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, false);
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true);
+        scanIntent.putExtra(CardIOActivity.EXTRA_SCAN_EXPIRY, true);
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, false);
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false);
         scanIntent.putExtra(CardIOActivity.EXTRA_RESTRICT_POSTAL_CODE_TO_NUMERIC_ONLY, false);
@@ -440,7 +446,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     public void fillCardNumber(String cardNumberText, Date expiryDate) {
 
         mCardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(Integer.MAX_VALUE)});
-        mCardNumber.setText(cardNumberText);
+        mCardNumber.setText(Utils.formatCardNumber(cardNumberText));
 
         if (expiryDate != null) {
             mCardExpiration.setText(Utils.getPaymentFormStringFromDate(expiryDate));

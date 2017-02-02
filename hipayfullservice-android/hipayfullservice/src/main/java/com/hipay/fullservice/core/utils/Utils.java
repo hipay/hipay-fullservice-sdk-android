@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import io.card.payment.CardType;
+
 /**
  * Created by nfillion on 25/01/16.
  */
@@ -325,5 +327,64 @@ public class Utils {
         }
 
         return bundle;
+    }
+
+    public static String formatCardNumber(String numStr) {
+        return formatString(numStr, true, null);
+    }
+
+    private static String formatString(String numStr, boolean filterDigits, CardType type) {
+        String digits;
+        if (filterDigits) {
+            digits = getDigitsOnlyString(numStr);
+        } else {
+            digits = numStr;
+        }
+        if (type == null) {
+            type = CardType.fromCardNumber(digits);
+        }
+        int numLen = type.numberLength();
+        if (digits.length() == numLen) {
+            if (numLen == 16) {
+                return formatSixteenString(digits);
+            } else if (numLen == 15) {
+                return formatFifteenString(digits);
+            }
+        }
+        return numStr; // at the worst case, pass back what was given
+    }
+
+    public static String getDigitsOnlyString(String numString) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : numString.toCharArray()) {
+            if (Character.isDigit(c)) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    private static String formatFifteenString(String digits) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 15; i++) {
+            if (i == 4 || i == 10) {
+                sb.append(' ');
+            }
+            sb.append(digits.charAt(i));
+        }
+        return sb.toString();
+    }
+
+    private static String formatSixteenString(String digits) {
+        StringBuilder sb = new StringBuilder();
+        {
+            for (int i = 0; i < 16; i++) {
+                if (i != 0 && i % 4 == 0) {
+                    sb.append(' ');// insert every 4th char, except at end
+                }
+                sb.append(digits.charAt(i));
+            }
+        }
+        return sb.toString();
     }
 }

@@ -18,7 +18,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
@@ -26,7 +25,6 @@ import android.widget.TextView;
 
 import com.github.devnied.emvnfccard.model.EmvCard;
 import com.github.devnied.emvnfccard.parser.EmvParser;
-import com.github.devnied.emvnfccard.utils.AtrUtils;
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.errors.Errors;
@@ -50,10 +48,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.List;
-
-import fr.devnied.bitlib.BytesUtils;
 
 /**
  * Created by nfillion on 29/02/16.
@@ -69,7 +64,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     private AlertDialog mDialog;
 
     private List<PaymentMethod> history;
-
 
     private NFCUtils mNfcUtils;
     private Provider mProvider = new Provider();
@@ -107,7 +101,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        //it comes from ForwardWebViewActivity, handlind 3DS
+        //it comes from ForwardWebViewActivity, handling 3DS
 
         if (requestCode == PaymentPageRequest.REQUEST_ORDER) {
 
@@ -228,7 +222,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                 }
             }
         }
-
     }
 
     private void setLoadingMode(boolean loadingMode, boolean delay) {
@@ -656,9 +649,10 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         mNfcUtils = new NFCUtils(this);
 
         // Read card on launch
-        if (getIntent().getAction() == NfcAdapter.ACTION_TECH_DISCOVERED) {
-            onNewIntent(getIntent());
-        }
+        //TODO don't need that
+        //if (getIntent().getAction() == NfcAdapter.ACTION_TECH_DISCOVERED) {
+            //onNewIntent(getIntent());
+        //}
     }
 
     @Override
@@ -669,19 +663,8 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
             new SimpleAsyncTask() {
 
-                /**
-                 * Tag comm
-                 */
                 private IsoDep mTagcomm;
-
-                /**
-                 * Emv Card
-                 */
                 private EmvCard mCard;
-
-                /**
-                 * Boolean to indicate exception
-                 */
                 private boolean mException;
 
                 @Override
@@ -719,14 +702,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
                         EmvParser parser = new EmvParser(mProvider, true);
                         mCard = parser.readEmvCard();
-                        if (mCard != null) {
-
-                            Log.i("hello", "hello");
-                            Log.i("hello", "hello");
-
-                            Collection<String> col = extractAtsDescription(getAts(mTagcomm));
-                            mCard.setAtrDescription(col);
-                        }
 
                     } catch (IOException e) {
                         mException = true;
@@ -764,30 +739,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
             }.execute();
         }
 
-    }
-
-    /**
-     * Get ATS from isoDep
-     *
-     * @param pIso
-     *            isodep
-     * @return ATS byte array
-     */
-    private byte[] getAts(final IsoDep pIso) {
-        byte[] ret = null;
-        if (pIso.isConnected()) {
-            // Extract ATS from NFC-A
-            ret = pIso.getHistoricalBytes();
-            if (ret == null) {
-                // Extract ATS from NFC-B
-                ret = pIso.getHiLayerResponse();
-            }
-        }
-        return ret;
-    }
-
-    public Collection<String> extractAtsDescription(final byte[] pAts) {
-        return AtrUtils.getDescriptionFromAts(BytesUtils.bytesToString(pAts));
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
