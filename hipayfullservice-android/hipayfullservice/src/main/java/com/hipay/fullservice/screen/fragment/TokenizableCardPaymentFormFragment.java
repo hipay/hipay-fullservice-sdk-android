@@ -276,7 +276,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                     }
                 };
 
-                Snackbar.make(getView(), getString(R.string.scan_card_permission), Snackbar.LENGTH_SHORT)
+                Snackbar.make(getView(), getString(R.string.scan_card_permission), Snackbar.LENGTH_LONG)
                         .setAction(getString(R.string.settings), clickListener)
                         .setActionTextColor(Color.YELLOW)
                         .show();

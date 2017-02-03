@@ -14,16 +14,6 @@ import android.nfc.tech.IsoDep;
 
 public class NFCUtils {
 
-    /**
-     * Intent filter
-     */
-    private static final IntentFilter[] INTENT_FILTER = new IntentFilter[] { new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED) };
-
-    /**
-     * Tech List
-     */
-    private static final String[][] TECH_LIST = new String[][] { { IsoDep.class.getName() } };
-
     public static NfcAdapter getNfcAdapter(final Context pContext) {
 
         return NfcAdapter.getDefaultAdapter(pContext);
@@ -51,11 +41,10 @@ public class NFCUtils {
         return false;
 	}
 
-
 	/**
 	 * Disable dispacher Remove the most important priority for foreground application
 	 */
-	public void disableDispatch(Activity activity) {
+	public static void disableDispatch(Activity activity) {
 
         if (isNfcEnabled(activity)) {
 
@@ -67,7 +56,7 @@ public class NFCUtils {
 	/**
 	 * Activate NFC dispacher to read NFC Card Set the most important priority to the foreground application
 	 */
-	public void enableDispatch(Activity activity) {
+	public static void enableDispatch(Activity activity) {
 
         if (isNfcEnabled(activity)) {
 
@@ -78,7 +67,11 @@ public class NFCUtils {
                     0,
                     new Intent(activity, activity.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
                     0);
-            adapter.enableForegroundDispatch(activity, pendingIntent, INTENT_FILTER, TECH_LIST);
+
+            IntentFilter[] intentFilter = new IntentFilter[] { new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED) };
+            String[][] techList = new String[][] { { IsoDep.class.getName() } };
+
+            adapter.enableForegroundDispatch(activity, pendingIntent, intentFilter, techList);
         }
 	}
 }

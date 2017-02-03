@@ -6,12 +6,17 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -19,9 +24,11 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.github.devnied.emvnfccard.model.EmvCard;
@@ -63,11 +70,11 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
     private ImageButton mToolbarBack;
     private AlertDialog mDialog;
+    private ProgressBar mProgressBar;
 
     private List<PaymentMethod> history;
 
     private NFCUtils mNfcUtils;
-    private Provider mProvider = new Provider();
 
     public static Intent getStartIntent(Context context, Bundle paymentPageRequestBundle, Bundle themeBundle, PaymentProduct paymentProduct, String signature) {
 
@@ -145,7 +152,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     protected void onPause() {
         super.onPause();
 
-        mNfcUtils.disableDispatch();
+        mNfcUtils.disableDispatch(this);
     }
 
     private boolean isPaymentTokenizable() {
@@ -603,6 +610,14 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         PaymentProduct paymentProduct = PaymentProduct.fromBundle(paymentProductBundle);
         initToolbar(paymentProduct);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.progress);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mProgressBar.setIndeterminateTintList(ColorStateList.valueOf(ContextCompat.getColor(this, customTheme.getTextColorPrimaryId())));
+
+        } else {
+            mProgressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, customTheme.getTextColorPrimaryId()), PorterDuff.Mode.SRC_IN);
+        }
+
         int categoryNameTextSize = getResources()
                 .getDimensionPixelSize(R.dimen.payment_product_item_text_size);
         int paddingStart = getResources().getDimensionPixelSize(R.dimen.spacing_double);
@@ -645,10 +660,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                     .replace(R.id.form_fragment_container, AbstractPaymentFormFragment.newInstance(paymentPageRequestBundle, paymentProduct, signature, customThemeBundle)).commit();
         }
 
-
-        // init NfcUtils
-        mNfcUtils = new NFCUtils(this);
-
         // Read card on launch
         //TODO don't need that
         //if (getIntent().getAction() == NfcAdapter.ACTION_TECH_DISCOVERED) {
@@ -659,96 +670,95 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     @Override
     protected void onNewIntent(final Intent intent) {
         super.onNewIntent(intent);
-        final Tag mTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        if (mTag != null) {
 
-            ProgressDialog.show(this, "hello",
-                    "world", true, false).show();
+        if (intent != null && intent.getAction() == NfcAdapter.ACTION_TECH_DISCOVERED) {
 
-            //return;
+            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            IsoDep isoDep = IsoDep.get(tag);
 
-            /*
-            new SimpleAsyncTask() {
+            if (isoDep != null) {
 
-                private IsoDep mTagcomm;
-                private EmvCard mCard;
-                private boolean mException;
+                new NFCAsyncTask().execute(isoDep);
+            }
+        }
+    }
 
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
+    private class NFCAsyncTask extends AsyncTask<IsoDep, Void, EmvCard> {
 
-                    //backToHomeScreen();
-                    //mProvider.getLog().setLength(0);
-                    // Show dialog
-                    //if (mDialog == null) {
-                    //mDialog = ProgressDialog.show(HomeActivity.this, getString(R.string.card_reading),
-                    //getString(R.string.card_reading_desc), true, false);
-                    //} else {
-                    //mDialog.show();
-                    //}
+        @Override
+        protected void onPreExecute() {}
+
+        @Override
+        protected EmvCard doInBackground(IsoDep... params) {
+
+            IsoDep isoDep = params[0];
+
+            try {
+                // Open connection
+                isoDep.connect();
+
+                Provider mProvider = new Provider(isoDep);
+                mProvider.setTagCom(isoDep);
+
+                EmvParser parser = new EmvParser(mProvider, true);
+                EmvCard card = parser.readEmvCard();
+                if (card == null) {
+                    card = new EmvCard();
                 }
+                return card;
 
-                @Override
-                protected void doInBackground() {
+            } catch (IOException e)
+            {
+                return null;
 
-                    mTagcomm = IsoDep.get(mTag);
-                    if (mTagcomm == null) {
-
-                        //CroutonUtils.display(HomeActivity.this, getText(R.string.error_communication_nfc), CoutonColor.BLACK);
-                        return;
-                    }
-                    mException = false;
-
-                    try {
-                        // Open connection
-                        mTagcomm.connect();
-                        //lastAts = getAts(mTagcomm);
-
-                        mProvider.setmTagCom(mTagcomm);
-
-                        EmvParser parser = new EmvParser(mProvider, true);
-                        mCard = parser.readEmvCard();
-
-                    } catch (IOException e) {
-                        mException = true;
-                    } finally {
-                        // close tagcomm
-                        IOUtils.closeQuietly(mTagcomm);
-                    }
-                }
-
-                @Override
-                protected void onPostExecute(final Object result) {
-
-                    if (!mException) {
-                        if (mCard != null) {
-                            if (StringUtils.isNotBlank(mCard.getCardNumber())) {
-
-                                String cardNumber = mCard.getCardNumber();
-                                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
-                                if (fragment != null) {
-
-                                    AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
-                                    if ( (abstractPaymentFormFragment instanceof TokenizableCardPaymentFormFragment)) {
-                                        TokenizableCardPaymentFormFragment formFragment = (TokenizableCardPaymentFormFragment) abstractPaymentFormFragment;
-                                        formFragment.fillCardNumber(cardNumber, mCard.getExpireDate());
-                                    }
-                                }
-
-                            } else if (mCard.isNfcLocked()) {
-                            }
-                        }
-                    }
-
-                }
-
-            }.execute();
-
-            */
+            } finally
+            {
+                IOUtils.closeQuietly(isoDep);
+            }
         }
 
+        @Override
+        protected void onPostExecute(EmvCard card) {
+
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
+            if (fragment != null) {
+
+                AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
+                if ( (abstractPaymentFormFragment instanceof TokenizableCardPaymentFormFragment)) {
+                    TokenizableCardPaymentFormFragment formFragment = (TokenizableCardPaymentFormFragment) abstractPaymentFormFragment;
+
+                    Snackbar snackbar = null;
+
+                    if (card != null) {
+                        if (StringUtils.isNotBlank(card.getCardNumber()))
+                        {
+                            String cardNumber = card.getCardNumber();
+                            formFragment.fillCardNumber(cardNumber, card.getExpireDate());
+
+                        } else if (card.isNfcLocked())
+                        {
+                            snackbar = Snackbar.make(formFragment.getView(), getString(R.string.nfc_locked), Snackbar.LENGTH_LONG);
+                        } else
+                        {
+                            snackbar = Snackbar.make(formFragment.getView(), getString(R.string.nfc_error_unknown_card), Snackbar.LENGTH_LONG);
+                        }
+
+                    } else
+                    {
+                        snackbar = Snackbar.make(formFragment.getView(), getString(R.string.nfc_error_io), Snackbar.LENGTH_LONG);
+                    }
+
+                    if (snackbar != null) {
+                        snackbar.show();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {}
     }
+
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void initToolbar(PaymentProduct paymentProduct) {
@@ -789,7 +799,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     protected void onResume() {
         super.onResume();
 
-        mNfcUtils.enableDispatch();
+        NFCUtils.enableDispatch(this);
 
         // Check if NFC is available
         if (!NFCUtils.isNfcAvailable(getApplicationContext())) {
