@@ -13,8 +13,8 @@ public class ClientConfig {
     private String userAgent;
 
     private boolean paymentCardStorageEnabled;
-
     private boolean paymentCardScanEnabled;
+    private boolean paymentCardNfcScanEnabled;
 
     public static final String GatewayClientBaseURLStage = "https://stage-secure-gateway.hipay-tpp.com/rest/v1";
 
@@ -25,10 +25,6 @@ public class ClientConfig {
     public static final String SecureVaultClientBaseURLStage = "https://stage-secure-vault.hipay-tpp.com/rest/v1";
     public static final String SecureVaultClientBaseURLProduction = "https://secure-vault.hipay-tpp.com/rest/v1";
 
-    //public static final String SecureVaultClientBaseURLStage = "https://preprod-secure-vault.allopass.com/rest/v1";
-    //public static final String SecureVaultClientBaseURLStage = "https://stage-secure-vault.hipay-tpp.com/rest/v1";
-    //public static final String SecureVaultClientBaseURLProduction = "https://secure-vault.hipay-tpp.com/rest/v1";
-
     private ClientConfig() {
     }
 
@@ -38,6 +34,7 @@ public class ClientConfig {
             mInstance = new ClientConfig();
             mInstance.setPaymentCardStorageEnabled(false);
             mInstance.setPaymentCardScanEnabled(false);
+            mInstance.setPaymentCardNfcScanEnabled(false);
         }
         return mInstance;
     }
@@ -70,7 +67,6 @@ public class ClientConfig {
             return this.status;
         }
     }
-
 
     public Environment getEnvironment() {
         return environment;
@@ -141,5 +137,13 @@ public class ClientConfig {
 
     public void setPaymentCardScanEnabled(boolean paymentCardScanEnabled) {
         this.paymentCardScanEnabled = paymentCardScanEnabled;
+    }
+
+    public boolean isPaymentCardNfcScanEnabled() {
+        return paymentCardNfcScanEnabled;
+    }
+
+    public void setPaymentCardNfcScanEnabled(boolean paymentCardNfcScanEnabled) {
+        this.paymentCardNfcScanEnabled = paymentCardNfcScanEnabled;
     }
 }

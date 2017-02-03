@@ -660,18 +660,13 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                     .replace(R.id.form_fragment_container, AbstractPaymentFormFragment.newInstance(paymentPageRequestBundle, paymentProduct, signature, customThemeBundle)).commit();
         }
 
-        // Read card on launch
-        //TODO don't need that
-        //if (getIntent().getAction() == NfcAdapter.ACTION_TECH_DISCOVERED) {
-            //onNewIntent(getIntent());
-        //}
     }
 
     @Override
     protected void onNewIntent(final Intent intent) {
         super.onNewIntent(intent);
 
-        if (intent != null && intent.getAction() == NfcAdapter.ACTION_TECH_DISCOVERED) {
+        if (intent != null && intent.getAction().equalsIgnoreCase(NfcAdapter.ACTION_TECH_DISCOVERED)) {
 
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             IsoDep isoDep = IsoDep.get(tag);
@@ -686,7 +681,11 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     private class NFCAsyncTask extends AsyncTask<IsoDep, Void, EmvCard> {
 
         @Override
-        protected void onPreExecute() {}
+        protected void onPreExecute() {
+
+            mProgressBar.setVisibility(View.VISIBLE);
+
+        }
 
         @Override
         protected EmvCard doInBackground(IsoDep... params) {
@@ -719,6 +718,8 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
         @Override
         protected void onPostExecute(EmvCard card) {
+
+            mProgressBar.setVisibility(View.GONE);
 
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
             if (fragment != null) {
@@ -753,6 +754,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                     }
                 }
             }
+
         }
 
         @Override

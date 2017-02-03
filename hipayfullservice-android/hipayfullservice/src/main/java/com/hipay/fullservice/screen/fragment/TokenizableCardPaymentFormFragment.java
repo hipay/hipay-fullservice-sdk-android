@@ -893,6 +893,18 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         return paymentCardScanEnabled;
     }
 
+    private boolean isPaymentCardNfcScanConfigEnabled()
+    {
+        boolean paymentCardNfcScanEnabled = ClientConfig.getInstance().isPaymentCardNfcScanEnabled();
+        return paymentCardNfcScanEnabled;
+    }
+
+    private boolean isPaymentCardNfcScanEnabled()
+    {
+        boolean paymentCardNfcScanEnabled = ClientConfig.getInstance().isPaymentCardNfcScanEnabled();
+        return paymentCardNfcScanEnabled;
+    }
+
     private boolean isPaymentCardStorageConfigEnabled()
     {
         boolean paymentCardEnabled = ClientConfig.getInstance().isPaymentCardStorageEnabled();
