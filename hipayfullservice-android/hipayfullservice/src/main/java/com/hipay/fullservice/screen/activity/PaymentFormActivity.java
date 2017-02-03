@@ -2,6 +2,7 @@ package com.hipay.fullservice.screen.activity;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -661,6 +662,12 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         final Tag mTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         if (mTag != null) {
 
+            ProgressDialog.show(this, "hello",
+                    "world", true, false).show();
+
+            //return;
+
+            /*
             new SimpleAsyncTask() {
 
                 private IsoDep mTagcomm;
@@ -737,6 +744,8 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                 }
 
             }.execute();
+
+            */
         }
 
     }

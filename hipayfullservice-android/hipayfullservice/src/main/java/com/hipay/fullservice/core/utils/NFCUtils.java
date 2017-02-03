@@ -9,109 +9,76 @@ import android.nfc.NfcAdapter;
 import android.nfc.tech.IsoDep;
 
 /**
- * 
- * Utils class used to manager NFC Adapter
- * 
- * @author MILLAU julien
- * 
+ * Created by nfillion on 01/02/17.
  */
+
 public class NFCUtils {
 
-	/**
-	 * Check if NFC is available on the device
-	 * 
-	 * @return true if the device has NFC available
-	 */
+    /**
+     * Intent filter
+     */
+    private static final IntentFilter[] INTENT_FILTER = new IntentFilter[] { new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED) };
+
+    /**
+     * Tech List
+     */
+    private static final String[][] TECH_LIST = new String[][] { { IsoDep.class.getName() } };
+
+    public static NfcAdapter getNfcAdapter(final Context pContext) {
+
+        return NfcAdapter.getDefaultAdapter(pContext);
+    }
+
 	public static boolean isNfcAvailable(final Context pContext) {
-		boolean nfcAvailable = true;
-		try {
-			NfcAdapter adapter = NfcAdapter.getDefaultAdapter(pContext);
-			if (adapter == null) {
-				nfcAvailable = false;
-			}
-		} catch (UnsupportedOperationException e) {
-			nfcAvailable = false;
-		}
-		return nfcAvailable;
+
+		NfcAdapter adapter = NfcAdapter.getDefaultAdapter(pContext);
+        if (adapter != null)
+        {
+            return true;
+        }
+
+        return false;
 	}
 	
-	/**
-	 * Check if NFC is enabled on the device
-	 * 
-	 * @return true if the device has NFC enabled
-	 */
 	public static boolean isNfcEnabled(final Context pContext) {
-		boolean nfcEnabled = true;
-		try {
-			NfcAdapter adapter = NfcAdapter.getDefaultAdapter(pContext);
-			nfcEnabled = adapter.isEnabled();
-		} catch (UnsupportedOperationException e) {
-			nfcEnabled = false;
-		}
-		return nfcEnabled;
+
+        if (isNfcAvailable(pContext))
+        {
+            NfcAdapter adapter = getNfcAdapter(pContext);
+            return adapter.isEnabled();
+        }
+
+        return false;
 	}
 
-	/**
-	 * NFC adapter
-	 */
-	private final NfcAdapter mNfcAdapter;
-	/**
-	 * Intent sent
-	 */
-	private final PendingIntent mPendingIntent;
-
-	/**
-	 * Parent Activity
-	 */
-	private final Activity mActivity;
-
-	/**
-	 * Inetnt filter
-	 */
-	private static final IntentFilter[] INTENT_FILTER = new IntentFilter[] { new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED) };
-
-	/**
-	 * Tech List
-	 */
-	private static final String[][] TECH_LIST = new String[][] { { IsoDep.class.getName() } };
-
-	/**
-	 * Constructor of this class
-	 * 
-	 * @param pActivity
-	 *            activity context
-	 */
-	public NFCUtils(final Activity pActivity) {
-		mActivity = pActivity;
-		mNfcAdapter = NfcAdapter.getDefaultAdapter(mActivity);
-		mPendingIntent = PendingIntent.getActivity(mActivity, 0,
-				new Intent(mActivity, mActivity.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-	}
 
 	/**
 	 * Disable dispacher Remove the most important priority for foreground application
 	 */
-	public void disableDispatch() {
-		if (mNfcAdapter != null) {
-			mNfcAdapter.disableForegroundDispatch(mActivity);
-		}
+	public void disableDispatch(Activity activity) {
+
+        if (isNfcEnabled(activity)) {
+
+            NfcAdapter adapter = getNfcAdapter(activity);
+            adapter.disableForegroundDispatch(activity);
+        }
 	}
 
 	/**
 	 * Activate NFC dispacher to read NFC Card Set the most important priority to the foreground application
 	 */
-	public void enableDispatch() {
-		if (mNfcAdapter != null) {
-			mNfcAdapter.enableForegroundDispatch(mActivity, mPendingIntent, INTENT_FILTER, TECH_LIST);
-		}
-	}
+	public void enableDispatch(Activity activity) {
 
-	/**
-	 * Getter mNfcAdapter
-	 * 
-	 * @return the mNfcAdapter
-	 */
-	public NfcAdapter getmNfcAdapter() {
-		return mNfcAdapter;
+        if (isNfcEnabled(activity)) {
+
+            NfcAdapter adapter = getNfcAdapter(activity);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                    activity,
+                    0,
+                    new Intent(activity, activity.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+                    0);
+            adapter.enableForegroundDispatch(activity, pendingIntent, INTENT_FILTER, TECH_LIST);
+        }
 	}
 }
