@@ -20,7 +20,7 @@
     <string name="nfc_error_unknown_card">Carte inconnue</string>
     <string name="nfc_locked">Paiement NFC désactivé sur votre carte</string>
     <string name="activate_nfc_sensor">Activer le NFC</string>
-    <string name="nfc_activated">Le NFC sensor est activé</string>
+    <string name="nfc_activated">Rapprochez et maintenez votre carte du dos de votre téléphone</string>
 
     <string name="refresh">Actualiser</string>
 

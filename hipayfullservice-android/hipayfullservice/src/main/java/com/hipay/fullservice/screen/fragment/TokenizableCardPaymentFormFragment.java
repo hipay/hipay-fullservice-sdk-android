@@ -208,10 +208,10 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         });
 
         //button to enable NFC on the device
-        boolean isPaymentCardNfcScanButtonVisible = this.isPaymentCardNfcScanAvailable() && !this.isPaymentCardNfcScanEnabled();
+        boolean isPaymentCardNfcScanButtonVisible = this.isPaymentCardNfcScanConfigEnabled() && this.isPaymentCardNfcScanAvailable() && !this.isPaymentCardNfcScanEnabled();
         mScanNfcButton.setVisibility(isPaymentCardNfcScanButtonVisible ? View.VISIBLE : View.GONE);
 
-        boolean isPaymentCardNfcScanInfoVisible = this.isPaymentCardNfcScanAvailable() && this.isPaymentCardNfcScanEnabled();
+        boolean isPaymentCardNfcScanInfoVisible = this.isPaymentCardNfcScanConfigEnabled() && this.isPaymentCardNfcScanAvailable() && this.isPaymentCardNfcScanEnabled();
         mScanNfcInfoLayout.setVisibility(isPaymentCardNfcScanInfoVisible ? View.VISIBLE : View.GONE);
 
         View.OnFocusChangeListener focusChangeListener = this.focusChangeListener();
@@ -930,6 +930,11 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     private boolean isPaymentCardScanConfigEnabled()
     {
         return ClientConfig.getInstance().isPaymentCardScanEnabled();
+    }
+
+    private boolean isPaymentCardNfcScanConfigEnabled()
+    {
+        return ClientConfig.getInstance().isPaymentCardNfcScanEnabled();
     }
 
     private boolean isPaymentCardNfcScanEnabled()

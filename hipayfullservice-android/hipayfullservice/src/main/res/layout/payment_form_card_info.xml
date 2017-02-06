@@ -52,16 +52,37 @@
         android:id="@+id/scan_nfc_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
         android:orientation="horizontal"
+        android:background="@drawable/selector_nfc_layout"
+        android:layout_marginBottom="@dimen/spacing_double">
 
-        style="@style/PaymentScreens.ScanButton"
+        <ImageView
+            android:layout_weight="0"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_double"
+            android:layout_marginLeft="@dimen/spacing_double"
+            android:src="@drawable/ic_info_black"
+            />
 
-        android:text="@string/nfc_activated"
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/spacing_double"
+            android:layout_marginLeft="@dimen/spacing_double"
+            android:layout_marginRight="@dimen/spacing_normal"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            android:gravity="center_vertical"
+            android:text="@string/nfc_activated"
+            />
 
-        android:paddingLeft="@dimen/spacing_double"
-        android:paddingRight="@dimen/spacing_double"
-
-        android:layout_marginBottom="@dimen/spacing_double" />
+    </LinearLayout>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/card_owner_support"
