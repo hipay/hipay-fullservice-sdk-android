@@ -35,7 +35,8 @@ public class PaymentCardTokenDatabase {
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove("paymentCardToken_" + currency);
-        editor.commit();
+        //editor.commit();
+        editor.apply();
     }
 
     public void clearPaymentCardTokens(Context context) {
@@ -136,8 +137,8 @@ public class PaymentCardTokenDatabase {
                 SharedPreferences.Editor editor = preferences.edit();
 
                 editor.putStringSet("paymentCardToken_" + currency, tokens);
-                editor.commit();
-                //editor.apply();
+                //editor.commit();
+                editor.apply();
             }
         }
     }

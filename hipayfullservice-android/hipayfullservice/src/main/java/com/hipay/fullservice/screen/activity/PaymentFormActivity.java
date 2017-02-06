@@ -57,6 +57,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by nfillion on 29/02/16.
@@ -534,13 +535,13 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     @Override
     public void updatePaymentProduct(String title) {
 
-        title = title.substring(0, 1).toUpperCase() + title.substring(1);
+        title = title.substring(0, 1).toUpperCase(Locale.US) + title.substring(1);
 
         int index = title.indexOf('_');
         if (index != -1) {
 
             String firstPart = title.substring(0, index);
-            String secondPart = title.substring(index, index+2).toUpperCase() + title.substring(index+2);
+            String secondPart = title.substring(index, index+2).toUpperCase(Locale.US) + title.substring(index+2);
 
             title = firstPart + secondPart;
             title = title.replace('_',' ');

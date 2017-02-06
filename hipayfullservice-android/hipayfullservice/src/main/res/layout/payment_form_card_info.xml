@@ -65,6 +65,7 @@
             android:layout_marginStart="@dimen/spacing_double"
             android:layout_marginLeft="@dimen/spacing_double"
             android:src="@drawable/ic_info_black"
+            android:contentDescription="@string/content_description"
             />
 
         <TextView
@@ -219,6 +220,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:contentDescription="@string/content_description"
             android:src="@drawable/cvc_mv"/>
 
     </LinearLayout>
