@@ -50,6 +50,7 @@ import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.utils.NFCUtils;
 import com.hipay.fullservice.core.utils.PaymentCardTokenDatabase;
 import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.screen.activity.PaymentFormActivity;
@@ -185,6 +186,13 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         boolean isPaymentCardScanButtonVisible = this.isPaymentCardScanConfigEnabled();
         mScanButton.setVisibility(isPaymentCardScanButtonVisible ? View.VISIBLE : View.GONE);
+
+
+        //TODO put NFC button here
+
+
+
+
 
         View.OnFocusChangeListener focusChangeListener = this.focusChangeListener();
 
@@ -889,20 +897,17 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
     private boolean isPaymentCardScanConfigEnabled()
     {
-        boolean paymentCardScanEnabled = ClientConfig.getInstance().isPaymentCardScanEnabled();
-        return paymentCardScanEnabled;
-    }
-
-    private boolean isPaymentCardNfcScanConfigEnabled()
-    {
-        boolean paymentCardNfcScanEnabled = ClientConfig.getInstance().isPaymentCardNfcScanEnabled();
-        return paymentCardNfcScanEnabled;
+        return ClientConfig.getInstance().isPaymentCardScanEnabled();
     }
 
     private boolean isPaymentCardNfcScanEnabled()
     {
-        boolean paymentCardNfcScanEnabled = ClientConfig.getInstance().isPaymentCardNfcScanEnabled();
-        return paymentCardNfcScanEnabled;
+        return NFCUtils.isNfcEnabled(getActivity());
+    }
+
+    private boolean isPaymentCardNfcScanAvailable()
+    {
+        return NFCUtils.isNfcAvailable(getActivity());
     }
 
     private boolean isPaymentCardStorageConfigEnabled()
