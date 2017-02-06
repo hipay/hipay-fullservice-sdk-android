@@ -28,6 +28,41 @@
 
         android:layout_marginBottom="@dimen/spacing_double" />
 
+    <Button
+        android:id="@+id/scan_nfc_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:drawableLeft="@drawable/ic_settings_black"
+        android:drawableStart="@drawable/ic_settings_black"
+
+        android:drawableRight="@drawable/ic_nfc_black"
+        android:drawableEnd="@drawable/ic_nfc_black"
+
+        style="@style/PaymentScreens.ScanButton"
+
+        android:text="@string/activate_nfc_sensor"
+
+        android:paddingLeft="@dimen/spacing_double"
+        android:paddingRight="@dimen/spacing_double"
+
+        android:layout_marginBottom="@dimen/spacing_double" />
+
+    <LinearLayout
+        android:id="@+id/scan_nfc_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        style="@style/PaymentScreens.ScanButton"
+
+        android:text="@string/nfc_activated"
+
+        android:paddingLeft="@dimen/spacing_double"
+        android:paddingRight="@dimen/spacing_double"
+
+        android:layout_marginBottom="@dimen/spacing_double" />
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/card_owner_support"
         app:errorTextAppearance="@style/PaymentScreens.TextAppearance.ErrorSmallItem"

@@ -24,6 +24,8 @@
     <string name="nfc_error_io">Please do not move your card, try again!</string>
     <string name="nfc_error_unknown_card">Unknown EMV card</string>
     <string name="nfc_locked">NFC is locked on your card</string>
+    <string name="activate_nfc_sensor">Activate NFC Sensor in settings</string>
+    <string name="nfc_activated">You can use the NFC sensor</string>
 
     <string name="refresh">Refresh</string>
 

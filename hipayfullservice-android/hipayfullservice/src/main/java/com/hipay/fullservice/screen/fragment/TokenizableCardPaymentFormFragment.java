@@ -73,6 +73,8 @@ import io.card.payment.CreditCard;
 public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragment {
 
     private Button mScanButton;
+    private Button mScanNfcButton;
+    private LinearLayout mScanNfcInfoLayout;
 
     private Button mPayButton;
     private FrameLayout mPayButtonLayout;
@@ -139,6 +141,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         super.initContentViews(view);
 
         mScanButton = (Button) view.findViewById(R.id.scan_button);
+        mScanNfcButton = (Button) view.findViewById(R.id.scan_nfc_button);
+        mScanNfcInfoLayout = (LinearLayout) view.findViewById(R.id.scan_nfc_info);
 
         mPayButton = (Button) view.findViewById(R.id.pay_button);
         mPayButtonLayout = (FrameLayout) view.findViewById(R.id.pay_button_layout);
@@ -187,12 +191,28 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         boolean isPaymentCardScanButtonVisible = this.isPaymentCardScanConfigEnabled();
         mScanButton.setVisibility(isPaymentCardScanButtonVisible ? View.VISIBLE : View.GONE);
 
+        mScanNfcButton.setOnClickListener(new View.OnClickListener() {
 
-        //TODO put NFC button here
+            @Override
+            public void onClick(View v)
+            {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                {
+                    startActivity(new Intent(android.provider.Settings.ACTION_NFC_SETTINGS));
+                }
+                else
+                {
+                    startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
+                }
+            }
+        });
 
+        //button to enable NFC on the device
+        boolean isPaymentCardNfcScanButtonVisible = this.isPaymentCardNfcScanAvailable() && !this.isPaymentCardNfcScanEnabled();
+        mScanNfcButton.setVisibility(isPaymentCardNfcScanButtonVisible ? View.VISIBLE : View.GONE);
 
-
-
+        boolean isPaymentCardNfcScanInfoVisible = this.isPaymentCardNfcScanAvailable() && this.isPaymentCardNfcScanEnabled();
+        mScanNfcInfoLayout.setVisibility(isPaymentCardNfcScanInfoVisible ? View.VISIBLE : View.GONE);
 
         View.OnFocusChangeListener focusChangeListener = this.focusChangeListener();
 
@@ -258,6 +278,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         validatePayButton(isInputDataValid());
 
         validateScanButton(true);
+        validateNfcScanButton(true);
 
         putEverythingInRed();
 
@@ -379,6 +400,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             }
 
             validateScanButton(!loadingMode);
+            validateNfcScanButton(!loadingMode);
         }
 
         mLoadingMode = loadingMode;
@@ -468,6 +490,16 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         } else {
             mScanButton.setEnabled(false);
+        }
+    }
+
+    protected void validateNfcScanButton(boolean validate) {
+
+        if (validate) {
+            mScanNfcButton.setEnabled(true);
+
+        } else {
+            mScanNfcButton.setEnabled(false);
         }
     }
 
