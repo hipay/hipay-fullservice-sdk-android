@@ -39,7 +39,6 @@
             android:textAppearance="@style/PaymentScreens.TextAppearance.ListItemSecondary"
             android:maxLines="1" />
 
-
     </LinearLayout>
 
     <RadioButton

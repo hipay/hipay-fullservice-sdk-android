@@ -75,8 +75,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
     private List<PaymentMethod> history;
 
-    private NFCUtils mNfcUtils;
-
     public static Intent getStartIntent(Context context, Bundle paymentPageRequestBundle, Bundle themeBundle, PaymentProduct paymentProduct, String signature) {
 
         Intent starter = new Intent(context, PaymentFormActivity.class);
@@ -153,7 +151,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     protected void onPause() {
         super.onPause();
 
-        mNfcUtils.disableDispatch(this);
     }
 
     private boolean isPaymentTokenizable() {
@@ -802,12 +799,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     protected void onResume() {
         super.onResume();
 
-        NFCUtils.enableDispatch(this);
-
-        // Check if NFC is available
-        if (!NFCUtils.isNfcAvailable(getApplicationContext())) {
-
-        }
     }
 
     final View.OnClickListener mOnClickListener = new View.OnClickListener() {
