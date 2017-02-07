@@ -106,14 +106,16 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     public void onResume() {
         super.onResume();
 
-        NFCUtils.enableDispatch(getActivity());
-
         //button to enable NFC on the device
         boolean isPaymentCardNfcScanButtonVisible = this.isPaymentCardNfcScanConfigEnabled() && this.isPaymentCardNfcScanAvailable() && !this.isPaymentCardNfcScanEnabled();
         mScanNfcButton.setVisibility(isPaymentCardNfcScanButtonVisible ? View.VISIBLE : View.GONE);
 
         boolean isPaymentCardNfcScanInfoVisible = this.isPaymentCardNfcScanConfigEnabled() && this.isPaymentCardNfcScanAvailable() && this.isPaymentCardNfcScanEnabled();
         mScanNfcInfoLayout.setVisibility(isPaymentCardNfcScanInfoVisible ? View.VISIBLE : View.GONE);
+
+        if (isPaymentCardNfcScanInfoVisible) {
+            NFCUtils.enableDispatch(getActivity());
+        }
     }
 
     @Override

@@ -32,9 +32,9 @@ public class ClientConfig {
         if(mInstance == null)
         {
             mInstance = new ClientConfig();
-            mInstance.setPaymentCardStorageEnabled(false);
-            mInstance.setPaymentCardScanEnabled(false);
-            mInstance.setPaymentCardNfcScanEnabled(false);
+            mInstance.setPaymentCardStorageEnabled(true);
+            mInstance.setPaymentCardScanEnabled(true);
+            mInstance.setPaymentCardNfcScanEnabled(true);
         }
         return mInstance;
     }
@@ -72,10 +72,6 @@ public class ClientConfig {
         return environment;
     }
 
-    /**
-     * @deprecated use {@link #setConfig(Environment, String, String, boolean)} instead.
-     */
-    @Deprecated
     public void setConfig(Environment environment, String username, String password) {
 
         this.setEnvironment(environment);
@@ -85,6 +81,10 @@ public class ClientConfig {
         this.setUserAgent(null);
     }
 
+    /**
+     * @deprecated use {@link #setConfig(Environment, String, String)} instead.
+     */
+    @Deprecated
     public void setConfig(Environment environment, String username, String password, boolean paymentCardStorageEnabled) {
 
         this.setEnvironment(environment);
