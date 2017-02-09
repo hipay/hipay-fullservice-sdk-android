@@ -6,6 +6,8 @@
     <string name="amount_and_currency">Amount and currency</string>
     <string name="group_cards">Group card</string>
     <string name="card_storage">Payment cards storage</string>
+    <string name="card_scan">Payment cards scan</string>
+    <string name="card_nfc_scan">Payment cards NFC scan</string>
 
     <string name="three_ds">3DS Authentication</string>
     <string name="color">Color</string>

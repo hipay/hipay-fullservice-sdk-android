@@ -1,6 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hipay.fullservice">
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Permission to vibrate - recommended, allows vibration feedback on scan -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Permission to use camera - required -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-permission android:name="android.permission.NFC" />
+
+    <!-- Camera features - recommended -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.flash" android:required="false" />
+
     <application>
 
         <activity android:name=".screen.activity.PaymentProductsActivity"
@@ -13,8 +27,9 @@
 
         <activity android:name=".screen.activity.PaymentFormActivity"
             android:theme="@style/PaymentScreens.PaymentFormActivity"
-            android:windowSoftInputMode="adjustPan"
-            />
+            android:windowSoftInputMode="adjustPan">
+
+        </activity>
 
         <activity android:name=".screen.activity.ForwardWebViewActivity"
             android:theme="@style/PaymentScreens.ForwardWebViewActivity"
@@ -22,6 +37,9 @@
             android:configChanges="orientation|screenSize">
 
         </activity>
+
+        <activity android:name="io.card.payment.CardIOActivity" android:configChanges="keyboardHidden|orientation"
+            android:hardwareAccelerated="true"/>
 
     </application>
 

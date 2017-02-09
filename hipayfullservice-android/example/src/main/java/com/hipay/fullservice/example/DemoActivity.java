@@ -50,9 +50,13 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         ClientConfig.getInstance().setConfig(
                 ClientConfig.Environment.Stage,
                 username,
-                password,
-                true
+                password
         );
+
+        //options by default: true
+        ClientConfig.getInstance().setPaymentCardNfcScanEnabled(true);
+        ClientConfig.getInstance().setPaymentCardScanEnabled(true);
+        ClientConfig.getInstance().setPaymentCardNfcScanEnabled(true);
 
         paymentProducts = new HashMap<>(4);
 
