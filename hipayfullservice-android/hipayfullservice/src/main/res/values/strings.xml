@@ -21,6 +21,12 @@
     <string name="scan_card_permission">To scan your payment card, allow camera permission.</string>
     <string name="settings">Settings</string>
 
+    <string name="nfc_error_io">Please do not move your card, try again!</string>
+    <string name="nfc_error_unknown_card">Unknown EMV card</string>
+    <string name="nfc_locked">NFC is locked on your card</string>
+    <string name="activate_nfc_sensor">Activate the NFC Sensor</string>
+    <string name="nfc_activated">Bump and hold your payment card to the back of your phone</string>
+
     <string name="refresh">Refresh</string>
 
     <string name="transaction_error_declined_title">Transaction declined</string>

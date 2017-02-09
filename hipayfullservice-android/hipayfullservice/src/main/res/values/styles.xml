@@ -22,7 +22,9 @@
         <item name="android:windowBackground">@color/hpf_blank</item>
     </style>
 
-    <style name="PaymentScreens.PaymentFormActivity" />
+    <style name="PaymentScreens.PaymentFormActivity">
+        <item name="android:windowBackground">@color/hpf_light</item>
+    </style>
 
     <style name="PaymentScreens.PaymentCardsActivity" />
 

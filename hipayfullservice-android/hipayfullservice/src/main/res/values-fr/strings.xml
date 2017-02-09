@@ -16,6 +16,12 @@
     <string name="scan_card_permission">Pour scanner votre carte, activez la permission Appareil photo.</string>
     <string name="settings">Paramètres</string>
 
+    <string name="nfc_error_io">Merci de ne pas bouger votre carte durant la lecture !</string>
+    <string name="nfc_error_unknown_card">Carte inconnue</string>
+    <string name="nfc_locked">Paiement NFC désactivé sur votre carte</string>
+    <string name="activate_nfc_sensor">Activer le NFC</string>
+    <string name="nfc_activated">Rapprochez et maintenez votre carte du dos de votre téléphone</string>
+
     <string name="refresh">Actualiser</string>
 
     <string name="transaction_error_declined_title">Transaction refusée</string>

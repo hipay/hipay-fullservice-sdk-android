@@ -1,12 +1,15 @@
 package com.hipay.fullservice.screen.fragment;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -237,6 +240,12 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     protected void initContentViews(View view) {
 
         mProgressBar = (ProgressBar) view.findViewById(R.id.empty);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mProgressBar.setIndeterminateTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity(), R.color.hpf_accent)));
+
+        } else {
+            mProgressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.hpf_accent), PorterDuff.Mode.SRC_IN);
+        }
         mCardInfoLayout = (LinearLayout) view.findViewById(R.id.card_info_layout);
 
         //validatePayButton(isInputDataValid());

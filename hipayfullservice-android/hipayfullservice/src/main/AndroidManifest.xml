@@ -8,6 +8,8 @@
     <!-- Permission to use camera - required -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-permission android:name="android.permission.NFC" />
+
     <!-- Camera features - recommended -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
@@ -25,8 +27,9 @@
 
         <activity android:name=".screen.activity.PaymentFormActivity"
             android:theme="@style/PaymentScreens.PaymentFormActivity"
-            android:windowSoftInputMode="adjustPan"
-            />
+            android:windowSoftInputMode="adjustPan">
+
+        </activity>
 
         <activity android:name=".screen.activity.ForwardWebViewActivity"
             android:theme="@style/PaymentScreens.ForwardWebViewActivity"

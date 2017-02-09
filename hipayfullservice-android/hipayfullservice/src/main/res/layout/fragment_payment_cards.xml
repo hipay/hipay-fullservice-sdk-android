@@ -70,6 +70,7 @@
             android:focusable="false"
             android:minHeight="0dp"
             android:minWidth="0dp"
+            tools:ignore="UnusedAttribute,NewApi"
             />
 
     </FrameLayout>

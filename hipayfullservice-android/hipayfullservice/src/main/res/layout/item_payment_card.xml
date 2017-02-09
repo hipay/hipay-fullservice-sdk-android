@@ -13,6 +13,7 @@
         android:layout_gravity="center"
         android:src="@drawable/ic_credit_card_black"
         android:layout_marginRight="@dimen/spacing_double"
+        android:layout_marginEnd="@dimen/spacing_double"
         android:contentDescription="@string/content_description" />
 
     <LinearLayout
@@ -37,7 +38,6 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/PaymentScreens.TextAppearance.ListItemSecondary"
             android:maxLines="1" />
-
 
     </LinearLayout>
 

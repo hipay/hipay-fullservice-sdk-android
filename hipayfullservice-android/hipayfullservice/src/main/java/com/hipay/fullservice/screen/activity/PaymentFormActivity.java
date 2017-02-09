@@ -5,9 +5,16 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.IsoDep;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -18,8 +25,11 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.devnied.emvnfccard.model.EmvCard;
+import com.github.devnied.emvnfccard.parser.EmvParser;
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.errors.Errors;
@@ -29,14 +39,20 @@ import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
+import com.hipay.fullservice.core.utils.Provider;
 import com.hipay.fullservice.screen.fragment.AbstractPaymentFormFragment;
 import com.hipay.fullservice.screen.fragment.TokenizableCardPaymentFormFragment;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 import com.hipay.fullservice.screen.widget.TextSharedElementCallback;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by nfillion on 29/02/16.
@@ -50,6 +66,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
     private ImageButton mToolbarBack;
     private AlertDialog mDialog;
+    private ProgressBar mProgressBar;
 
     private List<PaymentMethod> history;
 
@@ -80,14 +97,13 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                 fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         }
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        //it comes from ForwardWebViewActivity, handlind 3DS
+        //it comes from ForwardWebViewActivity, handling 3DS
 
         if (requestCode == PaymentPageRequest.REQUEST_ORDER) {
 
@@ -124,6 +140,12 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                 }
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
     }
 
     private boolean isPaymentTokenizable() {
@@ -201,7 +223,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                 }
             }
         }
-
     }
 
     private void setLoadingMode(boolean loadingMode, boolean delay) {
@@ -506,13 +527,13 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     @Override
     public void updatePaymentProduct(String title) {
 
-        title = title.substring(0, 1).toUpperCase() + title.substring(1);
+        title = title.substring(0, 1).toUpperCase(Locale.US) + title.substring(1);
 
         int index = title.indexOf('_');
         if (index != -1) {
 
             String firstPart = title.substring(0, index);
-            String secondPart = title.substring(index, index+2).toUpperCase() + title.substring(index+2);
+            String secondPart = title.substring(index, index+2).toUpperCase(Locale.US) + title.substring(index+2);
 
             title = firstPart + secondPart;
             title = title.replace('_',' ');
@@ -582,6 +603,14 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         PaymentProduct paymentProduct = PaymentProduct.fromBundle(paymentProductBundle);
         initToolbar(paymentProduct);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.progress);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mProgressBar.setIndeterminateTintList(ColorStateList.valueOf(ContextCompat.getColor(this, customTheme.getTextColorPrimaryId())));
+
+        } else {
+            mProgressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, customTheme.getTextColorPrimaryId()), PorterDuff.Mode.SRC_IN);
+        }
+
         int categoryNameTextSize = getResources()
                 .getDimensionPixelSize(R.dimen.payment_product_item_text_size);
         int paddingStart = getResources().getDimensionPixelSize(R.dimen.spacing_double);
@@ -623,7 +652,108 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.form_fragment_container, AbstractPaymentFormFragment.newInstance(paymentPageRequestBundle, paymentProduct, signature, customThemeBundle)).commit();
         }
+
     }
+
+    @Override
+    protected void onNewIntent(final Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent != null && intent.getAction().equalsIgnoreCase(NfcAdapter.ACTION_TECH_DISCOVERED)) {
+
+            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            IsoDep isoDep = IsoDep.get(tag);
+
+            if (isoDep != null) {
+
+                new NFCAsyncTask().execute(isoDep);
+            }
+        }
+    }
+
+    private class NFCAsyncTask extends AsyncTask<IsoDep, Void, EmvCard> {
+
+        @Override
+        protected void onPreExecute() {
+
+            mProgressBar.setVisibility(View.VISIBLE);
+
+        }
+
+        @Override
+        protected EmvCard doInBackground(IsoDep... params) {
+
+            IsoDep isoDep = params[0];
+
+            try {
+                // Open connection
+                isoDep.connect();
+
+                Provider mProvider = new Provider(isoDep);
+                mProvider.setTagCom(isoDep);
+
+                EmvParser parser = new EmvParser(mProvider, true);
+                EmvCard card = parser.readEmvCard();
+                if (card == null) {
+                    card = new EmvCard();
+                }
+                return card;
+
+            } catch (IOException e)
+            {
+                return null;
+
+            } finally
+            {
+                IOUtils.closeQuietly(isoDep);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(EmvCard card) {
+
+            mProgressBar.setVisibility(View.GONE);
+
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
+            if (fragment != null) {
+
+                AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
+                if ( (abstractPaymentFormFragment instanceof TokenizableCardPaymentFormFragment)) {
+                    TokenizableCardPaymentFormFragment formFragment = (TokenizableCardPaymentFormFragment) abstractPaymentFormFragment;
+
+                    Snackbar snackbar = null;
+
+                    if (card != null) {
+                        if (StringUtils.isNotBlank(card.getCardNumber()))
+                        {
+                            String cardNumber = card.getCardNumber();
+                            formFragment.fillCardNumber(cardNumber, card.getExpireDate());
+
+                        } else if (card.isNfcLocked())
+                        {
+                            snackbar = Snackbar.make(formFragment.getView(), getString(R.string.nfc_locked), Snackbar.LENGTH_LONG);
+                        } else
+                        {
+                            snackbar = Snackbar.make(formFragment.getView(), getString(R.string.nfc_error_unknown_card), Snackbar.LENGTH_LONG);
+                        }
+
+                    } else
+                    {
+                        snackbar = Snackbar.make(formFragment.getView(), getString(R.string.nfc_error_io), Snackbar.LENGTH_LONG);
+                    }
+
+                    if (snackbar != null) {
+                        snackbar.show();
+                    }
+                }
+            }
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {}
+    }
+
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void initToolbar(PaymentProduct paymentProduct) {
@@ -663,6 +793,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     @Override
     protected void onResume() {
         super.onResume();
+
     }
 
     final View.OnClickListener mOnClickListener = new View.OnClickListener() {

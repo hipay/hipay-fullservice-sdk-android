@@ -13,8 +13,8 @@ public class ClientConfig {
     private String userAgent;
 
     private boolean paymentCardStorageEnabled;
-
     private boolean paymentCardScanEnabled;
+    private boolean paymentCardNfcScanEnabled;
 
     public static final String GatewayClientBaseURLStage = "https://stage-secure-gateway.hipay-tpp.com/rest/v1";
 
@@ -25,10 +25,6 @@ public class ClientConfig {
     public static final String SecureVaultClientBaseURLStage = "https://stage-secure-vault.hipay-tpp.com/rest/v1";
     public static final String SecureVaultClientBaseURLProduction = "https://secure-vault.hipay-tpp.com/rest/v1";
 
-    //public static final String SecureVaultClientBaseURLStage = "https://preprod-secure-vault.allopass.com/rest/v1";
-    //public static final String SecureVaultClientBaseURLStage = "https://stage-secure-vault.hipay-tpp.com/rest/v1";
-    //public static final String SecureVaultClientBaseURLProduction = "https://secure-vault.hipay-tpp.com/rest/v1";
-
     private ClientConfig() {
     }
 
@@ -36,8 +32,9 @@ public class ClientConfig {
         if(mInstance == null)
         {
             mInstance = new ClientConfig();
-            mInstance.setPaymentCardStorageEnabled(false);
-            mInstance.setPaymentCardScanEnabled(false);
+            mInstance.setPaymentCardStorageEnabled(true);
+            mInstance.setPaymentCardScanEnabled(true);
+            mInstance.setPaymentCardNfcScanEnabled(true);
         }
         return mInstance;
     }
@@ -71,15 +68,10 @@ public class ClientConfig {
         }
     }
 
-
     public Environment getEnvironment() {
         return environment;
     }
 
-    /**
-     * @deprecated use {@link #setConfig(Environment, String, String, boolean)} instead.
-     */
-    @Deprecated
     public void setConfig(Environment environment, String username, String password) {
 
         this.setEnvironment(environment);
@@ -89,6 +81,10 @@ public class ClientConfig {
         this.setUserAgent(null);
     }
 
+    /**
+     * @deprecated use {@link #setConfig(Environment, String, String)} instead.
+     */
+    @Deprecated
     public void setConfig(Environment environment, String username, String password, boolean paymentCardStorageEnabled) {
 
         this.setEnvironment(environment);
@@ -141,5 +137,13 @@ public class ClientConfig {
 
     public void setPaymentCardScanEnabled(boolean paymentCardScanEnabled) {
         this.paymentCardScanEnabled = paymentCardScanEnabled;
+    }
+
+    public boolean isPaymentCardNfcScanEnabled() {
+        return paymentCardNfcScanEnabled;
+    }
+
+    public void setPaymentCardNfcScanEnabled(boolean paymentCardNfcScanEnabled) {
+        this.paymentCardNfcScanEnabled = paymentCardNfcScanEnabled;
     }
 }
