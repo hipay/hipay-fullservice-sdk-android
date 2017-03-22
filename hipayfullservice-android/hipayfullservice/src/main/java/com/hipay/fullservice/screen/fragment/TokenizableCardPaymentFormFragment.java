@@ -947,7 +947,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
     private boolean isPaymentCardScanConfigEnabled()
     {
-        return ClientConfig.getInstance().isPaymentCardScanEnabled();
+        return ClientConfig.getInstance().isPaymentCardScanEnabled() && CardIOActivity.canReadCardWithCamera();
+
     }
 
     private boolean isPaymentCardNfcScanConfigEnabled()
