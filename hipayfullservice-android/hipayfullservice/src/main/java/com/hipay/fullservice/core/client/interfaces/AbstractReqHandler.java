@@ -7,10 +7,10 @@ import com.hipay.fullservice.core.client.interfaces.callbacks.AbstractRequestCal
 import com.hipay.fullservice.core.errors.Errors;
 import com.hipay.fullservice.core.errors.exceptions.ApiException;
 import com.hipay.fullservice.core.errors.exceptions.HttpException;
-import com.hipay.fullservice.core.logging.Logger;
 import com.hipay.fullservice.core.network.HttpResult;
 import com.hipay.fullservice.core.operations.AbstractOperation;
 import com.hipay.fullservice.core.utils.DataExtractor;
+import com.hipay.fullservice.core.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,8 +73,9 @@ public abstract class AbstractReqHandler<T> implements IReqHandler {
     public abstract AbstractOperation getReqOperation(Context context, Bundle bundle);
     public abstract int getLoaderId();
 
-    public void onError(Exception exception) {
-        Logger.d(new StringBuilder(this.getDomain()).append(": ").append(exception.toString()).toString());
+    public void onError(Exception exception)
+    {
+        Utils.logFromException(exception, this.getDomain());
     }
 
     public abstract void onSuccess(JSONObject jsonObject);
