@@ -1,6 +1,10 @@
 HiPay Android SDK change log and release notes
 ================================================
 
+1.3.1
+-----
+* Add more logging to exceptions.
+
 1.2.1
 -----
 * Display the scan card button if device supports card scanning.
