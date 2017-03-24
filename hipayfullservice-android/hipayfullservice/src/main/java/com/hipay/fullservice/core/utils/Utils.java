@@ -5,6 +5,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.hipay.fullservice.core.errors.exceptions.ApiException;
+import com.hipay.fullservice.core.errors.exceptions.HttpException;
+import com.hipay.fullservice.core.logging.Logger;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -386,5 +390,76 @@ public class Utils {
             }
         }
         return sb.toString();
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static void logFromException(Exception exception, String client) {
+
+        Throwable throwable = exception;
+
+        do
+        {
+
+            StringBuilder stringBuilder;
+
+            if (client != null) {
+                stringBuilder = new StringBuilder("Error ").append(client).append(":");
+            } else {
+                stringBuilder = new StringBuilder("Error:");
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                stringBuilder.append(System.lineSeparator());
+
+            } else {
+                stringBuilder.append(System.getProperty("line.separator"));
+            }
+
+            if (throwable instanceof ApiException)
+            {
+                ApiException apiException = (ApiException) throwable;
+
+                stringBuilder.append("API code: ").append(apiException.getApiCode());
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    stringBuilder.append(System.lineSeparator());
+
+                } else {
+                    stringBuilder.append(System.getProperty("line.separator"));
+                }
+
+                stringBuilder.append("Status code: ").append(apiException.getStatusCode());
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    stringBuilder.append(System.lineSeparator());
+
+                } else {
+                    stringBuilder.append(System.getProperty("line.separator"));
+                }
+
+                stringBuilder.append("Message: ").append(apiException.getMessage());
+
+            } else
+
+            if (throwable instanceof HttpException)
+            {
+                HttpException httpException = (HttpException) throwable;
+                stringBuilder.append("Status code: ").append(httpException.getStatusCode());
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    stringBuilder.append(System.lineSeparator());
+
+                } else {
+                    stringBuilder.append(System.getProperty("line.separator"));
+                }
+
+                stringBuilder.append("Message: ").append(httpException.getMessage());
+            }
+
+            Logger.d(stringBuilder.toString());
+            throwable = throwable.getCause();
+
+        } while (throwable != null);
+
     }
 }

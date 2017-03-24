@@ -64,6 +64,5 @@ public class OrderReqHandler extends AbstractReqHandler {
 
         OrderRequestCallback orderRequestCallback = (OrderRequestCallback)this.getCallback();
         orderRequestCallback.onError(apiException);
-
     }
 }
