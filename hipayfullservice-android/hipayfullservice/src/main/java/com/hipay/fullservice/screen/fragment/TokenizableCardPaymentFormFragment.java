@@ -641,7 +641,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                 if (diffLength < 0) {
 
                     // delete the space when we find one
-                    if (diffLength == -1 && isLastSpace == true) {
+                    if (diffLength == -1 && isLastSpace == true && editable.length() > 0) {
+
                         editable.delete(editable.length()-1, editable.length());
                     }
 
