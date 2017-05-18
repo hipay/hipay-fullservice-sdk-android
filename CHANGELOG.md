@@ -1,6 +1,10 @@
 HiPay Android SDK change log and release notes
 ================================================
 
+1.3.3
+-----
+* Fixes the available-payment-products url in production.
+
 1.3.2
 -----
 * Fixes the bug related to space in card number form.
