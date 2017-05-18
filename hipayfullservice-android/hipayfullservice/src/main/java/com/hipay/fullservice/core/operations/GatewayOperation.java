@@ -69,9 +69,18 @@ public abstract class GatewayOperation extends AbstractOperation {
                 } else {
                     return ClientConfig.GatewayClientBaseURLStage;
                 }
-
             }
-            case Production: return ClientConfig.GatewayClientBaseURLProduction;
+
+            case Production: {
+
+                if (this.isV2()) {
+                    return ClientConfig.GatewayClientBaseURLNewProduction;
+
+                } else {
+                    return ClientConfig.GatewayClientBaseURLProduction;
+                }
+            }
+
             default: return null;
         }
     }
