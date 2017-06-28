@@ -92,8 +92,10 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
             contextWeakReference = new WeakReference<>(context);
         }
 
-        FragmentActivity activity = (FragmentActivity) this.getContext();
-        activity.getSupportLoaderManager().destroyLoader(this.getLoaderId());
+        if (this.getContext() instanceof FragmentActivity) {
+            FragmentActivity activity = (FragmentActivity) this.getContext();
+            activity.getSupportLoaderManager().destroyLoader(this.getLoaderId());
+        }
     }
 
     protected void launchOperation() {

@@ -821,7 +821,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                     public void onError(Exception error) {
 
                         if (mCallback != null) {
-                            cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
+                            cancelLoaderId(AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue());
                             mCallback.onCallbackOrderReceived(null, error);
                         }
                     }

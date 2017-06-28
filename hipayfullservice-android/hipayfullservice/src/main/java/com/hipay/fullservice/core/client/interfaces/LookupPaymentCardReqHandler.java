@@ -62,7 +62,7 @@ public class LookupPaymentCardReqHandler extends AbstractReqHandler {
 
     @Override
     public int getLoaderId() {
-        return AbstractClient.RequestLoaderId.UpdatePaymentCardLoaderId.getIntegerValue();
+        return AbstractClient.RequestLoaderId.LookupPaymentCardLoaderId.getIntegerValue();
     }
 }
 
