@@ -133,14 +133,8 @@ public class ForwardWebViewActivity extends AppCompatActivity {
             //OrderRelatedRequest.OrderRelatedRequestRedirectPathPending
             //);
 
-            if (!pathSegments.isEmpty() && pathSegments.size() == 4) {
-
-                if (
-                        pathSegments.get(0).equalsIgnoreCase(OrderRelatedRequest.GatewayCallbackURLPathName) &&
-                                pathSegments.get(1).equalsIgnoreCase(OrderRelatedRequest.GatewayCallbackURLOrderPathName) &&
-
-                                transactionStatus.containsKey(pathSegments.get(3))
-                        )
+            if (!pathSegments.isEmpty()) {
+                if (transactionStatus.containsKey(pathSegments.get(pathSegments.size() - 1)))
                 {
 
                     transaction = Transaction.fromUri(data);
