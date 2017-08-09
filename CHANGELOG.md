@@ -1,6 +1,10 @@
 HiPay Android SDK change log and release notes
 ================================================
 
+1.3.5
+-----
+* Fixes the wrong operation parameter.
+
 1.3.4
 -----
 * Fixes the cancel loader requests.
