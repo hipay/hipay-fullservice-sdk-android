@@ -167,34 +167,36 @@ public class OrderRelatedRequest extends AbstractRequest {
 
     public enum OrderRequestOperation {
 
-        Undefined(0),
-        Authorization(1), Sale(2);
-        protected final Integer operation;
-        OrderRequestOperation(Integer operation) {
+        Undefined(null),
+        Authorization("Authorization"), Sale("Sale");
 
+        protected final String operation;
+
+        OrderRequestOperation(String operation)
+        {
             this.operation = operation;
         }
 
-        public static OrderRequestOperation fromIntegerValue(Integer value) {
+        public static OrderRequestOperation fromStringValue(String value) {
 
             if (value == null) return null;
 
-            if (value.equals(Authorization.getIntegerValue())) {
+            if (value.equals(Authorization.getStringValue())) {
                 return Authorization;
             }
 
-            if (value.equals(Sale.getIntegerValue())) {
+            if (value.equals(Sale.getStringValue())) {
                 return Sale;
             }
 
             return null;
         }
 
-        public Integer getIntegerValue() {
+        public String getStringValue()
+        {
             return this.operation;
         }
     }
-
 
     public String getOrderId() {
         return orderId;
@@ -484,9 +486,9 @@ public class OrderRelatedRequest extends AbstractRequest {
 
             orderRelatedRequest.setOrderId(this.getStringForKey("orderid"));
 
-            Integer operationValue = this.getIntegerForKey("operation");
+            String operationValue = this.getStringForKey("operation");
             if (operationValue != null) {
-                orderRelatedRequest.setOperation(OrderRequestOperation.fromIntegerValue(operationValue));
+                orderRelatedRequest.setOperation(OrderRequestOperation.fromStringValue(operationValue));
             }
 
             orderRelatedRequest.setShortDescription(this.getStringForKey("description"));
