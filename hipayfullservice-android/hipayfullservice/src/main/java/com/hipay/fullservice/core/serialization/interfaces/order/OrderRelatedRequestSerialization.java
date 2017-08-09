@@ -31,7 +31,7 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
 
         OrderRelatedRequest.OrderRequestOperation operation = orderRelatedRequest.getOperation();
         if (operation != null) {
-            retMap.put("operation", String.valueOf(operation.getIntegerValue()));
+            retMap.put("operation", operation.getStringValue());
         }
 
         retMap.put("description", orderRelatedRequest.getShortDescription());
@@ -120,7 +120,7 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
 
         OrderRelatedRequest.OrderRequestOperation operation = orderRelatedRequest.getOperation();
         if (operation != null) {
-            this.putIntForKey("operation", operation.getIntegerValue());
+            this.putStringForKey("operation", operation.getStringValue());
         }
 
         this.putStringForKey("description", orderRelatedRequest.getShortDescription());
