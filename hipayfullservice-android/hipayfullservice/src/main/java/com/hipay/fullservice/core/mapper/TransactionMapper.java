@@ -203,7 +203,7 @@ public class TransactionMapper extends TransactionRelatedItemMapper {
 
         JSONObject threeDSecureObject = this.getJSONObjectForKey("threeDSecure");
         ThreeDSecure threeDSecure = null;
-        if (threeDSecure != null) {
+        if (threeDSecureObject != null) {
             threeDSecure = ThreeDSecure.fromJSONObject(threeDSecureObject);
         }
         object.setThreeDSecure(threeDSecure);
