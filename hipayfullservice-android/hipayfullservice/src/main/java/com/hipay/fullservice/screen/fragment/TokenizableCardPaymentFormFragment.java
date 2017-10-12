@@ -601,9 +601,12 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                 } else {
 
-                    if (version.length() == 1 && diffLength == 1 && changeStart == 0 && Integer.valueOf(version) > 1  ) {
+                    if (version.length() == 1 && diffLength == 1 && changeStart == 0) {
 
-                        editable.insert(0, "0");
+                        if (TextUtils.isDigitsOnly(version) && Integer.valueOf(version) > 1)
+                        {
+                            editable.insert(0, "0");
+                        }
                     }
 
                     if (!version.contains("/")) {
