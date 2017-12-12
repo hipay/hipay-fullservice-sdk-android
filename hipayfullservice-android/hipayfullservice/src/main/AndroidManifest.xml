@@ -36,6 +36,14 @@
             android:launchMode="singleTop"
             android:configChanges="orientation|screenSize">
 
+            <intent-filter>
+            <data android:scheme="bepgenapp"
+                />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+
         </activity>
 
         <activity android:name="io.card.payment.CardIOActivity" android:configChanges="keyboardHidden|orientation"

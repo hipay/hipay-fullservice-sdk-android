@@ -41,6 +41,8 @@
     <string name="error_title_default">Une erreur est survenue</string>
     <string name="error_body_default">Votre demande n\'a pu aboutir.</string>
 
+    <string name="error_body_bcmc_app_not_found">L\'application Bancontact n\'a pas pu être trouvée.</string>
+
     <string name="error_body_payment_products">Aucun moyen de paiement n\'a été trouvé.</string>
 
     <string name="error_title_connection">Erreur de connexion</string>

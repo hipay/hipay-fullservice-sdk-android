@@ -47,6 +47,8 @@
     <string name="error_body_default">Your request could not be completed</string>
 
     <string name="error_body_payment_products">No paiment product found</string>
+
+    <string name="error_body_bcmc_app_not_found">Bancontact app could not be found</string>
     <string name="error_title_connection">Network error</string>
 
     <string name="card_expiration_placeholder">MM / AA</string>
