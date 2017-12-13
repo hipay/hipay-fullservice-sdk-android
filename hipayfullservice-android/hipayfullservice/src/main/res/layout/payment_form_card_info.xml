@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_double"
             android:layout_marginLeft="@dimen/spacing_double"
-            android:src="@drawable/ic_info_black"
+            android:src="@drawable/ic_info_nfc_black"
             android:contentDescription="@string/content_description"
             />
 

@@ -25,7 +25,7 @@
     <string name="nfc_error_unknown_card">Unknown EMV card</string>
     <string name="nfc_locked">NFC is locked on your card</string>
     <string name="activate_nfc_sensor">Activate the NFC Sensor</string>
-    <string name="nfc_activated">Bump and hold your payment card to the back of your phone</string>
+    <string name="nfc_activated">Bump and hold your contactless payment card to the back of your phone</string>
 
     <string name="refresh">Refresh</string>
 
@@ -47,6 +47,8 @@
     <string name="error_body_default">Your request could not be completed</string>
 
     <string name="error_body_payment_products">No paiment product found</string>
+
+    <string name="error_body_bcmc_app_not_found">Bancontact app could not be found</string>
     <string name="error_title_connection">Network error</string>
 
     <string name="card_expiration_placeholder">MM / AA</string>

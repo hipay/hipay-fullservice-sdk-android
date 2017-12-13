@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.net.UrlQuerySanitizer;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,7 +36,6 @@ import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
-import java.net.URI;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
@@ -171,10 +169,39 @@ public class ForwardWebViewActivity extends AppCompatActivity {
             setResult(R.id.transaction_succeed, transactionIntent);
             finish();
 
-        } else {
-
+        } else
+        {
             //fail, should not happen
-            finish();
+
+            if (data != null)
+            {
+                if (data.getScheme().equals("bepgenapp"))
+                {
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    };
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(R.string.error_title_default)
+                            .setMessage(R.string.error_body_bcmc_app_not_found)
+                            .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                            .setCancelable(false)
+                            .show();
+
+                } else
+                {
+                    finish();
+                }
+
+            } else
+            {
+                finish();
+            }
         }
     }
 
@@ -268,8 +295,15 @@ public class ForwardWebViewActivity extends AppCompatActivity {
                 return true;
             }
 
-            //let the webview load the page
+            if (data.getScheme().equals("bepgenapp"))
+            {
+                Intent viewIntent = new Intent("android.intent.action.VIEW", data);
+                startActivity(viewIntent);
+                return true;
+            }
+
             return false;
+
         }
 
         @TargetApi(Build.VERSION_CODES.KITKAT)

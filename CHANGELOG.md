@@ -1,6 +1,10 @@
 HiPay Android SDK change log and release notes
 ================================================
 
+1.3.6
+-----
+* Handle Bancontact scheme app.
+
 1.3.5
 -----
 * Fixes the wrong operation parameter.
