@@ -15,11 +15,6 @@ buildscript {
     }
 }
 
-//plugins {
-    //id "com.jfrog.bintray" version "1.7"
-//}
-
-
 allprojects {
     repositories {
         jcenter()
