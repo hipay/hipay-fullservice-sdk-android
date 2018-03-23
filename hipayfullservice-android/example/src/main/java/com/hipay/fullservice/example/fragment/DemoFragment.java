@@ -46,6 +46,7 @@ import com.hipay.fullservice.core.client.config.ClientConfig;
 import com.hipay.fullservice.core.errors.Errors;
 import com.hipay.fullservice.core.errors.exceptions.ApiException;
 import com.hipay.fullservice.core.models.Transaction;
+import com.hipay.fullservice.core.requests.order.OrderRelatedRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.example.DemoActivity;
@@ -107,7 +108,10 @@ public class DemoFragment extends Fragment {
             if (resultCode == R.id.transaction_succeed) {
 
                 Bundle transactionBundle = data.getBundleExtra(Transaction.TAG);
-                Transaction transaction = Transaction.fromBundle(transactionBundle);
+                Transaction transaction = (Transaction) transactionBundle.getSerializable(Transaction.TAG);
+
+                // @Deprecated Use Native Serialization
+                // Transaction transaction = Transaction.fromBundle(transactionBundle);
 
                 Snackbar snackbar = Snackbar.make(mDoneFab, "Transaction state: " + transaction.getState().getStringValue(),
                         Snackbar.LENGTH_INDEFINITE);
@@ -538,6 +542,7 @@ public class DemoFragment extends Fragment {
         paymentPageRequest.getCustomer().setZipCode("75012");
         paymentPageRequest.getCustomer().setCountry("FR");
         paymentPageRequest.getCustomer().setState("France");
+        paymentPageRequest.setOperation(OrderRelatedRequest.OrderRequestOperation.Sale);
 
         paymentPageRequest.setTax(2.67f);
         paymentPageRequest.setShipping(1.56f);

@@ -7,12 +7,13 @@ import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.Set;
 
 /**
  * Created by nfillion on 25/01/16.
  */
-public class PaymentProduct extends AbstractModel {
+public class PaymentProduct extends AbstractModel  implements Serializable {
 
     public static final String TAG = "Payment_product";
 
@@ -43,7 +44,7 @@ public class PaymentProduct extends AbstractModel {
     public static PaymentProduct fromBundle(Bundle bundle) {
 
         PaymentProductMapper mapper = new PaymentProductMapper(bundle);
-        return mapper.mappedObjectFromBundle();
+        return mapper.mappedObject();
     }
 
     public Bundle toBundle() {

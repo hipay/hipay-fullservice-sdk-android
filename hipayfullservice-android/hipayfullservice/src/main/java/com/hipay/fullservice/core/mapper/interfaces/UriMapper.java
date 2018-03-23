@@ -100,7 +100,7 @@ public class UriMapper implements IBehaviour {
     public String getEnumCharForKey(String key) {
 
         String string = this.getStringForKey(key);
-        if (string != null && string.length() == 1)  {
+        if (string != null && string.length() == 1) {
             return string;
         }
 
@@ -163,10 +163,6 @@ public class UriMapper implements IBehaviour {
     public Object getObjectForKey(String key) {
         return null;
     }
-
-    //public Uri getUriObject() {
-        //return uriObject;
-    //}
 
     public void setUriObject(Uri uriObject) {
         this.uriObject = uriObject;

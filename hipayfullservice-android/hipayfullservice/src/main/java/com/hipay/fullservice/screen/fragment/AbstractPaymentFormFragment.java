@@ -340,6 +340,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         }
     }
 
+
     public void cancelOperations() {
 
         if (mGatewayClient != null) {

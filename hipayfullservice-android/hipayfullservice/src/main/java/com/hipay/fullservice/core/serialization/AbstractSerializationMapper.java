@@ -68,7 +68,6 @@ public abstract class AbstractSerializationMapper {
     }
 
     public AbstractSerializationMapper(AbstractModel model) {
-
         this.initSerializing(model);
     }
 
@@ -78,15 +77,11 @@ public abstract class AbstractSerializationMapper {
     }
 
     private void initSerializing(Exception exception) {
-
         if (exception instanceof ApiException) {
-
-            ApiException apiException = (ApiException)exception;
+            ApiException apiException = (ApiException) exception;
             this.setSerialization(new ApiException.ApiExceptionSerialization(apiException));
-
         } else if (exception instanceof HttpException) {
-
-            HttpException httpException = (HttpException)exception;
+            HttpException httpException = (HttpException) exception;
             this.setSerialization(new HttpException.HttpExceptionSerialization(httpException));
         }
     }
@@ -139,27 +134,27 @@ public abstract class AbstractSerializationMapper {
 
         if (request instanceof PaymentPageRequest) {
 
-            PaymentPageRequest paymentPageRequest = (PaymentPageRequest)request;
+            PaymentPageRequest paymentPageRequest = (PaymentPageRequest) request;
             this.setSerialization(new PaymentPageRequestSerialization(paymentPageRequest));
 
         } else if (request instanceof OrderRequest) {
 
-            OrderRequest orderRequest = (OrderRequest)request;
+            OrderRequest orderRequest = (OrderRequest) request;
             this.setSerialization(new OrderRequestSerialization(orderRequest));
 
         } else if (request instanceof CustomerInfoRequest) {
 
-            CustomerInfoRequest customerInfoRequest = (CustomerInfoRequest)request;
+            CustomerInfoRequest customerInfoRequest = (CustomerInfoRequest) request;
             this.setSerialization(new CustomerInfoRequest.CustomerInfoRequestSerialization(customerInfoRequest));
 
         } else if (request instanceof PersonalInfoRequest) {
 
-            PersonalInfoRequest personalInfoRequest = (PersonalInfoRequest)request;
+            PersonalInfoRequest personalInfoRequest = (PersonalInfoRequest) request;
             this.setSerialization(new PersonalInfoRequest.PersonalInfoRequestSerialization(personalInfoRequest));
 
         } else if (request instanceof GenerateTokenRequest) {
 
-            GenerateTokenRequest generateTokenRequest = (GenerateTokenRequest)request;
+            GenerateTokenRequest generateTokenRequest = (GenerateTokenRequest) request;
             this.setSerialization(new SecureVaultRequestSerialization(generateTokenRequest));
 
         } else if (request instanceof UpdatePaymentCardRequest) {
@@ -171,10 +166,9 @@ public abstract class AbstractSerializationMapper {
 
             LookupPaymentCardRequest lookupPaymentCardRequest = (LookupPaymentCardRequest) request;
             this.setSerialization(new LookupPaymentCardRequestSerialization(lookupPaymentCardRequest));
-
         } else if (request instanceof CardTokenPaymentMethodRequest) {
 
-            CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest = (CardTokenPaymentMethodRequest)request;
+            CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest = (CardTokenPaymentMethodRequest) request;
             this.setSerialization(new CardTokenPaymentMethodRequestSerialization(cardTokenPaymentMethodRequest));
         }
     }

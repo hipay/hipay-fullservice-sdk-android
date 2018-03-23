@@ -7,10 +7,12 @@ import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by nfillion on 08/03/16.
  */
-public class PaymentCardToken extends PaymentMethod {
+public class PaymentCardToken extends PaymentMethod implements Serializable {
 
     protected String token;
     protected String brand;
@@ -32,7 +34,7 @@ public class PaymentCardToken extends PaymentMethod {
     public static PaymentCardToken fromBundle(Bundle bundle) {
 
         PaymentCardTokenMapper mapper = new PaymentCardTokenMapper(bundle);
-        return mapper.mappedObjectFromBundle();
+        return mapper.mappedObject();
     }
 
     public Bundle toBundle() {

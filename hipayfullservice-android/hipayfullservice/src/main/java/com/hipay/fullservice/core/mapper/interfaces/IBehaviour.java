@@ -16,28 +16,35 @@ public interface IBehaviour {
 
     // Object?
     Object getObjectForKey(String key);
+
     String getStringForKey(String key);
+
     Float getFloatForKey(String key);
 
     String getLowercaseStringForKey(String key);
+
     Number getNumberForKey(String key);
+
     Integer getIntegerForKey(String key);
 
     Date getDateForKey(String key);
+
     String getEnumCharForKey(String key);
 
     Bundle getBundleForKey(String key);
+
     Boolean getBoolNumberForKey(String key);
+
     JSONObject getJSONObjectForKey(String key);
 
     Map<String, String> getMapJSONForKey(String key);
 
     Boolean getBoolForKey(String key);
+
     Map getMapForKey(String key);
 
-    //public getYearAndMonthForKey
-
     URL getURLForKey(String key);
+
     List getArrayFromObject(Object object);
 
 }

@@ -420,7 +420,10 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
             case TransactionStatePending: {
 
                 Intent intent = getIntent();
-                intent.putExtra(Transaction.TAG, transaction.toBundle());
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable(Transaction.TAG, transaction);
+                intent.putExtra(Transaction.TAG, bundle);
                 setResult(R.id.transaction_succeed, intent);
 
                 formResult = FormResult.FormActionQuit;

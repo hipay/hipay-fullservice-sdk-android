@@ -7,25 +7,18 @@ import com.hipay.fullservice.core.models.HostedPaymentPage;
  * Created by nfillion on 08/09/16.
  */
 public class HostedPaymentPageMapper extends AbstractMapper {
+
     public HostedPaymentPageMapper(Object rawdata) {
         super(rawdata);
     }
 
     @Override
     public boolean isValid() {
-
-        if (this.getBehaviour() instanceof MapMapper) {
-
-            if (this.getURLForKey("forwardUrl") != null) {
-                return true;
-            }
-        }
-
-        return false;
+        return this.getBehaviour() instanceof MapMapper && this.getURLForKey("forwardUrl") != null;
     }
 
+    @Override
     public HostedPaymentPage mappedObject() {
-
         HostedPaymentPage object = new HostedPaymentPage();
 
         object.setCdata1(this.getStringForKey("cdata1"));
@@ -38,23 +31,11 @@ public class HostedPaymentPageMapper extends AbstractMapper {
         object.setCdata8(this.getStringForKey("cdata8"));
         object.setCdata9(this.getStringForKey("cdata9"));
         object.setCdata10(this.getStringForKey("cdata10"));
-
         object.setForwardUrl(this.getURLForKey("forwardUrl"));
         object.setTest(this.getBoolForKey("test"));
         object.setMid(this.getStringForKey("mid"));
 
         return object;
-
-    }
-
-    @Override
-    protected Object mappedObjectFromBundle() {
-        return null;
-    }
-
-    @Override
-    protected Object mappedObjectFromUri() {
-        return null;
     }
 }
 

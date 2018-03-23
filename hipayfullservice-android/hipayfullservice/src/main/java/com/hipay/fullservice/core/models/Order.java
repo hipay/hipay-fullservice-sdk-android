@@ -8,14 +8,15 @@ import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by nfillion on 25/01/16.
  */
-public class Order extends PersonalInformation {
+public class Order extends PersonalInformation implements Serializable {
 
-    protected String orderId;
+        protected String orderId;
     protected Date dateCreated;
     protected Integer attempts;
     protected Float amount;
@@ -41,7 +42,7 @@ public class Order extends PersonalInformation {
     public static Order fromBundle(Bundle bundle) {
 
         OrderMapper mapper = new OrderMapper(bundle);
-        return mapper.mappedObjectFromBundle();
+        return mapper.mappedObject();
     }
 
     public Bundle toBundle() {

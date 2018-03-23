@@ -13,16 +13,11 @@ public class PersonalInformationMapper extends AbstractMapper {
     }
 
     @Override
-    protected boolean isValid() {
-
-        if (this.getBehaviour() instanceof MapMapper) {
-
-            if (this.getStringForKey("email") != null) return true;
-        }
-
-        return false;
+    public boolean isValid() {
+        return this.getBehaviour() instanceof MapMapper && this.getStringForKey("email") != null;
     }
 
+    @Override
     public PersonalInformation mappedObject() {
 
         PersonalInformation object = new PersonalInformation();
@@ -40,30 +35,6 @@ public class PersonalInformationMapper extends AbstractMapper {
 
         return object;
 
-    }
-
-    @Override
-    public PersonalInformation mappedObjectFromBundle() {
-
-        PersonalInformation object = new PersonalInformation();
-
-        object.setFirstname(this.getStringForKey("firstname"));
-        object.setLastname(this.getStringForKey("lastname"));
-        object.setStreetAddress(this.getStringForKey("streetAddress"));
-        object.setLocality(this.getStringForKey("streetLocality"));
-        object.setPostalCode(this.getStringForKey("postalCode"));
-        object.setCountry(this.getStringForKey("country"));
-        object.setMsisdn(this.getStringForKey("msisdn"));
-        object.setPhone(this.getStringForKey("phone"));
-        object.setPhoneOperator(this.getStringForKey("phoneOperator"));
-        object.setEmail(this.getStringForKey("email"));
-
-        return object;
-    }
-
-    @Override
-    protected Object mappedObjectFromUri() {
-        return null;
     }
 }
 

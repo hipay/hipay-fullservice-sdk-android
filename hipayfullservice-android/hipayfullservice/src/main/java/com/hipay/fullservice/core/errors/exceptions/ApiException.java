@@ -2,11 +2,9 @@ package com.hipay.fullservice.core.errors.exceptions;
 
 import android.os.Bundle;
 
-import com.hipay.fullservice.core.mapper.AbstractMapper;
-import com.hipay.fullservice.core.mapper.interfaces.BundleMapper;
-import com.hipay.fullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 import com.hipay.fullservice.core.serialization.interfaces.AbstractSerialization;
+import com.hipay.fullservice.core.mapper.ApiExceptionMapper;
 
 import java.util.Map;
 
@@ -25,7 +23,7 @@ public class ApiException extends AbstractException {
     public static ApiException fromBundle(Bundle bundle) {
 
         ApiExceptionMapper mapper = new ApiExceptionMapper(bundle);
-        return mapper.mappedObjectFromBundle();
+        return mapper.mappedObject();
     }
 
     public Bundle toBundle() {
@@ -48,58 +46,6 @@ public class ApiException extends AbstractException {
         @Override
         protected Bundle getSerializedBundle() {
             return super.getSerializedBundle();
-        }
-    }
-
-    public static class ApiExceptionMapper extends AbstractMapper {
-
-        public ApiExceptionMapper(Object rawData) {
-            super(rawData);
-        }
-
-        @Override
-        protected boolean isValid() {
-
-            if (this.getBehaviour() instanceof MapMapper) {
-
-                return true;
-
-            } else if (getBehaviour() instanceof BundleMapper) {
-
-                return true;
-            }
-
-            return true;
-        }
-
-        @Override
-        protected ApiException mappedObject() {
-
-            return null;
-        }
-
-        @Override
-        protected ApiException mappedObjectFromBundle() {
-
-            Bundle exceptionBundle = this.getBundleForKey("cause");
-            HttpException httpException = null;
-            if (exceptionBundle != null) {
-                httpException = HttpException.fromBundle(exceptionBundle);
-            }
-
-            ApiException object = new ApiException(
-                    this.getStringForKey("message"),
-                    this.getIntegerForKey("code"),
-                    this.getIntegerForKey("apiCode"),
-                    httpException
-            );
-
-            return object;
-        }
-
-        @Override
-        protected Object mappedObjectFromUri() {
-            return null;
         }
     }
 

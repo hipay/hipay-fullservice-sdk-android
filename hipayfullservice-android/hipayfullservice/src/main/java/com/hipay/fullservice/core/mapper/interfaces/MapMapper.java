@@ -38,9 +38,9 @@ public class MapMapper implements IBehaviour {
     public Float getFloatForKey(String key) {
 
         Object object = this.getObjectForKey(key);
-        if (object != null ) {
+        if (object != null) {
             if (object instanceof String) {
-                String digits = (String)object;
+                String digits = (String) object;
 
                 Float floatForKey;
                 try {
@@ -68,7 +68,7 @@ public class MapMapper implements IBehaviour {
     public String getEnumCharForKey(String key) {
 
         String string = this.getStringForKey(key);
-        if (string != null && string.length() == 1)  {
+        if (string != null && string.length() == 1) {
 
             return string;
         }
@@ -84,10 +84,10 @@ public class MapMapper implements IBehaviour {
     public Number getNumberForKey(String key) {
 
         Object object = this.getObjectForKey(key);
-        if (object != null ) {
+        if (object != null) {
             if (object instanceof String) {
 
-                String digits = (String)object;
+                String digits = (String) object;
                 if (TextUtils.isDigitsOnly(digits)) {
 
                     Number number = Integer.parseInt(digits);
@@ -102,10 +102,10 @@ public class MapMapper implements IBehaviour {
     public Integer getIntegerForKey(String key) {
 
         Object object = this.getObjectForKey(key);
-        if (object != null ) {
+        if (object != null) {
             if (object instanceof String) {
 
-                String digits = (String)object;
+                String digits = (String) object;
                 if (TextUtils.isDigitsOnly(digits)) {
 
                     return Integer.parseInt(digits);
@@ -167,7 +167,7 @@ public class MapMapper implements IBehaviour {
             }
         } else if (object instanceof Boolean) {
 
-            return (Boolean)object;
+            return (Boolean) object;
         }
 
         return null;
@@ -177,7 +177,7 @@ public class MapMapper implements IBehaviour {
 
         Object object = this.getObjectForKey(key);
         if (object instanceof Map) {
-            return (Map)object;
+            return (Map) object;
         }
         return null;
     }

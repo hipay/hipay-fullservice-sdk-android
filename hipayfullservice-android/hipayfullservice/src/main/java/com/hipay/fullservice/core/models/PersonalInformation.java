@@ -7,10 +7,12 @@ import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by nfillion on 25/01/16.
  */
-public class PersonalInformation extends AbstractModel {
+public class PersonalInformation extends AbstractModel  implements Serializable {
 
     protected String firstname;
     protected String lastname;
@@ -52,7 +54,7 @@ public class PersonalInformation extends AbstractModel {
     public static PersonalInformation fromBundle(Bundle bundle) {
 
         PersonalInformationMapper mapper = new PersonalInformationMapper(bundle);
-        return mapper.mappedObjectFromBundle();
+        return mapper.mappedObject();
     }
 
     public Bundle toBundle() {

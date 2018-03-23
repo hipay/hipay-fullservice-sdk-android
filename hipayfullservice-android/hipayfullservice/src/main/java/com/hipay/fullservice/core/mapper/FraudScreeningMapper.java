@@ -15,26 +15,14 @@ public class FraudScreeningMapper extends AbstractMapper {
     }
 
     @Override
-    protected boolean isValid() {
-
+    public boolean isValid() {
         // from JSON only, not bundle?
-        if (this.getBehaviour() instanceof MapMapper) {
-
-            if (    this.getStringForKey("result") != null &&
+        if (this.getBehaviour() instanceof MapMapper || this.getBehaviour() instanceof BundleMapper) {
+            if (this.getStringForKey("result") != null &&
                     this.getIntegerForKey("scoring") != null) {
-
-                return true;
-            }
-
-        } else if (this.getBehaviour() instanceof BundleMapper) {
-
-            if (    this.getStringForKey("result") != null &&
-                    this.getIntegerForKey("scoring") != null) {
-
                 return true;
             }
         }
-
         return false;
     }
 
@@ -61,35 +49,6 @@ public class FraudScreeningMapper extends AbstractMapper {
 
         return object;
 
-    }
-
-    @Override
-    public FraudScreening mappedObjectFromBundle() {
-
-        FraudScreening object = new FraudScreening();
-
-        object.setScoring(this.getIntegerForKey("scoring"));
-
-        String resultString = this.getLowercaseStringForKey("result");
-        FraudScreening.FraudScreeningResult result = FraudScreening.FraudScreeningResult.fromStringValue(resultString);
-        if (result == null) {
-            result = FraudScreening.FraudScreeningResult.FraudScreeningResultUnknown;
-        }
-        object.setResult(result);
-
-        String reviewString = this.getLowercaseStringForKey("review");
-        FraudScreening.FraudScreeningReview review = FraudScreening.FraudScreeningReview.fromStringValue(reviewString);
-        if (review == null) {
-            review = FraudScreening.FraudScreeningReview.FraudScreeningReviewNone;
-        }
-        object.setReview(review);
-
-        return object;
-    }
-
-    @Override
-    protected Object mappedObjectFromUri() {
-        return null;
     }
 }
 

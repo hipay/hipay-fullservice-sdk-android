@@ -1,11 +1,12 @@
 package com.hipay.fullservice.core.models;
 
 import java.util.Date;
+import java.io.Serializable;
 
 /**
  * Created by nfillion on 25/01/16.
  */
-public class TransactionRelatedItem extends AbstractModel {
+public class TransactionRelatedItem extends AbstractModel implements Serializable {
 
     protected Boolean test;
     protected String mid;

@@ -2,7 +2,7 @@ package com.hipay.fullservice.core.requests.info;
 
 import android.os.Bundle;
 
-import com.hipay.fullservice.core.mapper.interfaces.MapMapper;
+import com.hipay.fullservice.core.mapper.CustomerInfoRequestMapper;
 import com.hipay.fullservice.core.models.Order;
 import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 import com.hipay.fullservice.core.utils.Utils;
@@ -24,7 +24,7 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
     public static CustomerInfoRequest fromBundle(Bundle bundle) {
 
         CustomerInfoRequestMapper mapper = new CustomerInfoRequestMapper(bundle);
-        return mapper.mappedObjectFromBundle();
+        return mapper.mappedObject();
     }
 
     public static CustomerInfoRequest fromJSONObject(JSONObject jsonObject) {
@@ -209,83 +209,5 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
         }
     }
 
-    public static class CustomerInfoRequestMapper extends PersonalInfoRequestMapper {
-        public CustomerInfoRequestMapper(Object rawData) {
-            super(rawData);
-        }
-
-        @Override
-        protected boolean isValid() {
-
-            if (getBehaviour() instanceof MapMapper) {
-                return true;
-            }
-
-            return false;
-        }
-
-        @Override
-        protected CustomerInfoRequest mappedObject() {
-
-            //used in HostedPaymentPageMapper (see on iOS), using OrderMapper
-
-            PersonalInfoRequest personalInfoRequest = super.mappedObject();
-            CustomerInfoRequest object = this.customerFromPersonalRequest(personalInfoRequest);
-
-            object.setEmail(this.getStringForKey("email"));
-            object.setPhone(this.getStringForKey("phone"));
-            object.setBirthDateDay(this.getIntegerForKey("birthDateDay"));
-            object.setBirthDateMonth(this.getIntegerForKey("birthDateMonth"));
-            object.setBirthDateYear(this.getIntegerForKey("birthDateYear"));
-
-            String genderChar = this.getEnumCharForKey("gender");
-            Order.Gender gender = Order.Gender.fromStringValue(genderChar);
-            if (gender == null) {
-                gender = Order.Gender.GenderUnknown;
-            }
-            object.setGender(gender);
-
-            return object;
-        }
-
-        @Override
-        protected CustomerInfoRequest mappedObjectFromBundle() {
-
-            PersonalInfoRequest personalInfoRequest = super.mappedObjectFromBundle();
-            CustomerInfoRequest object = this.customerFromPersonalRequest(personalInfoRequest);
-
-            object.setEmail(this.getStringForKey("email"));
-            object.setPhone(this.getStringForKey("phone"));
-            object.setBirthDateDay(this.getIntegerForKey("birthDateDay"));
-            object.setBirthDateMonth(this.getIntegerForKey("birthDateMonth"));
-            object.setBirthDateYear(this.getIntegerForKey("birthDateYear"));
-
-            String genderChar = this.getEnumCharForKey("gender");
-            Order.Gender gender = Order.Gender.fromStringValue(genderChar);
-            if (gender == null) {
-                gender = Order.Gender.GenderUnknown;
-            }
-            object.setGender(gender);
-
-            return object;
-        }
-
-        private CustomerInfoRequest customerFromPersonalRequest(PersonalInfoRequest personalInfoRequest) {
-
-            CustomerInfoRequest customerInfoRequest = new CustomerInfoRequest();
-
-            customerInfoRequest.setFirstname(personalInfoRequest.getFirstname());
-            customerInfoRequest.setLastname(personalInfoRequest.getLastname());
-            customerInfoRequest.setStreetAddress(personalInfoRequest.getStreetAddress());
-            customerInfoRequest.setStreetAddress2(personalInfoRequest.getStreetAddress2());
-            customerInfoRequest.setRecipientInfo(personalInfoRequest.getRecipientInfo());
-            customerInfoRequest.setCity(personalInfoRequest.getCity());
-            customerInfoRequest.setState(personalInfoRequest.getState());
-            customerInfoRequest.setZipCode(personalInfoRequest.getZipCode());
-            customerInfoRequest.setCountry(personalInfoRequest.getCountry());
-
-            return customerInfoRequest;
-        }
-    }
 
 }

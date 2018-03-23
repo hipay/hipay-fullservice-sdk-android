@@ -13,20 +13,17 @@ public class OperationMapper extends AbstractMapper {
     }
 
     @Override
-    protected boolean isValid() {
-
+    public boolean isValid() {
         if (this.getBehaviour() instanceof MapMapper) {
-
             if (this.getStringForKey("operation") != null) {
                 return true;
             }
         }
-
         return false;
     }
 
-    protected Operation mappedObject() {
-
+    @Override
+    public Operation mappedObject() {
         Operation object = new Operation();
 
         String operationTypeString = this.getLowercaseStringForKey("operation");
@@ -38,16 +35,6 @@ public class OperationMapper extends AbstractMapper {
 
         return object;
 
-    }
-
-    @Override
-    protected Operation mappedObjectFromBundle() {
-        return null;
-    }
-
-    @Override
-    protected Object mappedObjectFromUri() {
-        return null;
     }
 }
 

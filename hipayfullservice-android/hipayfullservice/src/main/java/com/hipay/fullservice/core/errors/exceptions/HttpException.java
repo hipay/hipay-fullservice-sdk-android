@@ -1,5 +1,6 @@
 package com.hipay.fullservice.core.errors.exceptions;
 
+
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.AbstractMapper;
@@ -7,6 +8,7 @@ import com.hipay.fullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.fullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 import com.hipay.fullservice.core.serialization.interfaces.AbstractSerialization;
+import com.hipay.fullservice.core.mapper.HttpExceptionMapper;
 
 import java.util.Map;
 
@@ -26,7 +28,7 @@ public class HttpException extends AbstractException {
     public static HttpException fromBundle(Bundle bundle) {
 
         HttpExceptionMapper mapper = new HttpExceptionMapper(bundle);
-        return mapper.mappedObjectFromBundle();
+        return mapper.mappedObject();
     }
 
     public Bundle toBundle() {
@@ -54,55 +56,6 @@ public class HttpException extends AbstractException {
         }
     }
 
-    public static class HttpExceptionMapper extends AbstractMapper {
-
-        public HttpExceptionMapper(Object rawData) {
-            super(rawData);
-        }
-
-        @Override
-        protected boolean isValid() {
-
-            if (this.getBehaviour() instanceof MapMapper) {
-
-                return true;
-
-            } else if (getBehaviour() instanceof BundleMapper) {
-
-                return true;
-            }
-
-            return true;
-        }
-
-        protected HttpException mappedObject() {
-
-            return null;
-        }
-
-        @Override
-        protected HttpException mappedObjectFromBundle() {
-
-            Bundle exceptionBundle = this.getBundleForKey("cause");
-            HttpException httpException = null;
-            if (exceptionBundle != null) {
-                httpException = HttpException.fromBundle(exceptionBundle);
-            }
-
-            HttpException object = new HttpException(
-                    this.getStringForKey("message"),
-                    this.getIntegerForKey("code"),
-                    httpException
-            );
-
-            return object;
-        }
-
-        @Override
-        protected Object mappedObjectFromUri() {
-            return null;
-        }
-    }
 
     public static class HttpExceptionSerialization extends AbstractSerialization {
 

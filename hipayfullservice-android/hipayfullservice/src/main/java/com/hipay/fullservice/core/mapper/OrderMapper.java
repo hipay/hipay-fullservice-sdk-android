@@ -1,7 +1,5 @@
 package com.hipay.fullservice.core.mapper;
 
-import android.os.Bundle;
-
 import com.hipay.fullservice.core.models.Order;
 import com.hipay.fullservice.core.models.PersonalInformation;
 
@@ -17,18 +15,12 @@ public class OrderMapper extends PersonalInformationMapper {
     }
 
     @Override
-    protected boolean isValid() {
-
-        if (this.getStringForKey("id") != null) {
-            return true;
-        }
-
-        return false;
+    public boolean isValid() {
+        return this.getStringForKey("id") != null;
     }
 
     @Override
     public Order mappedObject() {
-
         PersonalInformation personalInformation = super.mappedObject();
         Order object = this.orderFromPersonalInformation(personalInformation);
 
@@ -54,42 +46,7 @@ public class OrderMapper extends PersonalInformationMapper {
         JSONObject shippingObject = this.getJSONObjectForKey("shippingAddress");
         PersonalInformation personalInfo = null;
         if (shippingObject != null) {
-            personalInfo= PersonalInformation.fromJSONObject(shippingObject);
-        }
-        object.setShippingAddress(personalInfo);
-
-        return object;
-
-    }
-
-    @Override
-    public Order mappedObjectFromBundle() {
-
-        PersonalInformation personalInformation = super.mappedObjectFromBundle();
-        Order object = this.orderFromPersonalInformation(personalInformation);
-
-        object.setCurrency(this.getStringForKey("currency"));
-        object.setCustomerId(this.getStringForKey("customerId"));
-        object.setLanguage(this.getStringForKey("language"));
-        object.setOrderId(this.getStringForKey("id"));
-        object.setAttempts(this.getIntegerForKey("attempts"));
-        object.setAmount(this.getFloatForKey("amount"));
-        object.setShipping(this.getFloatForKey("shipping"));
-        object.setTax(this.getFloatForKey("tax"));
-        object.setDecimals(this.getIntegerForKey("decimals"));
-
-        String genderString = this.getEnumCharForKey("gender");
-        Order.Gender gender = Order.Gender.fromStringValue(genderString);
-        if (gender == null) {
-            gender = Order.Gender.GenderUndefined;
-        }
-        object.setGender(gender);
-        object.setDateCreated(this.getDateForKey("dateCreated"));
-
-        Bundle shippingBundle = this.getBundleForKey("shippingAddress");
-        PersonalInformation personalInfo = null;
-        if (shippingBundle != null) {
-            personalInfo = PersonalInformation.fromBundle(shippingBundle);
+            personalInfo = PersonalInformation.fromJSONObject(shippingObject);
         }
         object.setShippingAddress(personalInfo);
 
@@ -97,7 +54,6 @@ public class OrderMapper extends PersonalInformationMapper {
     }
 
     private Order orderFromPersonalInformation(PersonalInformation personalInformation) {
-
         Order order = new Order();
 
         order.setFirstname(personalInformation.getFirstname());

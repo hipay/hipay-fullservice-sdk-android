@@ -7,10 +7,12 @@ import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by nfillion on 25/01/16.
  */
-public class FraudScreening extends AbstractModel {
+public class FraudScreening extends AbstractModel implements Serializable {
 
     protected Integer scoring;
     protected FraudScreeningResult result;
@@ -28,7 +30,7 @@ public class FraudScreening extends AbstractModel {
     public static FraudScreening fromBundle(Bundle bundle) {
 
         FraudScreeningMapper mapper = new FraudScreeningMapper(bundle);
-        return mapper.mappedObjectFromBundle();
+        return mapper.mappedObject();
     }
 
     public Bundle toBundle() {

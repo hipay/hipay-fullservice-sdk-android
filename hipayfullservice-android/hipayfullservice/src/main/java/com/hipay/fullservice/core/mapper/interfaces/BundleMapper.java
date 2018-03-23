@@ -106,7 +106,7 @@ public class BundleMapper implements IBehaviour {
     public String getEnumCharForKey(String key) {
 
         String string = this.getStringForKey(key);
-        if (string != null && string.length() == 1)  {
+        if (string != null && string.length() == 1) {
             return string;
         }
 

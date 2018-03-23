@@ -1,9 +1,11 @@
 package com.hipay.fullservice.core.models;
 
+import java.io.Serializable;
+
 /**
  * Created by nfillion on 25/01/16.
  */
-public class Operation extends AbstractModel {
+public class Operation extends AbstractModel implements Serializable {
 
     protected OperationType operation;
 

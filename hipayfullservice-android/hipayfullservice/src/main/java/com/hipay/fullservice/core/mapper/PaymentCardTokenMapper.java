@@ -12,10 +12,8 @@ public class PaymentCardTokenMapper extends AbstractMapper {
     }
 
     @Override
-    protected boolean isValid() {
-
-        if (this.getStringForKey("token") != null) return true;
-        return false;
+    public boolean isValid() {
+        return this.getStringForKey("token") != null;
     }
 
     @Override
@@ -35,30 +33,6 @@ public class PaymentCardTokenMapper extends AbstractMapper {
         object.setDomesticNetwork(this.getStringForKey("domesticNetwork"));
 
         return object;
-    }
-
-    @Override
-    public PaymentCardToken mappedObjectFromBundle() {
-
-        PaymentCardToken object = new PaymentCardToken();
-
-        object.setToken(this.getStringForKey("token"));
-        object.setRequestID(this.getStringForKey("request_id"));
-        object.setPan(this.getStringForKey("pan"));
-        object.setBrand(this.getStringForKey("brand"));
-        object.setCardHolder(this.getStringForKey("card_holder"));
-        object.setCardExpiryMonth(this.getIntegerForKey("card_expiry_month"));
-        object.setCardExpiryYear(this.getIntegerForKey("card_expiry_year"));
-        object.setIssuer(this.getStringForKey("issuer"));
-        object.setCountry(this.getStringForKey("country"));
-        object.setDomesticNetwork(this.getStringForKey("domesticNetwork"));
-
-        return object;
-    }
-
-    @Override
-    protected Object mappedObjectFromUri() {
-        return null;
     }
 }
 

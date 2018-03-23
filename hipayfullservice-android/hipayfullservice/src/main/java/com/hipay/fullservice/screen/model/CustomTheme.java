@@ -2,7 +2,7 @@ package com.hipay.fullservice.screen.model;
 
 import android.os.Bundle;
 
-import com.hipay.fullservice.core.mapper.AbstractMapper;
+import com.hipay.fullservice.core.mapper.CustomThemeMapper;
 import com.hipay.fullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.fullservice.core.models.AbstractModel;
 import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
@@ -24,7 +24,7 @@ public class CustomTheme extends AbstractModel {
     public static CustomTheme fromBundle(Bundle bundle) {
 
         CustomThemeMapper mapper = new CustomThemeMapper(bundle);
-        return mapper.mappedObjectFromBundle();
+        return mapper.mappedObject();
     }
 
     public Bundle toBundle() {
@@ -83,43 +83,4 @@ public class CustomTheme extends AbstractModel {
         }
     }
 
-    protected static class CustomThemeMapper extends AbstractMapper {
-        public CustomThemeMapper(Bundle object) {
-            super(object);
-        }
-
-        @Override
-        protected boolean isValid() {
-
-            if (this.getBehaviour() instanceof BundleMapper) {
-
-                return true;
-            }
-
-            return true;
-        }
-
-        @Override
-        protected CustomTheme mappedObject() {
-
-            return null;
-        }
-
-        @Override
-        protected CustomTheme mappedObjectFromBundle() {
-
-            CustomTheme customTheme = new CustomTheme();
-
-            customTheme.setColorPrimaryId(this.getIntegerForKey("colorPrimary"));
-            customTheme.setColorPrimaryDarkId(this.getIntegerForKey("colorPrimaryDark"));
-            customTheme.setTextColorPrimaryId(this.getIntegerForKey("colorTextPrimary"));
-
-            return customTheme;
-        }
-
-        @Override
-        protected Object mappedObjectFromUri() {
-            return null;
-        }
-    }
 }

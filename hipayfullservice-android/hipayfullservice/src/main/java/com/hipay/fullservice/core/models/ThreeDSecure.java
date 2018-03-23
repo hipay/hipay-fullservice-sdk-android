@@ -7,10 +7,12 @@ import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by nfillion on 25/01/16.
  */
-public class ThreeDSecure extends AbstractModel {
+public class ThreeDSecure extends AbstractModel  implements Serializable {
 
     protected ThreeDSecureEnrollmentStatus enrollmentStatus;
     protected String enrollmentMessage;
@@ -32,7 +34,7 @@ public class ThreeDSecure extends AbstractModel {
     public static ThreeDSecure fromBundle(Bundle bundle) {
 
         ThreeDSecureMapper mapper = new ThreeDSecureMapper(bundle);
-        return mapper.mappedObjectFromBundle();
+        return mapper.mappedObject();
     }
 
     public Bundle toBundle() {

@@ -2,7 +2,7 @@ package com.hipay.fullservice.core.requests.info;
 
 import android.os.Bundle;
 
-import com.hipay.fullservice.core.mapper.AbstractMapper;
+import com.hipay.fullservice.core.mapper.PersonalInfoRequestMapper;
 import com.hipay.fullservice.core.requests.AbstractRequest;
 import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 import com.hipay.fullservice.core.serialization.interfaces.AbstractSerialization;
@@ -34,7 +34,7 @@ public class PersonalInfoRequest extends AbstractRequest {
     public static PersonalInfoRequest fromBundle(Bundle bundle) {
 
         PersonalInfoRequestMapper mapper = new PersonalInfoRequestMapper(bundle);
-        return mapper.mappedObjectFromBundle();
+        return mapper.mappedObject();
     }
 
     public static PersonalInfoRequest fromJSONObject(JSONObject jsonObject) {
@@ -232,54 +232,4 @@ public class PersonalInfoRequest extends AbstractRequest {
         }
     }
 
-    public static class PersonalInfoRequestMapper extends AbstractMapper {
-        public PersonalInfoRequestMapper(Object rawData) {
-            super(rawData);
-        }
-
-        @Override
-        protected boolean isValid() {
-            return true;
-        }
-
-        protected PersonalInfoRequest mappedObject() {
-
-            PersonalInfoRequest object = new PersonalInfoRequest();
-
-            object.setFirstname(this.getStringForKey("firstname"));
-            object.setLastname(this.getStringForKey("lastname"));
-            object.setStreetAddress(this.getStringForKey("streetaddress"));
-            object.setStreetAddress2(this.getStringForKey("streetaddress2"));
-            object.setRecipientInfo(this.getStringForKey("recipientinfo"));
-            object.setCity(this.getStringForKey("city"));
-            object.setState(this.getStringForKey("state"));
-            object.setZipCode(this.getStringForKey("zipcode"));
-            object.setCountry(this.getStringForKey("country"));
-
-            return object;
-        }
-
-        @Override
-        protected PersonalInfoRequest mappedObjectFromBundle() {
-
-            PersonalInfoRequest object = new PersonalInfoRequest();
-
-            object.setFirstname(this.getStringForKey("firstname"));
-            object.setLastname(this.getStringForKey("lastname"));
-            object.setStreetAddress(this.getStringForKey("streetaddress"));
-            object.setStreetAddress2(this.getStringForKey("streetaddress2"));
-            object.setRecipientInfo(this.getStringForKey("recipientinfo"));
-            object.setCity(this.getStringForKey("city"));
-            object.setState(this.getStringForKey("state"));
-            object.setZipCode(this.getStringForKey("zipcode"));
-            object.setCountry(this.getStringForKey("country"));
-
-            return object;
-        }
-
-        @Override
-        protected Object mappedObjectFromUri() {
-            return null;
-        }
-    }
 }

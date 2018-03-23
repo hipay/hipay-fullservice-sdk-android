@@ -4,12 +4,13 @@ import com.hipay.fullservice.core.mapper.HostedPaymentPageMapper;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.net.URL;
 
 /**
  * Created by nfillion on 25/01/16.
  */
-public class HostedPaymentPage extends AbstractModel {
+public class HostedPaymentPage extends AbstractModel implements Serializable {
 
     protected Boolean test;
     protected String mid;

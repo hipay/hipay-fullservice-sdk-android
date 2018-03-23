@@ -9,6 +9,7 @@ import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.Map;
 /**
  * Created by nfillion on 25/01/16.
  */
-public class Transaction extends TransactionRelatedItem {
+public class Transaction extends TransactionRelatedItem  implements Serializable {
 
     public static final String TAG = "Transaction";
 
@@ -67,13 +68,13 @@ public class Transaction extends TransactionRelatedItem {
     public static Transaction fromBundle(Bundle bundle) {
 
         TransactionMapper mapper = new TransactionMapper(bundle);
-        return mapper.mappedObjectFromBundle();
+        return mapper.mappedObject();
     }
 
     public static Transaction fromUri(Uri uri) {
 
         TransactionMapper mapper = new TransactionMapper(uri);
-        return mapper.mappedObjectFromUri();
+        return mapper.mappedObject();
 
     }
 
