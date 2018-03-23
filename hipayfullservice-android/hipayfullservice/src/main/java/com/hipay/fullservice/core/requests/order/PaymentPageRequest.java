@@ -4,9 +4,9 @@ import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.PaymentPageRequestMapper;
 import com.hipay.fullservice.core.models.PaymentProduct;
-import com.hipay.fullservice.core.models.Transaction;
-import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.fullservice.core.utils.enums.ECI;
+import com.hipay.fullservice.core.utils.enums.AuthenticationIndicator;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -25,8 +25,8 @@ public class PaymentPageRequest extends OrderRelatedRequest {
     List<String> paymentProductList;
     List<String> paymentProductCategoryList;
 
-    Transaction.ECI eci;
-    CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator;
+    ECI eci;
+    AuthenticationIndicator authenticationIndicator;
     Boolean multiUse;
     Boolean displaySelector;
     String templateName;
@@ -40,7 +40,7 @@ public class PaymentPageRequest extends OrderRelatedRequest {
 
     public PaymentPageRequest() {
 
-        this.setEci(Transaction.ECI.SecureECommerce);
+        this.setEci(ECI.SECURE_E_COMMERCE);
         this.setMultiUse(false);
         this.setDisplaySelector(false);
         this.setPaymentCardGroupingEnabled(false);
@@ -120,19 +120,19 @@ public class PaymentPageRequest extends OrderRelatedRequest {
         this.paymentProductCategoryList = paymentProductCategoryList;
     }
 
-    public Transaction.ECI getEci() {
+    public ECI getEci() {
         return eci;
     }
 
-    public void setEci(Transaction.ECI eci) {
+    public void setEci(ECI eci) {
         this.eci = eci;
     }
 
-    public CardTokenPaymentMethodRequest.AuthenticationIndicator getAuthenticationIndicator() {
+    public AuthenticationIndicator getAuthenticationIndicator() {
         return authenticationIndicator;
     }
 
-    public void setAuthenticationIndicator(CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator) {
+    public void setAuthenticationIndicator(AuthenticationIndicator authenticationIndicator) {
         this.authenticationIndicator = authenticationIndicator;
     }
 

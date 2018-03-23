@@ -3,9 +3,9 @@ package com.hipay.fullservice.core.requests.info;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.CustomerInfoRequestMapper;
-import com.hipay.fullservice.core.models.Order;
 import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 import com.hipay.fullservice.core.utils.Utils;
+import com.hipay.fullservice.core.utils.enums.Gender;
 
 import org.json.JSONObject;
 
@@ -56,7 +56,7 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
     protected Integer birthDateDay;
     protected Integer birthDateMonth;
     protected Integer birthDateYear;
-    protected Order.Gender gender;
+    protected Gender gender;
 
     public String getEmail() {
         return email;
@@ -98,11 +98,11 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
         this.birthDateYear = birthDateYear;
     }
 
-    public Order.Gender getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(Order.Gender gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
@@ -172,9 +172,9 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
             String birthDate = this.getBirthDate(customerInfoRequest.getBirthDateDay(), customerInfoRequest.getBirthDateMonth(), customerInfoRequest.getBirthDateYear());
             personalInfoRequestMap.put("birthdate", birthDate);
 
-            Order.Gender gender = customerInfoRequest.getGender();
-            if (gender != null && gender != Order.Gender.GenderUndefined) {
-                personalInfoRequestMap.put("gender", String.valueOf(gender.getCharValue()));
+            Gender gender = customerInfoRequest.getGender();
+            if (gender != null && gender != Gender.UNDEFINED) {
+                personalInfoRequestMap.put("gender", String.valueOf(gender.getValue()));
             }
 
             return personalInfoRequestMap;
@@ -195,9 +195,9 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
             this.putIntForKey("birthDateMonth", customerInfoRequest.getBirthDateMonth());
             this.putIntForKey("birthDateYear", customerInfoRequest.getBirthDateYear());
 
-            Order.Gender gender = customerInfoRequest.getGender();
+            Gender gender = customerInfoRequest.getGender();
             if (gender != null) {
-                this.putStringForKey("gender", Character.toString(gender.getCharValue()));
+                this.putStringForKey("gender", Character.toString(gender.getValue()));
             }
 
             return this.getBundle();

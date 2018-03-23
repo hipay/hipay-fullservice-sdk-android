@@ -8,6 +8,10 @@ import com.hipay.fullservice.core.models.PaymentCardToken;
 import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.ThreeDSecure;
 import com.hipay.fullservice.core.models.Transaction;
+import com.hipay.fullservice.core.utils.enums.CVCResult;
+import com.hipay.fullservice.core.utils.enums.ECI;
+import com.hipay.fullservice.core.utils.enums.AVSResult;
+import com.hipay.fullservice.core.utils.enums.TransactionState;
 
 import java.util.Map;
 
@@ -53,24 +57,24 @@ public class TransactionSerialization extends TransactionRelatedItemSerializatio
 
         this.putUrlForKey("forwardUrl", transaction.getForwardUrl());
 
-        Transaction.AVSResult avsResult = transaction.getAvsResult();
+        AVSResult avsResult = transaction.getAvsResult();
         if (avsResult != null) {
-            this.putStringForKey("avsResult", Character.toString(avsResult.getCharValue()));
+            this.putStringForKey("avsResult", Character.toString(avsResult.getValue()));
         }
 
-        Transaction.CVCResult cvcResult = transaction.getCvcResult();
+        CVCResult cvcResult = transaction.getCvcResult();
         if (cvcResult != null) {
-            this.putStringForKey("cvcResult", Character.toString(cvcResult.getCharValue()));
+            this.putStringForKey("cvcResult", Character.toString(cvcResult.getValue()));
         }
 
-        Transaction.ECI eci = transaction.getEci();
+        ECI eci = transaction.getEci();
         if (eci != null) {
-            this.putIntForKey("eci", eci.getIntegerValue());
+            this.putIntForKey("eci", eci.getValue());
         }
 
-        Transaction.TransactionState state = transaction.getState();
+        TransactionState state = transaction.getState();
         if (state != null) {
-            this.putStringForKey("state", state.getStringValue());
+            this.putStringForKey("state", state.getValue());
         }
 
         ThreeDSecure threeDSecure = transaction.getThreeDSecure();

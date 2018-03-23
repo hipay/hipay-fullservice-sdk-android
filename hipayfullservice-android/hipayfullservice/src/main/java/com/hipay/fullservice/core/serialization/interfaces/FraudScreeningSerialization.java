@@ -3,6 +3,8 @@ package com.hipay.fullservice.core.serialization.interfaces;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.models.FraudScreening;
+import com.hipay.fullservice.core.models.FraudScreeningReview;
+import com.hipay.fullservice.core.utils.enums.FraudScreeningResult;
 
 import java.util.Map;
 
@@ -34,12 +36,12 @@ public class FraudScreeningSerialization extends AbstractSerialization {
 
         this.putIntForKey("scoring", fraudScreening.getScoring());
 
-        FraudScreening.FraudScreeningResult result = fraudScreening.getResult();
+        FraudScreeningResult result = fraudScreening.getResult();
         if (result != null) {
-            this.putStringForKey("result", result.getStringValue());
+            this.putStringForKey("result", result.getValue());
         }
 
-        FraudScreening.FraudScreeningReview review = fraudScreening.getReview();
+        FraudScreeningReview review = fraudScreening.getReview();
         if (review != null) {
             this.putStringForKey("review", review.getStringValue());
         }

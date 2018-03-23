@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.hipay.fullservice.core.client.config.ClientConfig;
 import com.hipay.fullservice.core.network.HttpResult;
 import com.hipay.fullservice.core.utils.Utils;
+import com.hipay.fullservice.core.utils.enums.HttpMethod;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -61,7 +62,7 @@ public abstract class GatewayOperation extends AbstractOperation {
 
         switch (ClientConfig.getInstance().getEnvironment()) {
 
-            case Stage: {
+            case STAGE: {
 
                 if (this.isV2()) {
                     return ClientConfig.GatewayClientBaseURLNewStage;
@@ -71,7 +72,7 @@ public abstract class GatewayOperation extends AbstractOperation {
                 }
             }
 
-            case Production: {
+            case PRODUCTION: {
 
                 if (this.isV2()) {
                     return ClientConfig.GatewayClientBaseURLNewProduction;
@@ -111,7 +112,7 @@ public abstract class GatewayOperation extends AbstractOperation {
 
         urlConnection.setRequestMethod(this.getRequestType().getStringValue());
         urlConnection.setRequestProperty("Accept", "application/json");
-        urlConnection.setRequestProperty("Authorization", this.getAuthHeader());
+        urlConnection.setRequestProperty("AUTHORIZATION", this.getAuthHeader());
 
         if (this.getRequestType().equals(HttpMethod.POST)) {
 

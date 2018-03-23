@@ -3,6 +3,8 @@ package com.hipay.fullservice.core.operations;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.hipay.fullservice.core.utils.enums.HttpMethod;
+
 /**
  * Created by nfillion on 08/05/16.
  */

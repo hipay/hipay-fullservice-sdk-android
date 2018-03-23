@@ -11,6 +11,7 @@ import android.text.TextUtils;
 
 import com.hipay.fullservice.core.client.config.ClientConfig;
 import com.hipay.fullservice.core.models.PaymentProduct;
+import com.hipay.fullservice.core.utils.enums.Environment;
 import com.hipay.fullservice.example.fragment.DemoFragment;
 import com.hipay.fullservice.example.fragment.ProductCategoryListFragment;
 
@@ -48,7 +49,7 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         }
 
         ClientConfig.getInstance().setConfig(
-                ClientConfig.Environment.Stage,
+                Environment.STAGE,
                 username,
                 password
         );

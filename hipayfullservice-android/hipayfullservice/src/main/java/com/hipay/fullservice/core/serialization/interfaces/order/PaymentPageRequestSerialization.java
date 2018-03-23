@@ -3,10 +3,10 @@ package com.hipay.fullservice.core.serialization.interfaces.order;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
-import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.utils.enums.ECI;
 import com.hipay.fullservice.core.utils.Utils;
+import com.hipay.fullservice.core.utils.enums.AuthenticationIndicator;
 
 import java.net.URL;
 import java.util.List;
@@ -40,14 +40,14 @@ public class PaymentPageRequestSerialization extends OrderRelatedRequestSerializ
             relatedRequestMap.put("payment_product_category_list", TextUtils.join(",", paymentProductsCategory));
         }
 
-        Transaction.ECI eci = paymentPageRequest.getEci();
-        if (eci != null && !eci.equals(Transaction.ECI.Undefined)) {
-            relatedRequestMap.put("eci", String.valueOf(eci.getIntegerValue()));
+        ECI eci = paymentPageRequest.getEci();
+        if (eci != null && !eci.equals(ECI.UNDEFINED)) {
+            relatedRequestMap.put("eci", String.valueOf(eci.getValue()));
         }
 
-        CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator = paymentPageRequest.getAuthenticationIndicator();
+        AuthenticationIndicator authenticationIndicator = paymentPageRequest.getAuthenticationIndicator();
         if (authenticationIndicator != null) {
-            relatedRequestMap.put("authentication_indicator", String.valueOf(authenticationIndicator.getIntegerValue()));
+            relatedRequestMap.put("authentication_indicator", String.valueOf(authenticationIndicator.getValue()));
         }
 
         Boolean multiUseBoolean = paymentPageRequest.getMultiUse();
@@ -92,14 +92,14 @@ public class PaymentPageRequestSerialization extends OrderRelatedRequestSerializ
             this.putStringForKey("payment_product_category_list", TextUtils.join(",", paymentProductsCategory));
         }
 
-        Transaction.ECI eci = paymentPageRequest.getEci();
+        ECI eci = paymentPageRequest.getEci();
         if (eci != null) {
-            this.putIntForKey("eci", eci.getIntegerValue());
+            this.putIntForKey("eci", eci.getValue());
         }
 
-        CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator = paymentPageRequest.getAuthenticationIndicator();
+        AuthenticationIndicator authenticationIndicator = paymentPageRequest.getAuthenticationIndicator();
         if (authenticationIndicator != null) {
-            this.putIntForKey("authentication_indicator", authenticationIndicator.getIntegerValue());
+            this.putIntForKey("authentication_indicator", authenticationIndicator.getValue());
         }
 
         this.putBoolForKey("multi_use", paymentPageRequest.getMultiUse());

@@ -7,7 +7,7 @@ package com.hipay.fullservice.core.operations;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.hipay.fullservice.core.network.AbstractHttpClient;
+import com.hipay.fullservice.core.utils.enums.HttpMethod;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,7 +36,6 @@ public class TransactionsDetailsOperationTest {
 
     @Before
     public void setUp() throws Exception {
-
         transactionsDetailsOperation = new TransactionsDetailsOperation(context, bundle);
     }
 
@@ -44,6 +43,6 @@ public class TransactionsDetailsOperationTest {
     public void testMethods() throws Exception {
 
         assertEquals(transactionsDetailsOperation.concatUrl(), "transaction");
-        assertEquals(transactionsDetailsOperation.getRequestType(), AbstractHttpClient.HttpMethod.GET);
+        assertEquals(transactionsDetailsOperation.getRequestType(), HttpMethod.GET);
     }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.PaymentProductMapper;
 import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.fullservice.core.utils.enums.SecurityCodeType;
 
 import org.json.JSONObject;
 
@@ -60,20 +61,20 @@ public class PaymentProduct extends AbstractModel  implements Serializable {
                 paymentProductCode.equalsIgnoreCase(PaymentProductCodeDiners)
                 ) {
 
-            return SecurityCodeType.SecurityCodeTypeCVV;
+            return SecurityCodeType.SECURITY_CODE_TYPE_CVV;
 
         } else if (paymentProductCode.equalsIgnoreCase(PaymentProductCodeAmericanExpress)) {
 
-            return SecurityCodeType.SecurityCodeTypeCID;
+            return SecurityCodeType.SECURITY_CODE_TYPE_CID;
 
         } else if ( paymentProductCode.equalsIgnoreCase(PaymentProductCodeBCMC) ||
                     paymentProductCode.equalsIgnoreCase(PaymentProductCodeMaestro)
                 ) {
 
-            return SecurityCodeType.SecurityCodeTypeNone;
+            return SecurityCodeType.SECURITY_CODE_TYPE_NONE;
         }
 
-        return SecurityCodeType.SecurityCodeTypeNotApplicable;
+        return SecurityCodeType.SECURITY_CODE_TYPE_NOT_APPLICABLE;
     }
 
     public boolean isPaymentProductCodeDomesticNetworkOfPaymentProductCode(String domesticPaymentProductCode, String paymentProductCode) {
@@ -106,31 +107,6 @@ public class PaymentProduct extends AbstractModel  implements Serializable {
         return this.isEqualToPaymentProduct(object);
     }
 
-
-    public enum SecurityCodeType {
-
-        // Ex. : Maestro
-        SecurityCodeTypeNone (0),
-
-        // Ex. : BCMC (for domestic networks or specific issuer payment products, we don't know if there's a security code as it depends on the card scheme)
-        SecurityCodeTypeNotApplicable (1),
-
-        // Ex. : Visa, MasterCard
-        SecurityCodeTypeCVV (2),
-
-        // Ex. : American Express
-        SecurityCodeTypeCID (3);
-
-
-        protected final Integer status;
-        SecurityCodeType(Integer status) {
-            this.status = status;
-        }
-
-        public Integer getIntegerValue() {
-            return this.status;
-        }
-    }
 
     public final static String PaymentProductCode3xcb                      = "3xcb";
     public final static String PaymentProductCode3xcbNoFees                = "3xcb-no-fees";

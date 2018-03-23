@@ -5,13 +5,21 @@ import android.text.format.DateFormat;
 import com.hipay.fullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.fullservice.core.mapper.interfaces.UriMapper;
 import com.hipay.fullservice.core.models.FraudScreening;
+import com.hipay.fullservice.core.models.FraudScreeningReview;
 import com.hipay.fullservice.core.models.Order;
 import com.hipay.fullservice.core.models.PaymentCardToken;
 import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.ThreeDSecure;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.models.TransactionRelatedItem;
+import com.hipay.fullservice.core.utils.enums.CVCResult;
+import com.hipay.fullservice.core.utils.enums.ECI;
 import com.hipay.fullservice.core.utils.Utils;
+import com.hipay.fullservice.core.utils.enums.AVSResult;
+import com.hipay.fullservice.core.utils.enums.FraudScreeningResult;
+import com.hipay.fullservice.core.utils.enums.ThreeDSecureAuthenticationStatus;
+import com.hipay.fullservice.core.utils.enums.ThreeDSecureEnrollmentStatus;
+import com.hipay.fullservice.core.utils.enums.TransactionState;
 
 import org.json.JSONObject;
 
@@ -60,30 +68,30 @@ public class TransactionMapper extends TransactionRelatedItemMapper {
             object.setForwardUrl(this.getURLForKey("forwardUrl"));
 
             String resultString = this.getEnumCharForKey("avsResult");
-            Transaction.AVSResult result = Transaction.AVSResult.fromStringValue(resultString);
+            AVSResult result = AVSResult.fromStringValue(resultString);
             if (result == null) {
-                result = Transaction.AVSResult.AVSResultNotApplicable;
+                result = AVSResult.AVS_RESULT_NOT_APPLICABLE;
             }
             object.setAvsResult(result);
 
             String cvcResultString = this.getEnumCharForKey("cvcResult");
-            Transaction.CVCResult cvcResult = Transaction.CVCResult.fromStringValue(cvcResultString);
+            CVCResult cvcResult = CVCResult.fromStringValue(cvcResultString);
             if (cvcResult == null) {
-                cvcResult = Transaction.CVCResult.CVCResultNotApplicable;
+                cvcResult = CVCResult.CVC_RESULT_NOT_APPLICABLE;
             }
             object.setCvcResult(cvcResult);
 
             Integer eciString = this.getIntegerForKey("eci");
-            Transaction.ECI eci = Transaction.ECI.fromIntegerValue(eciString);
+            ECI eci = ECI.fromIntegerValue(eciString);
             if (eci == null) {
-                eci = Transaction.ECI.Undefined;
+                eci = ECI.UNDEFINED;
             }
             object.setEci(eci);
 
             String stateString = this.getStringForKey("state");
-            Transaction.TransactionState state = Transaction.TransactionState.fromStringValue(stateString);
+            TransactionState state = TransactionState.fromStringValue(stateString);
             if (state == null) {
-                state = Transaction.TransactionState.TransactionStateError;
+                state = TransactionState.TRANSACTION_STATE_ERROR;
             }
             object.setState(state);
 
@@ -122,9 +130,9 @@ public class TransactionMapper extends TransactionRelatedItemMapper {
             transaction.setTransactionReference(this.getStringForKey("reference"));
 
             String stateString = this.getStringForKey("state");
-            Transaction.TransactionState state = Transaction.TransactionState.fromStringValue(stateString);
+            TransactionState state = TransactionState.fromStringValue(stateString);
             if (state == null) {
-                state = Transaction.TransactionState.TransactionStateError;
+                state = TransactionState.TRANSACTION_STATE_ERROR;
             }
             transaction.setState(state);
 
@@ -143,16 +151,16 @@ public class TransactionMapper extends TransactionRelatedItemMapper {
 
 
             String avsString = this.getEnumCharForKey("avscheck");
-            Transaction.AVSResult avsResult = Transaction.AVSResult.fromStringValue(avsString);
+            AVSResult avsResult = AVSResult.fromStringValue(avsString);
             if (avsResult == null) {
-                avsResult = Transaction.AVSResult.AVSResultNotApplicable;
+                avsResult = AVSResult.AVS_RESULT_NOT_APPLICABLE;
             }
             transaction.setAvsResult(avsResult);
 
             String cvcResultString = this.getEnumCharForKey("cvccheck");
-            Transaction.CVCResult cvcResult = Transaction.CVCResult.fromStringValue(cvcResultString);
+            CVCResult cvcResult = CVCResult.fromStringValue(cvcResultString);
             if (cvcResult == null) {
-                cvcResult = Transaction.CVCResult.CVCResultNotApplicable;
+                cvcResult = CVCResult.CVC_RESULT_NOT_APPLICABLE;
             }
             transaction.setCvcResult(cvcResult);
 
@@ -192,16 +200,16 @@ public class TransactionMapper extends TransactionRelatedItemMapper {
                 fraudScreening.setScoring(this.getIntegerForKey("score"));
 
                 String resultString = this.getLowercaseStringForKey("fraud");
-                FraudScreening.FraudScreeningResult result = FraudScreening.FraudScreeningResult.fromStringValue(resultString);
+                FraudScreeningResult result = FraudScreeningResult.fromStringValue(resultString);
                 if (result == null) {
-                    result = FraudScreening.FraudScreeningResult.FraudScreeningResultUnknown;
+                    result = FraudScreeningResult.FRAUDSCREENINGRESULT_UNKNOWN;
                 }
                 fraudScreening.setResult(result);
 
                 String reviewString = this.getLowercaseStringForKey("review");
-                FraudScreening.FraudScreeningReview review = FraudScreening.FraudScreeningReview.fromStringValue(reviewString);
+                FraudScreeningReview review = FraudScreeningReview.fromStringValue(reviewString);
                 if (review == null) {
-                    review = FraudScreening.FraudScreeningReview.FraudScreeningReviewNone;
+                    review = FraudScreeningReview.FRAUDSCREENINGREVIEW_NONE;
                 }
                 fraudScreening.setReview(review);
 
@@ -214,16 +222,16 @@ public class TransactionMapper extends TransactionRelatedItemMapper {
 
                 ThreeDSecure threeDSecure = new ThreeDSecure();
 
-                ThreeDSecure.ThreeDSecureEnrollmentStatus threeDSStatus = ThreeDSecure.ThreeDSecureEnrollmentStatus.fromStringValue(enrollmentStatus);
+                ThreeDSecureEnrollmentStatus threeDSStatus = ThreeDSecureEnrollmentStatus.fromStringValue(enrollmentStatus);
                 if (threeDSStatus == null) {
-                    threeDSStatus = ThreeDSecure.ThreeDSecureEnrollmentStatus.ThreeDSecureEnrollmentStatusUnknown;
+                    threeDSStatus = ThreeDSecureEnrollmentStatus.THREED_SECURE_ENROLLMENT_STATUS_UNKNOWN;
                 }
                 threeDSecure.setEnrollmentStatus(threeDSStatus);
 
                 String authenticationStatus = this.getEnumCharForKey("pares");
-                ThreeDSecure.ThreeDSecureAuthenticationStatus authStatus = ThreeDSecure.ThreeDSecureAuthenticationStatus.fromStringValue(authenticationStatus);
+                ThreeDSecureAuthenticationStatus authStatus = ThreeDSecureAuthenticationStatus.fromStringValue(authenticationStatus);
                 if (authStatus == null) {
-                    authStatus = ThreeDSecure.ThreeDSecureAuthenticationStatus.ThreeDSecureAuthenticationStatusUnknown;
+                    authStatus = ThreeDSecureAuthenticationStatus.THREED_SECURE_AUTHENTICATION_STATUS_UNKNOWN;
                 }
                 threeDSecure.setAuthenticationStatus(authStatus);
 

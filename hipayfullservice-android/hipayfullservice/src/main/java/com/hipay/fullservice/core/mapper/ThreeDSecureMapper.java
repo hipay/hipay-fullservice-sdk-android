@@ -2,6 +2,8 @@ package com.hipay.fullservice.core.mapper;
 
 import com.hipay.fullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.fullservice.core.models.ThreeDSecure;
+import com.hipay.fullservice.core.utils.enums.ThreeDSecureAuthenticationStatus;
+import com.hipay.fullservice.core.utils.enums.ThreeDSecureEnrollmentStatus;
 
 /**
  * Created by nfillion on 08/09/16.
@@ -24,16 +26,16 @@ public class ThreeDSecureMapper extends AbstractMapper {
         object.setEnrollmentMessage(this.getStringForKey("enrollmentMessage"));
 
         String enrollmentStatus = this.getEnumCharForKey("enrollmentStatus");
-        ThreeDSecure.ThreeDSecureEnrollmentStatus status = ThreeDSecure.ThreeDSecureEnrollmentStatus.fromStringValue(enrollmentStatus);
+        ThreeDSecureEnrollmentStatus status = ThreeDSecureEnrollmentStatus.fromStringValue(enrollmentStatus);
         if (status == null) {
-            status = ThreeDSecure.ThreeDSecureEnrollmentStatus.ThreeDSecureEnrollmentStatusUnknown;
+            status = ThreeDSecureEnrollmentStatus.THREED_SECURE_ENROLLMENT_STATUS_UNKNOWN;
         }
         object.setEnrollmentStatus(status);
 
         String authenticationStatus = this.getEnumCharForKey("authenticationStatus");
-        ThreeDSecure.ThreeDSecureAuthenticationStatus authStatus = ThreeDSecure.ThreeDSecureAuthenticationStatus.fromStringValue(authenticationStatus);
+        ThreeDSecureAuthenticationStatus authStatus = ThreeDSecureAuthenticationStatus.fromStringValue(authenticationStatus);
         if (authStatus == null) {
-            authStatus = ThreeDSecure.ThreeDSecureAuthenticationStatus.ThreeDSecureAuthenticationStatusUnknown;
+            authStatus = ThreeDSecureAuthenticationStatus.THREED_SECURE_AUTHENTICATION_STATUS_UNKNOWN;
         }
         object.setAuthenticationStatus(authStatus);
 

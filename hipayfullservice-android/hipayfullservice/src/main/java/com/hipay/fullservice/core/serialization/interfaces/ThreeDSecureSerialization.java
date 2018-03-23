@@ -2,6 +2,9 @@ package com.hipay.fullservice.core.serialization.interfaces;
 
 import android.os.Bundle;
 import com.hipay.fullservice.core.models.ThreeDSecure;
+import com.hipay.fullservice.core.utils.enums.ThreeDSecureAuthenticationStatus;
+import com.hipay.fullservice.core.utils.enums.ThreeDSecureEnrollmentStatus;
+
 import java.util.Map;
 
 /**
@@ -27,14 +30,14 @@ public class ThreeDSecureSerialization extends AbstractSerialization {
 
         this.putStringForKey("enrollmentMessage", threeDSecure.getEnrollmentMessage());
 
-        ThreeDSecure.ThreeDSecureEnrollmentStatus enrollmentStatus = threeDSecure.getEnrollmentStatus();
+        ThreeDSecureEnrollmentStatus enrollmentStatus = threeDSecure.getEnrollmentStatus();
         if (enrollmentStatus != null) {
-            this.putStringForKey("enrollmentStatus", Character.toString(enrollmentStatus.getCharValue()));
+            this.putStringForKey("enrollmentStatus", Character.toString(enrollmentStatus.getValue()));
         }
 
-        ThreeDSecure.ThreeDSecureAuthenticationStatus authenticationStatus = threeDSecure.getAuthenticationStatus();
+        ThreeDSecureAuthenticationStatus authenticationStatus = threeDSecure.getAuthenticationStatus();
         if (authenticationStatus != null) {
-            this.putStringForKey("authenticationStatus", Character.toString(authenticationStatus.getCharValue()));
+            this.putStringForKey("authenticationStatus", Character.toString(authenticationStatus.getValue()));
         }
 
         this.putStringForKey("authenticationMessage", threeDSecure.getAuthenticationMessage());

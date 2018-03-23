@@ -6,6 +6,7 @@ import com.hipay.fullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.info.PersonalInfoRequest;
 import com.hipay.fullservice.core.requests.order.OrderRelatedRequest;
+import com.hipay.fullservice.core.utils.enums.OrderRequestOperation;
 
 /**
  * Created by nfillion on 22/03/2018.
@@ -29,7 +30,7 @@ public class OrderRelatedRequestMapper extends AbstractMapper {
         orderRelatedRequest.setOrderId(this.getStringForKey("orderid"));
         String operationValue = this.getStringForKey("operation");
         if (operationValue != null) {
-            orderRelatedRequest.setOperation(OrderRelatedRequest.OrderRequestOperation.fromStringValue(operationValue));
+            orderRelatedRequest.setOperation(OrderRequestOperation.fromStringValue(operationValue));
         }
 
         orderRelatedRequest.setShortDescription(this.getStringForKey("description"));

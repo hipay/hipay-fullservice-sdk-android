@@ -3,10 +3,10 @@ package com.hipay.fullservice.core.mapper;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.interfaces.BundleMapper;
-import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.OrderRelatedRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
-import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.utils.enums.ECI;
+import com.hipay.fullservice.core.utils.enums.AuthenticationIndicator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,11 +48,11 @@ public class PaymentPageRequestMapper extends AbstractMapper{
         }
 
         Integer eciInt = this.getIntegerForKey("eci");
-        Transaction.ECI eci = Transaction.ECI.fromIntegerValue(eciInt);
+        ECI eci = ECI.fromIntegerValue(eciInt);
         paymentPageRequest.setEci(eci);
 
         Integer authenticationIndicatorInteger = this.getIntegerForKey("authentication_indicator");
-        CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator = CardTokenPaymentMethodRequest.AuthenticationIndicator.fromIntegerValue(authenticationIndicatorInteger);
+        AuthenticationIndicator authenticationIndicator = AuthenticationIndicator.fromIntegerValue(authenticationIndicatorInteger);
         paymentPageRequest.setAuthenticationIndicator(authenticationIndicator);
 
         paymentPageRequest.setMultiUse(this.getBoolForKey("multi_use"));

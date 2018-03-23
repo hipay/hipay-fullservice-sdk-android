@@ -40,6 +40,7 @@ import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.utils.Provider;
+import com.hipay.fullservice.core.utils.enums.APIReason;
 import com.hipay.fullservice.screen.fragment.AbstractPaymentFormFragment;
 import com.hipay.fullservice.screen.fragment.TokenizableCardPaymentFormFragment;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
@@ -416,8 +417,8 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
         switch (transaction.getState()) {
 
-            case TransactionStateCompleted:
-            case TransactionStatePending: {
+            case TRANSACTION_STATE_COMPLETED:
+            case TRANSACTION_STATE_PENDING: {
 
                 Intent intent = getIntent();
                 Bundle bundle = new Bundle();
@@ -437,7 +438,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
             } break;
 
-            case TransactionStateDeclined: {
+            case TRANSACTION_STATE_DECLINED: {
 
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
@@ -460,7 +461,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
             } break;
 
-            case TransactionStateForwarding: {
+            case TRANSACTION_STATE_FORWARDING: {
 
                 URL forwardUrl = transaction.getForwardUrl();
 
@@ -486,7 +487,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
             } break;
 
-            case TransactionStateError: {
+            case TRANSACTION_STATE_ERROR: {
 
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
@@ -561,7 +562,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
 
         if (statusCode.equals(Errors.Code.APICheckout.getIntegerValue()) &&
                 apiCode != null &&
-                apiCode.equals(Errors.APIReason.APIDuplicateOrder.getIntegerValue())
+                apiCode.equals(APIReason.API_DUPLICATE_ORDER.getValue())
                 ) {
             return true;
         }
@@ -577,9 +578,9 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
             Integer apiCode = exception.getApiCode();
             if (
                     apiCode != null &&
-                            (apiCode.equals(Errors.APIReason.APIDuplicateOrder.getIntegerValue())
+                            (apiCode.equals(APIReason.API_DUPLICATE_ORDER.getValue())
                             ||
-                            apiCode.equals(Errors.APIReason.APIMaxAttemptsExceeded.getIntegerValue()))
+                            apiCode.equals(APIReason.API_MAX_ATTEMPTS_EXCEEDED.getValue()))
                     ) {
 
                 return true;

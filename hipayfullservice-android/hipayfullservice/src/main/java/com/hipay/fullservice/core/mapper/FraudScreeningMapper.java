@@ -3,6 +3,8 @@ package com.hipay.fullservice.core.mapper;
 import com.hipay.fullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.fullservice.core.mapper.interfaces.MapMapper;
 import com.hipay.fullservice.core.models.FraudScreening;
+import com.hipay.fullservice.core.models.FraudScreeningReview;
+import com.hipay.fullservice.core.utils.enums.FraudScreeningResult;
 
 /**
  * Created by nfillion on 08/09/16.
@@ -34,16 +36,16 @@ public class FraudScreeningMapper extends AbstractMapper {
         object.setScoring(this.getIntegerForKey("scoring"));
 
         String resultString = this.getLowercaseStringForKey("result");
-        FraudScreening.FraudScreeningResult result = FraudScreening.FraudScreeningResult.fromStringValue(resultString);
+        FraudScreeningResult result = FraudScreeningResult.fromStringValue(resultString);
         if (result == null) {
-            result = FraudScreening.FraudScreeningResult.FraudScreeningResultUnknown;
+            result = FraudScreeningResult.FRAUDSCREENINGRESULT_UNKNOWN;
         }
         object.setResult(result);
 
         String reviewString = this.getLowercaseStringForKey("review");
-        FraudScreening.FraudScreeningReview review = FraudScreening.FraudScreeningReview.fromStringValue(reviewString);
+        FraudScreeningReview review = FraudScreeningReview.fromStringValue(reviewString);
         if (review == null) {
-            review = FraudScreening.FraudScreeningReview.FraudScreeningReviewNone;
+            review = FraudScreeningReview.FRAUDSCREENINGREVIEW_NONE;
         }
         object.setReview(review);
 

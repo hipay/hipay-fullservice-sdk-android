@@ -25,6 +25,7 @@ import com.hipay.fullservice.core.errors.exceptions.ApiException;
 import com.hipay.fullservice.core.errors.exceptions.HttpException;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
+import com.hipay.fullservice.core.utils.enums.APIReason;
 import com.hipay.fullservice.screen.fragment.PaymentCardsFragment;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
@@ -41,7 +42,7 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
         Intent starter = getStartIntent(activity, paymentPageRequest, signature, theme);
 
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(activity, null);
+                .makeSceneTransitionAnimation(activity);
 
         ActivityCompat.startActivityForResult(activity, starter, PaymentPageRequest.REQUEST_ORDER, activityOptions.toBundle());
     }
@@ -256,8 +257,8 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
 
         switch (transaction.getState()) {
 
-            case TransactionStateCompleted:
-            case TransactionStatePending: {
+            case TRANSACTION_STATE_COMPLETED:
+            case TRANSACTION_STATE_PENDING: {
 
                 Intent intent = getIntent();
                 intent.putExtra(Transaction.TAG, transaction.toBundle());
@@ -267,7 +268,7 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
 
             } break;
 
-            case TransactionStateDeclined: {
+            case TRANSACTION_STATE_DECLINED: {
 
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
@@ -290,7 +291,7 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
 
             //TODO this won't be forwarded
             /*
-            case TransactionStateForwarding: {
+            case TRANSACTION_STATE_FORWARDING: {
 
                 URL forwardUrl = transaction.getForwardUrl();
 
@@ -317,7 +318,7 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
             } break;
             */
 
-            case TransactionStateError: {
+            case TRANSACTION_STATE_ERROR: {
 
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
@@ -499,9 +500,9 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
             Integer apiCode = exception.getApiCode();
             if (
                     apiCode != null &&
-                            (apiCode.equals(Errors.APIReason.APIDuplicateOrder.getIntegerValue())
+                            (apiCode.equals(APIReason.API_DUPLICATE_ORDER.getValue())
                                     ||
-                                    apiCode.equals(Errors.APIReason.APIMaxAttemptsExceeded.getIntegerValue()))
+                                    apiCode.equals(APIReason.API_MAX_ATTEMPTS_EXCEEDED.getValue()))
                     ) {
 
                 return true;
@@ -518,7 +519,7 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
 
         if (statusCode.equals(Errors.Code.APICheckout.getIntegerValue()) &&
                 apiCode != null &&
-                apiCode.equals(Errors.APIReason.APIDuplicateOrder.getIntegerValue())
+                apiCode.equals(APIReason.API_DUPLICATE_ORDER.getValue())
                 ) {
             return true;
         }

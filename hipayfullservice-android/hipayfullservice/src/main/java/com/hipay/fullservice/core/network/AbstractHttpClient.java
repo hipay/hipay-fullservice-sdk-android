@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.hipay.fullservice.core.utils.Utils;
+import com.hipay.fullservice.core.utils.enums.HttpMethod;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -141,22 +142,6 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
 
         mLastData = data;
         mLastData = null;
-    }
-
-    public enum HttpMethod {
-
-        GET ("GET"),
-        POST ("POST");
-
-        protected final String method;
-        HttpMethod(String method) {
-
-            this.method = method;
-        }
-
-        public String getStringValue() {
-            return this.method;
-        }
     }
 
     public Bundle getBundle() {

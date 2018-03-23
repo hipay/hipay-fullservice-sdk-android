@@ -2,9 +2,9 @@ package com.hipay.fullservice.core.serialization.interfaces.order;
 
 import android.text.TextUtils;
 
-import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
-import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.utils.enums.ECI;
+import com.hipay.fullservice.core.utils.enums.AuthenticationIndicator;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -71,8 +71,8 @@ public class PaymentPageRequestSerializationTest {
         when(paymentPageRequest.getPaymentProductList()).thenReturn(productsList);
         when(paymentPageRequest.getPaymentProductCategoryList()).thenReturn(productsCatList);
 
-        when(paymentPageRequest.getEci()).thenReturn(Transaction.ECI.RecurringMOTO);
-        when(paymentPageRequest.getAuthenticationIndicator()).thenReturn(CardTokenPaymentMethodRequest.AuthenticationIndicator.IfAvailable);
+        when(paymentPageRequest.getEci()).thenReturn(ECI.RECURRING_MOTO);
+        when(paymentPageRequest.getAuthenticationIndicator()).thenReturn(AuthenticationIndicator.IfAvailable);
         when(paymentPageRequest.getMultiUse()).thenReturn(Boolean.TRUE);
         when(paymentPageRequest.getDisplaySelector()).thenReturn(Boolean.TRUE);
         when(paymentPageRequest.getTemplateName()).thenReturn("templateName");

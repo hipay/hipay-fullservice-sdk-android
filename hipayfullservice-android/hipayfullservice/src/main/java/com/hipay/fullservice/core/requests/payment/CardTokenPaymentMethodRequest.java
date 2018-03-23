@@ -1,8 +1,9 @@
 package com.hipay.fullservice.core.requests.payment;
 
-import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.AbstractRequest;
 import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.fullservice.core.utils.enums.ECI;
+import com.hipay.fullservice.core.utils.enums.AuthenticationIndicator;
 
 import java.util.Map;
 
@@ -12,15 +13,15 @@ import java.util.Map;
 public class CardTokenPaymentMethodRequest extends AbstractPaymentMethodRequest {
 
     protected String cardToken;
-    protected Transaction.ECI eci;
+    protected ECI eci;
     protected AuthenticationIndicator authenticationIndicator;
 
     public CardTokenPaymentMethodRequest() {
 
-        this.setEci(Transaction.ECI.Undefined);
+        this.setEci(ECI.UNDEFINED);
     }
 
-    public CardTokenPaymentMethodRequest(String cardToken, Transaction.ECI eci, AuthenticationIndicator authenticationIndicator) {
+    public CardTokenPaymentMethodRequest(String cardToken, ECI eci, AuthenticationIndicator authenticationIndicator) {
         this.cardToken = cardToken;
         this.eci = eci;
         this.authenticationIndicator = authenticationIndicator;
@@ -32,44 +33,6 @@ public class CardTokenPaymentMethodRequest extends AbstractPaymentMethodRequest 
         return mapper.getSerializedObject();
     }
 
-    public enum AuthenticationIndicator {
-
-        //Undefined (-1),
-        Bypass(0),
-        IfAvailable(1),
-        Mandatory(2);
-
-        protected final Integer indicator;
-        AuthenticationIndicator(Integer indicator) {
-
-            this.indicator = indicator;
-        }
-
-        public static AuthenticationIndicator fromIntegerValue(Integer value) {
-
-            if (value == null) return null;
-
-            if (value.equals(Bypass.getIntegerValue())) {
-                return Bypass;
-            }
-
-            if (value.equals(IfAvailable.getIntegerValue())) {
-
-                return IfAvailable;
-            }
-
-            if (value.equals(Mandatory.getIntegerValue())) {
-                return Mandatory;
-            }
-
-            return null;
-        }
-
-        public Integer getIntegerValue() {
-            return this.indicator;
-        }
-    }
-
     public String getCardToken() {
         return cardToken;
     }
@@ -78,11 +41,11 @@ public class CardTokenPaymentMethodRequest extends AbstractPaymentMethodRequest 
         this.cardToken = cardToken;
     }
 
-    public Transaction.ECI getEci() {
+    public ECI getEci() {
         return eci;
     }
 
-    public void setEci(Transaction.ECI eci) {
+    public void setEci(ECI eci) {
         this.eci = eci;
     }
 

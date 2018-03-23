@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.hipay.fullservice.core.client.config.ClientConfig;
 import com.hipay.fullservice.core.network.HttpResult;
 import com.hipay.fullservice.core.utils.Utils;
+import com.hipay.fullservice.core.utils.enums.HttpMethod;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -70,10 +71,10 @@ public abstract class SecureVaultOperation extends AbstractOperation {
 
         switch (ClientConfig.getInstance().getEnvironment()) {
 
-            case Stage: {
+            case STAGE: {
                 return ClientConfig.SecureVaultClientBaseURLStage;
             }
-            case Production: {
+            case PRODUCTION: {
                 return ClientConfig.SecureVaultClientBaseURLProduction;
             }
 
@@ -97,7 +98,7 @@ public abstract class SecureVaultOperation extends AbstractOperation {
 
         urlConnection.setRequestMethod(this.getRequestType().getStringValue());
         urlConnection.setRequestProperty("Accept", "application/json");
-        urlConnection.setRequestProperty("Authorization", this.getAuthHeader());
+        urlConnection.setRequestProperty("AUTHORIZATION", this.getAuthHeader());
 
         if (this.getRequestType().equals(HttpMethod.POST)) {
 

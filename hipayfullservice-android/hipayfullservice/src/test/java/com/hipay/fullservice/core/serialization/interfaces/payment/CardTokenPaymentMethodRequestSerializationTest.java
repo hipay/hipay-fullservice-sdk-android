@@ -2,8 +2,9 @@ package com.hipay.fullservice.core.serialization.interfaces.payment;
 
 import android.text.TextUtils;
 
-import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.utils.enums.ECI;
+import com.hipay.fullservice.core.utils.enums.AuthenticationIndicator;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -58,8 +59,8 @@ public class CardTokenPaymentMethodRequestSerializationTest {
         assertNull(cardTokenPaymentMethodRequestSerialization.getSerializedBundle());
 
         when(cardTokenPaymentMethodRequest.getCardToken()).thenReturn("123cardtoken123");
-        when(cardTokenPaymentMethodRequest.getEci()).thenReturn(Transaction.ECI.InstallmentPayment);
-        when(cardTokenPaymentMethodRequest.getAuthenticationIndicator()).thenReturn(CardTokenPaymentMethodRequest.AuthenticationIndicator.Mandatory);
+        when(cardTokenPaymentMethodRequest.getEci()).thenReturn(ECI.INSTALLMENT_PAYMENT);
+        when(cardTokenPaymentMethodRequest.getAuthenticationIndicator()).thenReturn(AuthenticationIndicator.Mandatory);
 
         Map<String, String> testMap = new HashMap<>(3);
         testMap.put("cardtoken", "123cardtoken123");

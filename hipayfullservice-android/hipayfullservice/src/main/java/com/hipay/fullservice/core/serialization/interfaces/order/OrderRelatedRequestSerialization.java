@@ -7,6 +7,7 @@ import com.hipay.fullservice.core.requests.info.PersonalInfoRequest;
 import com.hipay.fullservice.core.requests.order.OrderRelatedRequest;
 import com.hipay.fullservice.core.serialization.interfaces.AbstractSerialization;
 import com.hipay.fullservice.core.utils.Utils;
+import com.hipay.fullservice.core.utils.enums.OrderRequestOperation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,9 +30,9 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
 
         retMap.put("orderid", orderRelatedRequest.getOrderId());
 
-        OrderRelatedRequest.OrderRequestOperation operation = orderRelatedRequest.getOperation();
+        OrderRequestOperation operation = orderRelatedRequest.getOperation();
         if (operation != null) {
-            retMap.put("operation", operation.getStringValue());
+            retMap.put("operation", operation.getValue());
         }
 
         retMap.put("description", orderRelatedRequest.getShortDescription());
@@ -118,9 +119,9 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
 
         this.putStringForKey("orderid", orderRelatedRequest.getOrderId());
 
-        OrderRelatedRequest.OrderRequestOperation operation = orderRelatedRequest.getOperation();
+        OrderRequestOperation operation = orderRelatedRequest.getOperation();
         if (operation != null) {
-            this.putStringForKey("operation", operation.getStringValue());
+            this.putStringForKey("operation", operation.getValue());
         }
 
         this.putStringForKey("description", orderRelatedRequest.getShortDescription());

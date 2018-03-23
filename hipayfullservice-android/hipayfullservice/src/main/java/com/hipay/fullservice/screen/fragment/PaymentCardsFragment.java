@@ -46,6 +46,7 @@ import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.utils.enums.ECI;
 import com.hipay.fullservice.core.utils.PaymentCardTokenDatabase;
 import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.screen.activity.PaymentProductsActivity;
@@ -500,7 +501,7 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest =
                 new CardTokenPaymentMethodRequest(
                         paymentCardToken.getToken(),
-                        Transaction.ECI.RecurringECommerce,
+                        ECI.RECURRING_E_COMMERCE,
                         mPaymentPageRequest.getAuthenticationIndicator());
 
         orderRequest.setPaymentMethod(cardTokenPaymentMethodRequest);

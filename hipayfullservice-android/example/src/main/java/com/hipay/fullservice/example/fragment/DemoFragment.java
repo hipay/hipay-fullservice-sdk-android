@@ -46,12 +46,11 @@ import com.hipay.fullservice.core.client.config.ClientConfig;
 import com.hipay.fullservice.core.errors.Errors;
 import com.hipay.fullservice.core.errors.exceptions.ApiException;
 import com.hipay.fullservice.core.models.Transaction;
-import com.hipay.fullservice.core.requests.order.OrderRelatedRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
-import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.utils.enums.AuthenticationIndicator;
+import com.hipay.fullservice.core.utils.enums.OrderRequestOperation;
 import com.hipay.fullservice.example.DemoActivity;
 import com.hipay.fullservice.example.R;
-import com.hipay.fullservice.screen.activity.PaymentProductsActivity;
 import com.hipay.fullservice.screen.activity.PaymentScreenActivity;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
@@ -60,7 +59,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -113,7 +111,7 @@ public class DemoFragment extends Fragment {
                 // @Deprecated Use Native Serialization
                 // Transaction transaction = Transaction.fromBundle(transactionBundle);
 
-                Snackbar snackbar = Snackbar.make(mDoneFab, "Transaction state: " + transaction.getState().getStringValue(),
+                Snackbar snackbar = Snackbar.make(mDoneFab, "Transaction state: " + transaction.getState().getValue(),
                         Snackbar.LENGTH_INDEFINITE);
                 View snackBarView = snackbar.getView();
                 snackBarView.setBackgroundColor((ContextCompat.getColor(getActivity(),
@@ -542,7 +540,7 @@ public class DemoFragment extends Fragment {
         paymentPageRequest.getCustomer().setZipCode("75012");
         paymentPageRequest.getCustomer().setCountry("FR");
         paymentPageRequest.getCustomer().setState("France");
-        paymentPageRequest.setOperation(OrderRelatedRequest.OrderRequestOperation.Sale);
+        paymentPageRequest.setOperation(OrderRequestOperation.SALE);
 
         paymentPageRequest.setTax(2.67f);
         paymentPageRequest.setShipping(1.56f);
@@ -562,7 +560,7 @@ public class DemoFragment extends Fragment {
         paymentPageRequest.setCurrency(selectedItem);
 
         Integer selectedItemThreeDS = (int)(long)m3DSSpinner.getSelectedItemId() - 1;
-        CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator = CardTokenPaymentMethodRequest.AuthenticationIndicator.fromIntegerValue(selectedItemThreeDS);
+        AuthenticationIndicator authenticationIndicator = AuthenticationIndicator.fromIntegerValue(selectedItemThreeDS);
 
         paymentPageRequest.setAuthenticationIndicator(authenticationIndicator);
 

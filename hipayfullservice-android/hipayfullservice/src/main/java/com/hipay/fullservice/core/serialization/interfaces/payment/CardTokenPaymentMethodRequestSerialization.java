@@ -2,10 +2,11 @@ package com.hipay.fullservice.core.serialization.interfaces.payment;
 
 import android.os.Bundle;
 
-import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.core.serialization.interfaces.AbstractSerialization;
+import com.hipay.fullservice.core.utils.enums.ECI;
 import com.hipay.fullservice.core.utils.Utils;
+import com.hipay.fullservice.core.utils.enums.AuthenticationIndicator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,14 +27,14 @@ public class CardTokenPaymentMethodRequestSerialization extends AbstractSerializ
 
         retMap.put("cardtoken", cardTokenPaymentMethodRequest.getCardToken());
 
-        Transaction.ECI eci = cardTokenPaymentMethodRequest.getEci();
-        if (eci != null && eci != Transaction.ECI.Undefined) {
-            retMap.put("eci", String.valueOf(eci.getIntegerValue()));
+        ECI eci = cardTokenPaymentMethodRequest.getEci();
+        if (eci != null && eci != ECI.UNDEFINED) {
+            retMap.put("eci", String.valueOf(eci.getValue()));
         }
 
-        CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator = cardTokenPaymentMethodRequest.getAuthenticationIndicator();
+        AuthenticationIndicator authenticationIndicator = cardTokenPaymentMethodRequest.getAuthenticationIndicator();
         if (authenticationIndicator != null) {
-            retMap.put("authentication_indicator", String.valueOf(authenticationIndicator.getIntegerValue()));
+            retMap.put("authentication_indicator", String.valueOf(authenticationIndicator.getValue()));
         }
 
         return retMap;

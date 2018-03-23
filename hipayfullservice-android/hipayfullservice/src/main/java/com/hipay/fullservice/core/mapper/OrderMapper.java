@@ -2,6 +2,7 @@ package com.hipay.fullservice.core.mapper;
 
 import com.hipay.fullservice.core.models.Order;
 import com.hipay.fullservice.core.models.PersonalInformation;
+import com.hipay.fullservice.core.utils.enums.Gender;
 
 import org.json.JSONObject;
 
@@ -35,9 +36,9 @@ public class OrderMapper extends PersonalInformationMapper {
         object.setDecimals(this.getIntegerForKey("decimals"));
 
         String genderString = this.getEnumCharForKey("gender");
-        Order.Gender gender = Order.Gender.fromStringValue(genderString);
+        Gender gender = Gender.fromStringValue(genderString);
         if (gender == null) {
-            gender = Order.Gender.GenderUndefined;
+            gender = Gender.UNDEFINED;
         }
         object.setGender(gender);
 

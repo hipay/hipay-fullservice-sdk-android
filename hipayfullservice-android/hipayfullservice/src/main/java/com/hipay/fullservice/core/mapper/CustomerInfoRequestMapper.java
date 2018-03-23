@@ -1,9 +1,9 @@
 package com.hipay.fullservice.core.mapper;
 
 import com.hipay.fullservice.core.mapper.interfaces.MapMapper;
-import com.hipay.fullservice.core.models.Order;
 import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.info.PersonalInfoRequest;
+import com.hipay.fullservice.core.utils.enums.Gender;
 
 /**
  * Created by nfillion on 22/03/2018.
@@ -30,9 +30,9 @@ public class CustomerInfoRequestMapper extends PersonalInfoRequestMapper {
         object.setBirthDateYear(this.getIntegerForKey("birthDateYear"));
 
         String genderChar = this.getEnumCharForKey("gender");
-        Order.Gender gender = Order.Gender.fromStringValue(genderChar);
+        Gender gender = Gender.fromStringValue(genderChar);
         if (gender == null) {
-            gender = Order.Gender.GenderUnknown;
+            gender = Gender.UNKNOWN;
         }
         object.setGender(gender);
 

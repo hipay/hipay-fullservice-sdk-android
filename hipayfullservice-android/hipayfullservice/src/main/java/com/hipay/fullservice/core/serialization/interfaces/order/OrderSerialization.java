@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.hipay.fullservice.core.models.Order;
 import com.hipay.fullservice.core.serialization.interfaces.PersonalInformationSerialization;
+import com.hipay.fullservice.core.utils.enums.Gender;
 
 import java.util.Map;
 
@@ -38,9 +39,9 @@ public class OrderSerialization extends PersonalInformationSerialization {
         this.putFloatForKey("tax", order.getTax());
         this.putIntForKey("decimals", order.getDecimals());
 
-        Order.Gender gender = order.getGender();
+        Gender gender = order.getGender();
         if (gender != null) {
-            this.putStringForKey("gender", Character.toString(gender.getCharValue()));
+            this.putStringForKey("gender", Character.toString(gender.getValue()));
         }
 
         this.putDateForKey("dateCreated", order.getDateCreated());

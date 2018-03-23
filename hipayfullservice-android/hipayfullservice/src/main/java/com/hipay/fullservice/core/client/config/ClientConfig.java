@@ -1,5 +1,7 @@
 package com.hipay.fullservice.core.client.config;
 
+import com.hipay.fullservice.core.utils.enums.Environment;
+
 /**
  * Created by nfillion on 21/01/16.
  */
@@ -38,35 +40,6 @@ public class ClientConfig {
             mInstance.setPaymentCardNfcScanEnabled(true);
         }
         return mInstance;
-    }
-
-    public enum Environment {
-
-        Stage (0),
-        Production (1);
-
-        protected final Integer status;
-        Environment(Integer status) {
-
-            this.status = status;
-        }
-
-        public static Environment fromIntegerValue(Integer value) {
-
-            if (value.equals(Stage.getIntegerValue())) {
-                return Stage;
-            }
-
-            if (value.equals(Production.getIntegerValue())) {
-                return Production;
-            }
-
-            return null;
-        }
-
-        public Integer getIntegerValue() {
-            return this.status;
-        }
     }
 
     public Environment getEnvironment() {

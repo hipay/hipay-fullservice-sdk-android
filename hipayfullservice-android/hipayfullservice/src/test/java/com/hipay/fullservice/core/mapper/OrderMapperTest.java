@@ -7,6 +7,7 @@ package com.hipay.fullservice.core.mapper;
 import android.text.TextUtils;
 
 import com.hipay.fullservice.core.models.Order;
+import com.hipay.fullservice.core.utils.enums.Gender;
 
 import org.json.JSONObject;
 import org.junit.Before;
@@ -69,7 +70,7 @@ public class OrderMapperTest {
         orderCompare.setShipping(3.5f);
         orderCompare.setTax(2.8f);
         orderCompare.setDecimals(8);
-        orderCompare.setGender(Order.Gender.GenderMale);
+        orderCompare.setGender(Gender.GenderMale);
         //order.setDateCreated(Order.Gender.GenderMale);
 
         BDDMockito.given(TextUtils.isDigitsOnly("2")).willReturn(true);

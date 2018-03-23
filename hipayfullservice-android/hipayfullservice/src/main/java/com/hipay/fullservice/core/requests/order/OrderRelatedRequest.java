@@ -1,15 +1,13 @@
 package com.hipay.fullservice.core.requests.order;
 
 import android.os.Build;
-import android.os.Bundle;
 
 import com.hipay.fullservice.BuildConfig;
 import com.hipay.fullservice.core.client.config.ClientConfig;
-import com.hipay.fullservice.core.mapper.AbstractMapper;
-import com.hipay.fullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.fullservice.core.requests.AbstractRequest;
 import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.info.PersonalInfoRequest;
+import com.hipay.fullservice.core.utils.enums.OrderRequestOperation;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -163,39 +161,6 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.setCancelScheme(appSchemeBuilder.toString().concat(OrderRelatedRequestRedirectPathCancel));
         this.setExceptionScheme(appSchemeBuilder.toString().concat(OrderRelatedRequestRedirectPathException));
 
-    }
-
-    public enum OrderRequestOperation {
-
-        Undefined(null),
-        Authorization("Authorization"), Sale("Sale");
-
-        protected final String operation;
-
-        OrderRequestOperation(String operation)
-        {
-            this.operation = operation;
-        }
-
-        public static OrderRequestOperation fromStringValue(String value) {
-
-            if (value == null) return null;
-
-            if (value.equals(Authorization.getStringValue())) {
-                return Authorization;
-            }
-
-            if (value.equals(Sale.getStringValue())) {
-                return Sale;
-            }
-
-            return null;
-        }
-
-        public String getStringValue()
-        {
-            return this.operation;
-        }
     }
 
     public String getOrderId() {

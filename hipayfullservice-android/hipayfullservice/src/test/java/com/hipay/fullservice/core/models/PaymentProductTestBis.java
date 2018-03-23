@@ -22,30 +22,30 @@ public class PaymentProductTestBis {
 
         /*
         when(paymentProduct.securityCodeTypeForPaymentProductCode(PaymentProduct.PaymentProductCodeBCMC))
-                .thenReturn(PaymentProduct.SecurityCodeType.SecurityCodeTypeNone);
+                .thenReturn(PaymentProduct.SecurityCodeType.SECURITY_CODE_TYPE_NONE);
 
         when(paymentProduct.securityCodeTypeForPaymentProductCode(PaymentProduct.PaymentProductCodeBCMC))
-                .thenReturn(PaymentProduct.SecurityCodeType.SecurityCodeTypeNone);
+                .thenReturn(PaymentProduct.SecurityCodeType.SECURITY_CODE_TYPE_NONE);
 
         when(paymentProduct.securityCodeTypeForPaymentProductCode(PaymentProduct.PaymentProductCodeBCMC))
-                .thenReturn(PaymentProduct.SecurityCodeType.SecurityCodeTypeNone);
+                .thenReturn(PaymentProduct.SecurityCodeType.SECURITY_CODE_TYPE_NONE);
 
         when(paymentProduct.securityCodeTypeForPaymentProductCode(PaymentProduct.PaymentProductCodeBCMC))
-                .thenReturn(PaymentProduct.SecurityCodeType.SecurityCodeTypeNone);
+                .thenReturn(PaymentProduct.SecurityCodeType.SECURITY_CODE_TYPE_NONE);
 
         when(paymentProduct.securityCodeTypeForPaymentProductCode(PaymentProduct.PaymentProductCodeBCMC))
-                .thenReturn(PaymentProduct.SecurityCodeType.SecurityCodeTypeNone);
+                .thenReturn(PaymentProduct.SecurityCodeType.SECURITY_CODE_TYPE_NONE);
 
         when(paymentProduct.securityCodeTypeForPaymentProductCode(PaymentProduct.PaymentProductCodeBCMC))
-                .thenReturn(PaymentProduct.SecurityCodeType.SecurityCodeTypeNone);
+                .thenReturn(PaymentProduct.SecurityCodeType.SECURITY_CODE_TYPE_NONE);
 
         when(paymentProduct.securityCodeTypeForPaymentProductCode(PaymentProduct.PaymentProductCodeBCMC))
-                .thenReturn(PaymentProduct.SecurityCodeType.SecurityCodeTypeNone);
+                .thenReturn(PaymentProduct.SecurityCodeType.SECURITY_CODE_TYPE_NONE);
 
         when(paymentProduct.securityCodeTypeForPaymentProductCode(PaymentProduct.PaymentProductCodeBCMC))
-                .thenReturn(PaymentProduct.SecurityCodeType.SecurityCodeTypeNone);
-        when(paymentProduct.securityCodeTypeForPaymentProductCode(PaymentProduct.PaymentProductCodeBCMC)) .thenReturn(PaymentProduct.SecurityCodeType.SecurityCodeTypeNone);
-        //assertThat(result, is(PaymentProduct.SecurityCodeType.SecurityCodeTypeNone));
+                .thenReturn(PaymentProduct.SecurityCodeType.SECURITY_CODE_TYPE_NONE);
+        when(paymentProduct.securityCodeTypeForPaymentProductCode(PaymentProduct.PaymentProductCodeBCMC)) .thenReturn(PaymentProduct.SecurityCodeType.SECURITY_CODE_TYPE_NONE);
+        //assertThat(result, is(PaymentProduct.SecurityCodeType.SECURITY_CODE_TYPE_NONE));
 
         */
 

@@ -3,8 +3,7 @@ package com.hipay.fullservice.core.models;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.OrderMapper;
-import com.hipay.fullservice.core.mapper.PersonalInformationMapper;
-import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.fullservice.core.utils.enums.Gender;
 
 import org.json.JSONObject;
 
@@ -145,45 +144,6 @@ public class Order extends PersonalInformation implements Serializable {
 
     public void setShippingAddress(PersonalInformation shippingAddress) {
         this.shippingAddress = shippingAddress;
-    }
-
-    public enum Gender {
-
-        GenderUndefined (' '),
-        GenderUnknown ('U'),
-        GenderMale ('M'),
-        GenderFemale ('F');
-
-        protected final char gender;
-        Gender(char gender) {
-            this.gender = gender;
-        }
-
-        public char getCharValue() {
-
-            return this.gender;
-        }
-
-        public static Gender fromStringValue(String value) {
-
-            if (value == null) return null;
-
-            char c = value.charAt(0);
-
-            if (c == GenderUnknown.getCharValue()) {
-                return GenderUnknown;
-            }
-
-            if (c == GenderMale.getCharValue()) {
-                return GenderMale;
-            }
-
-            if (c == GenderFemale.getCharValue()) {
-                return GenderFemale;
-            }
-
-            return null;
-        }
     }
 
     protected static class OrderSerializationMapper extends PersonalInformationSerializationMapper {

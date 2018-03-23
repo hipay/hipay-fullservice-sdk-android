@@ -50,6 +50,7 @@ import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.utils.enums.ECI;
 import com.hipay.fullservice.core.utils.NFCUtils;
 import com.hipay.fullservice.core.utils.PaymentCardTokenDatabase;
 import com.hipay.fullservice.core.utils.Utils;
@@ -976,7 +977,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         Bundle args = getArguments();
         PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
-        boolean paymentPageRequestECI = paymentPageRequest.getEci() == Transaction.ECI.SecureECommerce ? true : false;
+        boolean paymentPageRequestECI = paymentPageRequest.getEci() == ECI.SECURE_E_COMMERCE ? true : false;
 
         return paymentCardEnabled && paymentPageRequestECI;
     }

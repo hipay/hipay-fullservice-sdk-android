@@ -7,6 +7,8 @@ package com.hipay.fullservice.core.mapper;
 import android.text.TextUtils;
 
 import com.hipay.fullservice.core.models.FraudScreening;
+import com.hipay.fullservice.core.models.FraudScreeningReview;
+import com.hipay.fullservice.core.utils.enums.FraudScreeningResult;
 
 import org.json.JSONObject;
 import org.junit.Before;
@@ -57,8 +59,8 @@ public class FraudScreeningMapperTest {
 
         FraudScreening compareFraudScreeningCompare = new FraudScreening();
         compareFraudScreeningCompare.setScoring(1);
-        compareFraudScreeningCompare.setResult(FraudScreening.FraudScreeningResult.FraudScreeningResultBlocked);
-        compareFraudScreeningCompare.setReview(FraudScreening.FraudScreeningReview.FraudScreeningReviewDenied);
+        compareFraudScreeningCompare.setResult(FraudScreeningResult.FRAUDSCREENINGRESULT_BLOCKED);
+        compareFraudScreeningCompare.setReview(FraudScreeningReview.FRAUDSCREENINGREVIEW_DENIED);
 
         FraudScreening fraudScreeningTest = fraudScreeningMapper.mappedObject();
 

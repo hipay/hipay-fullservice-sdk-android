@@ -7,7 +7,7 @@ package com.hipay.fullservice.core.operations;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.hipay.fullservice.core.network.AbstractHttpClient;
+import com.hipay.fullservice.core.utils.enums.HttpMethod;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -44,6 +44,6 @@ public class PaymentProductsOperationTest {
     public void testMethods() throws Exception {
 
         assertEquals(paymentProductsOperation.concatUrl(), "available-payment-products");
-        assertEquals(paymentProductsOperation.getRequestType(), AbstractHttpClient.HttpMethod.GET);
+        assertEquals(paymentProductsOperation.getRequestType(), HttpMethod.GET);
     }
 }

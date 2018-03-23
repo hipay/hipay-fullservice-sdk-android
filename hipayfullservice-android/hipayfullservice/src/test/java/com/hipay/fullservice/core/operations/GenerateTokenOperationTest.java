@@ -7,7 +7,7 @@ package com.hipay.fullservice.core.operations;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.hipay.fullservice.core.network.AbstractHttpClient;
+import com.hipay.fullservice.core.utils.enums.HttpMethod;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -45,7 +45,7 @@ public class GenerateTokenOperationTest {
     public void testMethods() throws Exception {
 
         assertEquals(generateTokenOperation.concatUrl(), "token/create");
-        assertEquals(generateTokenOperation.getRequestType(), AbstractHttpClient.HttpMethod.POST);
+        assertEquals(generateTokenOperation.getRequestType(), HttpMethod.POST);
     }
 }
 

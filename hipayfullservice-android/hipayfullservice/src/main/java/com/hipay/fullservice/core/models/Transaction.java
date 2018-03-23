@@ -1,18 +1,19 @@
 package com.hipay.fullservice.core.models;
 
 import android.net.Uri;
-import android.net.UrlQuerySanitizer;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.TransactionMapper;
 import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.fullservice.core.utils.enums.CVCResult;
+import com.hipay.fullservice.core.utils.enums.ECI;
+import com.hipay.fullservice.core.utils.enums.AVSResult;
+import com.hipay.fullservice.core.utils.enums.TransactionState;
 
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.net.URL;
-import java.util.Map;
 
 /**
  * Created by nfillion on 25/01/16.
@@ -54,9 +55,9 @@ public class Transaction extends TransactionRelatedItem  implements Serializable
 
     public Transaction() {
 
-        this.eci = ECI.Undefined;
-        this.avsResult = AVSResult.AVSResultNotApplicable;
-        this.cvcResult = CVCResult.CVCResultNotApplicable;
+        this.eci = ECI.UNDEFINED;
+        this.avsResult = AVSResult.AVS_RESULT_NOT_APPLICABLE;
+        this.cvcResult = CVCResult.CVC_RESULT_NOT_APPLICABLE;
     }
 
     public static Transaction fromJSONObject(JSONObject object) {
@@ -86,231 +87,11 @@ public class Transaction extends TransactionRelatedItem  implements Serializable
 
     public Boolean isHandled() {
 
-        if (this.state.equals(TransactionState.TransactionStatePending) ||
-                this.state.equals(TransactionState.TransactionStateCompleted )) {
+        if (this.state.equals(TransactionState.TRANSACTION_STATE_PENDING) ||
+                this.state.equals(TransactionState.TRANSACTION_STATE_COMPLETED)) {
             return Boolean.valueOf(true);
         }
         return Boolean.valueOf(false);
-    }
-
-    public enum AVSResult {
-
-        AVSResultNotApplicable (' '),
-        AVSResultExactMatch ('Y'),
-        AVSResultAddressMatch ('A'),
-        AVSResultPostalCodeMatch ('P'),
-        AVSResultNoMatch ('N'),
-        AVSResultNotCompatible ('C'),
-        AVSResultNotAllowed ('E'),
-        AVSResultUnavailable ('U'),
-        AVSResultRetry ('R'),
-        AVSResultNotSupported ('S');
-
-        protected final char result;
-        AVSResult(char result) {
-
-            this.result = result;
-        }
-
-        public char getCharValue() {
-
-            return this.result;
-        }
-
-        public static AVSResult fromStringValue(String value) {
-
-            if (value == null) return null;
-
-            char c = value.charAt(0);
-
-            if (c == AVSResultExactMatch.getCharValue()) {
-                return AVSResultExactMatch;
-            }
-
-            if (c == AVSResultAddressMatch.getCharValue()) {
-                return AVSResultAddressMatch;
-            }
-
-            if (c == AVSResultPostalCodeMatch.getCharValue()) {
-                return AVSResultPostalCodeMatch;
-            }
-
-            if (c == AVSResultNoMatch.getCharValue()) {
-                return AVSResultNoMatch;
-            }
-
-            if (c == AVSResultNotCompatible.getCharValue()) {
-                return AVSResultNotCompatible;
-            }
-
-            if (c == AVSResultNotAllowed.getCharValue()) {
-                return AVSResultNotAllowed;
-            }
-
-            if (c == AVSResultUnavailable.getCharValue()) {
-                return AVSResultUnavailable;
-            }
-
-            if (c == AVSResultRetry.getCharValue()) {
-                return AVSResultRetry;
-            }
-
-            if (c == AVSResultNotSupported.getCharValue()) {
-                return AVSResultNotSupported;
-            }
-
-            return null;
-        }
-
-    }
-
-    public enum ECI {
-
-        Undefined(Integer.MAX_VALUE),
-        MOTO(1),
-        RecurringMOTO(2),
-        InstallmentPayment(3),
-        ManuallyKeyedCardPresent(4),
-        SecureECommerce(7),
-        RecurringECommerce(9);
-
-        protected final int eci;
-        ECI(int eci) {
-            this.eci = eci;
-        }
-
-        public Integer getIntegerValue() {
-            return this.eci;
-        }
-
-        public static ECI fromIntegerValue(Integer value) {
-
-            if (value == null) return null;
-
-            if (value.equals(MOTO.getIntegerValue())) {
-                return MOTO;
-            }
-
-            if (value.equals(RecurringMOTO.getIntegerValue())) {
-                return RecurringMOTO;
-            }
-
-            if (value.equals(InstallmentPayment.getIntegerValue())) {
-                return InstallmentPayment;
-            }
-
-            if (value.equals(ManuallyKeyedCardPresent.getIntegerValue())) {
-                return ManuallyKeyedCardPresent;
-            }
-
-            if (value.equals(SecureECommerce.getIntegerValue())) {
-                return SecureECommerce;
-            }
-
-            if (value.equals(RecurringECommerce.getIntegerValue())) {
-                return RecurringECommerce;
-            }
-
-            return null;
-        }
-    }
-
-    public enum CVCResult {
-
-        CVCResultNotApplicable(' '),
-        CVCResultMatch('M'),
-        CVCResultNoMatch('N'),
-        CVCResultNotProcessed('P'),
-        CVCResultMissing('S'),
-        CVCResultNotSupported('U');
-
-        protected final char result;
-
-        CVCResult(char result) {
-            this.result = result;
-        }
-
-        public char getCharValue() {
-            return this.result;
-        }
-
-        public static CVCResult fromStringValue(String value) {
-
-            if (value == null) return null;
-
-            char c = value.charAt(0);
-
-            if (c == CVCResultNotApplicable.getCharValue()) {
-                return CVCResultNotApplicable;
-            }
-
-            if (c == CVCResultMatch.getCharValue()) {
-                return CVCResultMatch;
-            }
-
-            if (c == CVCResultNoMatch.getCharValue()) {
-                return CVCResultNoMatch;
-            }
-
-            if (c == CVCResultNotProcessed.getCharValue()) {
-                return CVCResultNotProcessed;
-            }
-
-            if (c == CVCResultMissing.getCharValue()) {
-                return CVCResultMissing;
-            }
-
-            if (c == CVCResultNotSupported.getCharValue()) {
-                return CVCResultNotSupported;
-            }
-
-            return null;
-        }
-    }
-
-    public enum TransactionState {
-
-        TransactionStateError ("error"),
-        TransactionStateCompleted ("completed"),
-        TransactionStateForwarding ("forwarding"),
-        TransactionStatePending ("pending"),
-        TransactionStateDeclined ("declined");
-
-        protected final String state;
-        TransactionState(String state) {
-            this.state = state;
-        }
-
-        public String getStringValue() {
-            return this.state;
-        }
-
-        public static TransactionState fromStringValue(String value) {
-
-            if (value == null) return null;
-
-            if (value.equalsIgnoreCase(TransactionStateError.getStringValue())) {
-                return TransactionStateError;
-            }
-
-            if (value.equalsIgnoreCase(TransactionStateCompleted.getStringValue())) {
-                return TransactionStateCompleted;
-            }
-
-            if (value.equalsIgnoreCase(TransactionStateForwarding.getStringValue())) {
-                return TransactionStateForwarding;
-            }
-
-            if (value.equalsIgnoreCase(TransactionStatePending.getStringValue())) {
-                return TransactionStatePending;
-            }
-
-            if (value.equalsIgnoreCase(TransactionStateDeclined.getStringValue())) {
-                return TransactionStateDeclined;
-            }
-
-            return null;
-        }
     }
 
     public TransactionState getState() {

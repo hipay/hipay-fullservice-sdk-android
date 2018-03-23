@@ -33,6 +33,7 @@ import com.hipay.fullservice.core.models.Order;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.OrderRelatedRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
+import com.hipay.fullservice.core.utils.enums.TransactionState;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
@@ -50,7 +51,7 @@ public class ForwardWebViewActivity extends AppCompatActivity {
         Intent starter = getStartIntent(activity, forwardURLString, title, theme);
 
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(activity, null);
+                .makeSceneTransitionAnimation(activity);
 
         ActivityCompat.startActivityForResult(activity, starter, PaymentPageRequest.REQUEST_ORDER, activityOptions.toBundle());
     }
@@ -70,26 +71,6 @@ public class ForwardWebViewActivity extends AppCompatActivity {
             throw new InvalidParameterException();
         }
     }
-
-    //@Override
-    //public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        //if (requestCode == PaymentPageRequest.REQUEST_ORDER) {
-
-            //if (resultCode == R.id.transaction_succeed) {
-
-                //setResult(R.id.transaction_succeed, data);
-
-            //} else if (resultCode == R.id.transaction_failed) {
-
-                //setResult(R.id.transaction_failed, data);
-            //}
-
-            //finish();
-        //}
-
-        //super.onActivityResult(requestCode, resultCode, data);
-    //}
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -114,22 +95,13 @@ public class ForwardWebViewActivity extends AppCompatActivity {
 
             List<String> pathSegments = data.getPathSegments();
 
-            Map<String, Transaction.TransactionState> transactionStatus = new HashMap<>(5);
+            Map<String, TransactionState> transactionStatus = new HashMap<>(5);
 
-            transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathAccept,Transaction.TransactionState.TransactionStateCompleted);
-            transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathCancel,Transaction.TransactionState.TransactionStateDeclined);
-            transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathDecline,Transaction.TransactionState.TransactionStateDeclined);
-            transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathException,Transaction.TransactionState.TransactionStateError);
-            transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathPending,Transaction.TransactionState.TransactionStatePending);
-
-            //List<String> statusList = Arrays.asList(
-
-            //OrderRelatedRequest.OrderRelatedRequestRedirectPathAccept,
-            //OrderRelatedRequest.OrderRelatedRequestRedirectPathCancel,
-            //OrderRelatedRequest.OrderRelatedRequestRedirectPathDecline,
-            //OrderRelatedRequest.OrderRelatedRequestRedirectPathException,
-            //OrderRelatedRequest.OrderRelatedRequestRedirectPathPending
-            //);
+            transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathAccept, TransactionState.TRANSACTION_STATE_COMPLETED);
+            transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathCancel, TransactionState.TRANSACTION_STATE_DECLINED);
+            transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathDecline, TransactionState.TRANSACTION_STATE_DECLINED);
+            transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathException, TransactionState.TRANSACTION_STATE_ERROR);
+            transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathPending, TransactionState.TRANSACTION_STATE_PENDING);
 
             if (!pathSegments.isEmpty() && pathSegments.size() == 4) {
 
@@ -256,8 +228,6 @@ public class ForwardWebViewActivity extends AppCompatActivity {
             this.initStatusBar(CustomTheme.fromBundle(customTheme));
         }
 
-        //getSupportActionBar().setDisplayShowTitleEnabled(false);
-
         if (savedInstanceState == null) {
 
             WebView myWebView = (WebView) findViewById(R.id.webview);
@@ -309,7 +279,6 @@ public class ForwardWebViewActivity extends AppCompatActivity {
         @TargetApi(Build.VERSION_CODES.KITKAT)
         @Override
         public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
-            //super.onReceivedSslError(view, handler, error);
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(ForwardWebViewActivity.this);
             builder.setTitle(getString(R.string.certificate_error_title));
