@@ -1,16 +1,13 @@
 package com.hipay.fullservice.core.requests.payment;
 
-import com.hipay.fullservice.core.serialization.SerializationFactory;
-import com.hipay.fullservice.core.serialization.interfaces.ISerialization;
+import com.hipay.fullservice.core.requests.AbstractRequest;
 import com.hipay.fullservice.core.utils.enums.AuthenticationIndicator;
 import com.hipay.fullservice.core.utils.enums.ECI;
-
-import java.util.Map;
 
 /**
  * Created by nfillion on 03/02/16.
  */
-public class CardTokenPaymentMethodRequest extends AbstractPaymentMethodRequest {
+public class CardTokenPaymentMethodRequest extends AbstractRequest {
 
     protected String cardToken;
     protected ECI eci;
@@ -25,11 +22,6 @@ public class CardTokenPaymentMethodRequest extends AbstractPaymentMethodRequest 
         this.cardToken = cardToken;
         this.eci = eci;
         this.authenticationIndicator = authenticationIndicator;
-    }
-
-    public Map<String, String> getSerializedObject() {
-        ISerialization mapper = SerializationFactory.newInstance(this);
-        return mapper.getSerializedRequest();
     }
 
     public String getCardToken() {

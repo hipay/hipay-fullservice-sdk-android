@@ -1,9 +1,11 @@
 package com.hipay.fullservice.core.requests.payment;
 
+import com.hipay.fullservice.core.requests.AbstractRequest;
+
 /**
  * Created by nfillion on 03/02/16.
  */
-public class IDealPaymentMethodRequest extends AbstractPaymentMethodRequest {
+public class IDealPaymentMethodRequest extends AbstractRequest {
 
     public IDealPaymentMethodRequest() {
     }

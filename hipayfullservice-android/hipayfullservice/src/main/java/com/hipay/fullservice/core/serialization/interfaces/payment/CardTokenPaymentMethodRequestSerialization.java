@@ -2,7 +2,6 @@ package com.hipay.fullservice.core.serialization.interfaces.payment;
 
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.core.serialization.interfaces.AbstractSerialization;
-import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.core.utils.enums.AuthenticationIndicator;
 import com.hipay.fullservice.core.utils.enums.ECI;
 
@@ -38,8 +37,4 @@ public class CardTokenPaymentMethodRequestSerialization extends AbstractSerializ
         return retMap;
     }
 
-    @Override
-    public String getQueryString() {
-        return Utils.queryStringFromMap(this.getSerializedRequest());
-    }
 }

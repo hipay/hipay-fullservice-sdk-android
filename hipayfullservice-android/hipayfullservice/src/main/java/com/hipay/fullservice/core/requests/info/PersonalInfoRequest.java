@@ -4,12 +4,8 @@ import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.PersonalInfoRequestMapper;
 import com.hipay.fullservice.core.requests.AbstractRequest;
-import com.hipay.fullservice.core.serialization.SerializationFactory;
-import com.hipay.fullservice.core.serialization.interfaces.ISerialization;
 
 import org.json.JSONObject;
-
-import java.util.Map;
 
 /**
  * Created by nfillion on 03/02/16.
@@ -40,22 +36,6 @@ public class PersonalInfoRequest extends AbstractRequest {
         PersonalInfoRequestMapper mapper = new PersonalInfoRequestMapper(jsonObject);
         return mapper.mappedObject();
     }
-
-    public Bundle toBundle() {
-        ISerialization mapper = SerializationFactory.newInstance(this);
-        return mapper.getSerializedBundle();
-    }
-
-    public String getStringParameters() {
-        ISerialization mapper = SerializationFactory.newInstance(this);
-        return mapper.getQueryString();
-    }
-
-    public Map<String, String> getSerializedObject() {
-        ISerialization mapper = SerializationFactory.newInstance(this);
-        return mapper.getSerializedRequest();
-    }
-
 
     public String getFirstname() {
         return firstname;

@@ -1,9 +1,11 @@
 package com.hipay.fullservice.core.requests.payment;
 
+import com.hipay.fullservice.core.requests.AbstractRequest;
+
 /**
  * Created by nfillion on 03/02/16.
  */
-public class QiwiWalletPaymentMethodRequest extends AbstractPaymentMethodRequest {
+public class QiwiWalletPaymentMethodRequest extends AbstractRequest {
 
     public QiwiWalletPaymentMethodRequest() {
     }

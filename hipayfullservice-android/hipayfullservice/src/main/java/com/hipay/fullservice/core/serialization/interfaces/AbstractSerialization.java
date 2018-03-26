@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.hipay.fullservice.core.serialization.BundleSerialization;
 import com.hipay.fullservice.core.serialization.IBundle;
+import com.hipay.fullservice.core.utils.Utils;
 
 import java.util.Map;
 
@@ -34,10 +35,8 @@ public abstract class AbstractSerialization<T> implements ISerialization {
     ;
 
     public String getQueryString() {
-        return null;
+        return Utils.queryStringFromMap(this.getSerializedRequest());
     }
-
-    ;
 
     protected T getModel() {
         return model;

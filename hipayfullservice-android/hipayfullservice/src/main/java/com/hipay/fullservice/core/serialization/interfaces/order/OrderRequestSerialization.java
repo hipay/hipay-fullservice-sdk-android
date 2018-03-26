@@ -1,11 +1,8 @@
 package com.hipay.fullservice.core.serialization.interfaces.order;
 
-import android.os.Bundle;
-
+import com.hipay.fullservice.core.requests.AbstractRequest;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
-import com.hipay.fullservice.core.requests.payment.AbstractPaymentMethodRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
-import com.hipay.fullservice.core.utils.Utils;
 
 import java.util.Map;
 
@@ -27,7 +24,7 @@ public class OrderRequestSerialization extends OrderRelatedRequestSerialization 
 
         relatedRequestMap.put("payment_product", orderRequest.getPaymentProductCode());
 
-        AbstractPaymentMethodRequest paymentMethodRequest = orderRequest.getPaymentMethod();
+        AbstractRequest paymentMethodRequest = orderRequest.getPaymentMethod();
 
         //we don't have qiwi wallet token or ideal for now
         if (paymentMethodRequest instanceof CardTokenPaymentMethodRequest) {
@@ -39,17 +36,5 @@ public class OrderRequestSerialization extends OrderRelatedRequestSerialization 
         }
 
         return relatedRequestMap;
-    }
-
-    @Override
-    public String getQueryString() {
-        return Utils.queryStringFromMap(this.getSerializedRequest());
-    }
-
-    @Override
-    public Bundle getSerializedBundle() {
-
-        //check about this bundle
-        return super.getSerializedBundle();
     }
 }

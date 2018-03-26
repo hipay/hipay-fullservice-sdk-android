@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
-import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.core.utils.enums.AuthenticationIndicator;
 import com.hipay.fullservice.core.utils.enums.ECI;
 
@@ -112,10 +111,5 @@ public class PaymentPageRequestSerialization extends OrderRelatedRequestSerializ
         this.bundle.putBool("card_grouping", paymentPageRequest.isPaymentCardGroupingEnabled());
 
         return this.getBundle();
-    }
-
-    @Override
-    public String getQueryString() {
-        return Utils.queryStringFromMap(this.getSerializedRequest());
     }
 }

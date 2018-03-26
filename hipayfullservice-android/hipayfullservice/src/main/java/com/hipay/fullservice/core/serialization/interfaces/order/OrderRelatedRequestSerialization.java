@@ -112,9 +112,6 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
 
     @Override
     public Bundle getSerializedBundle() {
-
-        super.getSerializedBundle();
-
         OrderRelatedRequest orderRelatedRequest = (OrderRelatedRequest)this.getModel();
 
         this.bundle.putString("orderid", orderRelatedRequest.getOrderId());

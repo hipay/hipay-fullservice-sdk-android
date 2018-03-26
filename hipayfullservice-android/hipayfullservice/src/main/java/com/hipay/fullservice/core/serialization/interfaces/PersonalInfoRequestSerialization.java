@@ -3,7 +3,6 @@ package com.hipay.fullservice.core.serialization.interfaces;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.requests.info.PersonalInfoRequest;
-import com.hipay.fullservice.core.utils.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,11 +52,5 @@ public class PersonalInfoRequestSerialization extends AbstractSerialization {
         this.bundle.putString("country", personalInfoRequest.getCountry());
 
         return this.getBundle();
-    }
-
-    @Override
-    public String getQueryString() {
-
-        return Utils.queryStringFromMap(this.getSerializedRequest());
     }
 }

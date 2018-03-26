@@ -1,8 +1,6 @@
 package com.hipay.fullservice.core.requests.securevault;
 
 import com.hipay.fullservice.core.requests.AbstractRequest;
-import com.hipay.fullservice.core.serialization.SerializationFactory;
-import com.hipay.fullservice.core.serialization.interfaces.ISerialization;
 
 /**
  * Created by nfillion on 09/03/16.
@@ -25,11 +23,6 @@ public class GenerateTokenRequest extends AbstractRequest {
     protected String cardHolder;
     protected String cardCVC;
     protected Boolean multiUse;
-
-    public String getStringParameters() {
-        ISerialization mapper = SerializationFactory.newInstance(this);
-        return mapper.getQueryString();
-    }
 
     public String getCardNumber() {
         return cardNumber;
