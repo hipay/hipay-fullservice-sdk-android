@@ -24,7 +24,7 @@ public enum SecurityCodeType {
         this.status = status;
     }
 
-    public Integer getIntegerValue() {
+    public Integer getValue() {
         return this.status;
     }
 }

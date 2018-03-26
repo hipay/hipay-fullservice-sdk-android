@@ -4,10 +4,9 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.TransactionMapper;
-import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.fullservice.core.utils.enums.AVSResult;
 import com.hipay.fullservice.core.utils.enums.CVCResult;
 import com.hipay.fullservice.core.utils.enums.ECI;
-import com.hipay.fullservice.core.utils.enums.AVSResult;
 import com.hipay.fullservice.core.utils.enums.TransactionState;
 
 import org.json.JSONObject;
@@ -77,12 +76,6 @@ public class Transaction extends TransactionRelatedItem  implements Serializable
         TransactionMapper mapper = new TransactionMapper(uri);
         return mapper.mappedObject();
 
-    }
-
-    public Bundle toBundle() {
-
-        Transaction.TransactionSerializationMapper mapper = new Transaction.TransactionSerializationMapper(this);
-        return mapper.getSerializedBundle();
     }
 
     public Boolean isHandled() {
@@ -302,25 +295,4 @@ public class Transaction extends TransactionRelatedItem  implements Serializable
     public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
-
-    protected static class TransactionSerializationMapper extends AbstractSerializationMapper {
-
-        protected TransactionSerializationMapper(Transaction transaction) {
-            super(transaction);
-        }
-
-        @Override
-        protected String getQueryString() {
-
-            return super.getQueryString();
-        }
-
-        @Override
-        protected Bundle getSerializedBundle() {
-
-            return super.getSerializedBundle();
-        }
-    }
-
-
 }

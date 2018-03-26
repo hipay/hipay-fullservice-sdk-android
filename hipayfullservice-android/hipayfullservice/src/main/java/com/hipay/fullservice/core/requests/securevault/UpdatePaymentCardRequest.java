@@ -1,7 +1,8 @@
 package com.hipay.fullservice.core.requests.securevault;
 
 import com.hipay.fullservice.core.requests.AbstractRequest;
-import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.fullservice.core.serialization.SerializationFactory;
+import com.hipay.fullservice.core.serialization.interfaces.ISerialization;
 
 /**
  * Created by nfillion on 09/03/16.
@@ -64,21 +65,8 @@ public class UpdatePaymentCardRequest extends AbstractRequest {
     }
 
     public String getStringParameters() {
-
-        UpdatePaymentCardRequest.UpdatePaymentCardRequestSerializationMapper mapper = new UpdatePaymentCardRequest.UpdatePaymentCardRequestSerializationMapper(this);
+        ISerialization mapper = SerializationFactory.newInstance(this);
         return mapper.getQueryString();
-    }
-
-    public static class UpdatePaymentCardRequestSerializationMapper extends AbstractSerializationMapper {
-
-        public UpdatePaymentCardRequestSerializationMapper(AbstractRequest request) {
-            super(request);
-        }
-
-        @Override
-        public String getQueryString() {
-            return super.getQueryString();
-        }
     }
 }
 

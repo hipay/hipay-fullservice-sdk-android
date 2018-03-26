@@ -1,7 +1,5 @@
 package com.hipay.fullservice.core.serialization.interfaces.securevault;
 
-import android.os.Bundle;
-
 import com.hipay.fullservice.core.requests.securevault.GenerateTokenRequest;
 import com.hipay.fullservice.core.serialization.interfaces.AbstractSerialization;
 import com.hipay.fullservice.core.utils.Utils;
@@ -37,12 +35,7 @@ public class SecureVaultRequestSerialization extends AbstractSerialization {
     }
 
     @Override
-    public Bundle getSerializedBundle() {
-        return null;
-    }
-
     public String getQueryString() {
-
         return Utils.queryStringFromMap(this.getSerializedRequest());
     }
 }

@@ -3,8 +3,7 @@ package com.hipay.fullservice.core.serialization.interfaces;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.models.TransactionRelatedItem;
-
-import java.util.Map;
+import com.hipay.fullservice.core.utils.enums.TransactionStatus;
 
 /**
  * Created by nfillion on 08/09/16.
@@ -16,43 +15,29 @@ public abstract class TransactionRelatedItemSerialization extends AbstractSerial
         super(transactionRelatedItem);
     }
 
-    @Override
-    public String getQueryString() {
-        return null;
-    }
-
-    @Override
-    public Map<String, String> getSerializedRequest() {
-        // we don't send it as a queryString
-        return null;
-    }
-
-    @Override
     public Bundle getSerializedBundle() {
-        super.getSerializedBundle();
-
         TransactionRelatedItem object = (TransactionRelatedItem) this.getModel();
 
-        this.putBoolForKey("test", object.getTest());
-        this.putStringForKey("mid", object.getMid());
-        this.putStringForKey("authorizationCode", object.getAuthorizationCode());
-        this.putStringForKey("transactionReference", object.getTransactionReference());
-        this.putDateForKey("dateCreated", object.getDateCreated());
-        this.putDateForKey("dateUpdated", object.getDateUpdated());
-        this.putDateForKey("dateAuthorized", object.getDateUpdated());
+        this.bundle.putBool("test", object.getTest());
+        this.bundle.putString("mid", object.getMid());
+        this.bundle.putString("authorizationCode", object.getAuthorizationCode());
+        this.bundle.putString("transactionReference", object.getTransactionReference());
+        this.bundle.putDate("dateCreated", object.getDateCreated());
+        this.bundle.putDate("dateUpdated", object.getDateUpdated());
+        this.bundle.putDate("dateAuthorized", object.getDateUpdated());
 
-        TransactionRelatedItem.TransactionStatus status = object.getStatus();
+        TransactionStatus status = object.getStatus();
         if (status != null) {
-            this.putIntForKey("status", object.getStatus().getIntegerValue());
+            this.bundle.putInt("status", object.getStatus().getValue());
         }
 
-        this.putStringForKey("message", object.getMessage());
-        this.putFloatForKey("authorizedAmount", object.getAuthorizedAmount());
-        this.putFloatForKey("capturedAmount", object.getCapturedAmount());
-        this.putFloatForKey("refundedAmount", object.getRefundedAmount());
+        this.bundle.putString("message", object.getMessage());
+        this.bundle.putFloat("authorizedAmount", object.getAuthorizedAmount());
+        this.bundle.putFloat("capturedAmount", object.getCapturedAmount());
+        this.bundle.putFloat("refundedAmount", object.getRefundedAmount());
 
-        this.putFloatForKey("decimals", object.getDecimals());
-        this.putStringForKey("currency", object.getCurrency());
+        this.bundle.putFloat("decimals", object.getDecimals());
+        this.bundle.putString("currency", object.getCurrency());
 
         return this.getBundle();
     }

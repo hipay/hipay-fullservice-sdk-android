@@ -117,35 +117,13 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking, paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking));
     }
 
-    //public void onClickPaymentProducts(View view) {
-
-            //Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.demo_container);
-            //if (fragment != null && fragment instanceof DemoFragment) {
-
-                //CustomTheme customTheme = ((DemoFragment) fragment).getCustomTheme();
-//
-                //getSupportFragmentManager()
-                        //.beginTransaction()
-                        //.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        ////.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        //.setCustomAnimations(android.R.anim.in_from_left, android.R.anim.out_to_right, android.R.anim.in_from_right, android.R.anim.out_to_left)
-
-                        //.replace(R.id.demo_container, ProductCategoryListFragment.newInstance(mPaymentProducts, customTheme))
-                        //.add(R.id.demo_container, ProductCategoryListFragment.newInstance(mPaymentProducts, this))
-                        //.addToBackStack(null)
-                        //.commit();
-            //}
-    //}
-
     @Override
     public void onPaymentProductSelected(int position, boolean isChecked) {
 
         switch (position) {
-
             case 0:
                 paymentProducts.put(PaymentProduct.PaymentProductCategoryCodeCreditCard, isChecked);
             break;
-
             case 1:
                 paymentProducts.put(PaymentProduct.PaymentProductCategoryCodeDebitCard, isChecked);
             break;

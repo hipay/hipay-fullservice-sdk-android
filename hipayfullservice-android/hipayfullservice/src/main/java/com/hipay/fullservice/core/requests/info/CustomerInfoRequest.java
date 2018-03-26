@@ -3,8 +3,8 @@ package com.hipay.fullservice.core.requests.info;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.CustomerInfoRequestMapper;
-import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
-import com.hipay.fullservice.core.utils.Utils;
+import com.hipay.fullservice.core.serialization.SerializationFactory;
+import com.hipay.fullservice.core.serialization.interfaces.ISerialization;
 import com.hipay.fullservice.core.utils.enums.Gender;
 
 import org.json.JSONObject;
@@ -17,8 +17,6 @@ import java.util.Map;
 public class CustomerInfoRequest extends PersonalInfoRequest {
 
     public CustomerInfoRequest() {
-
-        //this.setGender(Order.Gender.GenderUndefined);
     }
 
     public static CustomerInfoRequest fromBundle(Bundle bundle) {
@@ -34,21 +32,18 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
     }
 
     public Bundle toBundle() {
-
-        CustomerInfoRequest.CustomerInfoRequestSerializationMapper mapper = new CustomerInfoRequest.CustomerInfoRequestSerializationMapper(this);
+        ISerialization mapper = SerializationFactory.newInstance(this);
         return mapper.getSerializedBundle();
     }
 
     public String getStringParameters() {
-
-        CustomerInfoRequest.CustomerInfoRequestSerializationMapper mapper = new CustomerInfoRequest.CustomerInfoRequestSerializationMapper(this);
+        ISerialization mapper = SerializationFactory.newInstance(this);
         return mapper.getQueryString();
     }
 
     public Map<String, String> getSerializedObject() {
-
-        CustomerInfoRequest.CustomerInfoRequestSerializationMapper mapper = new CustomerInfoRequest.CustomerInfoRequestSerializationMapper(this);
-        return mapper.getSerializedObject();
+        ISerialization mapper = SerializationFactory.newInstance(this);
+        return mapper.getSerializedRequest();
     }
 
     protected String email;
@@ -105,109 +100,4 @@ public class CustomerInfoRequest extends PersonalInfoRequest {
     public void setGender(Gender gender) {
         this.gender = gender;
     }
-
-    public static class CustomerInfoRequestSerializationMapper extends AbstractSerializationMapper {
-
-        protected CustomerInfoRequestSerializationMapper(CustomerInfoRequest request) {
-            super(request);
-        }
-
-        @Override
-        protected String getQueryString() {
-            return super.getQueryString();
-        }
-
-        @Override
-        protected Map<String, String> getSerializedObject() {
-
-            return super.getSerializedObject();
-        }
-
-        @Override
-        protected Bundle getSerializedBundle() {
-
-            return super.getSerializedBundle();
-        }
-    }
-
-    public static class CustomerInfoRequestSerialization extends PersonalInfoRequestSerialization {
-
-        public CustomerInfoRequestSerialization(CustomerInfoRequest customerInfoRequest) {
-            super(customerInfoRequest);
-        }
-
-        private String getBirthDate(Integer birthDateDay, Integer birthDateMonth, Integer birthDateYear) {
-
-            if (
-                    birthDateDay != null &&
-                            birthDateDay.intValue() >= 1 &&
-                            birthDateDay.intValue() <= 31 &&
-
-                            birthDateMonth != null &&
-                            birthDateMonth.intValue() >= 1 &&
-                            birthDateMonth.intValue() <= 12 &&
-
-                            birthDateYear != null &&
-                            birthDateYear.intValue() >= 1 &&
-                            birthDateYear.intValue() <= 3000
-                    ) {
-
-                StringBuilder birthDateBuilder = new StringBuilder(birthDateYear.toString()).append(birthDateMonth.toString()).append(birthDateDay.toString());
-                return birthDateBuilder.toString();
-            }
-
-            return null;
-        }
-
-        @Override
-        public Map<String, String> getSerializedRequest() {
-
-            CustomerInfoRequest customerInfoRequest = (CustomerInfoRequest)this.getModel();
-
-            Map<String, String> personalInfoRequestMap = super.getSerializedRequest();
-
-            personalInfoRequestMap.put("email", customerInfoRequest.getEmail());
-            personalInfoRequestMap.put("phone", customerInfoRequest.getPhone());
-
-            String birthDate = this.getBirthDate(customerInfoRequest.getBirthDateDay(), customerInfoRequest.getBirthDateMonth(), customerInfoRequest.getBirthDateYear());
-            personalInfoRequestMap.put("birthdate", birthDate);
-
-            Gender gender = customerInfoRequest.getGender();
-            if (gender != null && gender != Gender.UNDEFINED) {
-                personalInfoRequestMap.put("gender", String.valueOf(gender.getValue()));
-            }
-
-            return personalInfoRequestMap;
-        }
-
-        @Override
-        public Bundle getSerializedBundle() {
-
-            //super class put data into the bundle first
-            super.getSerializedBundle();
-
-            CustomerInfoRequest customerInfoRequest = (CustomerInfoRequest)this.getModel();
-
-            this.putStringForKey("email", customerInfoRequest.getEmail());
-            this.putStringForKey("phone", customerInfoRequest.getPhone());
-
-            this.putIntForKey("birthDateDay", customerInfoRequest.getBirthDateDay());
-            this.putIntForKey("birthDateMonth", customerInfoRequest.getBirthDateMonth());
-            this.putIntForKey("birthDateYear", customerInfoRequest.getBirthDateYear());
-
-            Gender gender = customerInfoRequest.getGender();
-            if (gender != null) {
-                this.putStringForKey("gender", Character.toString(gender.getValue()));
-            }
-
-            return this.getBundle();
-        }
-
-        @Override
-        public String getQueryString() {
-            return Utils.queryStringFromMap(this.getSerializedRequest());
-        }
-    }
-
-
 }

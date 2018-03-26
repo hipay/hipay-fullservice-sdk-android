@@ -3,7 +3,6 @@ package com.hipay.fullservice.core.models;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.PaymentCardTokenMapper;
-import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 
 import org.json.JSONObject;
 
@@ -35,12 +34,6 @@ public class PaymentCardToken extends PaymentMethod implements Serializable {
 
         PaymentCardTokenMapper mapper = new PaymentCardTokenMapper(bundle);
         return mapper.mappedObject();
-    }
-
-    public Bundle toBundle() {
-
-        PaymentCardToken.PaymentCardTokenSerializationMapper mapper = new PaymentCardToken.PaymentCardTokenSerializationMapper(this);
-        return mapper.getSerializedBundle();
     }
 
     public String getToken() {
@@ -132,24 +125,5 @@ public class PaymentCardToken extends PaymentMethod implements Serializable {
         }
 
         return false;
-    }
-
-    protected static class PaymentCardTokenSerializationMapper extends AbstractSerializationMapper {
-
-        protected PaymentCardTokenSerializationMapper(PaymentCardToken paymentProduct) {
-            super(paymentProduct);
-        }
-
-        @Override
-        protected String getQueryString() {
-
-            return super.getQueryString();
-        }
-
-        @Override
-        protected Bundle getSerializedBundle() {
-
-            return super.getSerializedBundle();
-        }
     }
 }

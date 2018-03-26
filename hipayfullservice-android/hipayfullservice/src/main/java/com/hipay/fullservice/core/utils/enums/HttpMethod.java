@@ -14,7 +14,7 @@ public enum HttpMethod {
         this.method = method;
     }
 
-    public String getStringValue() {
+    public String getValue() {
         return this.method;
     }
 }

@@ -3,9 +3,6 @@ package com.hipay.fullservice.core.serialization.interfaces;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.models.PaymentCardToken;
-import com.hipay.fullservice.core.models.PaymentProduct;
-
-import java.util.Map;
 
 /**
  * Created by nfillion on 08/09/16.
@@ -18,33 +15,22 @@ public class PaymentCardTokenSerialization extends AbstractSerialization {
     }
 
     @Override
-    public Map<String, String> getSerializedRequest() {
-        return null;
-    }
-
-    @Override
     public Bundle getSerializedBundle() {
-        super.getSerializedBundle();
-
         PaymentCardToken paymentCardToken = (PaymentCardToken)this.getModel();
 
-        this.putStringForKey("token", paymentCardToken.getToken());
-        this.putStringForKey("request_id", paymentCardToken.getRequestID());
-        this.putStringForKey("pan", paymentCardToken.getPan());
-        this.putStringForKey("brand", paymentCardToken.getBrand());
-        this.putStringForKey("card_holder", paymentCardToken.getCardHolder());
-        this.putIntForKey("card_expiry_month", paymentCardToken.getCardExpiryMonth());
-        this.putIntForKey("card_expiry_year", paymentCardToken.getCardExpiryYear());
-        this.putStringForKey("issuer", paymentCardToken.getIssuer());
-        this.putStringForKey("country", paymentCardToken.getCountry());
-        this.putStringForKey("domesticNetwork", paymentCardToken.getDomesticNetwork());
+        this.bundle.putString("token", paymentCardToken.getToken());
+        this.bundle.putString("request_id", paymentCardToken.getRequestID());
+        this.bundle.putString("pan", paymentCardToken.getPan());
+        this.bundle.putString("brand", paymentCardToken.getBrand());
+        this.bundle.putString("card_holder", paymentCardToken.getCardHolder());
+        this.bundle.putInt("card_expiry_month", paymentCardToken.getCardExpiryMonth());
+        this.bundle.putInt("card_expiry_year", paymentCardToken.getCardExpiryYear());
+        this.bundle.putString("issuer", paymentCardToken.getIssuer());
+        this.bundle.putString("country", paymentCardToken.getCountry());
+        this.bundle.putString("domesticNetwork", paymentCardToken.getDomesticNetwork());
 
-        return this.getBundle();
+        return this.bundle.getBundle();
     }
 
-    @Override
-    public String getQueryString() {
-        return null;
-    }
 }
 

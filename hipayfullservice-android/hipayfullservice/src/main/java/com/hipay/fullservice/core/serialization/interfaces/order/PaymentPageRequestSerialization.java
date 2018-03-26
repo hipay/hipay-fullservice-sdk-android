@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
-import com.hipay.fullservice.core.utils.enums.ECI;
 import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.core.utils.enums.AuthenticationIndicator;
+import com.hipay.fullservice.core.utils.enums.ECI;
 
 import java.net.URL;
 import java.util.List;
@@ -84,38 +84,38 @@ public class PaymentPageRequestSerialization extends OrderRelatedRequestSerializ
 
         List<String> paymentProducts = paymentPageRequest.getPaymentProductList();
         if (paymentProducts != null) {
-            this.putStringForKey("payment_product_list", TextUtils.join(",", paymentProducts));
+            this.bundle.putString("payment_product_list", TextUtils.join(",", paymentProducts));
         }
 
         List<String> paymentProductsCategory = paymentPageRequest.getPaymentProductCategoryList();
         if (paymentProductsCategory != null) {
-            this.putStringForKey("payment_product_category_list", TextUtils.join(",", paymentProductsCategory));
+            this.bundle.putString("payment_product_category_list", TextUtils.join(",", paymentProductsCategory));
         }
 
         ECI eci = paymentPageRequest.getEci();
         if (eci != null) {
-            this.putIntForKey("eci", eci.getValue());
+            this.bundle.putInt("eci", eci.getValue());
         }
 
         AuthenticationIndicator authenticationIndicator = paymentPageRequest.getAuthenticationIndicator();
         if (authenticationIndicator != null) {
-            this.putIntForKey("authentication_indicator", authenticationIndicator.getValue());
+            this.bundle.putInt("authentication_indicator", authenticationIndicator.getValue());
         }
 
-        this.putBoolForKey("multi_use", paymentPageRequest.getMultiUse());
-        this.putBoolForKey("display_selector", paymentPageRequest.getDisplaySelector());
+        this.bundle.putBool("multi_use", paymentPageRequest.getMultiUse());
+        this.bundle.putBool("display_selector", paymentPageRequest.getDisplaySelector());
 
-        this.putStringForKey("template", paymentPageRequest.getTemplateName());
+        this.bundle.putString("template", paymentPageRequest.getTemplateName());
 
-        this.putUrlForKey("css", paymentPageRequest.getCss());
+        this.bundle.putUrl("css", paymentPageRequest.getCss());
 
-        this.putBoolForKey("card_grouping", paymentPageRequest.isPaymentCardGroupingEnabled());
+        this.bundle.putBool("card_grouping", paymentPageRequest.isPaymentCardGroupingEnabled());
 
         return this.getBundle();
     }
 
+    @Override
     public String getQueryString() {
-
         return Utils.queryStringFromMap(this.getSerializedRequest());
     }
 }

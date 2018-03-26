@@ -11,7 +11,6 @@ public enum Environment {
     protected final Integer status;
 
     Environment(Integer status) {
-
         this.status = status;
     }
 

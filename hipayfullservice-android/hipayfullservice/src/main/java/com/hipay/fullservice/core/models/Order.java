@@ -44,12 +44,6 @@ public class Order extends PersonalInformation implements Serializable {
         return mapper.mappedObject();
     }
 
-    public Bundle toBundle() {
-
-        Order.OrderSerializationMapper mapper = new Order.OrderSerializationMapper(this);
-        return mapper.getSerializedBundle();
-    }
-
     public String getOrderId() {
         return orderId;
     }
@@ -144,22 +138,5 @@ public class Order extends PersonalInformation implements Serializable {
 
     public void setShippingAddress(PersonalInformation shippingAddress) {
         this.shippingAddress = shippingAddress;
-    }
-
-    protected static class OrderSerializationMapper extends PersonalInformationSerializationMapper {
-
-        protected OrderSerializationMapper(Order order) {
-            super(order);
-        }
-
-        @Override
-        protected String getQueryString() {
-            return super.getQueryString();
-        }
-
-        @Override
-        protected Bundle getSerializedBundle() {
-            return super.getSerializedBundle();
-        }
     }
 }

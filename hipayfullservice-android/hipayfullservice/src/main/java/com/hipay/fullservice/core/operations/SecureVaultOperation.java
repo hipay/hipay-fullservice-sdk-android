@@ -96,7 +96,7 @@ public abstract class SecureVaultOperation extends AbstractOperation {
 
         HttpURLConnection urlConnection = (HttpURLConnection) this.getRequestURL().openConnection();
 
-        urlConnection.setRequestMethod(this.getRequestType().getStringValue());
+        urlConnection.setRequestMethod(this.getRequestType().getValue());
         urlConnection.setRequestProperty("Accept", "application/json");
         urlConnection.setRequestProperty("AUTHORIZATION", this.getAuthHeader());
 

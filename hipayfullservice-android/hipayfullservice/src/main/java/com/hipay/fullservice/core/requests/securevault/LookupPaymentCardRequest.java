@@ -1,7 +1,8 @@
 package com.hipay.fullservice.core.requests.securevault;
 
 import com.hipay.fullservice.core.requests.AbstractRequest;
-import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.fullservice.core.serialization.SerializationFactory;
+import com.hipay.fullservice.core.serialization.interfaces.ISerialization;
 
 /**
  * Created by nfillion on 09/03/16.
@@ -34,21 +35,8 @@ public class LookupPaymentCardRequest extends AbstractRequest {
     }
 
     public String getStringParameters() {
-
-        LookupPaymentCardRequest.LookupPaymentCardRequestSerializationMapper mapper = new LookupPaymentCardRequest.LookupPaymentCardRequestSerializationMapper(this);
+        ISerialization mapper = SerializationFactory.newInstance(this);
         return mapper.getQueryString();
-    }
-
-    public static class LookupPaymentCardRequestSerializationMapper extends AbstractSerializationMapper {
-
-        public LookupPaymentCardRequestSerializationMapper(AbstractRequest request) {
-            super(request);
-        }
-
-        @Override
-        public String getQueryString() {
-            return super.getQueryString();
-        }
     }
 }
 

@@ -1,7 +1,5 @@
 package com.hipay.fullservice.core.serialization.interfaces.securevault;
 
-import android.os.Bundle;
-
 import com.hipay.fullservice.core.requests.securevault.UpdatePaymentCardRequest;
 import com.hipay.fullservice.core.serialization.interfaces.AbstractSerialization;
 import com.hipay.fullservice.core.utils.Utils;
@@ -36,12 +34,7 @@ public class UpdatePaymentCardRequestSerialization extends AbstractSerialization
     }
 
     @Override
-    public Bundle getSerializedBundle() {
-        return null;
-    }
-
     public String getQueryString() {
-
         return Utils.queryStringFromMap(this.getSerializedRequest());
     }
 }

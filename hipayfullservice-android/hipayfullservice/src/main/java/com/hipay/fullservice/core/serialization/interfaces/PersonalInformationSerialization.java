@@ -4,8 +4,6 @@ import android.os.Bundle;
 
 import com.hipay.fullservice.core.models.PersonalInformation;
 
-import java.util.Map;
-
 /**
  * Created by nfillion on 08/09/16.
  */
@@ -17,33 +15,21 @@ public class PersonalInformationSerialization extends AbstractSerialization {
     }
 
     @Override
-    public Map<String, String> getSerializedRequest() {
-        return null;
-    }
-
-    @Override
     public Bundle getSerializedBundle() {
-        super.getSerializedBundle();
-
         PersonalInformation personalInformation = (PersonalInformation) this.getModel();
 
-        this.putStringForKey("firstname", personalInformation.getFirstname());
-        this.putStringForKey("lastname", personalInformation.getLastname());
-        this.putStringForKey("streetAddress", personalInformation.getStreetAddress());
-        this.putStringForKey("streetLocality", personalInformation.getLocality());
-        this.putStringForKey("postalCode", personalInformation.getPostalCode());
-        this.putStringForKey("country", personalInformation.getCountry());
-        this.putStringForKey("msisdn", personalInformation.getMsisdn());
-        this.putStringForKey("phone", personalInformation.getPhone());
-        this.putStringForKey("phoneOperator", personalInformation.getPhoneOperator());
-        this.putStringForKey("email", personalInformation.getEmail());
+        this.bundle.putString("firstname", personalInformation.getFirstname());
+        this.bundle.putString("lastname", personalInformation.getLastname());
+        this.bundle.putString("streetAddress", personalInformation.getStreetAddress());
+        this.bundle.putString("streetLocality", personalInformation.getLocality());
+        this.bundle.putString("postalCode", personalInformation.getPostalCode());
+        this.bundle.putString("country", personalInformation.getCountry());
+        this.bundle.putString("msisdn", personalInformation.getMsisdn());
+        this.bundle.putString("phone", personalInformation.getPhone());
+        this.bundle.putString("phoneOperator", personalInformation.getPhoneOperator());
+        this.bundle.putString("email", personalInformation.getEmail());
 
-        return this.getBundle();
-    }
-
-    @Override
-    public String getQueryString() {
-        return null;
+        return this.bundle.getBundle();
     }
 }
 

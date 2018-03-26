@@ -1,8 +1,8 @@
 package com.hipay.fullservice.core.requests.order;
 
-import com.hipay.fullservice.core.requests.AbstractRequest;
 import com.hipay.fullservice.core.requests.payment.AbstractPaymentMethodRequest;
-import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.fullservice.core.serialization.SerializationFactory;
+import com.hipay.fullservice.core.serialization.interfaces.ISerialization;
 
 /**
  * Created by nfillion on 03/02/16.
@@ -21,8 +21,7 @@ public class OrderRequest extends OrderRelatedRequest {
     protected AbstractPaymentMethodRequest paymentMethod;
 
     public String getStringParameters() {
-
-        OrderRequest.OrderRequestSerializationMapper mapper = new OrderRequest.OrderRequestSerializationMapper(this);
+        ISerialization mapper = SerializationFactory.newInstance(this);
         return mapper.getQueryString();
     }
 
@@ -40,18 +39,6 @@ public class OrderRequest extends OrderRelatedRequest {
 
     public void setPaymentMethod(AbstractPaymentMethodRequest paymentMethod) {
         this.paymentMethod = paymentMethod;
-    }
-
-    public static class OrderRequestSerializationMapper extends AbstractSerializationMapper {
-
-        public OrderRequestSerializationMapper(AbstractRequest request) {
-            super(request);
-        }
-
-        @Override
-        public String getQueryString() {
-            return super.getQueryString();
-        }
     }
 
 }

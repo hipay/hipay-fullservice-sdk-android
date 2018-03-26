@@ -3,10 +3,8 @@ package com.hipay.fullservice.core.models;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.ThreeDSecureMapper;
-import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 import com.hipay.fullservice.core.utils.enums.ThreeDSecureAuthenticationStatus;
 import com.hipay.fullservice.core.utils.enums.ThreeDSecureEnrollmentStatus;
-
 
 import org.json.JSONObject;
 
@@ -38,12 +36,6 @@ public class ThreeDSecure extends AbstractModel  implements Serializable {
 
         ThreeDSecureMapper mapper = new ThreeDSecureMapper(bundle);
         return mapper.mappedObject();
-    }
-
-    public Bundle toBundle() {
-
-        ThreeDSecure.ThreeDSecureSerializationMapper mapper = new ThreeDSecure.ThreeDSecureSerializationMapper(this);
-        return mapper.getSerializedBundle();
     }
 
     public ThreeDSecureEnrollmentStatus getEnrollmentStatus() {
@@ -93,24 +85,4 @@ public class ThreeDSecure extends AbstractModel  implements Serializable {
     public void setXid(String xid) {
         this.xid = xid;
     }
-
-    protected static class ThreeDSecureSerializationMapper extends AbstractSerializationMapper {
-
-        protected ThreeDSecureSerializationMapper(ThreeDSecure threeDSecure) {
-            super(threeDSecure);
-        }
-
-        @Override
-        protected String getQueryString() {
-
-            return super.getQueryString();
-        }
-
-        @Override
-        protected Bundle getSerializedBundle() {
-
-            return super.getSerializedBundle();
-        }
-    }
-
 }

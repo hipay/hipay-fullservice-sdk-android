@@ -10,6 +10,9 @@ import java.util.Map;
 public interface ISerialization {
 
     String getQueryString();
+
     Map<String,String> getSerializedRequest();
+
     Bundle getSerializedBundle();
+
 }

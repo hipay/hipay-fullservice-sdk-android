@@ -1,6 +1,7 @@
 package com.hipay.fullservice.core.mapper;
 
 import com.hipay.fullservice.core.models.TransactionRelatedItem;
+import com.hipay.fullservice.core.utils.enums.TransactionStatus;
 
 /**
  * Created by nfillion on 08/09/16.
@@ -29,9 +30,9 @@ public abstract class TransactionRelatedItemMapper extends AbstractMapper {
         object.setDateAuthorized(this.getDateForKey("dateAuthorized"));
 
         Integer statusInteger = this.getIntegerForKey("status");
-        TransactionRelatedItem.TransactionStatus status = TransactionRelatedItem.TransactionStatus.fromIntegerValue(statusInteger);
+        TransactionStatus status = TransactionStatus.fromIntegerValue(statusInteger);
         if (status == null) {
-            status = TransactionRelatedItem.TransactionStatus.TransactionStatusUnknown;
+            status = TransactionStatus.TRANSACTION_STATUS_UNKNOWN;
         }
         object.setStatus(status);
 

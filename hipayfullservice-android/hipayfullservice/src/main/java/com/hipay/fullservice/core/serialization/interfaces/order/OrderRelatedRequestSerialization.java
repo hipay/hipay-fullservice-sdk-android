@@ -117,57 +117,57 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
 
         OrderRelatedRequest orderRelatedRequest = (OrderRelatedRequest)this.getModel();
 
-        this.putStringForKey("orderid", orderRelatedRequest.getOrderId());
+        this.bundle.putString("orderid", orderRelatedRequest.getOrderId());
 
         OrderRequestOperation operation = orderRelatedRequest.getOperation();
         if (operation != null) {
-            this.putStringForKey("operation", operation.getValue());
+            this.bundle.putString("operation", operation.getValue());
         }
 
-        this.putStringForKey("description", orderRelatedRequest.getShortDescription());
-        this.putStringForKey("long_description", orderRelatedRequest.getLongDescription());
-        this.putStringForKey("currency", orderRelatedRequest.getCurrency());
-        this.putFloatForKey("amount",orderRelatedRequest.getAmount());
+        this.bundle.putString("description", orderRelatedRequest.getShortDescription());
+        this.bundle.putString("long_description", orderRelatedRequest.getLongDescription());
+        this.bundle.putString("currency", orderRelatedRequest.getCurrency());
+        this.bundle.putFloat("amount", orderRelatedRequest.getAmount());
 
-        this.putFloatForKey("shipping",orderRelatedRequest.getShipping());
-        this.putFloatForKey("tax",orderRelatedRequest.getTax());
+        this.bundle.putFloat("shipping", orderRelatedRequest.getShipping());
+        this.bundle.putFloat("tax", orderRelatedRequest.getTax());
 
-        this.putStringForKey("cid", orderRelatedRequest.getClientId());
-        this.putStringForKey("ipaddr", orderRelatedRequest.getIpAddress());
+        this.bundle.putString("cid", orderRelatedRequest.getClientId());
+        this.bundle.putString("ipaddr", orderRelatedRequest.getIpAddress());
 
-        this.putStringForKey("http_accept", orderRelatedRequest.getHTTPAccept());
-        this.putStringForKey("http_user_agent", orderRelatedRequest.getHTTPUserAgent());
-        this.putStringForKey("device_fingerprint", orderRelatedRequest.getDeviceFingerprint());
-        this.putStringForKey("language", orderRelatedRequest.getLanguage());
+        this.bundle.putString("http_accept", orderRelatedRequest.getHTTPAccept());
+        this.bundle.putString("http_user_agent", orderRelatedRequest.getHTTPUserAgent());
+        this.bundle.putString("device_fingerprint", orderRelatedRequest.getDeviceFingerprint());
+        this.bundle.putString("language", orderRelatedRequest.getLanguage());
 
-        this.putStringForKey("accept_url", orderRelatedRequest.getAcceptScheme());
-        this.putStringForKey("decline_url", orderRelatedRequest.getDeclineScheme());
-        this.putStringForKey("pending_url", orderRelatedRequest.getPendingScheme());
-        this.putStringForKey("exception_url", orderRelatedRequest.getExceptionScheme());
-        this.putStringForKey("cancel_url", orderRelatedRequest.getCancelScheme());
+        this.bundle.putString("accept_url", orderRelatedRequest.getAcceptScheme());
+        this.bundle.putString("decline_url", orderRelatedRequest.getDeclineScheme());
+        this.bundle.putString("pending_url", orderRelatedRequest.getPendingScheme());
+        this.bundle.putString("exception_url", orderRelatedRequest.getExceptionScheme());
+        this.bundle.putString("cancel_url", orderRelatedRequest.getCancelScheme());
 
-        this.putMapJSONForKey("custom_data", orderRelatedRequest.getCustomData());
+        this.bundle.putMapJSON("custom_data", orderRelatedRequest.getCustomData());
 
-        this.putStringForKey("cdata1", orderRelatedRequest.getCdata1());
-        this.putStringForKey("cdata2", orderRelatedRequest.getCdata2());
-        this.putStringForKey("cdata3", orderRelatedRequest.getCdata3());
-        this.putStringForKey("cdata4", orderRelatedRequest.getCdata4());
-        this.putStringForKey("cdata5", orderRelatedRequest.getCdata5());
-        this.putStringForKey("cdata6", orderRelatedRequest.getCdata6());
-        this.putStringForKey("cdata7", orderRelatedRequest.getCdata7());
-        this.putStringForKey("cdata8", orderRelatedRequest.getCdata8());
-        this.putStringForKey("cdata9", orderRelatedRequest.getCdata9());
-        this.putStringForKey("cdata10", orderRelatedRequest.getCdata10());
+        this.bundle.putString("cdata1", orderRelatedRequest.getCdata1());
+        this.bundle.putString("cdata2", orderRelatedRequest.getCdata2());
+        this.bundle.putString("cdata3", orderRelatedRequest.getCdata3());
+        this.bundle.putString("cdata4", orderRelatedRequest.getCdata4());
+        this.bundle.putString("cdata5", orderRelatedRequest.getCdata5());
+        this.bundle.putString("cdata6", orderRelatedRequest.getCdata6());
+        this.bundle.putString("cdata7", orderRelatedRequest.getCdata7());
+        this.bundle.putString("cdata8", orderRelatedRequest.getCdata8());
+        this.bundle.putString("cdata9", orderRelatedRequest.getCdata9());
+        this.bundle.putString("cdata10", orderRelatedRequest.getCdata10());
 
         CustomerInfoRequest customerInfoRequest = orderRelatedRequest.getCustomer();
         Bundle customerInfoBundle = customerInfoRequest.toBundle();
-        this.putBundleForKey("customer", customerInfoBundle);
+        this.bundle.putBundle("customer", customerInfoBundle);
 
         PersonalInfoRequest personalInfoRequest = orderRelatedRequest.getShippingAddress();
         Bundle personalInfoBundle = personalInfoRequest.toBundle();
-        this.putBundleForKey("shipping_address", personalInfoBundle);
+        this.bundle.putBundle("shipping_address", personalInfoBundle);
 
-        this.putMapJSONForKey("source", orderRelatedRequest.getSource());
+        this.bundle.putMapJSON("source", orderRelatedRequest.getSource());
 
         return this.getBundle();
     }

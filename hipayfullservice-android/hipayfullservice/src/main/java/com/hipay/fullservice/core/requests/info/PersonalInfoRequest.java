@@ -4,13 +4,11 @@ import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.PersonalInfoRequestMapper;
 import com.hipay.fullservice.core.requests.AbstractRequest;
-import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
-import com.hipay.fullservice.core.serialization.interfaces.AbstractSerialization;
-import com.hipay.fullservice.core.utils.Utils;
+import com.hipay.fullservice.core.serialization.SerializationFactory;
+import com.hipay.fullservice.core.serialization.interfaces.ISerialization;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -44,21 +42,18 @@ public class PersonalInfoRequest extends AbstractRequest {
     }
 
     public Bundle toBundle() {
-
-        PersonalInfoRequest.PersonalInfoRequestSerializationMapper mapper = new PersonalInfoRequest.PersonalInfoRequestSerializationMapper(this);
+        ISerialization mapper = SerializationFactory.newInstance(this);
         return mapper.getSerializedBundle();
     }
 
     public String getStringParameters() {
-
-        PersonalInfoRequest.PersonalInfoRequestSerializationMapper mapper = new PersonalInfoRequest.PersonalInfoRequestSerializationMapper(this);
+        ISerialization mapper = SerializationFactory.newInstance(this);
         return mapper.getQueryString();
     }
 
     public Map<String, String> getSerializedObject() {
-
-        PersonalInfoRequest.PersonalInfoRequestSerializationMapper mapper = new PersonalInfoRequest.PersonalInfoRequestSerializationMapper(this);
-        return mapper.getSerializedObject();
+        ISerialization mapper = SerializationFactory.newInstance(this);
+        return mapper.getSerializedRequest();
     }
 
 
@@ -156,80 +151,5 @@ public class PersonalInfoRequest extends AbstractRequest {
         this.country = country;
     }
 
-    public static class PersonalInfoRequestSerializationMapper extends AbstractSerializationMapper {
-
-        protected PersonalInfoRequestSerializationMapper(PersonalInfoRequest request) {
-            super(request);
-        }
-
-        @Override
-        protected String getQueryString() {
-            return super.getQueryString();
-        }
-
-        @Override
-        protected Map<String, String> getSerializedObject() {
-            return super.getSerializedObject();
-        }
-
-        @Override
-        protected Bundle getSerializedBundle() {
-            return super.getSerializedBundle();
-        }
-    }
-
-    public static class PersonalInfoRequestSerialization extends AbstractSerialization {
-
-        public PersonalInfoRequestSerialization(PersonalInfoRequest personalInfoRequest) {
-
-            super(personalInfoRequest);
-        }
-
-        @Override
-        public Map<String, String> getSerializedRequest() {
-
-            PersonalInfoRequest personalInfoRequest = (PersonalInfoRequest)this.getModel();
-
-            Map<String, String> personalInfoRequestMap = new HashMap<>();
-
-            personalInfoRequestMap.put("firstname", personalInfoRequest.getFirstname());
-            personalInfoRequestMap.put("lastname", personalInfoRequest.getLastname());
-            personalInfoRequestMap.put("streetaddress", personalInfoRequest.getStreetAddress());
-            personalInfoRequestMap.put("streetaddress2", personalInfoRequest.getStreetAddress2());
-            personalInfoRequestMap.put("recipientinfo", personalInfoRequest.getRecipientInfo());
-            personalInfoRequestMap.put("city", personalInfoRequest.getCity());
-            personalInfoRequestMap.put("state", personalInfoRequest.getState());
-            personalInfoRequestMap.put("zipcode", personalInfoRequest.getZipCode());
-            personalInfoRequestMap.put("country", personalInfoRequest.getCountry());
-
-            return personalInfoRequestMap;
-        }
-
-        @Override
-        public Bundle getSerializedBundle() {
-
-            super.getSerializedBundle();
-
-            PersonalInfoRequest personalInfoRequest = (PersonalInfoRequest)this.getModel();
-
-            this.putStringForKey("firstname", personalInfoRequest.getFirstname());
-            this.putStringForKey("lastname", personalInfoRequest.getLastname());
-            this.putStringForKey("streetaddress", personalInfoRequest.getStreetAddress());
-            this.putStringForKey("streetaddress2", personalInfoRequest.getStreetAddress2());
-            this.putStringForKey("recipientinfo", personalInfoRequest.getRecipientInfo());
-            this.putStringForKey("city", personalInfoRequest.getCity());
-            this.putStringForKey("state", personalInfoRequest.getState());
-            this.putStringForKey("zipcode", personalInfoRequest.getZipCode());
-            this.putStringForKey("country", personalInfoRequest.getCountry());
-
-            return this.getBundle();
-        }
-
-        @Override
-        public String getQueryString() {
-
-            return Utils.queryStringFromMap(this.getSerializedRequest());
-        }
-    }
 
 }

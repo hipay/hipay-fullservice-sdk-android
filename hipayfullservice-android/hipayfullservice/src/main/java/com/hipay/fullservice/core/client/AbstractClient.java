@@ -238,7 +238,7 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
             //performs http request
             AbstractOperation operation = this.getOperation();
 
-            String httpMethod = operation.getRequestType().getStringValue();
+            String httpMethod = operation.getRequestType().getValue();
             String path = operation.concatUrl();
 
             Logger.d(new StringBuilder("<HTTP:> Performs ").append(httpMethod).append(" ").append(path).toString());

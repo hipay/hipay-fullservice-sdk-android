@@ -1,7 +1,8 @@
 package com.hipay.fullservice.core.requests.securevault;
 
 import com.hipay.fullservice.core.requests.AbstractRequest;
-import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.fullservice.core.serialization.SerializationFactory;
+import com.hipay.fullservice.core.serialization.interfaces.ISerialization;
 
 /**
  * Created by nfillion on 09/03/16.
@@ -26,8 +27,7 @@ public class GenerateTokenRequest extends AbstractRequest {
     protected Boolean multiUse;
 
     public String getStringParameters() {
-
-        GenerateTokenRequest.SecureVaultRequestSerializationMapper mapper = new GenerateTokenRequest.SecureVaultRequestSerializationMapper(this);
+        ISerialization mapper = SerializationFactory.newInstance(this);
         return mapper.getQueryString();
     }
 
@@ -79,15 +79,4 @@ public class GenerateTokenRequest extends AbstractRequest {
         this.multiUse = multiUse;
     }
 
-    public static class SecureVaultRequestSerializationMapper extends AbstractSerializationMapper {
-
-        public SecureVaultRequestSerializationMapper(AbstractRequest request) {
-            super(request);
-        }
-
-        @Override
-        public String getQueryString() {
-            return super.getQueryString();
-        }
-    }
 }

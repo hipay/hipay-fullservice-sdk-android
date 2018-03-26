@@ -3,9 +3,7 @@ package com.hipay.fullservice.screen.model;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.CustomThemeMapper;
-import com.hipay.fullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.fullservice.core.models.AbstractModel;
-import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 
 /**
  * Created by nfillion on 29/03/16.
@@ -25,12 +23,6 @@ public class CustomTheme extends AbstractModel {
 
         CustomThemeMapper mapper = new CustomThemeMapper(bundle);
         return mapper.mappedObject();
-    }
-
-    public Bundle toBundle() {
-
-        CustomTheme.CustomThemeSerializationMapper mapper = new CustomTheme.CustomThemeSerializationMapper(this);
-        return mapper.getSerializedBundle();
     }
 
     public CustomTheme(int colorPrimaryId, int colorPrimaryDarkId, int textColorPrimaryId) {
@@ -63,24 +55,4 @@ public class CustomTheme extends AbstractModel {
     public void setTextColorPrimaryId(int textColorPrimaryId) {
         this.textColorPrimaryId = textColorPrimaryId;
     }
-
-    protected static class CustomThemeSerializationMapper extends AbstractSerializationMapper {
-
-        protected CustomThemeSerializationMapper(CustomTheme customTheme) {
-            super(customTheme);
-        }
-
-        @Override
-        protected String getQueryString() {
-
-            return null;
-        }
-
-        @Override
-        protected Bundle getSerializedBundle() {
-
-            return super.getSerializedBundle();
-        }
-    }
-
 }

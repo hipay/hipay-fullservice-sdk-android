@@ -12,14 +12,15 @@ import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.ThreeDSecure;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.models.TransactionRelatedItem;
-import com.hipay.fullservice.core.utils.enums.CVCResult;
-import com.hipay.fullservice.core.utils.enums.ECI;
 import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.core.utils.enums.AVSResult;
+import com.hipay.fullservice.core.utils.enums.CVCResult;
+import com.hipay.fullservice.core.utils.enums.ECI;
 import com.hipay.fullservice.core.utils.enums.FraudScreeningResult;
 import com.hipay.fullservice.core.utils.enums.ThreeDSecureAuthenticationStatus;
 import com.hipay.fullservice.core.utils.enums.ThreeDSecureEnrollmentStatus;
 import com.hipay.fullservice.core.utils.enums.TransactionState;
+import com.hipay.fullservice.core.utils.enums.TransactionStatus;
 
 import org.json.JSONObject;
 
@@ -137,9 +138,9 @@ public class TransactionMapper extends TransactionRelatedItemMapper {
             transaction.setState(state);
 
             Integer statusInteger = this.getIntegerForKey("status");
-            TransactionRelatedItem.TransactionStatus status = TransactionRelatedItem.TransactionStatus.fromIntegerValue(statusInteger);
+            TransactionStatus status = TransactionStatus.fromIntegerValue(statusInteger);
             if (status == null) {
-                status = TransactionRelatedItem.TransactionStatus.TransactionStatusUnknown;
+                status = TransactionStatus.TRANSACTION_STATUS_UNKNOWN;
             }
             transaction.setStatus(status);
 

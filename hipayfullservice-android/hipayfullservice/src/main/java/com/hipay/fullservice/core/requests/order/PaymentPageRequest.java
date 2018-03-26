@@ -4,9 +4,10 @@ import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.PaymentPageRequestMapper;
 import com.hipay.fullservice.core.models.PaymentProduct;
-import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
-import com.hipay.fullservice.core.utils.enums.ECI;
+import com.hipay.fullservice.core.serialization.SerializationFactory;
+import com.hipay.fullservice.core.serialization.interfaces.ISerialization;
 import com.hipay.fullservice.core.utils.enums.AuthenticationIndicator;
+import com.hipay.fullservice.core.utils.enums.ECI;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -69,14 +70,12 @@ public class PaymentPageRequest extends OrderRelatedRequest {
     }
 
     public Bundle toBundle() {
-
-        PaymentPageRequest.PaymentPageRequestSerializationMapper mapper = new PaymentPageRequest.PaymentPageRequestSerializationMapper(this);
+        ISerialization mapper = SerializationFactory.newInstance(this);
         return mapper.getSerializedBundle();
     }
 
     public String getStringParameters() {
-
-        PaymentPageRequest.PaymentPageRequestSerializationMapper mapper = new PaymentPageRequest.PaymentPageRequestSerializationMapper(this);
+        ISerialization mapper = SerializationFactory.newInstance(this);
         return mapper.getQueryString();
     }
 
@@ -172,22 +171,4 @@ public class PaymentPageRequest extends OrderRelatedRequest {
         this.paymentProductList = paymentProductList;
     }
 
-    protected static class PaymentPageRequestSerializationMapper extends AbstractSerializationMapper {
-
-        protected PaymentPageRequestSerializationMapper(PaymentPageRequest request) {
-            super(request);
-        }
-
-        @Override
-        protected String getQueryString() {
-
-            return super.getQueryString();
-        }
-
-        @Override
-        protected Bundle getSerializedBundle() {
-
-            return super.getSerializedBundle();
-        }
-    }
 }

@@ -43,7 +43,6 @@ public class OrderRequestSerialization extends OrderRelatedRequestSerialization 
 
     @Override
     public String getQueryString() {
-
         return Utils.queryStringFromMap(this.getSerializedRequest());
     }
 

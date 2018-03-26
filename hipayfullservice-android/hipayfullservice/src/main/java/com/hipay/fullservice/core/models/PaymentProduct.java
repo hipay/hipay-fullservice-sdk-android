@@ -3,7 +3,8 @@ package com.hipay.fullservice.core.models;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.PaymentProductMapper;
-import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
+import com.hipay.fullservice.core.serialization.SerializationFactory;
+import com.hipay.fullservice.core.serialization.interfaces.ISerialization;
 import com.hipay.fullservice.core.utils.enums.SecurityCodeType;
 
 import org.json.JSONObject;
@@ -49,8 +50,7 @@ public class PaymentProduct extends AbstractModel  implements Serializable {
     }
 
     public Bundle toBundle() {
-
-        PaymentProduct.PaymentProductSerializationMapper mapper = new PaymentProduct.PaymentProductSerializationMapper(this);
+        ISerialization mapper = SerializationFactory.newInstance(this);
         return mapper.getSerializedBundle();
     }
 
@@ -222,25 +222,6 @@ public class PaymentProduct extends AbstractModel  implements Serializable {
 
     public void setTokenizable(Boolean tokenizable) {
         this.tokenizable = tokenizable;
-    }
-
-    protected static class PaymentProductSerializationMapper extends AbstractSerializationMapper {
-
-        protected PaymentProductSerializationMapper(PaymentProduct paymentProduct) {
-            super(paymentProduct);
-        }
-
-        @Override
-        protected String getQueryString() {
-
-            return super.getQueryString();
-        }
-
-        @Override
-        protected Bundle getSerializedBundle() {
-
-            return super.getSerializedBundle();
-        }
     }
 
 }

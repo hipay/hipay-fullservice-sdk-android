@@ -3,7 +3,6 @@ package com.hipay.fullservice.core.models;
 import android.os.Bundle;
 
 import com.hipay.fullservice.core.mapper.FraudScreeningMapper;
-import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 import com.hipay.fullservice.core.utils.enums.FraudScreeningResult;
 
 import org.json.JSONObject;
@@ -34,12 +33,6 @@ public class FraudScreening extends AbstractModel implements Serializable {
         return mapper.mappedObject();
     }
 
-    public Bundle toBundle() {
-
-        FraudScreening.FraudScreeningSerializationMapper mapper = new FraudScreening.FraudScreeningSerializationMapper(this);
-        return mapper.getSerializedBundle();
-    }
-
     public Integer getScoring() {
         return scoring;
     }
@@ -64,24 +57,5 @@ public class FraudScreening extends AbstractModel implements Serializable {
         this.review = review;
     }
 
-
-    protected static class FraudScreeningSerializationMapper extends AbstractSerializationMapper {
-
-        protected FraudScreeningSerializationMapper(FraudScreening fraudScreening) {
-            super(fraudScreening);
-        }
-
-        @Override
-        protected String getQueryString() {
-
-            return super.getQueryString();
-        }
-
-        @Override
-        protected Bundle getSerializedBundle() {
-
-            return super.getSerializedBundle();
-        }
-    }
 
 }
