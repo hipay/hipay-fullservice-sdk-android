@@ -922,15 +922,16 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
     protected boolean isCardNumberValid() {
 
-        if (!TextUtils.isEmpty(mCardNumber.getText())) {
+        String cardNumber = mCardNumber.getText().toString();
+        if (!TextUtils.isEmpty(cardNumber)) {
 
             //luhn first
-            if (!FormHelper.luhnTest(mCardNumber.getText().toString().replaceAll(" ", ""))) {
+            if (!FormHelper.luhnTest(cardNumber.replaceAll(" ", ""))) {
                 return false;
             }
 
             //format then
-            Set<String> paymentProducts = FormHelper.getPaymentProductCodes(mCardNumber.getText().toString(), getActivity());
+            Set<String> paymentProducts = FormHelper.getPaymentProductCodes(cardNumber, getActivity());
             if (paymentProducts.isEmpty()) {
                 return false;
             }
@@ -939,7 +940,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                 String[] things = paymentProducts.toArray(new String[1]);
 
-                if (FormHelper.hasValidCardLength(mCardNumber.getText().toString(), things[0], getActivity())) {
+                if (FormHelper.hasValidCardLength(cardNumber, things[0], getActivity())) {
 
                     return true;
                 }
