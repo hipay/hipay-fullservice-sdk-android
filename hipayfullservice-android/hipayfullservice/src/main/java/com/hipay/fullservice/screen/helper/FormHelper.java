@@ -69,13 +69,12 @@ public class FormHelper {
         outerloop:
         for (String productCode: myArrayList) {
 
-            String cardVisaInfoString = FormHelper.getStringResourceByName("card_"+productCode+"_info", context);
 
             try {
 
-                JSONObject cardVisaInfo = new JSONObject(cardVisaInfoString);
+                JSONObject cardInfo = getInfoCardByProductCode(productCode, context);
 
-                JSONArray ranges = DataExtractor.getJSONArrayFromField(cardVisaInfo, "ranges");
+                JSONArray ranges = DataExtractor.getJSONArrayFromField(cardInfo, "ranges");
 
                 for (int i = 0; i < ranges.length() ; i++) {
 
@@ -95,8 +94,6 @@ public class FormHelper {
                         }
                     }
 
-                    //ok pour chaque element on tente la formule
-
                     for (String number: numbers) {
 
                         String digitsOnlyCopy = digitsOnly;
@@ -112,9 +109,7 @@ public class FormHelper {
 
                         if (result) {
                             set.add(productCode);
-
-                            //cut to the next product code
-                            continue outerloop;
+                            break outerloop;
                         }
                     }
                 }
@@ -148,12 +143,10 @@ public class FormHelper {
 
     public static boolean isIndexSpace(Integer index, String productCode, Context context) {
 
-        String cardVisaInfoString = FormHelper.getStringResourceByName("card_"+productCode+"_info", context);
-
         try {
 
-            JSONObject cardVisaInfo = new JSONObject(cardVisaInfoString);
-            JSONArray format = DataExtractor.getJSONArrayFromField(cardVisaInfo, "format");
+            JSONObject cardInfo = getInfoCardByProductCode(productCode, context);
+            JSONArray format = DataExtractor.getJSONArrayFromField(cardInfo, "format");
 
             Integer integer = 0;
             for (int i = 0; i < format.length(); i++) {
@@ -175,12 +168,10 @@ public class FormHelper {
     public static Integer getMaxCardNumberLength(String productCode, Context context) {
 
         Integer integer = 0;
-        String cardVisaInfoString = FormHelper.getStringResourceByName("card_"+productCode+"_info", context);
-
         try {
 
-            JSONObject cardVisaInfo = new JSONObject(cardVisaInfoString);
-            JSONObject lengths = DataExtractor.getJSONObjectFromField(cardVisaInfo, "lengths");
+            JSONObject cardInfo = getInfoCardByProductCode(productCode, context);
+            JSONObject lengths = DataExtractor.getJSONObjectFromField(cardInfo, "lengths");
 
             integer = DataExtractor.getIntegerFromField(lengths, "length");
             Integer variable = DataExtractor.getIntegerFromField(lengths, "variable");
@@ -188,7 +179,7 @@ public class FormHelper {
                 integer += variable;
             }
 
-            JSONArray format = DataExtractor.getJSONArrayFromField(cardVisaInfo, "format");
+            JSONArray format = DataExtractor.getJSONArrayFromField(cardInfo, "format");
             integer += format.length();
 
             return integer;
@@ -202,15 +193,10 @@ public class FormHelper {
 
     public static boolean hasValidCardLength(String plainTextNumber, String productCode, Context context) {
 
-        String cardVisaInfoString = FormHelper.getStringResourceByName("card_"+productCode+"_info", context);
-        if (cardVisaInfoString == null) {
-            return false;
-        }
-
         try {
 
-            JSONObject cardVisaInfo = new JSONObject(cardVisaInfoString);
-            JSONObject lengths = DataExtractor.getJSONObjectFromField(cardVisaInfo, "lengths");
+            JSONObject cardInfo = getInfoCardByProductCode(productCode, context);
+            JSONObject lengths = DataExtractor.getJSONObjectFromField(cardInfo, "lengths");
 
             Integer integer = DataExtractor.getIntegerFromField(lengths, "length");
             Set<Integer> integerSet = new HashSet<>(Collections.singletonList(integer));
@@ -296,4 +282,17 @@ public class FormHelper {
         }
         return year;
     }
+
+    /**
+     * Get resource for product code and context
+     *
+     * @param productCode
+     * @param context
+     * @return JSONObject
+     */
+    public static JSONObject getInfoCardByProductCode(String productCode, Context context) throws JSONException {
+        String cardInfoString = FormHelper.getStringResourceByName("card_" + productCode + "_info", context);
+        return new JSONObject(cardInfoString);
+    }
+
 }

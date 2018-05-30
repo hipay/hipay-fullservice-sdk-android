@@ -125,10 +125,13 @@
     <string name="card_mastercard_info" translatable="false">
         {
             "ranges":[
-
                 {
                     "first": 51,
                     "variable": 4
+                },
+                {
+                    "first": 222,
+                    "variable": 50
                 }
             ],
 
