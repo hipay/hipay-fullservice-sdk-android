@@ -13,19 +13,7 @@ dependencies:
     - echo y | android update sdk --no-ui --all --filter "build-tools-25.0.0"
     - bash ../deployment/download_keystore.sh
 
-checkout:
-  post:
-    - python ../deployment/create_hockeyapp_branch.py
-    - python ../deployment/set_credentials.py
-    - python ../deployment/set_version_code.py
-
 test:
   override:
     - ./gradlew build check
 
-deployment:
-  distribution:
-    branch: "/.*/"
-    commands:
-       - python ../deployment/get_identifier.py > $CIRCLE_ARTIFACTS/app_identifier
-       - sh ../deployment/deploy.sh
