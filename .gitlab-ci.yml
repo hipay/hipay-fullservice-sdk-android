@@ -8,6 +8,7 @@ stages:
  - build
 # - analysis
 # - deploy
+ - sync
 
 android:
   stage: build
@@ -19,13 +20,15 @@ android:
     - mkdir /tmp/log && chmod 777 /tmp/log
   script:
     - cd hipayfullservice-android && ./gradlew build
-    - cd .. && bash ./deployment/deploy.sh
+    - cd .. && python ./deployment/create_hockeyapp_branch.py
+    - python ./deployment/get_identifier.py > $CI_ARTIFACTS/app_identifier
+    - bash ./deployment/deploy.sh
   allow_failure: false
 #  artifacts:
 #    paths:
 #    - ./hipayfullservice-android/example/build/intermediates/
   tags:
-    - android-research
+    - sdk-android
 
 #sonarqube:
 #  stage: analysis
@@ -65,3 +68,11 @@ android:
 # artifacts:
 #   paths:
 #   - ./hipayfullservice-android/example/build/outputs/apk/example-release.apk
+
+sync:
+  stage: sync
+  script:
+  - git clone --mirror https://$GITLAB_USER:$GITLAB_PASSWORD@gitlab.hipay.org/pi-ecommerce/hipay-fullservice-sdk-android.git
+  - cd hipay-fullservice-sdk-android.git
+  - git push --mirror https://$GITHUB_USER:$GITHUB_PASSWORD@github.com/hipay/hipay-fullservice-sdk-android.git
+  allow_failure: true
