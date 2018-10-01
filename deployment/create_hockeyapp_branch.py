@@ -8,11 +8,11 @@ from shutil import move
 from os import remove, close
 
 public_identifier = None;
-bundle_identifier = "com.hipay.fullservice.example." + os.environ.get('CIRCLE_BRANCH')
+bundle_identifier = "com.hipay.fullservice.example." + os.environ.get('CI_COMMIT_REF_SLUG')
 bundle_identifier = bundle_identifier.replace('/', '.')
 bundle_identifier = bundle_identifier.replace('-', '')
 
-log_file = open(os.environ.get('CIRCLE_ARTIFACTS') + '/get_app_identifer.log', 'w');
+log_file = open(os.environ.get('CI_ARTIFACTS') + '/get_app_identifer.log', 'w');
 
 hockeyConnection = httplib.HTTPSConnection("rink.hockeyapp.net")
 hockeyConnection.request("GET", "/api/2/apps", None, {"X-HockeyAppToken": os.environ.get('HOCKEY_APP_TOKEN')})
@@ -33,7 +33,7 @@ for app in appsResponse["apps"]:
 if public_identifier is None:
 
     params = urllib.urlencode({
-			"title": "HiPay Demo (" + os.environ.get('CIRCLE_BRANCH') + ")",
+			"title": "HiPay Demo (" + os.environ.get('CI_COMMIT_REF_SLUG') + ")",
 			"bundle_identifier": bundle_identifier,
 			"platform": "Android",
 			"release_type": "2"
@@ -61,7 +61,7 @@ log_file.write("Public identifier to be used:\n" + str(public_identifier) + "\n\
 
 # Insert identifier in Android Manifest
 filename = "hipayfullservice-android/example/src/main/AndroidManifest.xml"
-path =  "../" + filename
+path =  "./" + filename
 
 ET.register_namespace('android', "http://schemas.android.com/apk/res/android")
 
@@ -79,7 +79,7 @@ tree.write(path)
 
 # Update the project applicationId 
 file_name = "hipayfullservice-android/example/build.gradle" 
-file_path =  "../" + file_name 
+file_path =  "./" + file_name
  
 #Create temp file 
 fh, abs_path = mkstemp() 

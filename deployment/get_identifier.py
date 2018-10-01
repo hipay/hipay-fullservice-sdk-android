@@ -3,11 +3,11 @@ import httplib, urllib
 import os, sys
 
 public_identifier = None;
-bundle_identifier = "com.hipay.fullservice.example." + os.environ.get('CIRCLE_BRANCH')
+bundle_identifier = "com.hipay.fullservice.example." + os.environ.get('CI_COMMIT_REF_SLUG')
 bundle_identifier = bundle_identifier.replace('/', '.')
 bundle_identifier = bundle_identifier.replace('-', '')
 
-log_file = open(os.environ.get('CIRCLE_ARTIFACTS') + '/get_app_identifer.log', 'w');
+log_file = open(os.environ.get('CI_ARTIFACTS') + '/get_app_identifer.log', 'w');
 
 hockeyConnection = httplib.HTTPSConnection("rink.hockeyapp.net")
 hockeyConnection.request("GET", "/api/2/apps", None, {"X-HockeyAppToken": os.environ.get('HOCKEY_APP_TOKEN')})
