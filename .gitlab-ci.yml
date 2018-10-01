@@ -13,6 +13,7 @@ stages:
 android:
   stage: build
   before_script:
+    - apt-get update
     - apt-get install -y curl python3
     - bash ./deployment/download_keystore.sh
     - python ./deployment/set_credentials.py
