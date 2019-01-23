@@ -2,7 +2,7 @@ import sys, os, xml.etree.ElementTree as ET
 
 filename = "hipayfullservice-android/example/src/main/res/values/credentials.xml"
 
-path =  "../" + filename
+path =  "./" + filename
 
 tree = ET.parse(path)
 root = tree.getroot()

@@ -19,12 +19,11 @@ public class ClientConfig {
     public static final String GatewayClientBaseURLStage =      "https://stage-secure-gateway.hipay-tpp.com/rest/v1";
     public static final String GatewayClientBaseURLNewStage =   "https://stage-secure-gateway.hipay-tpp.com/rest/v2";
 
-    //public static final String GatewayClientBaseURLProduction =     "https://secure-gateway.hipay-tpp.com/rest/v1";
     public static final String GatewayClientBaseURLProduction =  "https://secure-gateway.hipay-tpp.com/rest/v1";
     public static final String GatewayClientBaseURLNewProduction =  "https://secure-gateway.hipay-tpp.com/rest/v2";
 
-    public static final String SecureVaultClientBaseURLStage = "https://stage-secure-vault.hipay-tpp.com/rest/v1";
-    public static final String SecureVaultClientBaseURLProduction = "https://secure-vault.hipay-tpp.com/rest/v1";
+    public static final String SecureVaultClientBaseURLStage = "https://stage-secure2-vault.hipay-tpp.com/rest/v2";
+    public static final String SecureVaultClientBaseURLProduction = "https://stage-secure2-vault.hipay-tpp.com/rest/v2";
 
     private ClientConfig() {
     }
