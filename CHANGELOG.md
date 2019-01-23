@@ -1,5 +1,8 @@
 HiPay Android SDK change log and release notes
 ================================================
+1.4.0
+-----
+* Add Secure Vault V2
 
 1.3.7
 -----
