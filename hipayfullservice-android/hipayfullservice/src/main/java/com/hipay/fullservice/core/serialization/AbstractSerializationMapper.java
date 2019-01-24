@@ -19,7 +19,6 @@ import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.core.requests.securevault.GenerateTokenRequest;
-import com.hipay.fullservice.core.requests.securevault.LookupPaymentCardRequest;
 import com.hipay.fullservice.core.requests.securevault.UpdatePaymentCardRequest;
 import com.hipay.fullservice.core.serialization.interfaces.CustomThemeSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.FraudScreeningSerialization;
@@ -33,7 +32,6 @@ import com.hipay.fullservice.core.serialization.interfaces.order.OrderRequestSer
 import com.hipay.fullservice.core.serialization.interfaces.order.OrderSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.order.PaymentPageRequestSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.payment.CardTokenPaymentMethodRequestSerialization;
-import com.hipay.fullservice.core.serialization.interfaces.securevault.LookupPaymentCardRequestSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.securevault.SecureVaultRequestSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.securevault.UpdatePaymentCardRequestSerialization;
 import com.hipay.fullservice.screen.model.CustomTheme;
@@ -166,11 +164,6 @@ public abstract class AbstractSerializationMapper {
 
             UpdatePaymentCardRequest updatePaymentCardRequest = (UpdatePaymentCardRequest) request;
             this.setSerialization(new UpdatePaymentCardRequestSerialization(updatePaymentCardRequest));
-
-        } else if (request instanceof LookupPaymentCardRequest) {
-
-            LookupPaymentCardRequest lookupPaymentCardRequest = (LookupPaymentCardRequest) request;
-            this.setSerialization(new LookupPaymentCardRequestSerialization(lookupPaymentCardRequest));
 
         } else if (request instanceof CardTokenPaymentMethodRequest) {
 

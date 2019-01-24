@@ -13,6 +13,7 @@ stages:
 android:
   stage: build
   before_script:
+    - apt-get update
     - apt-get install -y curl python3
     - bash ./deployment/download_keystore.sh
     - python ./deployment/set_credentials.py
@@ -28,7 +29,7 @@ android:
 #    paths:
 #    - ./hipayfullservice-android/example/build/intermediates/
   tags:
-    - sdk-android
+    - pi-commerce-no-overlay
 
 #sonarqube:
 #  stage: analysis
@@ -76,3 +77,5 @@ sync:
   - cd hipay-fullservice-sdk-android.git
   - git push --mirror https://$GITHUB_USER:$GITHUB_PASSWORD@github.com/hipay/hipay-fullservice-sdk-android.git
   allow_failure: true
+  tags:
+    - pi-commerce-no-overlay
