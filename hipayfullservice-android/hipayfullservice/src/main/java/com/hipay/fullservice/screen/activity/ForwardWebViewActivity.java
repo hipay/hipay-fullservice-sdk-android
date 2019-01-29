@@ -50,7 +50,7 @@ public class ForwardWebViewActivity extends AppCompatActivity {
         Intent starter = getStartIntent(activity, forwardURLString, title, theme);
 
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(activity, null);
+                .makeSceneTransitionAnimation(activity);
 
         ActivityCompat.startActivityForResult(activity, starter, PaymentPageRequest.REQUEST_ORDER, activityOptions.toBundle());
     }
