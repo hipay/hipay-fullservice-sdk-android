@@ -71,25 +71,6 @@ public class ForwardWebViewActivity extends AppCompatActivity {
         }
     }
 
-    //@Override
-    //public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        //if (requestCode == PaymentPageRequest.REQUEST_ORDER) {
-
-            //if (resultCode == R.id.transaction_succeed) {
-
-                //setResult(R.id.transaction_succeed, data);
-
-            //} else if (resultCode == R.id.transaction_failed) {
-
-                //setResult(R.id.transaction_failed, data);
-            //}
-
-            //finish();
-        //}
-
-        //super.onActivityResult(requestCode, resultCode, data);
-    //}
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -99,14 +80,6 @@ public class ForwardWebViewActivity extends AppCompatActivity {
     }
 
     private void transactionFromCallbackIntent(Uri data) {
-
-        //Uri data = intent.getData();
-        //Set set = data.getQueryParameterNames();
-
-        //List<String> l4 = data.getQueryParameters("cardtoken");
-
-        //String l2 = data.getQueryParameter("eci3d");
-        //String l3 = data.getQueryParameter("cardtoken");
 
         Transaction transaction = null;
 
@@ -121,15 +94,6 @@ public class ForwardWebViewActivity extends AppCompatActivity {
             transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathDecline,Transaction.TransactionState.TransactionStateDeclined);
             transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathException,Transaction.TransactionState.TransactionStateError);
             transactionStatus.put(OrderRelatedRequest.OrderRelatedRequestRedirectPathPending,Transaction.TransactionState.TransactionStatePending);
-
-            //List<String> statusList = Arrays.asList(
-
-            //OrderRelatedRequest.OrderRelatedRequestRedirectPathAccept,
-            //OrderRelatedRequest.OrderRelatedRequestRedirectPathCancel,
-            //OrderRelatedRequest.OrderRelatedRequestRedirectPathDecline,
-            //OrderRelatedRequest.OrderRelatedRequestRedirectPathException,
-            //OrderRelatedRequest.OrderRelatedRequestRedirectPathPending
-            //);
 
             if (!pathSegments.isEmpty() && pathSegments.size() == 4) {
 
@@ -255,8 +219,6 @@ public class ForwardWebViewActivity extends AppCompatActivity {
         if (customTheme != null) {
             this.initStatusBar(CustomTheme.fromBundle(customTheme));
         }
-
-        //getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         if (savedInstanceState == null) {
 
@@ -388,7 +350,6 @@ public class ForwardWebViewActivity extends AppCompatActivity {
         }
 
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String title = getIntent().getStringExtra("title");
