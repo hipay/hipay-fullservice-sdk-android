@@ -1,6 +1,8 @@
 HiPay Android SDK change log and release notes
 ================================================
 
+Test
+
 1.3.7
 -----
 * Add maven script for deployment.
