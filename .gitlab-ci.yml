@@ -12,6 +12,7 @@ stages:
 
 android:
   stage: build
+  allow_failure: true
   before_script:
     - apt-get update
     - apt-get install -y curl python3
@@ -19,15 +20,17 @@ android:
     - python ./deployment/set_credentials.py
     - python ./deployment/set_version_code.py
     - mkdir /tmp/log && chmod 777 /tmp/log
+    - echo y | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-25"
+    - echo y | $ANDROID_HOME/tools/bin/sdkmanager "build-tools;28.0.3"
   script:
     - cd hipayfullservice-android && ./gradlew build
     - cd .. && python ./deployment/create_hockeyapp_branch.py
     - python ./deployment/get_identifier.py > $CI_ARTIFACTS/app_identifier
     - bash ./deployment/deploy.sh
-  allow_failure: false
-#  artifacts:
-#    paths:
-#    - ./hipayfullservice-android/example/build/intermediates/
+  artifacts:
+    when: on_failure
+    paths:
+      - ./hipayfullservice-android/example/build/reports/
   tags:
     - pi-commerce-no-overlay
 

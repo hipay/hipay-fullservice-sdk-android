@@ -22,8 +22,6 @@ public abstract class AbstractSerialization<T> implements ISerialization {
         this.setModel(model);
     }
 
-    //add the Map<String,String> behaviour
-
     public abstract Map<String, String> getSerializedRequest();
 
     public Bundle getSerializedBundle() {
@@ -34,7 +32,6 @@ public abstract class AbstractSerialization<T> implements ISerialization {
 
     public abstract String getQueryString();
 
-    //it should be Bundle or Map behaviour
     private IBundle getBundleBehaviour() {
         return bundleBehaviour;
     }

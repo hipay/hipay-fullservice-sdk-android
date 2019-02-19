@@ -13,7 +13,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -202,10 +205,15 @@ public class Utils {
         String string = null;
 
         StringBuilder sb = new StringBuilder();
-        BufferedReader r = new BufferedReader(new InputStreamReader(is), 1000);
+        BufferedReader r = null;
+        try {
+            r = new BufferedReader(new InputStreamReader(is, "UTF-8"), 1000);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         try {
             for (String line = r.readLine(); line != null; line = r.readLine()) {
-                sb.append(line);
+                sb.append(line).append(System.getProperty("line.separator"));
             }
 
             is.close();

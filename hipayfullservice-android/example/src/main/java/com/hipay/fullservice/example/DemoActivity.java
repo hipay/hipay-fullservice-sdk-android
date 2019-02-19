@@ -95,7 +95,6 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         }
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -115,26 +114,6 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeEWallet, paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeEWallet));
         outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking, paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking));
     }
-
-    //public void onClickPaymentProducts(View view) {
-
-            //Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.demo_container);
-            //if (fragment != null && fragment instanceof DemoFragment) {
-
-                //CustomTheme customTheme = ((DemoFragment) fragment).getCustomTheme();
-//
-                //getSupportFragmentManager()
-                        //.beginTransaction()
-                        //.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        ////.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        //.setCustomAnimations(android.R.anim.in_from_left, android.R.anim.out_to_right, android.R.anim.in_from_right, android.R.anim.out_to_left)
-
-                        //.replace(R.id.demo_container, ProductCategoryListFragment.newInstance(mPaymentProducts, customTheme))
-                        //.add(R.id.demo_container, ProductCategoryListFragment.newInstance(mPaymentProducts, this))
-                        //.addToBackStack(null)
-                        //.commit();
-            //}
-    //}
 
     @Override
     public void onPaymentProductSelected(int position, boolean isChecked) {
@@ -173,8 +152,6 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
 
         return list;
     }
-
-
 
     private void checkForUpdates() {
         // Remove this for store builds!

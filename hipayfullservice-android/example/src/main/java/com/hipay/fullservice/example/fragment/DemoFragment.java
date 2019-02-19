@@ -50,7 +50,6 @@ import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.example.DemoActivity;
 import com.hipay.fullservice.example.R;
-import com.hipay.fullservice.screen.activity.PaymentProductsActivity;
 import com.hipay.fullservice.screen.activity.PaymentScreenActivity;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
@@ -59,7 +58,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -401,7 +399,7 @@ public class DemoFragment extends Fragment {
                                 final PaymentPageRequest paymentPageRequest = buildPageRequest(activity, orderId);
 
                                 PaymentScreenActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
-                                mDoneFab.setVisibility(View.INVISIBLE);
+                                mDoneFab.hide();
 
                             } else {
 
@@ -479,7 +477,7 @@ public class DemoFragment extends Fragment {
             removeDoneFab(new Runnable() {
                 @Override
                 public void run() {
-                    mDoneFab.setVisibility(View.INVISIBLE);
+                    mDoneFab.hide();
                 }
             });
         }
@@ -618,7 +616,7 @@ public class DemoFragment extends Fragment {
 
     private void showDoneFab() {
 
-        mDoneFab.setVisibility(View.VISIBLE);
+        mDoneFab.show();
         mDoneFab.setScaleX(0f);
         mDoneFab.setScaleY(0f);
         ViewCompat.animate(mDoneFab)

@@ -25,7 +25,6 @@ public class PaymentPageRequestSerialization extends OrderRelatedRequestSerializ
     @Override
     public Map<String, String> getSerializedRequest() {
 
-        // get the OrderRelatedRequest serialization
         Map<String, String> relatedRequestMap = super.getSerializedRequest();
 
         PaymentPageRequest paymentPageRequest = (PaymentPageRequest)this.getModel();
