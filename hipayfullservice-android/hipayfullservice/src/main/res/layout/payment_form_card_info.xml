@@ -100,16 +100,16 @@
             android:id="@+id/card_owner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/card_owner_placeholder"
-            android:drawableRight="@drawable/ic_person_black"
-            android:drawableEnd="@drawable/ic_person_black"
-            android:drawablePadding="@dimen/spacing_double"
             android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            android:drawableEnd="@drawable/ic_person_black"
+            android:drawableRight="@drawable/ic_person_black"
+            android:drawablePadding="@dimen/spacing_double"
+            android:hint="@string/card_owner_placeholder"
+            android:imeOptions="actionNext"
+            android:inputType="textPersonName|textCapWords|textNoSuggestions"
             android:maxLength="30"
             android:maxLines="1"
             android:textColorHint="@color/hpf_placeholder"
-            android:imeOptions="actionNext"
-            android:inputType="textPersonName|textCapWords|textNoSuggestions"
             android:textSize="@dimen/size_edit_text" />
     </android.support.design.widget.TextInputLayout>
 

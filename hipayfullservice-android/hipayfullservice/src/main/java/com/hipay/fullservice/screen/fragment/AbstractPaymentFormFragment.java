@@ -89,6 +89,10 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
             fragment = new TokenizableCardPaymentFormFragment();
 
+        } else if (paymentProduct.getCode().equals(PaymentProduct.PaymentProductCodeSDD)) {
+
+            fragment = new IBANFormFragment();
+
         } else if (forwardProductsCodes().contains(paymentProduct.getCode()) ) {
 
             fragment = new ForwardPaymentFormFragment();
@@ -116,7 +120,6 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
                 PaymentProduct.PaymentProductCodeYandex,
                 PaymentProduct.PaymentProductCodeSofortUberweisung,
                 PaymentProduct.PaymentProductCodeSisal,
-                PaymentProduct.PaymentProductCodeSDD,
                 PaymentProduct.PaymentProductCodePayULatam,
                 PaymentProduct.PaymentProductCodeINGHomepay,
                 PaymentProduct.PaymentProductCodeBCMCMobile,
@@ -211,7 +214,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        final View contentView = inflater.inflate(R.layout.fragment_payment_form, container, false);
+        final View contentView = inflater.inflate(R.layout.fragment_payment_sdd, container, false);
         return contentView;
     }
 
