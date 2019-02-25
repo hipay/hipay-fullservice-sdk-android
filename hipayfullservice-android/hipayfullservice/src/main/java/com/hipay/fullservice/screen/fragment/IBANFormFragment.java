@@ -5,14 +5,17 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
@@ -39,6 +42,8 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
     private Button mPayButton;
     private FrameLayout mPayButtonLayout;
 
+    protected TextInputEditText mFirstname;
+    protected TextInputEditText mLastname;
     protected TextInputEditText mIban;
 
     @Override
@@ -51,14 +56,13 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
         final String signature = args.getString(GatewayClient.SIGNATURE_TAG);
 
         SepaDirectDebitPaymentMethodRequest sddPaymentMethodRequest =
-                new SepaDirectDebitPaymentMethodRequest("John", "doe", "FR7630006000011234567890189", 1);
+                new SepaDirectDebitPaymentMethodRequest(mFirstname.getText().toString(), mLastname.getText().toString(), mIban.getText().toString().toUpperCase());
 
         OrderRequest orderRequest = new OrderRequest(paymentPageRequest);
         orderRequest.setPaymentMethod(sddPaymentMethodRequest);
 
         orderRequest.setPaymentProductCode(paymentProduct.getCode());
 
-        //check if activity is still available
         if (getActivity() != null) {
 
             mGatewayClient = new GatewayClient(getActivity());
@@ -68,7 +72,6 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
 
                 @Override
                 public void onSuccess(final Transaction transaction) {
-                    Log.i("transaction success", transaction.toString());
 
                     if (mCallback != null) {
                         cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
@@ -79,7 +82,6 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
 
                 @Override
                 public void onError(Exception error) {
-                    Log.i("transaction failed", error.getLocalizedMessage());
 
                     if (mCallback != null) {
                         cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
@@ -92,11 +94,11 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
 
     @Override
     protected boolean isInputDataValid() {
-        System.out.println(ibanValidation("CH10002300A1023502601"));
-        System.out.println(ibanValidation("AT483200000012345864"));
-        System.out.println(ibanValidation("BG18RZBB91550123456781")); // false
-        System.out.println(ibanValidation("DK9520000123456711")); // false
-        System.out.println(ibanValidation("GR9608100010000001234567890"));
+
+        if (isIBANValid(mIban.getText().toString().toUpperCase()) && isFirstnameValid() && isLastnameValid()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -127,38 +129,27 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final View contentView = inflater.inflate(R.layout.fragment_payment_sdd, container, false);
+        return contentView;
+    }
+
+    @Override
     protected void initContentViews(View view) {
         super.initContentViews(view);
 
+        mFirstname = view.findViewById(R.id.ssd_form_firstname);
+        mFirstname.addTextChangedListener(new GenericTextWatcher(mFirstname));
+
+        mLastname = view.findViewById(R.id.ssd_form_lastname);
+        mLastname.addTextChangedListener(new GenericTextWatcher(mLastname));
+
         mIban = view.findViewById(R.id.ssd_form_iban);
+        mIban.addTextChangedListener(new GenericTextWatcher(mIban));
 
-        mIban.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                System.out.print("beforeTextChanged");
+        mPayButton = view.findViewById(R.id.pay_button);
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                System.out.print("onTextChanged");
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                System.out.print("afterTextChanged");
-
-                boolean valid = !ibanCompleted(s.toString()) || (ibanValidation(s.toString()) && ibanCompleted(s.toString()));
-                mIban.setTextColor(ContextCompat.getColor(getActivity(), valid ? R.color.hpf_accent : R.color.hpf_error));
-
-                Integer ibanSize = ibanMaxLength(s.toString());
-                mIban.setFilters( new InputFilter[] { new InputFilter.LengthFilter((ibanSize == -1) ? 30 : ibanSize)});
-            }
-        });
-
-        mPayButton = (Button) view.findViewById(R.id.pay_button);
-
-        mPayButtonLayout = (FrameLayout) view.findViewById(R.id.pay_button_layout);
+        mPayButtonLayout = view.findViewById(R.id.pay_button_layout);
         mPayButtonLayout.setVisibility(View.VISIBLE);
 
         Bundle args = getArguments();
@@ -182,9 +173,53 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
             }
         });
 
+        mFirstname.requestFocus();
 
+        validatePayButton(false);
+    }
 
-        validatePayButton(true);
+    private class GenericTextWatcher implements TextWatcher {
+
+        private View v;
+        private GenericTextWatcher(View view) {
+            this.v = view;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        public void afterTextChanged(Editable editable) {
+
+            int i = v.getId();
+            String s = editable.toString();
+
+            if (i == R.id.ssd_form_firstname) {
+                System.out.print("ssd_form_firstname");
+            }
+            else if (i == R.id.ssd_form_lastname) {
+                System.out.print("ssd_form_lastname");
+            }
+            else if (i == R.id.ssd_form_iban) {
+                boolean valid = !isIBANCompleted(s) || (isIBANValid(s) && isIBANCompleted(s));
+                mIban.setTextColor(ContextCompat.getColor(getActivity(), valid ? R.color.hpf_accent : R.color.hpf_error));
+
+                Integer ibanSize = ibanMaxLength(s);
+                mIban.setFilters( new InputFilter[] { new InputFilter.LengthFilter((ibanSize == -1) ? 30 : ibanSize)});
+            }
+            else {
+                throw new UnsupportedOperationException(
+                        "OnClick has not been implemented for " + getResources().
+                                getResourceName(v.getId()));
+            }
+            validatePayButton(isInputDataValid());
+        }
     }
 
     protected void validatePayButton(boolean validate) {
@@ -227,19 +262,15 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
     }
 
 
-    private boolean ibanValidation(String iban) {
+    private boolean isIBANValid(String iban) {
 
-        if (ibanCompleted(iban)) {
+        if (!isIBANCompleted(iban)) {
             return false;
         }
 
-        //CH10002300A1023502601
-        String subIban = iban.substring(2,4);
+        int ibanLength = iban.length();
+        iban = iban.substring(4, ibanLength) + iban.substring(0,4);
 
-        int checkDigit = Integer.parseInt(subIban);
-        iban = iban.substring(4, iban.length()) + iban.substring(0,4);
-
-        //002300A1023502601CH10
         long total = 0;
         for (int i = 0; i < iban.length(); i++ ) {
             int numericValue = Character.getNumericValue(iban.charAt(i));
@@ -254,7 +285,7 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
         return (total % 97) == 1;
     }
 
-    private boolean ibanCompleted(String iban) {
+    private boolean isIBANCompleted(String iban) {
         return iban.length() == ibanMaxLength(iban);
     }
 
@@ -342,5 +373,31 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
         }
 
         return ibanLength;
+    }
+
+    protected boolean isFirstnameValid() {
+
+        if (!TextUtils.isEmpty(mFirstname.getText())) {
+
+            String firstnameString = mFirstname.getText().toString().trim();
+
+            if (firstnameString.length() > 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean isLastnameValid() {
+
+        if (!TextUtils.isEmpty(mLastname.getText())) {
+
+            String lastnameString = mLastname.getText().toString().trim();
+
+            if (lastnameString.length() > 1) {
+                return true;
+            }
+        }
+        return false;
     }
 }

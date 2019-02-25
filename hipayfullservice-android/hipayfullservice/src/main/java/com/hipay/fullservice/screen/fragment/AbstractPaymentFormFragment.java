@@ -40,9 +40,6 @@ import java.util.List;
 
 public abstract class AbstractPaymentFormFragment extends Fragment {
 
-    //private static final String STATE_IS_LOADING = "isLoading";
-    //private static final String CURRENT_LOADER_ID = "currentLoaderId";
-
     protected ProgressBar mProgressBar;
     OnCallbackOrderListener mCallback;
     protected LinearLayout mCardInfoLayout;
@@ -214,7 +211,7 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        final View contentView = inflater.inflate(R.layout.fragment_payment_sdd, container, false);
+        final View contentView = inflater.inflate(R.layout.fragment_payment_form, container, false);
         return contentView;
     }
 
@@ -227,9 +224,6 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        //outState.putBoolean(STATE_IS_LOADING, mLoadingMode);
-        //outState.putInt(CURRENT_LOADER_ID, mCurrentLoading);
     }
 
     @Override
@@ -251,7 +245,6 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         }
         mCardInfoLayout = (LinearLayout) view.findViewById(R.id.card_info_layout);
 
-        //validatePayButton(isInputDataValid());
     }
 
     public void launchBackgroundReload(Transaction transaction) {

@@ -32,11 +32,10 @@ public class SepaDirectDebitPaymentMethodRequest extends AbstractPaymentMethodRe
         this.debitAgreementId = debitAgreementId;
     }
 
-    public SepaDirectDebitPaymentMethodRequest(String firstname, String lastname, String iban, Integer recurringPayment) {
+    public SepaDirectDebitPaymentMethodRequest(String firstname, String lastname, String iban) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.iban = iban;
-        this.recurringPayment = recurringPayment;
     }
 
     public Map<String, String> getSerializedObject() {
