@@ -23,6 +23,24 @@
         android:clipToPadding="false"
         tools:ignore="UnusedAttribute,NewApi" />
 
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/payment_products_environment"
+        style="?attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/ic_navigate_next_black"
+        android:drawableRight="@drawable/ic_navigate_next_black"
+        android:drawableTint="@android:color/darker_gray"
+        android:gravity="start|center_vertical"
+        android:minHeight="?android:attr/actionBarSize"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:text="@string/form_payment_environment"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/colorPrimaryDark"
+        tools:ignore="UnusedAttribute" />
+
     <TextView
         android:id="@+id/amount_currency_textview"
         android:layout_width="match_parent"

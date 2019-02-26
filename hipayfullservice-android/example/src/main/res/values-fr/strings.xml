@@ -24,6 +24,7 @@
     <string name="config_parameters_error">Vous devez renseigner votre identifiant et mot de passe comme arguments.</string>
 
     <string name="form_payment_products_categories">Moyens de paiement</string>
+    <string name="form_payment_environment">Environment Choice</string>
 
     <string-array name="array_threeds">
         <item>Défaut</item>

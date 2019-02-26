@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -76,6 +77,8 @@ public class DemoFragment extends Fragment {
     private CustomTheme customTheme;
 
     private ProgressBar mProgressBar;
+
+    private AppCompatButton mEnvironmentChoice;
 
     private SwitchCompat mGroupCardSwitch;
     private SwitchCompat mCardStorageSwitch;
@@ -161,6 +164,16 @@ public class DemoFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         final View contentView = inflater.inflate(R.layout.fragment_demo, container, false);
+
+        mEnvironmentChoice = contentView.findViewById(R.id.payment_products_environment);
+        mEnvironmentChoice.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                clickOnEnvironment();
+            }
+        });
 
         mGroupCardSwitch = (SwitchCompat) contentView.findViewById(R.id.group_card_switch);
         mCardStorageSwitch = (SwitchCompat) contentView.findViewById(R.id.card_storage_switch);
@@ -267,6 +280,16 @@ public class DemoFragment extends Fragment {
         });
 
         return contentView;
+    }
+
+    private void clickOnEnvironment() {
+        Fragment fragment = new EnvironmentFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.demo_container, fragment);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     private void clickOnCategories() {
