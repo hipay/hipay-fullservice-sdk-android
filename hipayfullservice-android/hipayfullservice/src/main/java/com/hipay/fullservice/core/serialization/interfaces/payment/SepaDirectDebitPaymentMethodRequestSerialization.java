@@ -24,11 +24,7 @@ public class SepaDirectDebitPaymentMethodRequestSerialization  extends AbstractS
         json.put("firstname", sepaDirectDebitPaymentMethodRequest.getFirstname());
         json.put("lastname", sepaDirectDebitPaymentMethodRequest.getLastname());
         json.put("iban", sepaDirectDebitPaymentMethodRequest.getIban());
-
-        if (sepaDirectDebitPaymentMethodRequest.getRecurringPayment() != null) {
-            json.put("recurring_payment", String.valueOf(sepaDirectDebitPaymentMethodRequest.getRecurringPayment()));
-        }
-
+        
         return json;
     }
 
