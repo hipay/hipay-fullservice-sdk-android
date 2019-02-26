@@ -2,10 +2,7 @@ package com.hipay.fullservice.core.models;
 
 import android.os.Bundle;
 
-import com.hipay.fullservice.core.mapper.SepaDirectDebitMapper;
 import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
-
-import org.json.JSONObject;
 
 public class SepaDirectDebit extends AbstractModel {
 
@@ -36,18 +33,6 @@ public class SepaDirectDebit extends AbstractModel {
         protected Bundle getSerializedBundle() {
             return super.getSerializedBundle();
         }
-    }
-
-    public static SepaDirectDebit fromJSONObject(JSONObject object) {
-
-        SepaDirectDebitMapper mapper = new SepaDirectDebitMapper(object);
-        return mapper.mappedObject();
-    }
-
-    public static SepaDirectDebit fromBundle(Bundle bundle) {
-
-        SepaDirectDebitMapper mapper = new SepaDirectDebitMapper(bundle);
-        return mapper.mappedObjectFromBundle();
     }
 
     public Bundle toBundle() {
