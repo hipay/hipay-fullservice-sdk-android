@@ -401,7 +401,7 @@ public class DemoFragment extends Fragment {
                                 final PaymentPageRequest paymentPageRequest = buildPageRequest(activity, orderId);
 
                                 PaymentScreenActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
-                                mDoneFab.setVisibility(View.INVISIBLE);
+                                mDoneFab.hide();
 
                             } else {
 
@@ -479,7 +479,7 @@ public class DemoFragment extends Fragment {
             removeDoneFab(new Runnable() {
                 @Override
                 public void run() {
-                    mDoneFab.setVisibility(View.INVISIBLE);
+                    mDoneFab.hide();
                 }
             });
         }
@@ -618,7 +618,7 @@ public class DemoFragment extends Fragment {
 
     private void showDoneFab() {
 
-        mDoneFab.setVisibility(View.VISIBLE);
+        mDoneFab.show();
         mDoneFab.setScaleX(0f);
         mDoneFab.setScaleY(0f);
         ViewCompat.animate(mDoneFab)
