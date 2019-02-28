@@ -30,7 +30,7 @@
     <string name="config_parameters_error">You must specify your API username and password as arguments.</string>
     
     <string name="server_url" translatable="false">https://developer.hipay.com/misc/public_credentials_signature.php?amount=%1$s&amp;currency=%2$s</string>
-    <string name="form_payment_environment">Environment Choice</string>
+    <string name="form_payment_environment">Environment</string>
 
     <string-array name="array_currencies" translatable="false">
         <item>EUR</item>

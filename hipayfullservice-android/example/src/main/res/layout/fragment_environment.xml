@@ -127,6 +127,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_normal"
                         android:layout_marginBottom="@dimen/spacing_normal"
+                        android:paddingLeft="4dp"
                         android:text="Local signature"
                         android:textSize="18sp" />
 

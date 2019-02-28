@@ -150,21 +150,15 @@ public class EnvironmentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Choose URL");
-
                 String[] choices = {"Stage", "Production"};
                 builder.setItems(choices, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                Log.d("", "Stage");
-
                                 urlInput.setText(ClientConfig.GatewayClientBaseURLNewStage);
                                 break;
                             case 1:
-                                Log.d("", "Prod");
-
                                 urlInput.setText(ClientConfig.GatewayClientBaseURLNewProduction);
                                 break;
                         }
