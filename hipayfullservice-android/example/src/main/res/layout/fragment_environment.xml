@@ -128,7 +128,7 @@
                         android:layout_marginTop="@dimen/spacing_normal"
                         android:layout_marginBottom="@dimen/spacing_normal"
                         android:paddingLeft="4dp"
-                        android:text="Local signature"
+                        android:text="@string/environment_signature_local"
                         android:textSize="18sp" />
 
                 </LinearLayout>
@@ -141,7 +141,7 @@
                         android:id="@+id/signature_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Password"
+                        android:hint="@string/environment_signature_passphrase"
                         android:inputType="textNoSuggestions"
                         android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>

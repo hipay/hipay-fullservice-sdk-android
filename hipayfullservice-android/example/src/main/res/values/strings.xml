@@ -24,12 +24,14 @@
     <string name="environment_alert_message_empty">Username or password empty</string>
     <string name="environment_alert_message_passphrase_empty">Passphrase empty</string>
     <string name="environment_alert_message_restart">Application will stop to save environment</string>
+    <string name="environment_signature_local">Local signature</string>
+    <string name="environment_signature_passphrase">Secret Passphrase</string>
 
     <string name="form_payment_products_categories">Payment product categories</string>
 
     <string name="config_parameters_error">You must specify your API username and password as arguments.</string>
-    
-    <string name="server_url" translatable="false">https://developer.hipay.com/misc/public_credentials_signature.php?amount=%1$s&amp;currency=%2$s</string>
+
+    <string name="server_url" translatable="false">https://84e49ae3.ngrok.io/index.php?amount=%1$s&amp;currency=%2$s</string>
     <string name="form_payment_environment">Environment</string>
 
     <string-array name="array_currencies" translatable="false">

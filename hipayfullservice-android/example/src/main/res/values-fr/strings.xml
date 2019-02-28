@@ -24,6 +24,8 @@
     <string name="environment_alert_message_empty">Le nom d\'utilisateur ou le mot de passe est vide</string>
     <string name="environment_alert_message_passphrase_empty">La passphrase est vide</string>
     <string name="environment_alert_message_restart">L\'application va s\'arrêter pour sauvegarder l\'environnement</string>
+    <string name="environment_signature_local">Signature en local</string>
+    <string name="environment_signature_passphrase">Passphrase secrète</string>
 
     <string name="config_parameters_error">Vous devez renseigner votre identifiant et mot de passe comme arguments.</string>
 
