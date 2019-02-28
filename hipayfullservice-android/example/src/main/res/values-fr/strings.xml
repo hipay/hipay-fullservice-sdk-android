@@ -20,7 +20,11 @@
     <string name="form_payment_products_ewallet">Portefeuille électronique</string>
     <string name="form_payment_products_realtime_banking">Banque temps réel</string>
 
-    <string name="error_button_dismiss">@android:string/ok</string>
+    <string name="environment_alert_title">⚠️ Attention ⚠️</string>
+    <string name="environment_alert_message_empty">Le nom d\'utilisateur ou le mot de passe est vide</string>
+    <string name="environment_alert_message_passphrase_empty">La passphrase est vide</string>
+    <string name="environment_alert_message_restart">L\'application va s\'arrêter pour sauvegarder l\'environnement</string>
+
     <string name="config_parameters_error">Vous devez renseigner votre identifiant et mot de passe comme arguments.</string>
 
     <string name="form_payment_products_categories">Moyens de paiement</string>

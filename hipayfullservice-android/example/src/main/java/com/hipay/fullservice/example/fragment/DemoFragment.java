@@ -453,7 +453,7 @@ public class DemoFragment extends Fragment {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                                     builder.setTitle(R.string.error_title_default)
                                             .setMessage(R.string.unknown_error)
-                                            .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                                            .setNegativeButton(R.string.button_ok, dialogClickListener)
                                             .setCancelable(false)
                                             .show();
                                     showDoneFab();
@@ -487,7 +487,7 @@ public class DemoFragment extends Fragment {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                                 builder.setTitle(R.string.error_title_default)
                                         .setMessage(R.string.error_body_default)
-                                        .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                                        .setNegativeButton(R.string.button_ok, dialogClickListener)
                                         .setCancelable(false)
                                         .show();
                                 showDoneFab();

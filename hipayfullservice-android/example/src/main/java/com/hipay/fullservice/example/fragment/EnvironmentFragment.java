@@ -1,9 +1,7 @@
 package com.hipay.fullservice.example.fragment;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -51,13 +49,73 @@ public class EnvironmentFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_save:
-                Preferences.saveEnvironmentString(getContext(), Preferences.PREF_USERNAME_KEY, usernameInput.getText().toString());
-                Preferences.saveEnvironmentString(getContext(), Preferences.PREF_USERNAME_KEY, usernameInput.getText().toString());
+                final String username =  usernameInput.getText().toString();
+                final String password = passwordInput.getText().toString();
+                final String signaturePassword = signatureInput.getText().toString();
 
-                Preferences.saveEnvironmentBoolean(getContext(), Preferences.PREF_LOCAL_SIGNATURE_ACTIVATION_KEY, localSignatureSwitch.isChecked());
-                Preferences.saveEnvironmentString(getContext(), Preferences.PREF_LOCAL_SIGNATURE_PASSWORD_KEY, signatureInput.getText().toString());
+                if (username.isEmpty() || password.isEmpty()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(R.string.environment_alert_title);
+                    builder.setMessage(R.string.environment_alert_message_empty);
+                    builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    return false;
+                }
 
-                break;
+                if (localSignatureSwitch.isChecked() && signaturePassword.isEmpty()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(R.string.environment_alert_title);
+                    builder.setMessage(R.string.environment_alert_message_passphrase_empty);
+                    builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    return false;
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.environment_alert_title);
+                builder.setMessage(R.string.environment_alert_message_restart);
+                builder.setCancelable(true);
+                builder.setNeutralButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (radioGroup.getCheckedRadioButtonId() == R.id.stage_radio_button) {
+                            Preferences.setEnvironment(getContext(), Preferences.STAGE);
+                        }
+                        else if (radioGroup.getCheckedRadioButtonId() == R.id.production_radio_button) {
+                            Preferences.setEnvironment(getContext(), Preferences.PRODUCTION);
+                        }
+                        else if (radioGroup.getCheckedRadioButtonId() == R.id.custom_radio_button) {
+                            Preferences.setEnvironment(getContext(), Preferences.CUSTOM);
+
+                            Preferences.setCustomUsername(getContext(), username);
+                            Preferences.setCustomPassword(getContext(), password);
+                            Preferences.setIsProductionUrl(getContext(), urlInput.getText().toString().equals(ClientConfig.GatewayClientBaseURLNewProduction));
+                        }
+
+                        Preferences.setIsLocalSignature(getContext(), localSignatureSwitch.isChecked());
+                        Preferences.setLocalSignaturePassword(getContext(), signaturePassword);
+                        System.exit(0);
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                return false;
         }
         return true;
     }
@@ -71,13 +129,13 @@ public class EnvironmentFragment extends Fragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.stage_radio_button) {
-                    setOptions(0);
+                    setOptions(Preferences.STAGE);
                 }
                 else if (checkedId == R.id.production_radio_button) {
-                    setOptions(1);
+                    setOptions(Preferences.PRODUCTION);
                 }
                 else if (checkedId == R.id.custom_radio_button) {
-                    setOptions(2);
+                    setOptions(Preferences.CUSTOM);
                 }
             }
         });
@@ -87,7 +145,7 @@ public class EnvironmentFragment extends Fragment {
         passwordInput = view.findViewById(R.id.password_input);
 
         urlInput = view.findViewById(R.id.url_input);
-        urlInput.setText("http://www.qwant.com");
+        urlInput.setText(Preferences.isProductionUrl(getContext()) ? ClientConfig.GatewayClientBaseURLNewProduction : ClientConfig.GatewayClientBaseURLNewStage);
         urlInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +180,7 @@ public class EnvironmentFragment extends Fragment {
 
         localSignatureSwitch = view.findViewById(R.id.local_signature_switch);
         localSignatureSwitch.setChecked(Preferences.isLocalSignature(getContext()));
+
         setLocalSignatureEnabled(Preferences.isLocalSignature(getContext()));
         localSignatureSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -131,41 +190,51 @@ public class EnvironmentFragment extends Fragment {
         });
 
 
-        setOptions(Preferences.getEnvironmentInt(getContext(), Preferences.PREF_ENVIRONMENT_KEY));
+        int env = Preferences.getEnvironment(getContext());
+        setOptions(env);
+        setRadioChecked(env);
+
+        signatureInput.setText(Preferences.getLocalSignaturePassword(getContext()));
     }
 
     private void setOptions(int environment) {
-        int ressource = 0;
         switch (environment) {
-            case 0:
-                ressource = R.id.stage_radio_button;
+            case Preferences.STAGE:
                 usernameInput.setText(R.string.username_stage);
                 passwordInput.setText(R.string.password_stage);
                 urlInput.setText(ClientConfig.GatewayClientBaseURLNewStage);
-                signatureInput.setText(R.string.signature_stage);
                 environmentSectionEnabled(false);
                 break;
-            case 1:
-                ressource = R.id.production_radio_button;
+            case Preferences.PRODUCTION:
                 usernameInput.setText(R.string.username_production);
                 passwordInput.setText(R.string.password_production);
                 urlInput.setText(ClientConfig.GatewayClientBaseURLNewProduction);
-                signatureInput.setText(R.string.signature_production);
                 environmentSectionEnabled(false);
                 break;
-            case 2:
-                ressource = R.id.custom_radio_button;
+            case Preferences.CUSTOM:
                 usernameInput.setText(Preferences.getCustomUsername(getContext()));
                 passwordInput.setText(Preferences.getCustomPassword(getContext()));
                 urlInput.setText(Preferences.isProductionUrl(getContext()) ? ClientConfig.GatewayClientBaseURLNewProduction : ClientConfig.GatewayClientBaseURLNewStage);
-                signatureInput.setText(Preferences.getLocalSignaturePassword(getContext()));
                 environmentSectionEnabled(true);
                 break;
         }
+    }
 
-        if (radioGroup.getCheckedRadioButtonId() != environment) {
-            radioGroup.check(ressource);
+    private void setRadioChecked(int environment) {
+        int ressource = 0;
+        switch (environment) {
+            case Preferences.STAGE:
+                ressource = R.id.stage_radio_button;
+                break;
+            case Preferences.PRODUCTION:
+                ressource = R.id.production_radio_button;
+                break;
+            case Preferences.CUSTOM:
+                ressource = R.id.custom_radio_button;
+                break;
         }
+
+        radioGroup.check(ressource);
     }
 
     private void environmentSectionEnabled(boolean enabled) {

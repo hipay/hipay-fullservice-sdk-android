@@ -20,8 +20,12 @@
     <string name="form_payment_products_ewallet">E-Wallet</string>
     <string name="form_payment_products_realtime_banking">Real-time banking</string>
 
+    <string name="environment_alert_title">⚠️ Warning ⚠️</string>
+    <string name="environment_alert_message_empty">Username or password empty</string>
+    <string name="environment_alert_message_passphrase_empty">Passphrase empty</string>
+    <string name="environment_alert_message_restart">Application will stop to save environment</string>
+
     <string name="form_payment_products_categories">Payment product categories</string>
-    <string name="error_button_dismiss">@android:string/ok</string>
 
     <string name="config_parameters_error">You must specify your API username and password as arguments.</string>
     

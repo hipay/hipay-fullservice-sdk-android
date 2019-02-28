@@ -136,7 +136,7 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(R.string.error_title_default)
                             .setMessage(R.string.error_body_payment_products)
-                            .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                            .setNegativeButton(R.string.button_ok, dialogClickListener)
                             .setCancelable(false)
                             .show();
                 }
@@ -165,7 +165,7 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(R.string.error_title_default)
                             .setMessage(R.string.error_body_default)
-                            .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                            .setNegativeButton(R.string.button_ok, dialogClickListener)
                             .setCancelable(false)
                             .show();
                 }

@@ -153,7 +153,7 @@ public class ForwardWebViewActivity extends AppCompatActivity {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(R.string.error_title_default)
                             .setMessage(R.string.error_body_bcmc_app_not_found)
-                            .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                            .setNegativeButton(R.string.button_ok, dialogClickListener)
                             .setCancelable(false)
                             .show();
 
