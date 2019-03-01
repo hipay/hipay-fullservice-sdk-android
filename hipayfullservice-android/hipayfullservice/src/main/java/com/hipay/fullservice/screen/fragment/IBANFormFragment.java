@@ -1,5 +1,6 @@
 package com.hipay.fullservice.screen.fragment;
 
+import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
@@ -7,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.Editable;
@@ -16,6 +18,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
@@ -44,6 +47,8 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
 
     protected TextInputEditText mFirstname;
     protected TextInputEditText mLastname;
+
+    protected TextInputLayout mIbanLayout;
     protected TextInputEditText mIban;
 
     @Override
@@ -144,8 +149,11 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
         mLastname = view.findViewById(R.id.ssd_form_lastname);
         mLastname.addTextChangedListener(new GenericTextWatcher(mLastname));
 
+        mIbanLayout = view.findViewById(R.id.ssd_form_iban_container);
+
         mIban = view.findViewById(R.id.ssd_form_iban);
         mIban.addTextChangedListener(new GenericTextWatcher(mIban));
+        mIban.setFilters( new InputFilter[] { new InputFilter.AllCaps()});
 
         mPayButton = view.findViewById(R.id.pay_button);
 
@@ -181,6 +189,8 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
     private class GenericTextWatcher implements TextWatcher {
 
         private View v;
+        private InputFilter lastFilter;
+
         private GenericTextWatcher(View view) {
             this.v = view;
         }
@@ -200,24 +210,36 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
             int i = v.getId();
             String s = editable.toString();
 
-            if (i == R.id.ssd_form_firstname) {
-                System.out.print("ssd_form_firstname");
-            }
-            else if (i == R.id.ssd_form_lastname) {
-                System.out.print("ssd_form_lastname");
-            }
-            else if (i == R.id.ssd_form_iban) {
-                boolean valid = !isIBANCompleted(s) || (isIBANValid(s) && isIBANCompleted(s));
-                mIban.setTextColor(ContextCompat.getColor(getActivity(), valid ? R.color.hpf_accent : R.color.hpf_error));
+            if (i == R.id.ssd_form_iban) {
+                Integer maxIBANSize = getIBANMaxLength(s);
 
-                Integer ibanSize = ibanMaxLength(s);
-                mIban.setFilters( new InputFilter[] { new InputFilter.LengthFilter((ibanSize == -1) ? 30 : ibanSize)});
+                if (s.length() > 4) {
+                    if (maxIBANSize == -1) {
+                        mIbanLayout.setError(getString(R.string.sdd_iban_invalid));
+                    }
+                    else if (isIBANCompleted(s)) {
+                        if (isIBANValid(s)) {
+                            mIbanLayout.setError(null);
+
+                            //Hide Keyboard
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                        }
+                        else {
+                            mIbanLayout.setError(getString(R.string.sdd_iban_invalid));
+                        }
+                    }
+                    else {
+                        mIbanLayout.setError(null);
+                    }
+                }
+                else {
+                    mIbanLayout.setError(null);
+                }
+
+                mIban.setFilters(new InputFilter[] { new InputFilter.AllCaps(), new InputFilter.LengthFilter((maxIBANSize == -1) ? 30 : maxIBANSize)});
             }
-            else {
-                throw new UnsupportedOperationException(
-                        "OnClick has not been implemented for " + getResources().
-                                getResourceName(v.getId()));
-            }
+
             validatePayButton(isInputDataValid());
         }
     }
@@ -286,10 +308,10 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
     }
 
     private boolean isIBANCompleted(String iban) {
-        return iban.length() == ibanMaxLength(iban);
+        return iban.length() == getIBANMaxLength(iban);
     }
 
-    private Integer ibanMaxLength(String iban) {
+    private Integer getIBANMaxLength(String iban) {
         Map<String, Integer> codeLength = new HashMap<String, Integer>();
 
         codeLength.put("AD", 24);
@@ -368,7 +390,7 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
         String countryCode = iban.substring(0,2);
         Integer ibanLength = codeLength.get(countryCode);
 
-        if (ibanLength == null || ibanLength != iban.length()) {
+        if (ibanLength == null) {
             return -1;
         }
 

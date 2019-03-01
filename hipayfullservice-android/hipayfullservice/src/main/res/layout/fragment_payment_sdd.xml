@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -31,11 +30,11 @@
                 android:drawableRight="@drawable/ic_person_black"
                 android:drawablePadding="@dimen/spacing_double"
                 android:hint="@string/sdd_firstname"
-                android:imeOptions="actionNext"
                 android:inputType="textPersonName|textCapWords|textNoSuggestions"
                 android:maxLength="30"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:textColorHint="@color/hpf_placeholder"
+                android:imeOptions="actionNext"
                 android:textSize="@dimen/size_edit_text" />
         </android.support.design.widget.TextInputLayout>
 
@@ -59,7 +58,7 @@
                 android:imeOptions="actionNext"
                 android:inputType="textPersonName|textCapWords|textNoSuggestions"
                 android:maxLength="30"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:textColorHint="@color/hpf_placeholder"
                 android:textSize="@dimen/size_edit_text" />
         </android.support.design.widget.TextInputLayout>
@@ -67,10 +66,10 @@
         <android.support.design.widget.TextInputLayout
             android:id="@+id/ssd_form_iban_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:minHeight="?android:attr/actionBarSize"
-            app:errorTextAppearance="@style/PaymentScreens.TextAppearance.ErrorSmallItem">
+            app:errorEnabled="true">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/ssd_form_iban"
@@ -81,9 +80,9 @@
                 android:drawableRight="@drawable/ic_payment_iban"
                 android:hint="@string/sdd_iban"
                 android:imeOptions="actionDone"
-                android:inputType="textCapWords|textNoSuggestions"
+                android:inputType="textCapCharacters|textNoSuggestions"
                 android:maxLength="30"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:textColorHint="@color/hpf_placeholder"
                 android:textSize="@dimen/size_edit_text" />
         </android.support.design.widget.TextInputLayout>
