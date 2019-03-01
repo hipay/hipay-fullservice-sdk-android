@@ -1,5 +1,5 @@
 curl \
--F "ipa=@./hipayfullservice-android/example/build/outputs/apk/example-release.apk" \
+-F "ipa=@./hipayfullservice-android/example/build/outputs/apk/release/example-release.apk" \
 -F "notes=GitlabCI build $CI_JOB_ID" \
 -F "notes_type=1" \
 -F "notify=0" \
