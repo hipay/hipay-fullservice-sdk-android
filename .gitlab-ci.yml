@@ -21,7 +21,7 @@ android:
     - python ./deployment/set_version_code.py
     - mkdir /tmp/log && chmod 777 /tmp/log
     - echo y | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-25"
-    - echo y | $ANDROID_HOME/tools/bin/sdkmanager "build-tools;28.0.3"
+    - echo y | $ANDROID_HOME/tools/bin/sdkmanager "build-tools;25.0.0"
   script:
     - cd hipayfullservice-android && ./gradlew build
     - cd .. && python ./deployment/create_hockeyapp_branch.py
