@@ -80,4 +80,9 @@
 
     <string name="card_storage_switch_description">Enregistrer cette carte</string>
 
+    <string name="sdd_firstname" translatable="true">Prénom</string>
+    <string name="sdd_lastname" translatable="true">Nom</string>
+    <string name="sdd_iban" translatable="true">IBAN</string>
+    <string name="sdd_iban_invalid" translatable="true">IBAN invalide</string>
+
 </resources>

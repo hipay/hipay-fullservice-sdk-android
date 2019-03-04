@@ -71,6 +71,11 @@
     <string name="card_number_placeholder_error">Invalid card number</string>
     <string name="card_owner_placeholder" translatable="false">Martin Dupont</string>
 
+    <string name="sdd_firstname" translatable="true">Firstname</string>
+    <string name="sdd_lastname" translatable="true">Lastname</string>
+    <string name="sdd_iban" translatable="true">IBAN</string>
+    <string name="sdd_iban_invalid" translatable="true">Invalid IBAN</string>
+
     <string name="payment_product_card_description">Card</string>
 
     <string name="card_stored_selection">Select a payment card</string>

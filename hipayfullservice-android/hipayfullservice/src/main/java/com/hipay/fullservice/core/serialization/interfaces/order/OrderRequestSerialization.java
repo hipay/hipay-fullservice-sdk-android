@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.payment.AbstractPaymentMethodRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.requests.payment.SepaDirectDebitPaymentMethodRequest;
 import com.hipay.fullservice.core.utils.Utils;
 
 import java.util.Map;
@@ -36,6 +37,12 @@ public class OrderRequestSerialization extends OrderRelatedRequestSerialization 
             Map<String, String> cardTokenSerializedObject = cardTokenPaymentMethodRequest.getSerializedObject();
 
             relatedRequestMap.putAll(cardTokenSerializedObject);
+        }
+        else if (paymentMethodRequest instanceof SepaDirectDebitPaymentMethodRequest) {
+            SepaDirectDebitPaymentMethodRequest sepaDirectDebitPaymentMethodRequest = (SepaDirectDebitPaymentMethodRequest)paymentMethodRequest;
+            Map<String, String> sepaDirectDebitSerializedObject = sepaDirectDebitPaymentMethodRequest.getSerializedObject();
+
+            relatedRequestMap.putAll(sepaDirectDebitSerializedObject);
         }
 
         return relatedRequestMap;
