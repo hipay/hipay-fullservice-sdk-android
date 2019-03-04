@@ -14,12 +14,10 @@ for string in root.iter('string'):
 	if string.get('name') == 'password_stage':
 		string.text = os.environ.get('HIPAY_FULLSERVICE_STAGE_API_PASSWORD', '')
 
-    if string.get('name') == 'username_production':
-        string.text = os.environ.get('HIPAY_FULLSERVICE_PRODUCTION_API_USERNAME', '')
-                    
-    if string.get('name') == 'password_production':
-        string.text = os.environ.get('HIPAY_FULLSERVICE_PRODUCTION_API_PASSWORD', '')
+	if string.get('name') == 'username_production':
+		string.text = os.environ.get('HIPAY_FULLSERVICE_PRODUCTION_API_USERNAME', '')
+
+	if string.get('name') == 'password_production':
+		string.text = os.environ.get('HIPAY_FULLSERVICE_PRODUCTION_API_PASSWORD', '')
 
 tree.write(path)
-
-
