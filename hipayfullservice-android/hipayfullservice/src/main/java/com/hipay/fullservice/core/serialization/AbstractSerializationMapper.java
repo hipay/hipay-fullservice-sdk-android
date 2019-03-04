@@ -18,6 +18,7 @@ import com.hipay.fullservice.core.requests.info.PersonalInfoRequest;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.requests.payment.SepaDirectDebitPaymentMethodRequest;
 import com.hipay.fullservice.core.requests.securevault.GenerateTokenRequest;
 import com.hipay.fullservice.core.requests.securevault.UpdatePaymentCardRequest;
 import com.hipay.fullservice.core.serialization.interfaces.CustomThemeSerialization;
@@ -32,6 +33,7 @@ import com.hipay.fullservice.core.serialization.interfaces.order.OrderRequestSer
 import com.hipay.fullservice.core.serialization.interfaces.order.OrderSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.order.PaymentPageRequestSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.payment.CardTokenPaymentMethodRequestSerialization;
+import com.hipay.fullservice.core.serialization.interfaces.payment.SepaDirectDebitPaymentMethodRequestSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.securevault.SecureVaultRequestSerialization;
 import com.hipay.fullservice.core.serialization.interfaces.securevault.UpdatePaymentCardRequestSerialization;
 import com.hipay.fullservice.screen.model.CustomTheme;
@@ -169,7 +171,13 @@ public abstract class AbstractSerializationMapper {
 
             CardTokenPaymentMethodRequest cardTokenPaymentMethodRequest = (CardTokenPaymentMethodRequest)request;
             this.setSerialization(new CardTokenPaymentMethodRequestSerialization(cardTokenPaymentMethodRequest));
+
+        } else if (request instanceof SepaDirectDebitPaymentMethodRequest) {
+
+            SepaDirectDebitPaymentMethodRequest sepaDirectDebitPaymentMethodRequest = (SepaDirectDebitPaymentMethodRequest)request;
+            this.setSerialization(new SepaDirectDebitPaymentMethodRequestSerialization(sepaDirectDebitPaymentMethodRequest));
         }
+
     }
 
     protected ISerialization getSerialization() {

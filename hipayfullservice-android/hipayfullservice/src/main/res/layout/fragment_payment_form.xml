@@ -35,40 +35,38 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         </LinearLayout>
 
         <RelativeLayout
-            android:layout_weight="0"
             android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
             android:layout_margin="@dimen/spacing_double"
-            android:layout_height="?android:attr/actionBarSize">
+            android:layout_weight="0">
 
             <FrameLayout
                 android:id="@+id/pay_button_layout"
+                style="@style/PaymentScreens.Button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                style="@style/PaymentScreens.Button"
-                android:enabled="false"
                 android:layout_centerInParent="true"
-                android:visibility="gone"
-                >
+                android:enabled="false"
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/pay_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    android:drawableLeft="@drawable/ic_lock_black"
-                    android:drawableStart="@drawable/ic_lock_black"
-                    android:drawableTint="@color/hpf_light"
-                    android:drawablePadding="@dimen/spacing_normal"
-                    android:textAppearance="@style/PaymentScreens.TextAppearance.AmountItem"
                     android:layout_gravity="center"
-                    android:enabled="false"
-
                     android:background="@null"
                     android:clickable="false"
+                    android:drawableStart="@drawable/ic_lock_black"
+                    android:drawableLeft="@drawable/ic_lock_black"
+                    android:drawablePadding="@dimen/spacing_normal"
+                    android:drawableTint="@color/hpf_light"
+
+                    android:enabled="false"
                     android:focusable="false"
-                    android:minHeight="0dp"
                     android:minWidth="0dp"
-                    />
+                    android:minHeight="0dp"
+                    android:textAppearance="@style/PaymentScreens.TextAppearance.AmountItem" />
 
             </FrameLayout>
 

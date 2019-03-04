@@ -40,9 +40,6 @@ import java.util.List;
 
 public abstract class AbstractPaymentFormFragment extends Fragment {
 
-    //private static final String STATE_IS_LOADING = "isLoading";
-    //private static final String CURRENT_LOADER_ID = "currentLoaderId";
-
     protected ProgressBar mProgressBar;
     OnCallbackOrderListener mCallback;
     protected LinearLayout mCardInfoLayout;
@@ -89,6 +86,10 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
 
             fragment = new TokenizableCardPaymentFormFragment();
 
+        } else if (paymentProduct.getCode().equals(PaymentProduct.PaymentProductCodeSDD)) {
+
+            fragment = new IBANFormFragment();
+
         } else if (forwardProductsCodes().contains(paymentProduct.getCode()) ) {
 
             fragment = new ForwardPaymentFormFragment();
@@ -116,7 +117,6 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
                 PaymentProduct.PaymentProductCodeYandex,
                 PaymentProduct.PaymentProductCodeSofortUberweisung,
                 PaymentProduct.PaymentProductCodeSisal,
-                PaymentProduct.PaymentProductCodeSDD,
                 PaymentProduct.PaymentProductCodePayULatam,
                 PaymentProduct.PaymentProductCodeINGHomepay,
                 PaymentProduct.PaymentProductCodeBCMCMobile,
@@ -224,9 +224,6 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        //outState.putBoolean(STATE_IS_LOADING, mLoadingMode);
-        //outState.putInt(CURRENT_LOADER_ID, mCurrentLoading);
     }
 
     @Override
@@ -248,7 +245,6 @@ public abstract class AbstractPaymentFormFragment extends Fragment {
         }
         mCardInfoLayout = (LinearLayout) view.findViewById(R.id.card_info_layout);
 
-        //validatePayButton(isInputDataValid());
     }
 
     public void launchBackgroundReload(Transaction transaction) {
