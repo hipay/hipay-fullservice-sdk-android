@@ -23,9 +23,11 @@
     <string name="environment_alert_title">⚠️ Warning ⚠️</string>
     <string name="environment_alert_message_empty">Username or password empty</string>
     <string name="environment_alert_message_passphrase_empty">Passphrase empty</string>
-    <string name="environment_alert_message_restart">Application will stop to save environment</string>
+    <string name="environment_alert_message_save">Do you want to save changes?</string>
     <string name="environment_signature_local">Local signature</string>
     <string name="environment_signature_passphrase">Secret Passphrase</string>
+
+    <string name="button_save">Save</string>
 
     <string name="form_payment_products_categories">Payment product categories</string>
 

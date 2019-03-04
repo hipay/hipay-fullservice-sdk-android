@@ -82,8 +82,7 @@ public class EnvironmentFragment extends Fragment {
                 }
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle(R.string.environment_alert_title);
-                builder.setMessage(R.string.environment_alert_message_restart);
+                builder.setMessage(R.string.environment_alert_message_save);
                 builder.setCancelable(true);
                 builder.setNeutralButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
                     @Override
@@ -91,26 +90,41 @@ public class EnvironmentFragment extends Fragment {
 
                     }
                 });
-                builder.setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.button_save, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+                        ClientConfig.Environment environment = ClientConfig.Environment.Stage;
+
                         if (radioGroup.getCheckedRadioButtonId() == R.id.stage_radio_button) {
                             Preferences.setEnvironment(getContext(), Preferences.STAGE);
+                            environment = ClientConfig.Environment.Stage;
                         }
                         else if (radioGroup.getCheckedRadioButtonId() == R.id.production_radio_button) {
                             Preferences.setEnvironment(getContext(), Preferences.PRODUCTION);
+                            environment = ClientConfig.Environment.Production;
                         }
                         else if (radioGroup.getCheckedRadioButtonId() == R.id.custom_radio_button) {
                             Preferences.setEnvironment(getContext(), Preferences.CUSTOM);
 
+                            boolean isProduction = urlInput.getText().toString().equals(ClientConfig.GatewayClientBaseURLNewProduction);
+
                             Preferences.setCustomUsername(getContext(), username);
                             Preferences.setCustomPassword(getContext(), password);
-                            Preferences.setIsProductionUrl(getContext(), urlInput.getText().toString().equals(ClientConfig.GatewayClientBaseURLNewProduction));
+                            Preferences.setIsProductionUrl(getContext(), isProduction);
+                            environment = isProduction ? ClientConfig.Environment.Production : ClientConfig.Environment.Stage;
                         }
 
                         Preferences.setIsLocalSignature(getContext(), localSignatureSwitch.isChecked());
                         Preferences.setLocalSignaturePassword(getContext(), signaturePassword);
-                        System.exit(0);
+
+                        ClientConfig.getInstance().setConfig(
+                                environment,
+                                username,
+                                password
+                        );
+
+                        getFragmentManager().popBackStack();
                     }
                 });
                 AlertDialog dialog = builder.create();

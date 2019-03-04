@@ -101,7 +101,8 @@
                         android:focusable="false"
                         android:focusableInTouchMode="false"
                         android:inputType="textNoSuggestions"
-                        android:maxLines="1" />
+                        android:maxLines="1"
+                        android:textSize="12sp" />
 
                 </android.support.design.widget.TextInputLayout>
 
