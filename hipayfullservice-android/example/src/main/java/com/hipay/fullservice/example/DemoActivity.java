@@ -38,8 +38,25 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         toolbar.setTitle(getString(R.string.mcommence_demo));
         setSupportActionBar(toolbar);
 
-        String username = getString(R.string.username);
-        String password = getString(R.string.password);
+        ClientConfig.Environment environment = ClientConfig.Environment.Stage;
+        String username = null;
+        String password = null;
+
+        if (Preferences.isStageEnvironment(getBaseContext())) {
+            username = getString(R.string.username_stage);
+            password = getString(R.string.password_stage);
+            environment = ClientConfig.Environment.Stage;
+        }
+        else if (Preferences.isProductionEnvironment(getBaseContext())) {
+            username = getString(R.string.username_production);
+            password = getString(R.string.password_production);
+            environment = ClientConfig.Environment.Production;
+        }
+        else if (Preferences.isCustomEnvironment(getBaseContext())) {
+            username = Preferences.getCustomUsername(getBaseContext());
+            password = Preferences.getCustomPassword(getBaseContext());
+            environment = Preferences.isProductionUrl(getBaseContext()) ? ClientConfig.Environment.Production : ClientConfig.Environment.Stage;
+        }
 
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
             throw new IllegalArgumentException(
@@ -48,7 +65,7 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         }
 
         ClientConfig.getInstance().setConfig(
-                ClientConfig.Environment.Stage,
+                environment,
                 username,
                 password
         );

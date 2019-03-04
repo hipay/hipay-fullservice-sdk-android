@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -49,6 +50,7 @@ import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.example.DemoActivity;
+import com.hipay.fullservice.example.Preferences;
 import com.hipay.fullservice.example.R;
 import com.hipay.fullservice.screen.activity.PaymentScreenActivity;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
@@ -57,8 +59,10 @@ import com.hipay.fullservice.screen.model.CustomTheme;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by nfillion on 15/03/16.
@@ -76,6 +80,8 @@ public class DemoFragment extends Fragment {
     private CustomTheme customTheme;
 
     private ProgressBar mProgressBar;
+
+    private AppCompatButton mEnvironmentChoice;
 
     private SwitchCompat mGroupCardSwitch;
     private SwitchCompat mCardStorageSwitch;
@@ -161,6 +167,16 @@ public class DemoFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         final View contentView = inflater.inflate(R.layout.fragment_demo, container, false);
+
+        mEnvironmentChoice = contentView.findViewById(R.id.payment_products_environment);
+        mEnvironmentChoice.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                clickOnEnvironment();
+            }
+        });
 
         mGroupCardSwitch = (SwitchCompat) contentView.findViewById(R.id.group_card_switch);
         mCardStorageSwitch = (SwitchCompat) contentView.findViewById(R.id.card_storage_switch);
@@ -269,6 +285,16 @@ public class DemoFragment extends Fragment {
         return contentView;
     }
 
+    private void clickOnEnvironment() {
+        Fragment fragment = new EnvironmentFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.demo_container, fragment);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
     private void clickOnCategories() {
 
         DemoActivity demoActivity = (DemoActivity)getActivity();
@@ -367,42 +393,90 @@ public class DemoFragment extends Fragment {
         String amount = mAmount.getText().toString();
         String currency = (String)mCurrencySpinner.getSelectedItem();
 
-        String url = String.format(getString(R.string.server_url), amount, currency);
-        mRequestQueue = Volley.newRequestQueue(getActivity());
+        if (Preferences.isLocalSignature(getContext())) {
+            Random random = new Random();
+            String orderId = "TEST_" + random.nextInt(100000);
 
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            String signature = getSha1Hex(orderId + amount + currency + Preferences.getLocalSignaturePassword(getContext()));
 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i(response.toString(), response.toString());
+            DemoActivity activity = (DemoActivity)getActivity();
 
-                        String orderId = null;
-                        try {
-                            orderId = response.getString("order_id");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+            final PaymentPageRequest paymentPageRequest = buildPageRequest(activity, orderId);
+
+            PaymentScreenActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
+            mDoneFab.hide();
+        }
+        else {
+            String url = String.format(getString(R.string.server_url), amount, currency);
+            mRequestQueue = Volley.newRequestQueue(getActivity());
+
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.i(response.toString(), response.toString());
+
+                            String orderId = null;
+                            try {
+                                orderId = response.getString("order_id");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            String signature = null;
+                            try {
+                                signature = response.getString("signature");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (getActivity() != null) {
+
+                                DemoActivity activity = (DemoActivity)getActivity();
+                                if (!TextUtils.isEmpty(orderId) && !TextUtils.isEmpty(signature) ) {
+
+                                    final PaymentPageRequest paymentPageRequest = buildPageRequest(activity, orderId);
+
+                                    PaymentScreenActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
+                                    mDoneFab.hide();
+
+                                } else {
+
+                                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    };
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                    builder.setTitle(R.string.error_title_default)
+                                            .setMessage(R.string.unknown_error)
+                                            .setNegativeButton(R.string.button_ok, dialogClickListener)
+                                            .setCancelable(false)
+                                            .show();
+                                    showDoneFab();
+
+                                    //DemoActivity demoActivity = (DemoActivity) getActivity();
+                                    //ProgressBar progressBar = (ProgressBar) demoActivity.findViewById(R.id.progress);
+                                    //progressBar.setVisibility(View.GONE);
+
+                                }
+                            }
+
+                            setLoadingMode(false);
+
                         }
 
-                        String signature = null;
-                        try {
-                            signature = response.getString("signature");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    }, new Response.ErrorListener() {
 
-                        if (getActivity() != null) {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
 
-                            DemoActivity activity = (DemoActivity)getActivity();
-                            if (!TextUtils.isEmpty(orderId) && !TextUtils.isEmpty(signature) ) {
+                            if (getActivity() != null) {
 
-                                final PaymentPageRequest paymentPageRequest = buildPageRequest(activity, orderId);
-
-                                PaymentScreenActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
-                                mDoneFab.hide();
-
-                            } else {
-
+                                AppCompatActivity activity = (AppCompatActivity)getActivity();
                                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -412,56 +486,43 @@ public class DemoFragment extends Fragment {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                                 builder.setTitle(R.string.error_title_default)
-                                        .setMessage(R.string.unknown_error)
-                                        .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                                        .setMessage(R.string.error_body_default)
+                                        .setNegativeButton(R.string.button_ok, dialogClickListener)
                                         .setCancelable(false)
                                         .show();
                                 showDoneFab();
 
-                                //DemoActivity demoActivity = (DemoActivity) getActivity();
-                                //ProgressBar progressBar = (ProgressBar) demoActivity.findViewById(R.id.progress);
-                                //progressBar.setVisibility(View.GONE);
 
                             }
+
+                            setLoadingMode(false);
                         }
+                    });
 
-                        setLoadingMode(false);
+            jsObjRequest.setTag(TAG);
 
-                    }
+            mRequestQueue.add(jsObjRequest);
+        }
+    }
 
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (getActivity() != null) {
-
-                            AppCompatActivity activity = (AppCompatActivity)getActivity();
-                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            };
-
-                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                            builder.setTitle(R.string.error_title_default)
-                                    .setMessage(R.string.error_body_default)
-                                    .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
-                                    .setCancelable(false)
-                                    .show();
-                            showDoneFab();
-
-
-                        }
-
-                        setLoadingMode(false);
-                    }
-                });
-
-        jsObjRequest.setTag(TAG);
-
-        mRequestQueue.add(jsObjRequest);
+    private static String getSha1Hex(String clearString) {
+        try
+        {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+            messageDigest.update(clearString.getBytes("UTF-8"));
+            byte[] bytes = messageDigest.digest();
+            StringBuilder buffer = new StringBuilder();
+            for (byte b : bytes)
+            {
+                buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+            }
+            return buffer.toString();
+        }
+        catch (Exception ignored)
+        {
+            ignored.printStackTrace();
+            return null;
+        }
     }
 
     @Override

@@ -38,10 +38,11 @@
     <string name="alert_transaction_loading_yes">Quit</string>
     <string name="alert_transaction_loading_no">Resume</string>
 
-    <string name="transaction_error_other">An error occurred while processing your transaction</string>
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_retry">Retry</string>
 
-    <string name="error_button_dismiss">@android:string/ok</string>
-    <string name="error_button_retry">Retry</string>
+    <string name="transaction_error_other">An error occurred while processing your transaction</string>
 
     <string name="error_title_default">An error occurred</string>
     <string name="error_body_default">Your request could not be completed</string>
