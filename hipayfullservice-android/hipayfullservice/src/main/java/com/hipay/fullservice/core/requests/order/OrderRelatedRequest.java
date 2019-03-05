@@ -79,6 +79,14 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.setCustomer(new CustomerInfoRequest());
         this.setShippingAddress(new PersonalInfoRequest());
 
+        Map<String,String> sourceMap = new HashMap<>(4);
+        sourceMap.put("source",  "CSDK");
+        sourceMap.put("brand", "android");
+        sourceMap.put("brand_version", Build.VERSION.RELEASE);
+        sourceMap.put("integration_version", BuildConfig.VERSION_NAME);
+
+        this.setSource(sourceMap);
+
     }
 
     public OrderRelatedRequest(OrderRelatedRequest orderRelatedRequest) {
@@ -88,6 +96,8 @@ public class OrderRelatedRequest extends AbstractRequest {
 
         this.setCustomer(new CustomerInfoRequest());
         this.setShippingAddress(new PersonalInfoRequest());
+
+        this.setSource(orderRelatedRequest.getSource());
 
         this.setOrderId(orderRelatedRequest.getOrderId());
         this.setOperation(orderRelatedRequest.getOperation());
@@ -123,19 +133,6 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.setCdata8(orderRelatedRequest.getCdata8());
         this.setCdata9(orderRelatedRequest.getCdata9());
         this.setCdata10(orderRelatedRequest.getCdata10());
-
-        String source = "CSDK";
-        String brand = "android";
-        String brand_version = Build.VERSION.RELEASE;
-        String integrationVersion = BuildConfig.VERSION_NAME;
-
-        Map<String,String> sourceMap = new HashMap<>(4);
-        sourceMap.put("source", source);
-        sourceMap.put("brand", brand);
-        sourceMap.put("brand_version", brand_version);
-        sourceMap.put("integration_version", integrationVersion);
-
-        this.setSource(sourceMap);
 
     }
 
