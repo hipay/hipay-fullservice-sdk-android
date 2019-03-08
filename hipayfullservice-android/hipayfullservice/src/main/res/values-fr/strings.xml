@@ -28,6 +28,8 @@
     <string name="transaction_error_declined">Veuillez vérifier vos informations et réessayer.</string>
     <string name="transaction_error_declined_reset">Merci de bien vouloir utiliser un autre moyen de paiement.</string>
 
+    <string name="payment_page_error_timeout">La page de paiement a expiré</string>
+
     <string name="alert_transaction_loading_title">Transaction en cours</string>
     <string name="alert_transaction_loading_body">Le traitement de votre transaction est toujours en cours, êtes-vous sûr de vouloir quitter cet écran ?</string>
     <string name="alert_transaction_loading_yes">Quitter</string>

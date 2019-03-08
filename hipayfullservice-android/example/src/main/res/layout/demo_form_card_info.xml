@@ -5,22 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/spacing_double"
     android:paddingLeft="@dimen/spacing_double"
-    android:paddingRight="@dimen/spacing_double"
     android:paddingTop="@dimen/spacing_double"
+    android:paddingRight="@dimen/spacing_double"
+    android:paddingBottom="@dimen/spacing_double"
     tools:showIn="@layout/fragment_demo">
 
     <TextView
         android:id="@+id/generate_payment_textview"
+        style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        style="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/colorPrimaryDark"
+        android:clipToPadding="false"
         android:elevation="@dimen/elevation_header"
         android:gravity="center_vertical"
         android:text="@string/generate_payment_screen"
-        android:clipToPadding="false"
+        android:textColor="@color/colorPrimaryDark"
         tools:ignore="UnusedAttribute,NewApi" />
 
     <android.support.v7.widget.AppCompatButton
@@ -43,14 +43,14 @@
 
     <TextView
         android:id="@+id/amount_currency_textview"
+        style="@style/TextAppearance.AppCompat.Subhead"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        style="@style/TextAppearance.AppCompat.Subhead"
-        android:textColor="@color/colorPrimaryDark"
+        android:clipToPadding="false"
         android:elevation="@dimen/elevation_header"
         android:gravity="center_vertical"
         android:text="@string/amount_and_currency"
-        android:clipToPadding="false"
+        android:textColor="@color/colorPrimaryDark"
         tools:ignore="UnusedAttribute,NewApi" />
 
     <LinearLayout
@@ -61,24 +61,23 @@
 
         <EditText
             android:id="@+id/amountEditText"
-            android:hint="@string/amount"
-            android:importantForAutofill="no"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:imeOptions="actionDone"
-            android:text="@string/amount_default"
-            android:inputType="numberDecimal"
+            android:layout_weight="1"
             android:digits="0123456789.,"
+            android:hint="@string/amount"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
             android:maxLength="10"
+            android:text="@string/amount_default"
             android:textSize="@dimen/size_edit_text" />
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/currency_spinner"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
-            />
+            android:layout_weight="1" />
 
     </LinearLayout>
 
@@ -87,10 +86,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        android:textColor="@color/colorPrimaryDark"
         android:text="@string/group_cards"
-        />
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/colorPrimaryDark" />
 
     <android.support.v7.widget.SwitchCompat
 
@@ -99,9 +97,8 @@
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
         android:text="@string/card_storage"
-        android:textColor="@color/colorPrimaryDark"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        />
+        android:textColor="@color/colorPrimaryDark" />
 
     <android.support.v7.widget.SwitchCompat
 
@@ -110,9 +107,8 @@
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
         android:text="@string/card_scan"
-        android:textColor="@color/colorPrimaryDark"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        />
+        android:textColor="@color/colorPrimaryDark" />
 
     <android.support.v7.widget.SwitchCompat
 
@@ -121,27 +117,26 @@
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
         android:text="@string/card_nfc_scan"
-        android:textColor="@color/colorPrimaryDark"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        />
+        android:textColor="@color/colorPrimaryDark" />
     <!--
     -->
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/payment_products_button"
+        style="?attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        android:textColor="@color/colorPrimaryDark"
-        android:textAllCaps="false"
-        android:paddingLeft="0dp"
-        android:paddingRight="0dp"
-        style="?attr/borderlessButtonStyle"
-        android:text="@string/form_payment_products_categories"
-        android:gravity="start|center_vertical"
         android:drawableEnd="@drawable/ic_navigate_next_black"
         android:drawableRight="@drawable/ic_navigate_next_black"
         android:drawableTint="@android:color/darker_gray"
+        android:gravity="start|center_vertical"
         android:minHeight="?android:attr/actionBarSize"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:text="@string/form_payment_products_categories"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/colorPrimaryDark"
         tools:ignore="UnusedAttribute" />
 
     <LinearLayout
@@ -149,25 +144,25 @@
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
         android:orientation="horizontal">
+
         <TextView
             android:id="@+id/threeds_textview"
+            style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            style="@style/TextAppearance.AppCompat.Subhead"
-            android:textColor="@color/colorPrimaryDark"
+            android:clipToPadding="false"
             android:elevation="@dimen/elevation_header"
             android:gravity="center_vertical"
             android:text="@string/three_ds"
-            android:clipToPadding="false"
+            android:textColor="@color/colorPrimaryDark"
             tools:ignore="UnusedAttribute,NewApi" />
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/threeds_spinner"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
-            />
+            android:layout_weight="1" />
     </LinearLayout>
 
     <LinearLayout
@@ -178,22 +173,37 @@
 
         <TextView
             android:id="@+id/color_textview"
+            style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            style="@style/TextAppearance.AppCompat.Subhead"
-            android:textColor="@color/colorPrimaryDark"
             android:elevation="@dimen/elevation_header"
             android:gravity="center_vertical"
             android:text="@string/color"
+            android:textColor="@color/colorPrimaryDark"
             tools:ignore="UnusedAttribute,NewApi" />
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/color_spinner"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
-            />
+            android:layout_weight="1" />
+        android:layout_weight="1" />
 
     </LinearLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/timeout_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="32dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/timeout_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/timeout"
+            android:inputType="number"
+            android:singleLine="true" />
+    </android.support.design.widget.TextInputLayout>
 </LinearLayout>

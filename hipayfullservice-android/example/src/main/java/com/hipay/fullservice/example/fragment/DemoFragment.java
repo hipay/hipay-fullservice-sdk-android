@@ -94,6 +94,8 @@ public class DemoFragment extends Fragment {
     private AppCompatButton mPaymentProductsButton;
     protected boolean inhibit_spinner;
 
+    private EditText mTimeout;
+
     protected boolean mLoadingMode;
 
     public static DemoFragment newInstance() {
@@ -126,6 +128,17 @@ public class DemoFragment extends Fragment {
                 ApiException exception = ApiException.fromBundle(exceptionBundle);
 
                 Snackbar snackbar = Snackbar.make(mDoneFab, "Error : " + exception.getLocalizedMessage(),
+                        Snackbar.LENGTH_INDEFINITE);
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackgroundColor((ContextCompat.getColor(getActivity(),
+                        android.R.color.holo_red_light)));
+                snackbar.show();
+            } else if (resultCode == R.id.transaction_timeout) {
+
+                Bundle bundle = data.getExtras();
+                String descriptionError = bundle.getString(Errors.TAG);
+
+                Snackbar snackbar = Snackbar.make(mDoneFab, "Error : " + descriptionError,
                         Snackbar.LENGTH_INDEFINITE);
                 View snackBarView = snackbar.getView();
                 snackBarView.setBackgroundColor((ContextCompat.getColor(getActivity(),
@@ -210,6 +223,9 @@ public class DemoFragment extends Fragment {
                 clickOnCategories();
             }
         });
+
+        mTimeout = contentView.findViewById(R.id.timeout_edit_text);
+        mTimeout.setText("604800");
 
         AppCompatSpinner colorSpinner = (AppCompatSpinner) contentView.findViewById(R.id.color_spinner);
         ArrayAdapter<CharSequence> adapterColorSpinner = ArrayAdapter.createFromResource(getActivity(),
@@ -437,6 +453,10 @@ public class DemoFragment extends Fragment {
                                 if (!TextUtils.isEmpty(orderId) && !TextUtils.isEmpty(signature) ) {
 
                                     final PaymentPageRequest paymentPageRequest = buildPageRequest(activity, orderId);
+
+                                    if (!TextUtils.isEmpty(mTimeout.getText().toString())) {
+                                        paymentPageRequest.setTimeout(Integer.parseInt(mTimeout.getText().toString()));
+                                    }
 
                                     PaymentScreenActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
                                     mDoneFab.hide();
