@@ -14,7 +14,9 @@
 
     <string name="three_ds">3DS Authentification</string>
     <string name="color">Couleur</string>
-    <string name="timeout">Expiration page de paiment (secondes)</string>
+    <string name="timeout">Expiration page de paiement</string>
+
+    <string name="payment_error">Erreur : %1$s</string>
 
     <string name="form_payment_products_credit_card">Carte de crédit</string>
     <string name="form_payment_products_debit_card">Carte de débit</string>

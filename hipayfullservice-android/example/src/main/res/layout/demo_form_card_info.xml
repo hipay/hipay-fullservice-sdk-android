@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/spacing_double"
     android:paddingTop="@dimen/spacing_double"
     android:paddingRight="@dimen/spacing_double"
-    android:paddingBottom="@dimen/spacing_double"
+    android:paddingBottom="48dp"
     tools:showIn="@layout/fragment_demo">
 
     <TextView
@@ -192,18 +192,29 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/timeout_input_layout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="32dp">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/timeout_edit_text"
+        <TextView
+            android:id="@+id/textView"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/timeout"
+            android:textColor="@color/colorPrimary" />
+
+        <EditText
+            android:id="@+id/timeout_editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/timeout"
-            android:inputType="number"
-            android:singleLine="true" />
-    </android.support.design.widget.TextInputLayout>
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="numberSigned" />
+
+    </LinearLayout>
+
 </LinearLayout>
