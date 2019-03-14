@@ -38,7 +38,7 @@ public class PaymentPageRequest extends OrderRelatedRequest {
     public final static String PaymentPageRequestTemplateNameBasic = "basic-js";
     public final static String PaymentPageRequestTemplateNameFrame = "iframe-js";
 
-    Integer timeout;
+    private Integer timeout;
 
     public PaymentPageRequest() {
 
