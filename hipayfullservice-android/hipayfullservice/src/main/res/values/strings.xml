@@ -33,6 +33,8 @@
     <string name="transaction_error_declined">Please check your entries and try again</string>
     <string name="transaction_error_declined_reset">Please use another payment method</string>
 
+    <string name="payment_page_error_timeout">Payment page has expired</string>
+
     <string name="alert_transaction_loading_title">Transaction in progress</string>
     <string name="alert_transaction_loading_body">Your transaction is still being processed. Are you sure that you want to leave the screen?</string>
     <string name="alert_transaction_loading_yes">Quit</string>
