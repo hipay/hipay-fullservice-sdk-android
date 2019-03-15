@@ -12,6 +12,9 @@
 
     <string name="three_ds">3DS Authentication</string>
     <string name="color">Color</string>
+    <string name="timeout">Timeout payment page</string>
+
+    <string name="payment_error">Error : %1$s</string>
 
     <string name="amount_default" translatable="false">60.00</string>
 

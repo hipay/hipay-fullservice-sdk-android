@@ -110,6 +110,8 @@ public class PaymentPageRequestSerialization extends OrderRelatedRequestSerializ
 
         this.putBoolForKey("card_grouping", paymentPageRequest.isPaymentCardGroupingEnabled());
 
+        this.putIntForKey("timeout", paymentPageRequest.getTimeout());
+
         return this.getBundle();
     }
 

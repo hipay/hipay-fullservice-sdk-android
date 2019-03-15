@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.GatewayClient;
+import com.hipay.fullservice.core.errors.Errors;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.screen.fragment.PaymentProductsFragment;
@@ -119,6 +121,24 @@ public class PaymentProductsActivity extends PaymentScreenActivity {
 
         //useful when this activity is gonna be called with makeTransition
         supportPostponeEnterTransition();
+
+        final Bundle paymentPageRequestBundle = getIntent().getBundleExtra(PaymentPageRequest.TAG);
+        final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(paymentPageRequestBundle);
+        if (paymentPageRequest.getTimeout() > 0) {
+            Handler handler = new Handler();
+            Runnable runnable = new Runnable(){
+                public void run() {
+                    Intent intent = getIntent();
+                    intent.putExtra(Errors.TAG, getString(R.string.payment_page_error_timeout));
+                    setResult(R.id.transaction_timeout, intent);
+                    finishActivity(PaymentPageRequest.REQUEST_ORDER);
+                    finish();
+                }
+            };
+
+            handler.postAtTime(runnable, System.currentTimeMillis()+ paymentPageRequest.getTimeout() * 1000);
+            handler.postDelayed(runnable, paymentPageRequest.getTimeout() * 1000);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
