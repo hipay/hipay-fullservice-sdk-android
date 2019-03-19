@@ -196,12 +196,13 @@ publishing {
 apply plugin: 'com.jfrog.bintray'
 
 // Bintray
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 version = libraryVersion
 
 bintray {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
     user = properties.getProperty("bintray.user")
     key = properties.getProperty("bintray.apikey")
     publications = ['myPublication']
