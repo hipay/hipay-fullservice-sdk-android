@@ -89,3 +89,12 @@ dependencies {
 }
 
 apply from: 'deploy.gradle'
+
+tasks.whenTaskAdded {task ->
+    if(task.name.contains("bintrayUpload")) {
+        task.enabled = false
+    }
+    if(task.name.contains("publish")) {
+        task.enabled = false
+    }
+}
