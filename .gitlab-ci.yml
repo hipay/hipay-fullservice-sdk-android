@@ -23,7 +23,7 @@ android:
     - echo y | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-25"
     - echo y | $ANDROID_HOME/tools/bin/sdkmanager "build-tools;25.0.0"
   script:
-    - cd hipayfullservice-android && ./gradlew build
+    - cd hipayfullservice-android && ./gradlew build -x bintray
     - cd .. && python ./deployment/create_hockeyapp_branch.py
     - python ./deployment/get_identifier.py > $CI_ARTIFACTS/app_identifier
     - bash ./deployment/deploy.sh
