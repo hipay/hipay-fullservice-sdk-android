@@ -5,7 +5,6 @@ then
     echo "Keystore detected - downloading..."
     git clone ${KEYSTORE_URI}
     mv hipay-sdk-android-certificates/HiPayGroupKey.jks ${KEYSTORE}
-    cat ${KEYSTORE}
 else
     echo "Keystore uri not set.  .APK artifact will not be signed."
 fi
