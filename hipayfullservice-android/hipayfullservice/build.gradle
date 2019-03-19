@@ -87,3 +87,5 @@ dependencies {
     implementation "io.card:android-sdk:${cardIOVersion}"
     implementation "com.github.devnied.emvnfccard:library:${emvNfcCardVersion}"
 }
+
+apply from: 'deploy.gradle'
