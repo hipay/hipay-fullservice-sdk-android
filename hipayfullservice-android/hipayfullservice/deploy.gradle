@@ -105,8 +105,6 @@ publishing {
 
 apply plugin: 'com.jfrog.bintray'
 
-// Bintray
-
 version = libraryVersion
 
 bintray {
