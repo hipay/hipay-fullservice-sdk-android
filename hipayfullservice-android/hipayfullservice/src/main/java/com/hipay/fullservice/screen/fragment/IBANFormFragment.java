@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,6 +30,9 @@ import com.hipay.fullservice.core.client.interfaces.callbacks.OrderRequestCallba
 import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.models.Transaction;
+import com.hipay.fullservice.core.monitoring.CheckoutData;
+import com.hipay.fullservice.core.monitoring.CheckoutDataNetwork;
+import com.hipay.fullservice.core.monitoring.Monitoring;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.SepaDirectDebitPaymentMethodRequest;
@@ -36,6 +40,7 @@ import com.hipay.fullservice.screen.model.CustomTheme;
 
 import java.text.NumberFormat;
 import java.util.Currency;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -73,10 +78,24 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
             mGatewayClient = new GatewayClient(getActivity());
             mCurrentLoading = AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue();
 
+            final Date requestDate = new Date();
+
             mGatewayClient.requestNewOrder(orderRequest, signature, new OrderRequestCallback() {
 
                 @Override
                 public void onSuccess(final Transaction transaction) {
+
+                    CheckoutData.checkoutData.setStatus(transaction.getStatus().getIntegerValue());
+                    CheckoutData.checkoutData.setTransactionID(transaction.getTransactionReference());
+                    CheckoutData.checkoutData.setEvent(CheckoutData.Event.request);
+
+                    Monitoring monitoring = new Monitoring();
+                    monitoring.setRequestDate(requestDate);
+                    monitoring.setResponseDate(new Date());
+                    CheckoutData.checkoutData.setMonitoring(monitoring);
+
+                    AsyncTask<CheckoutData, Void, Integer> task = new CheckoutDataNetwork().execute(CheckoutData.checkoutData);
+                    CheckoutData.checkoutData = null;
 
                     if (mCallback != null) {
                         cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());

@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -46,6 +47,9 @@ import com.hipay.fullservice.core.models.PaymentCardToken;
 import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.models.Transaction;
+import com.hipay.fullservice.core.monitoring.CheckoutData;
+import com.hipay.fullservice.core.monitoring.CheckoutDataNetwork;
+import com.hipay.fullservice.core.monitoring.Monitoring;
 import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
@@ -63,6 +67,7 @@ import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import io.card.payment.CardIOActivity;
 import io.card.payment.CreditCard;
@@ -769,6 +774,15 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                         mPaymentCardToken = paymentCardToken;
 
+                        CheckoutData.checkoutData.setPaymentMethod(paymentProduct.getCode());
+                        CheckoutData.checkoutData.setEvent(CheckoutData.Event.tokenize);
+
+                        Monitoring monitoring = new Monitoring();
+                        monitoring.setPayDate(new Date());
+                        CheckoutData.checkoutData.setMonitoring(monitoring);
+
+                        AsyncTask<CheckoutData, Void, Integer> task = new CheckoutDataNetwork().execute(CheckoutData.checkoutData);
+
                         //secure vault
                         cancelLoaderId(AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue());
 
@@ -795,11 +809,25 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                             mGatewayClient = new GatewayClient(getActivity());
                             mCurrentLoading = AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue();
 
+                            final Date requestDate = new Date();
+
                             mGatewayClient.requestNewOrder(orderRequest, signature, new OrderRequestCallback() {
 
                                 @Override
                                 public void onSuccess(final Transaction transaction) {
                                     //Log.i("transaction success", transaction.toString());
+
+                                    CheckoutData.checkoutData.setStatus(transaction.getStatus().getIntegerValue());
+                                    CheckoutData.checkoutData.setTransactionID(transaction.getTransactionReference());
+                                    CheckoutData.checkoutData.setEvent(CheckoutData.Event.request);
+
+                                    Monitoring monitoring = new Monitoring();
+                                    monitoring.setRequestDate(requestDate);
+                                    monitoring.setResponseDate(new Date());
+                                    CheckoutData.checkoutData.setMonitoring(monitoring);
+
+                                    AsyncTask<CheckoutData, Void, Integer> task = new CheckoutDataNetwork().execute(CheckoutData.checkoutData);
+                                    CheckoutData.checkoutData = null;
 
                                     if (mCallback != null) {
                                         cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());

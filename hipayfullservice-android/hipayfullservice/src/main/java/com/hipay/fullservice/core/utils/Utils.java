@@ -38,6 +38,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TimeZone;
 
 import io.card.payment.CardType;
 
@@ -132,6 +133,19 @@ public class Utils {
         if (date != null) {
 
             SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ", Locale.US);
+            stringDate = dateFormatter.format(date);
+        }
+
+        return stringDate;
+    }
+
+    public static String getStringFromDateUTC(Date date) {
+
+        String stringDate = null;
+        if (date != null) {
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             stringDate = dateFormatter.format(date);
         }
 
