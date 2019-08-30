@@ -1,27 +1,27 @@
-image: thyrlian/android-sdk:2.2
+image: thyrlian/android-sdk:2.6
 
 variables:
   KEYSTORE: $CI_PROJECT_DIR/signing.keystore
   CI_ARTIFACTS: /tmp/log
+  ANDROID_COMPILE_SDK: '28'
+  ANDROID_BUILD_TOOLS: '28.0.2'
 
 stages:
- - build
-# - analysis
-# - deploy
- - sync
+  - build
 
 android:
   stage: build
   allow_failure: true
   before_script:
-    - apt-get update
-    - apt-get install -y curl python3
+    - apt-get -qq update
+    - apt-get -qq install -y curl python3
     - bash ./deployment/download_keystore.sh
     - python ./deployment/set_credentials.py
     - python ./deployment/set_version_code.py
+    - python ./deployment/set_stats_url.py
     - mkdir /tmp/log && chmod 777 /tmp/log
-    - echo y | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-25"
-    - echo y | $ANDROID_HOME/tools/bin/sdkmanager "build-tools;25.0.0"
+    - echo y | $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}" > /dev/null
+    - echo y | $ANDROID_HOME/tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}" > /dev/null
   script:
     - cd hipayfullservice-android && ./gradlew build
     - cd .. && python ./deployment/create_hockeyapp_branch.py
@@ -31,54 +31,5 @@ android:
     when: on_failure
     paths:
       - ./hipayfullservice-android/example/build/reports/
-  tags:
-    - pi-commerce-no-overlay
-
-#sonarqube:
-#  stage: analysis
-#  image: ciricihq/gitlab-sonar-scanner
-#  variables:
-#    SONAR_URL: http://172.17.0.1:19000
-#    SONAR_ANALYSIS_MODE: preview
-#    SONAR_TOKEN: $SONAR_LOGIN
-##  artifacts:
-##    paths:
-##    - ./hipayfullservice-android/example/build/intermediates/
-#  script:
-#  - cd hipayfullservice-android && ./gradlew build
-#  - /usr/bin/sonar-scanner-run.sh -X
-#
-#sonarqube-reports:
-#  stage: analysis
-#  image: ciricihq/gitlab-sonar-scanner
-#  variables:
-#    SONAR_URL: http://172.17.0.1:19000
-#    SONAR_ANALYSIS_MODE: "publish"
-#    SONAR_TOKEN: $SONAR_LOGIN
-##  artifacts:
-##    paths:
-##    - ./hipayfullservice-android/example/build/intermediates/
-#  script:
-#  - cd hipayfullservice-android && ./gradlew build
-#  - unset CI_BUILD_REF && /usr/bin/sonar-scanner-run.sh
-
-# Wait problem with GitlabCI Artifact
-#deploy:
-# stage: deploy
-# script:
-#  - apt-get install -y curl
-#  - mkdir /tmp/log && chmod 777 /tmp/log
-#  - bash ./deployment/deploy.sh
-# artifacts:
-#   paths:
-#   - ./hipayfullservice-android/example/build/outputs/apk/example-release.apk
-
-sync:
-  stage: sync
-  script:
-  - git clone --mirror https://$GITLAB_USER:$GITLAB_PASSWORD@gitlab.hipay.org/pi-ecommerce/hipay-fullservice-sdk-android.git
-  - cd hipay-fullservice-sdk-android.git
-  - git push --mirror https://$GITHUB_USER:$GITHUB_PASSWORD@github.com/hipay/hipay-fullservice-sdk-android.git
-  allow_failure: true
   tags:
     - pi-commerce-no-overlay
