@@ -50,6 +50,7 @@ import com.hipay.fullservice.core.errors.exceptions.ApiException;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.example.DemoActivity;
 import com.hipay.fullservice.example.Preferences;
 import com.hipay.fullservice.example.R;
@@ -62,6 +63,7 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -158,9 +160,9 @@ public class DemoFragment extends Fragment {
 
         if (savedInstanceState == null) {
             theme = new CustomTheme(
-                R.color.hpf_primary,
-                R.color.hpf_primary_dark,
-                R.color.theme_blue_text);
+                    R.color.hpf_primary,
+                    R.color.hpf_primary_dark,
+                    R.color.theme_blue_text);
 
         } else {
 
@@ -183,11 +185,9 @@ public class DemoFragment extends Fragment {
         final View contentView = inflater.inflate(R.layout.fragment_demo, container, false);
 
         mEnvironmentChoice = contentView.findViewById(R.id.payment_products_environment);
-        mEnvironmentChoice.setOnClickListener(new View.OnClickListener()
-        {
+        mEnvironmentChoice.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 clickOnEnvironment();
             }
         });
@@ -216,11 +216,9 @@ public class DemoFragment extends Fragment {
         m3DSSpinner.setSelection(1);
 
         mPaymentProductsButton = (AppCompatButton) contentView.findViewById(R.id.payment_products_button);
-        mPaymentProductsButton.setOnClickListener(new View.OnClickListener()
-        {
+        mPaymentProductsButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 clickOnCategories();
             }
         });
@@ -265,14 +263,16 @@ public class DemoFragment extends Fragment {
                                 R.color.theme_green_primary,
                                 R.color.theme_green_primary_dark,
                                 R.color.theme_green_text);
-                    } break;
+                    }
+                    break;
 
                     case 3: {
                         makeCustomTheme(
                                 R.color.theme_purple_primary,
                                 R.color.theme_purple_primary_dark,
                                 R.color.theme_purple_text);
-                    } break;
+                    }
+                    break;
 
                     case 4: {
 
@@ -315,8 +315,8 @@ public class DemoFragment extends Fragment {
 
     private void clickOnCategories() {
 
-        DemoActivity demoActivity = (DemoActivity)getActivity();
-        Map<String,Boolean> paymentProducts = demoActivity.getPaymentProducts();
+        DemoActivity demoActivity = (DemoActivity) getActivity();
+        Map<String, Boolean> paymentProducts = demoActivity.getPaymentProducts();
 
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -339,7 +339,7 @@ public class DemoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         DemoActivity demoActivity = (DemoActivity) getActivity();
-        mProgressBar = (ProgressBar)demoActivity.findViewById(R.id.progress);
+        mProgressBar = (ProgressBar) demoActivity.findViewById(R.id.progress);
 
         mDoneFab = (FloatingActionButton) view.findViewById(R.id.done);
         mDoneFab.setOnClickListener(new View.OnClickListener() {
@@ -353,8 +353,8 @@ public class DemoFragment extends Fragment {
                         }
 
                         removeDoneFab(new Runnable() {
-                                @Override
-                                public void run() {
+                            @Override
+                            public void run() {
 
                                 if (getActivity() != null) {
                                     requestSignature();
@@ -394,7 +394,7 @@ public class DemoFragment extends Fragment {
             }
         };
 
-        mAmount = (EditText)view.findViewById(R.id.amountEditText);
+        mAmount = (EditText) view.findViewById(R.id.amountEditText);
         mAmount.addTextChangedListener(textWatcher);
 
         mCardStorageSwitch.setChecked(ClientConfig.getInstance().isPaymentCardStorageEnabled());
@@ -407,7 +407,7 @@ public class DemoFragment extends Fragment {
     private void requestSignature() {
 
         String amount = mAmount.getText().toString();
-        String currency = (String)mCurrencySpinner.getSelectedItem();
+        String currency = (String) mCurrencySpinner.getSelectedItem();
 
         if (Preferences.isLocalSignature(getContext())) {
             Random random = new Random();
@@ -415,7 +415,7 @@ public class DemoFragment extends Fragment {
 
             String signature = getSha1Hex(orderId + amount + currency + Preferences.getLocalSignaturePassword(getContext()));
 
-            DemoActivity activity = (DemoActivity)getActivity();
+            DemoActivity activity = (DemoActivity) getActivity();
 
             final PaymentPageRequest paymentPageRequest = buildPageRequest(activity, orderId);
 
@@ -425,8 +425,7 @@ public class DemoFragment extends Fragment {
 
             PaymentScreenActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
             mDoneFab.hide();
-        }
-        else {
+        } else {
             setLoadingMode(true);
 
             String url = String.format(getString(R.string.server_url), amount, currency);
@@ -455,8 +454,8 @@ public class DemoFragment extends Fragment {
 
                             if (getActivity() != null) {
 
-                                DemoActivity activity = (DemoActivity)getActivity();
-                                if (!TextUtils.isEmpty(orderId) && !TextUtils.isEmpty(signature) ) {
+                                DemoActivity activity = (DemoActivity) getActivity();
+                                if (!TextUtils.isEmpty(orderId) && !TextUtils.isEmpty(signature)) {
 
                                     final PaymentPageRequest paymentPageRequest = buildPageRequest(activity, orderId);
 
@@ -502,7 +501,7 @@ public class DemoFragment extends Fragment {
 
                             if (getActivity() != null) {
 
-                                AppCompatActivity activity = (AppCompatActivity)getActivity();
+                                AppCompatActivity activity = (AppCompatActivity) getActivity();
                                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -532,20 +531,16 @@ public class DemoFragment extends Fragment {
     }
 
     private static String getSha1Hex(String clearString) {
-        try
-        {
+        try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
             messageDigest.update(clearString.getBytes("UTF-8"));
             byte[] bytes = messageDigest.digest();
             StringBuilder buffer = new StringBuilder();
-            for (byte b : bytes)
-            {
+            for (byte b : bytes) {
                 buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
             }
             return buffer.toString();
-        }
-        catch (Exception ignored)
-        {
+        } catch (Exception ignored) {
             ignored.printStackTrace();
             return null;
         }
@@ -615,6 +610,9 @@ public class DemoFragment extends Fragment {
         paymentPageRequest.getCustomer().setLastname("Dupont");
         paymentPageRequest.getCustomer().setEmail("client@domain.com");
 
+        paymentPageRequest.getShippingAddress().setFirstname("Martin");
+        paymentPageRequest.getShippingAddress().setLastname("Dupont");
+
         paymentPageRequest.getCustomer().setRecipientInfo("Employee");
         paymentPageRequest.getCustomer().setStreetAddress("6 Place du Colonel Bourgoin");
         paymentPageRequest.getCustomer().setStreetAddress2("Immeuble de droite");
@@ -629,6 +627,8 @@ public class DemoFragment extends Fragment {
 
         paymentPageRequest.setPaymentCardGroupingEnabled(mGroupCardSwitch.isChecked());
 
+        fillDSP2Information(paymentPageRequest);
+
         boolean multiUse = mCardStorageSwitch.isChecked();
         paymentPageRequest.setMultiUse(multiUse);
         ClientConfig.getInstance().setPaymentCardStorageEnabled(multiUse);
@@ -638,20 +638,30 @@ public class DemoFragment extends Fragment {
 
         paymentPageRequest.setAmount(Float.parseFloat(mAmount.getText().toString()));
 
-        String selectedItem = (String)mCurrencySpinner.getSelectedItem();
+        String selectedItem = (String) mCurrencySpinner.getSelectedItem();
         paymentPageRequest.setCurrency(selectedItem);
 
-        Integer selectedItemThreeDS = (int)(long)m3DSSpinner.getSelectedItemId() - 1;
+        Integer selectedItemThreeDS = (int) (long) m3DSSpinner.getSelectedItemId() - 1;
         CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator = CardTokenPaymentMethodRequest.AuthenticationIndicator.fromIntegerValue(selectedItemThreeDS);
 
         paymentPageRequest.setAuthenticationIndicator(authenticationIndicator);
 
-        DemoActivity demoActivity = (DemoActivity)activity;
+        DemoActivity demoActivity = (DemoActivity) activity;
 
         ArrayList<String> productCategories = demoActivity.getPaymentProductsAsList();
         paymentPageRequest.setPaymentProductCategoryList(productCategories);
 
         return paymentPageRequest;
+    }
+
+    private void fillDSP2Information(PaymentPageRequest paymentPageRequest) {
+        String merchantRiskStatement = "{\"email_delivery_address\": \"jane.doe@test.com\", \"delivery_time_frame\": 1, \"purchase_indicator\": 1, \"pre_order_date\": 20190925, \"reorder_indicator\": 1, \"shipping_indicator\": 1, \"gift_card\": { \"amount\": 15, \"count\": 0, \"currency\": \"EUR\" } }";
+        String previousAuthInfo = "{\"transaction_reference\" : \"800000987283\"}";
+        String accountInfo = "{\"customer\": { \"account_change\":20180507, \"opening_account_date\" : 20180507, \"password_change\": 20180507}}";
+
+        paymentPageRequest.setMerchantRiskStatement(merchantRiskStatement);
+        paymentPageRequest.setPreviousAuthInfo(previousAuthInfo);
+        paymentPageRequest.setAccountInfo(accountInfo);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

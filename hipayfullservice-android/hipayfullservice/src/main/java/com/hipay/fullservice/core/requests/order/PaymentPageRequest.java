@@ -295,6 +295,10 @@ public class PaymentPageRequest extends OrderRelatedRequest {
             paymentPageRequest.setCustomer(orderRelatedRequest.getCustomer());
             paymentPageRequest.setShippingAddress(orderRelatedRequest.getShippingAddress());
 
+            paymentPageRequest.setMerchantRiskStatement(orderRelatedRequest.getMerchantRiskStatement());
+            paymentPageRequest.setPreviousAuthInfo(orderRelatedRequest.getPreviousAuthInfo());
+            paymentPageRequest.setAccountInfo(orderRelatedRequest.getAccountInfo());
+
             paymentPageRequest.setCustomData(orderRelatedRequest.getCustomData());
 
             paymentPageRequest.setCdata1(orderRelatedRequest.getCdata1());

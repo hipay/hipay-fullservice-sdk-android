@@ -8,33 +8,26 @@
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:layout_gravity="center"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <ScrollView
+            <include
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                layout="@layout/demo_form_card_info"/>
+        </ScrollView>
 
-                <include
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    layout="@layout/demo_form_card_info"
-                    />
-            </ScrollView>
-
-        </LinearLayout>
     </FrameLayout>
 
 
     <android.support.design.widget.FloatingActionButton
-        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/done"
         app:fabSize="normal"

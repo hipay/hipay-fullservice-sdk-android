@@ -7,6 +7,8 @@ import com.hipay.fullservice.core.serialization.AbstractSerializationMapper;
 
 import org.json.JSONObject;
 
+import java.util.Date;
+
 /**
  * Created by nfillion on 08/03/16.
  */
@@ -22,6 +24,7 @@ public class PaymentCardToken extends PaymentMethod {
     protected String issuer;
     protected String country;
     protected String domesticNetwork;
+    protected Date dateAdded;
 
     public static PaymentCardToken fromJSONObject(JSONObject object) {
 
@@ -119,6 +122,14 @@ public class PaymentCardToken extends PaymentMethod {
 
     public void setDomesticNetwork(String domesticNetwork) {
         this.domesticNetwork = domesticNetwork;
+    }
+
+    public Date getDateAdded() {
+        return dateAdded;
+    }
+
+    public void setDateAdded(Date dateAdded) {
+        this.dateAdded = dateAdded;
     }
 
     @Override

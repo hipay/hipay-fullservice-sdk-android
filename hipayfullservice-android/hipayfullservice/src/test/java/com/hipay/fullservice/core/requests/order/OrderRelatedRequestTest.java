@@ -1,11 +1,23 @@
 package com.hipay.fullservice.core.requests.order;
 
+
+import com.hipay.fullservice.core.utils.Utils;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
+
 
 /**
  * Created by nfillion on 22/02/16.
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(Utils.class)
 public class OrderRelatedRequestTest {
 
     private OrderRelatedRequest orderRelatedRequest;
@@ -13,11 +25,18 @@ public class OrderRelatedRequestTest {
     @Before
     public void setUp() throws Exception {
 
+        mockStatic(Utils.class);
+
+        when(Utils.getScreenHeight()).thenReturn(1920);
+        when(Utils.getScreenWidth()).thenReturn(1080);
+
         orderRelatedRequest = new OrderRelatedRequest();
     }
 
+
     @Test
     public void testGetters() throws Exception {
+
 
         orderRelatedRequest.getOrderId();
         orderRelatedRequest.getOperation();
@@ -38,6 +57,12 @@ public class OrderRelatedRequestTest {
         orderRelatedRequest.getHTTPUserAgent();
         orderRelatedRequest.getDeviceFingerprint();
         orderRelatedRequest.getLanguage();
+
+        orderRelatedRequest.getMerchantRiskStatement();
+        orderRelatedRequest.getPreviousAuthInfo();
+        orderRelatedRequest.getAccountInfo();
+        orderRelatedRequest.getBrowserInfo();
+
         orderRelatedRequest.getCustomData();
 
         orderRelatedRequest.getCdata1();
@@ -53,6 +78,8 @@ public class OrderRelatedRequestTest {
 
         orderRelatedRequest.getCustomer();
         orderRelatedRequest.getShippingAddress();
+
+
 
     }
 
@@ -79,6 +106,11 @@ public class OrderRelatedRequestTest {
         orderRelatedRequest.setHTTPUserAgent(null);
         orderRelatedRequest.setDeviceFingerprint(null);
         orderRelatedRequest.setLanguage(null);
+
+        orderRelatedRequest.setMerchantRiskStatement(null);
+        orderRelatedRequest.setPreviousAuthInfo(null);
+        orderRelatedRequest.setAccountInfo(null);
+
         orderRelatedRequest.setCustomData(null);
 
         orderRelatedRequest.setCdata1(null);

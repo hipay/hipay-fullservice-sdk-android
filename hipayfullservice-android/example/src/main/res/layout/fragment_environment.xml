@@ -129,6 +129,7 @@
                         android:layout_marginTop="@dimen/spacing_normal"
                         android:layout_marginBottom="@dimen/spacing_normal"
                         android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
                         android:text="@string/environment_signature_local"
                         android:textSize="18sp" />
 

@@ -85,21 +85,21 @@ public class Preferences {
         SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_DEMO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     private static void saveEnvironmentInt(Context context, String key, int value) {
         SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_DEMO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     private static void saveEnvironmentBoolean(Context context, String key, boolean value) {
         SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCES_DEMO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     private static String getEnvironmentString(Context context, String key) {

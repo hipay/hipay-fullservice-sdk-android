@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.hipay.fullservice.core.models.PaymentCardToken;
 import com.hipay.fullservice.core.models.PaymentProduct;
+import com.hipay.fullservice.core.utils.Utils;
 
 import java.util.Map;
 
@@ -38,6 +39,7 @@ public class PaymentCardTokenSerialization extends AbstractSerialization {
         this.putStringForKey("issuer", paymentCardToken.getIssuer());
         this.putStringForKey("country", paymentCardToken.getCountry());
         this.putStringForKey("domesticNetwork", paymentCardToken.getDomesticNetwork());
+        this.putStringForKey("dateAdded", Utils.getStringFromDateISO8601(paymentCardToken.getDateAdded()));
 
         return this.getBundle();
     }

@@ -3,10 +3,13 @@ package com.hipay.fullservice.core.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.hipay.fullservice.core.models.PaymentCardToken;
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +19,7 @@ import java.util.Set;
 public class PaymentCardTokenDatabase {
 
     private static PaymentCardTokenDatabase mInstance = null;
+    private static Context context = null;
 
     final private static String SHARED_PREFERENCES_NAME = "HiPay";
 
@@ -31,7 +35,7 @@ public class PaymentCardTokenDatabase {
     }
 
     private void clearPaymentCardTokens(Context context, String currency) {
-
+        this.context = context;
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove("paymentCardToken_" + currency);
@@ -40,7 +44,7 @@ public class PaymentCardTokenDatabase {
     }
 
     public void clearPaymentCardTokens(Context context) {
-
+        this.context = context;
         Set<String> currencyList = this.getPaymentCardTokensCurrencyList(context);
         if (currencyList != null && !currencyList.isEmpty()) {
 
@@ -51,6 +55,10 @@ public class PaymentCardTokenDatabase {
     }
 
     public Set<String> getPaymentCardTokens(Context context, String currency) {
+        if (context == null) {
+            return null;
+        }
+        this.context = context;
 
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
 
@@ -64,6 +72,10 @@ public class PaymentCardTokenDatabase {
     }
 
     private Set<String> getPaymentCardTokensCurrencyList(Context context) {
+        if (context == null) {
+            return null;
+        }
+        this.context = context;
 
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
 
@@ -77,6 +89,10 @@ public class PaymentCardTokenDatabase {
     }
 
     private void deleteCurrencyInList(Context context, String currency) {
+        if (context == null) {
+            return;
+        }
+        this.context = context;
 
         Set<String> currencyList = this.getPaymentCardTokensCurrencyList(context);
         if (currencyList != null && !currencyList.isEmpty()) {
@@ -93,6 +109,10 @@ public class PaymentCardTokenDatabase {
     }
 
     private void addCurrencyInList(Context context, String currency) {
+        if (context == null) {
+            return;
+        }
+        this.context = context;
 
         Set<String> currencyList = this.getPaymentCardTokensCurrencyList(context);
         if (currencyList != null && !currencyList.isEmpty()) {
@@ -119,6 +139,10 @@ public class PaymentCardTokenDatabase {
     }
 
     public void delete(Context context, PaymentCardToken paymentCardToken, String currency) {
+        if (context == null) {
+            return;
+        }
+        this.context = context;
 
         Set<String> tokens = this.getPaymentCardTokens(context, currency);
 
@@ -144,9 +168,14 @@ public class PaymentCardTokenDatabase {
     }
 
     public void save(Context context, PaymentCardToken paymentCardToken, String currency) {
+        if (context == null) {
+            return;
+        }
+        this.context = context;
 
         Set<String> tokens = this.getPaymentCardTokens(context, currency);
 
+        paymentCardToken.setDateAdded(new Date());
         Bundle paymentCardTokenBundle = paymentCardToken.toBundle();
         String paymentCardTokenJSONString = Utils.fromBundle(paymentCardTokenBundle);
 
@@ -173,5 +202,54 @@ public class PaymentCardTokenDatabase {
             //editor.commit();
             editor.apply();
         }
+    }
+
+    public int numberOfCardSavedInLast24Hours(String currency) {
+        Set<String> cardTokens = getPaymentCardTokens(context, currency);
+        int count = 0;
+
+        if (cardTokens == null) {
+            return count;
+        }
+
+        for (String token : cardTokens) {
+            Bundle tokenBundle = Utils.fromJSONString(token);
+            if (tokenBundle != null) {
+                PaymentCardToken paymentCardToken = PaymentCardToken.fromBundle(tokenBundle);
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DAY_OF_YEAR, -1);
+                Date beforeDate = calendar.getTime();
+
+                if (paymentCardToken.getDateAdded().after(beforeDate)) {
+                    count++;
+                }
+
+            }
+        }
+
+        return count;
+
+    }
+
+    public Date getEnrollmentDate(String token, String currency) {
+        Set<String> cardTokens = getPaymentCardTokens(context, currency);
+
+        if (cardTokens == null) {
+            return null;
+        }
+
+        for (String cardToken : cardTokens) {
+            Bundle tokenBundle = Utils.fromJSONString(cardToken);
+            if (tokenBundle != null) {
+                PaymentCardToken paymentCardToken = PaymentCardToken.fromBundle(tokenBundle);
+
+                if (paymentCardToken.getToken() != null && token != null && paymentCardToken.getToken().equals(token)) {
+                    return paymentCardToken.getDateAdded();
+                }
+            }
+        }
+
+        return null;
     }
 }
