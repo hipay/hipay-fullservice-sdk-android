@@ -1,6 +1,7 @@
 package com.hipay.fullservice.core.utils;
 
 import android.annotation.TargetApi;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -35,6 +36,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TimeZone;
 
 import io.card.payment.CardType;
 
@@ -135,6 +137,19 @@ public class Utils {
         return stringDate;
     }
 
+    public static String getStringFromDateUTC(Date date) {
+
+        String stringDate = null;
+        if (date != null) {
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            stringDate = dateFormatter.format(date);
+        }
+
+        return stringDate;
+    }
+
     public static String getPaymentFormStringFromDate(Date date) {
 
         String stringDate = null;
@@ -183,6 +198,14 @@ public class Utils {
         return date;
     }
 
+    public static int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
+
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
     public static String bundleToString(Bundle bundle) {
         if (bundle == null) {
             return null;
@@ -202,10 +225,15 @@ public class Utils {
         String string = null;
 
         StringBuilder sb = new StringBuilder();
-        BufferedReader r = new BufferedReader(new InputStreamReader(is), 1000);
+        BufferedReader r = null;
+        try {
+            r = new BufferedReader(new InputStreamReader(is, "UTF-8"), 1000);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         try {
             for (String line = r.readLine(); line != null; line = r.readLine()) {
-                sb.append(line);
+                sb.append(line).append(System.getProperty("line.separator"));
             }
 
             is.close();
@@ -255,7 +283,7 @@ public class Utils {
 
         while( keys.hasNext() ){
             String key = (String)keys.next();
-            String value = jObject.getString(key);
+            String value = jObject.getString(key) == "null" ? null : jObject.getString(key);
             map.put(key, value);
         }
 

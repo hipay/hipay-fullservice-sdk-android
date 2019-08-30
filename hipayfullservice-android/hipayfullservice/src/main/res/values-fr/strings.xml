@@ -28,15 +28,18 @@
     <string name="transaction_error_declined">Veuillez vérifier vos informations et réessayer.</string>
     <string name="transaction_error_declined_reset">Merci de bien vouloir utiliser un autre moyen de paiement.</string>
 
+    <string name="payment_page_error_timeout">La page de paiement a expiré.</string>
+
     <string name="alert_transaction_loading_title">Transaction en cours</string>
     <string name="alert_transaction_loading_body">Le traitement de votre transaction est toujours en cours, êtes-vous sûr de vouloir quitter cet écran ?</string>
     <string name="alert_transaction_loading_yes">Quitter</string>
     <string name="alert_transaction_loading_no">Reprendre</string>
 
-    <string name="transaction_error_other">Une erreur est survenue lors du traitement de la transaction.</string>
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Annuler</string>
+    <string name="button_retry">Réessayer</string>
 
-    <string name="error_button_dismiss">@android:string/ok</string>
-    <string name="error_button_retry">Réessayer</string>
+    <string name="transaction_error_other">Une erreur est survenue lors du traitement de la transaction.</string>
 
     <string name="error_title_default">Une erreur est survenue</string>
     <string name="error_body_default">Votre demande n\'a pu aboutir.</string>
@@ -79,5 +82,10 @@
     <string name="alert_deleting_payment_card_body">Êtes-vous sûr de vouloir supprimer cette carte de paiment ?</string>
 
     <string name="card_storage_switch_description">Enregistrer cette carte</string>
+
+    <string name="sdd_firstname" translatable="true">Prénom</string>
+    <string name="sdd_lastname" translatable="true">Nom</string>
+    <string name="sdd_iban" translatable="true">IBAN</string>
+    <string name="sdd_iban_invalid" translatable="true">IBAN invalide</string>
 
 </resources>

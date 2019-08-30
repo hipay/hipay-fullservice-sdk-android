@@ -10,10 +10,15 @@ import com.hipay.fullservice.core.mapper.interfaces.BundleMapper;
 import com.hipay.fullservice.core.requests.AbstractRequest;
 import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.info.PersonalInfoRequest;
+import com.hipay.fullservice.core.utils.Utils;
 
+import org.json.JSONObject;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Created by nfillion on 02/02/16.
@@ -47,6 +52,13 @@ public class OrderRelatedRequest extends AbstractRequest {
     protected CustomerInfoRequest customer;
     protected PersonalInfoRequest shippingAddress;
 
+    protected String merchantRiskStatement;
+    protected String previousAuthInfo;
+    protected String accountInfo;
+    protected String browserInfo;
+
+    protected Integer deviceChannel;
+
     protected Map<String, String> customData;
 
     protected String cdata1;
@@ -79,6 +91,33 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.setCustomer(new CustomerInfoRequest());
         this.setShippingAddress(new PersonalInfoRequest());
 
+        this.setDeviceChannel(2);
+
+        Map<String,String> sourceMap = new HashMap<>(4);
+        sourceMap.put("source",  "CSDK");
+        sourceMap.put("brand", "android");
+        sourceMap.put("brand_version", Build.VERSION.RELEASE);
+        sourceMap.put("integration_version", BuildConfig.VERSION_NAME);
+
+        this.setSource(sourceMap);
+
+        Map<String, Object> browserInfo = new HashMap<String, Object>();
+        browserInfo.put("java_enabled", true);
+        browserInfo.put("javascript_enabled", true);
+        browserInfo.put("language", Locale.getDefault().getLanguage());
+        browserInfo.put("color_depth", 32); //Android always return RGBA_8888 : 32-bit format that has 8-bit R, G, B, and A components
+
+        browserInfo.put("screen_height", Utils.getScreenHeight());
+        browserInfo.put("screen_width", Utils.getScreenWidth());
+
+        browserInfo.put("timezone", TimeZone.getDefault().getOffset(new Date().getTime()) / 1000 / 60);
+        browserInfo.put("ipaddr", "");
+        browserInfo.put("http_accept", "*/*");
+        browserInfo.put("http_user_agent", System.getProperty("http.agent"));
+
+        JSONObject browserInfoJSON = new JSONObject(browserInfo);
+        String browserInfoJSONString = browserInfoJSON.toString().replace("\\", "");
+        this.setBrowserInfo(browserInfoJSONString);
     }
 
     public OrderRelatedRequest(OrderRelatedRequest orderRelatedRequest) {
@@ -88,6 +127,8 @@ public class OrderRelatedRequest extends AbstractRequest {
 
         this.setCustomer(new CustomerInfoRequest());
         this.setShippingAddress(new PersonalInfoRequest());
+
+        this.setSource(orderRelatedRequest.getSource());
 
         this.setOrderId(orderRelatedRequest.getOrderId());
         this.setOperation(orderRelatedRequest.getOperation());
@@ -111,6 +152,12 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.setCustomer(orderRelatedRequest.getCustomer());
         this.setShippingAddress(orderRelatedRequest.getShippingAddress());
 
+        this.setMerchantRiskStatement(orderRelatedRequest.getMerchantRiskStatement());
+        this.setPreviousAuthInfo(orderRelatedRequest.getPreviousAuthInfo());
+        this.setAccountInfo(orderRelatedRequest.getAccountInfo());
+        this.setBrowserInfo(orderRelatedRequest.getBrowserInfo());
+        this.setDeviceChannel(orderRelatedRequest.getDeviceChannel());
+
         this.setCustomData(orderRelatedRequest.getCustomData());
 
         this.setCdata1(orderRelatedRequest.getCdata1());
@@ -123,20 +170,6 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.setCdata8(orderRelatedRequest.getCdata8());
         this.setCdata9(orderRelatedRequest.getCdata9());
         this.setCdata10(orderRelatedRequest.getCdata10());
-
-        String source = "CSDK";
-        String brand = "android";
-        String brand_version = Build.VERSION.RELEASE;
-        String integrationVersion = BuildConfig.VERSION_NAME;
-
-        Map<String,String> sourceMap = new HashMap<>(4);
-        sourceMap.put("source", source);
-        sourceMap.put("brand", brand);
-        sourceMap.put("brand_version", brand_version);
-        sourceMap.put("integration_version", integrationVersion);
-
-        this.setSource(sourceMap);
-
     }
 
     private static final String ClientConfigCallbackURLHost = "hipay-fullservice";
@@ -343,6 +376,14 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.deviceFingerprint = deviceFingerprint;
     }
 
+    public Integer getDeviceChannel() {
+        return deviceChannel;
+    }
+
+    public void setDeviceChannel(Integer deviceChannel) {
+        this.deviceChannel = deviceChannel;
+    }
+
     public String getLanguage() {
         return language;
     }
@@ -464,6 +505,39 @@ public class OrderRelatedRequest extends AbstractRequest {
         this.shippingAddress = shippingAddress;
     }
 
+    public String getMerchantRiskStatement() {
+        return merchantRiskStatement;
+    }
+
+    public void setMerchantRiskStatement(String merchantRiskStatement) {
+        this.merchantRiskStatement = merchantRiskStatement;
+    }
+
+    public String getPreviousAuthInfo() {
+        return previousAuthInfo;
+    }
+
+    public void setPreviousAuthInfo(String previousAuthInfo) {
+        this.previousAuthInfo = previousAuthInfo;
+    }
+
+    public String getAccountInfo() {
+        return accountInfo;
+    }
+
+    public void setAccountInfo(String accountInfo) {
+        this.accountInfo = accountInfo;
+    }
+
+
+    public String getBrowserInfo() {
+        return browserInfo;
+    }
+
+    protected void setBrowserInfo(String browserInfo) {
+        this.browserInfo = browserInfo;
+    }
+
     protected static class OrderRelatedRequestMapper extends AbstractMapper {
         public OrderRelatedRequestMapper(Bundle object) {
             super(object);
@@ -512,6 +586,11 @@ public class OrderRelatedRequest extends AbstractRequest {
             orderRelatedRequest.setPendingScheme(this.getStringForKey("pending_url"));
             orderRelatedRequest.setExceptionScheme(this.getStringForKey("exception_url"));
             orderRelatedRequest.setCancelScheme(this.getStringForKey("cancel_url"));
+
+            orderRelatedRequest.setMerchantRiskStatement(this.getStringForKey("merchant_risk_statement"));
+            orderRelatedRequest.setPreviousAuthInfo(this.getStringForKey("previous_auth_info"));
+            orderRelatedRequest.setAccountInfo(this.getStringForKey("account_info"));
+            orderRelatedRequest.setBrowserInfo(this.getStringForKey("browser_info"));
 
             orderRelatedRequest.setCustomData(this.getMapJSONForKey("custom_data"));
 

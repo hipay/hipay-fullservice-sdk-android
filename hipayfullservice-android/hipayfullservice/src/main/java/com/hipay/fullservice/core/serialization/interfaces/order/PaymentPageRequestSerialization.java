@@ -25,7 +25,6 @@ public class PaymentPageRequestSerialization extends OrderRelatedRequestSerializ
     @Override
     public Map<String, String> getSerializedRequest() {
 
-        // get the OrderRelatedRequest serialization
         Map<String, String> relatedRequestMap = super.getSerializedRequest();
 
         PaymentPageRequest paymentPageRequest = (PaymentPageRequest)this.getModel();
@@ -110,6 +109,8 @@ public class PaymentPageRequestSerialization extends OrderRelatedRequestSerializ
         this.putUrlForKey("css", paymentPageRequest.getCss());
 
         this.putBoolForKey("card_grouping", paymentPageRequest.isPaymentCardGroupingEnabled());
+
+        this.putIntForKey("timeout", paymentPageRequest.getTimeout());
 
         return this.getBundle();
     }

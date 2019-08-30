@@ -1,5 +1,10 @@
 HiPay Android SDK change log and release notes
 ================================================
+
+1.5.0
+-----
+* Add DSP2
+
 1.4.1
 -----
 * Fix Secure Vault V2

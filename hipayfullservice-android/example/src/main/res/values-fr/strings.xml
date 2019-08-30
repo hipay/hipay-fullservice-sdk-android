@@ -6,6 +6,7 @@
 
     <string name="generate_payment_screen">Générer un écran de paiement</string>
     <string name="amount_and_currency">Montant et devise</string>
+    <string name="amount">Montant</string>
     <string name="group_cards">Regrouper les cartes</string>
     <string name="card_storage">Enregistrement de carte</string>
     <string name="card_scan">Scan de carte</string>
@@ -13,16 +14,28 @@
 
     <string name="three_ds">3DS Authentification</string>
     <string name="color">Couleur</string>
+    <string name="timeout">Expiration page de paiement</string>
+
+    <string name="payment_error">Erreur : %1$s</string>
 
     <string name="form_payment_products_credit_card">Carte de crédit</string>
     <string name="form_payment_products_debit_card">Carte de débit</string>
     <string name="form_payment_products_ewallet">Portefeuille électronique</string>
     <string name="form_payment_products_realtime_banking">Banque temps réel</string>
 
-    <string name="error_button_dismiss">@android:string/ok</string>
+    <string name="environment_alert_title">⚠️ Attention ⚠️</string>
+    <string name="environment_alert_message_empty">Le nom d\'utilisateur ou le mot de passe est vide</string>
+    <string name="environment_alert_message_passphrase_empty">La passphrase est vide</string>
+    <string name="environment_alert_message_save">Voulez-vous enregistrer les modifications ?</string>
+    <string name="environment_signature_local">Signature en local</string>
+    <string name="environment_signature_passphrase">Passphrase secrète</string>
+
+    <string name="button_save">Enregistrer</string>
+
     <string name="config_parameters_error">Vous devez renseigner votre identifiant et mot de passe comme arguments.</string>
 
     <string name="form_payment_products_categories">Moyens de paiement</string>
+    <string name="form_payment_environment">Environnement</string>
 
     <string-array name="array_threeds">
         <item>Défaut</item>

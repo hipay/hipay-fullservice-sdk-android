@@ -2,11 +2,9 @@ package com.hipay.fullservice.core.client;
 
 import android.content.Context;
 
-import com.hipay.fullservice.core.client.interfaces.callbacks.LookupPaymentCardRequestCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.SecureVaultRequestCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.UpdatePaymentCardRequestCallback;
 import com.hipay.fullservice.core.requests.securevault.GenerateTokenRequest;
-import com.hipay.fullservice.core.requests.securevault.LookupPaymentCardRequest;
 import com.hipay.fullservice.core.requests.securevault.UpdatePaymentCardRequest;
 
 /**
@@ -57,18 +55,5 @@ public class SecureVaultClient extends AbstractClient {
                 cardHolder);
 
         super.createRequest(updatePaymentCardRequest, callback);
-    }
-
-    public void lookupPaymentCard(String token,
-                                  String requestId,
-                                  LookupPaymentCardRequestCallback callback
-
-    ) {
-
-        LookupPaymentCardRequest lookupPaymentCardRequest = new LookupPaymentCardRequest(
-                token,
-                requestId);
-
-        super.createRequest(lookupPaymentCardRequest, callback);
     }
 }

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+
 ext {
     bintrayRepo = 'maven'
     bintrayName = 'hipayfullservice'
@@ -12,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/hipay/hipay-fullservice-sdk-android'
     gitUrl = 'https://github.com/hipay/hipay-fullservice-sdk-android.git'
 
-    libraryVersion = '1.4.1'
+    libraryVersion = '1.5.0'
 
     developerId = 'hipayandroid'
     developerName = 'Nicolas Fillion'
@@ -31,7 +32,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 28
         versionCode 1
-        versionName "1.4.1"
+        versionName "1.5.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -49,6 +50,10 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 ext {
@@ -61,7 +66,6 @@ ext {
     emvNfcCardVersion = "2.1.1"
 }
 
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -73,6 +77,8 @@ dependencies {
     testImplementation "org.powermock:powermock-module-junit4-rule:1.6.5"
     testImplementation "org.powermock:powermock-api-mockito:1.6.5"
     testImplementation "org.powermock:powermock-classloading-xstream:1.6.5"
+
+    testImplementation 'org.json:json:20190722'
 
     androidTestImplementation "com.android.support:support-annotations:${supportLibVersion}"
     androidTestImplementation "com.android.support.test:runner:${androidTestVersion}"
@@ -87,5 +93,4 @@ dependencies {
     implementation "com.github.devnied.emvnfccard:library:${emvNfcCardVersion}"
 }
 
-//apply from: 'http://nfillion.net/installv1.gradle'
-//apply from: 'http://nfillion.net/bintrayv1.gradle'
+apply from: 'deploy.gradle'

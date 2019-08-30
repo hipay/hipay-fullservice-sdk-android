@@ -33,15 +33,18 @@
     <string name="transaction_error_declined">Please check your entries and try again</string>
     <string name="transaction_error_declined_reset">Please use another payment method</string>
 
+    <string name="payment_page_error_timeout">Payment page has expired</string>
+
     <string name="alert_transaction_loading_title">Transaction in progress</string>
     <string name="alert_transaction_loading_body">Your transaction is still being processed. Are you sure that you want to leave the screen?</string>
     <string name="alert_transaction_loading_yes">Quit</string>
     <string name="alert_transaction_loading_no">Resume</string>
 
-    <string name="transaction_error_other">An error occurred while processing your transaction</string>
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_retry">Retry</string>
 
-    <string name="error_button_dismiss">@android:string/ok</string>
-    <string name="error_button_retry">Retry</string>
+    <string name="transaction_error_other">An error occurred while processing your transaction</string>
 
     <string name="error_title_default">An error occurred</string>
     <string name="error_body_default">Your request could not be completed</string>
@@ -70,6 +73,11 @@
 
     <string name="card_number_placeholder_error">Invalid card number</string>
     <string name="card_owner_placeholder" translatable="false">Martin Dupont</string>
+
+    <string name="sdd_firstname" translatable="true">Firstname</string>
+    <string name="sdd_lastname" translatable="true">Lastname</string>
+    <string name="sdd_iban" translatable="true">IBAN</string>
+    <string name="sdd_iban_invalid" translatable="true">Invalid IBAN</string>
 
     <string name="payment_product_card_description">Card</string>
 

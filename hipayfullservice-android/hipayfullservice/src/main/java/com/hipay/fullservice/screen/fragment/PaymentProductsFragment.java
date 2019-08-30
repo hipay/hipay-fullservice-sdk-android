@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,6 +28,9 @@ import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.client.interfaces.callbacks.PaymentProductsCallback;
 import com.hipay.fullservice.core.models.PaymentProduct;
+import com.hipay.fullservice.core.monitoring.CheckoutData;
+import com.hipay.fullservice.core.monitoring.CheckoutDataNetwork;
+import com.hipay.fullservice.core.monitoring.Monitoring;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.screen.activity.PaymentFormActivity;
 import com.hipay.fullservice.screen.adapter.PaymentProductsAdapter;
@@ -34,8 +38,10 @@ import com.hipay.fullservice.screen.helper.TransitionHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 import com.hipay.fullservice.screen.widget.OffsetDecoration;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by nfillion on 26/02/16.
@@ -56,7 +62,6 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
     protected int mCurrentLoading = -1;
 
     public static PaymentProductsFragment newInstance(Bundle paymentPageRequestBundle, String signature, Bundle customTheme) {
-
         PaymentProductsFragment fragment = new PaymentProductsFragment();
 
         Bundle bundle = new Bundle();
@@ -81,6 +86,19 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final Bundle paymentPageRequestBundle = getArguments().getBundle(PaymentPageRequest.TAG);
+        final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(paymentPageRequestBundle);
+
+        CheckoutData.checkoutData = new CheckoutData();
+        CheckoutData.checkoutData.setAmount(paymentPageRequest.getAmount());
+        CheckoutData.checkoutData.setCardCountry(paymentPageRequest.getShippingAddress().getCountry());
+        CheckoutData.checkoutData.setCurrency(paymentPageRequest.getCurrency());
+        CheckoutData.checkoutData.setOrderID(paymentPageRequest.getOrderId());
+
+        Monitoring monitoring = new Monitoring();
+        monitoring.setInitDate(new Date());
+        CheckoutData.checkoutData.setMonitoring(monitoring);
 
         //necessary to handle the request
         setRetainInstance(true);
@@ -118,6 +136,13 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
                     paymentProducts = updatedPaymentProducts(pProducts, paymentPageRequest.isPaymentCardGroupingEnabled());
                     if (paymentProducts != null) {
                         mAdapter.updatePaymentProducts(paymentProducts);
+
+                        CheckoutData.checkoutData.setEvent(CheckoutData.Event.init);
+
+                        Monitoring monitoring = CheckoutData.checkoutData.getMonitoring();
+                        monitoring.setDisplayDate(new Date());
+
+                        AsyncTask<CheckoutData, Void, Integer> task = new CheckoutDataNetwork().execute(CheckoutData.checkoutData);
                     }
 
                 } else {
@@ -136,7 +161,7 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(R.string.error_title_default)
                             .setMessage(R.string.error_body_payment_products)
-                            .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                            .setNegativeButton(R.string.button_ok, dialogClickListener)
                             .setCancelable(false)
                             .show();
                 }
@@ -165,7 +190,7 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(R.string.error_title_default)
                             .setMessage(R.string.error_body_default)
-                            .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                            .setNegativeButton(R.string.button_ok, dialogClickListener)
                             .setCancelable(false)
                             .show();
                 }

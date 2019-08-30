@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -43,6 +44,9 @@ import com.hipay.fullservice.core.client.interfaces.callbacks.TransactionsDetail
 import com.hipay.fullservice.core.models.PaymentCardToken;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.models.Transaction;
+import com.hipay.fullservice.core.monitoring.CheckoutData;
+import com.hipay.fullservice.core.monitoring.CheckoutDataNetwork;
+import com.hipay.fullservice.core.monitoring.Monitoring;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
@@ -54,9 +58,11 @@ import com.hipay.fullservice.screen.model.CustomTheme;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Currency;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 public class PaymentCardsFragment extends ListFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
@@ -507,11 +513,34 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
 
         mGatewayClient = new GatewayClient(getActivity());
         mCurrentLoading = AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue();
+
+        final Date requestDate = new Date();
+
         mGatewayClient.requestNewOrder(orderRequest, mSignature, new OrderRequestCallback() {
 
             @Override
             public void onSuccess(final Transaction transaction) {
                 //Log.i("transaction success", transaction.toString());
+
+                if (CheckoutData.checkoutData == null) {
+                    CheckoutData.checkoutData = new CheckoutData();
+
+                    CheckoutData.checkoutData.setOrderID(transaction.getOrder().getOrderId());
+                    CheckoutData.checkoutData.setAmount(transaction.getOrder().getAmount());
+                    CheckoutData.checkoutData.setCurrency(transaction.getCurrency());
+                }
+
+                CheckoutData.checkoutData.setStatus(transaction.getStatus().getIntegerValue());
+                CheckoutData.checkoutData.setTransactionID(transaction.getTransactionReference());
+                CheckoutData.checkoutData.setEvent(CheckoutData.Event.request);
+
+                Monitoring monitoring = new Monitoring();
+                monitoring.setRequestDate(requestDate);
+                monitoring.setResponseDate(new Date());
+                CheckoutData.checkoutData.setMonitoring(monitoring);
+
+                AsyncTask<CheckoutData, Void, Integer> task = new CheckoutDataNetwork().execute(CheckoutData.checkoutData);
+                CheckoutData.checkoutData = null;
 
                 if (mCallback != null) {
                     cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());

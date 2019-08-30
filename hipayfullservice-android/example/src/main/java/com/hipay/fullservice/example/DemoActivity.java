@@ -38,8 +38,25 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         toolbar.setTitle(getString(R.string.mcommence_demo));
         setSupportActionBar(toolbar);
 
-        String username = getString(R.string.username);
-        String password = getString(R.string.password);
+        ClientConfig.Environment environment = ClientConfig.Environment.Stage;
+        String username = null;
+        String password = null;
+
+        if (Preferences.isStageEnvironment(getBaseContext())) {
+            username = getString(R.string.username_stage);
+            password = getString(R.string.password_stage);
+            environment = ClientConfig.Environment.Stage;
+        }
+        else if (Preferences.isProductionEnvironment(getBaseContext())) {
+            username = getString(R.string.username_production);
+            password = getString(R.string.password_production);
+            environment = ClientConfig.Environment.Production;
+        }
+        else if (Preferences.isCustomEnvironment(getBaseContext())) {
+            username = Preferences.getCustomUsername(getBaseContext());
+            password = Preferences.getCustomPassword(getBaseContext());
+            environment = Preferences.isProductionUrl(getBaseContext()) ? ClientConfig.Environment.Production : ClientConfig.Environment.Stage;
+        }
 
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
             throw new IllegalArgumentException(
@@ -48,7 +65,7 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         }
 
         ClientConfig.getInstance().setConfig(
-                ClientConfig.Environment.Stage,
+                environment,
                 username,
                 password
         );
@@ -95,7 +112,6 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         }
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -115,26 +131,6 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeEWallet, paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeEWallet));
         outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking, paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking));
     }
-
-    //public void onClickPaymentProducts(View view) {
-
-            //Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.demo_container);
-            //if (fragment != null && fragment instanceof DemoFragment) {
-
-                //CustomTheme customTheme = ((DemoFragment) fragment).getCustomTheme();
-//
-                //getSupportFragmentManager()
-                        //.beginTransaction()
-                        //.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        ////.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        //.setCustomAnimations(android.R.anim.in_from_left, android.R.anim.out_to_right, android.R.anim.in_from_right, android.R.anim.out_to_left)
-
-                        //.replace(R.id.demo_container, ProductCategoryListFragment.newInstance(mPaymentProducts, customTheme))
-                        //.add(R.id.demo_container, ProductCategoryListFragment.newInstance(mPaymentProducts, this))
-                        //.addToBackStack(null)
-                        //.commit();
-            //}
-    //}
 
     @Override
     public void onPaymentProductSelected(int position, boolean isChecked) {
@@ -173,8 +169,6 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
 
         return list;
     }
-
-
 
     private void checkForUpdates() {
         // Remove this for store builds!

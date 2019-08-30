@@ -6,12 +6,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -48,9 +50,10 @@ import com.hipay.fullservice.core.errors.exceptions.ApiException;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
+import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.example.DemoActivity;
+import com.hipay.fullservice.example.Preferences;
 import com.hipay.fullservice.example.R;
-import com.hipay.fullservice.screen.activity.PaymentProductsActivity;
 import com.hipay.fullservice.screen.activity.PaymentScreenActivity;
 import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
@@ -58,9 +61,11 @@ import com.hipay.fullservice.screen.model.CustomTheme;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by nfillion on 15/03/16.
@@ -79,6 +84,8 @@ public class DemoFragment extends Fragment {
 
     private ProgressBar mProgressBar;
 
+    private AppCompatButton mEnvironmentChoice;
+
     private SwitchCompat mGroupCardSwitch;
     private SwitchCompat mCardStorageSwitch;
     private SwitchCompat mCardScanSwitch;
@@ -89,6 +96,8 @@ public class DemoFragment extends Fragment {
 
     private AppCompatButton mPaymentProductsButton;
     protected boolean inhibit_spinner;
+
+    private EditText mTimeout;
 
     protected boolean mLoadingMode;
 
@@ -121,7 +130,18 @@ public class DemoFragment extends Fragment {
                 Bundle exceptionBundle = data.getBundleExtra(Errors.TAG);
                 ApiException exception = ApiException.fromBundle(exceptionBundle);
 
-                Snackbar snackbar = Snackbar.make(mDoneFab, "Error : " + exception.getLocalizedMessage(),
+                Snackbar snackbar = Snackbar.make(mDoneFab, getString(R.string.payment_error, exception.getLocalizedMessage()),
+                        Snackbar.LENGTH_INDEFINITE);
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackgroundColor((ContextCompat.getColor(getActivity(),
+                        android.R.color.holo_red_light)));
+                snackbar.show();
+            } else if (resultCode == R.id.transaction_timeout) {
+
+                Bundle bundle = data.getExtras();
+                String descriptionError = bundle.getString(Errors.TAG);
+
+                Snackbar snackbar = Snackbar.make(mDoneFab, getString(R.string.payment_error, descriptionError),
                         Snackbar.LENGTH_INDEFINITE);
                 View snackBarView = snackbar.getView();
                 snackBarView.setBackgroundColor((ContextCompat.getColor(getActivity(),
@@ -140,9 +160,9 @@ public class DemoFragment extends Fragment {
 
         if (savedInstanceState == null) {
             theme = new CustomTheme(
-                R.color.hpf_primary,
-                R.color.hpf_primary_dark,
-                R.color.theme_blue_text);
+                    R.color.hpf_primary,
+                    R.color.hpf_primary_dark,
+                    R.color.theme_blue_text);
 
         } else {
 
@@ -163,6 +183,14 @@ public class DemoFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         final View contentView = inflater.inflate(R.layout.fragment_demo, container, false);
+
+        mEnvironmentChoice = contentView.findViewById(R.id.payment_products_environment);
+        mEnvironmentChoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickOnEnvironment();
+            }
+        });
 
         mGroupCardSwitch = (SwitchCompat) contentView.findViewById(R.id.group_card_switch);
         mCardStorageSwitch = (SwitchCompat) contentView.findViewById(R.id.card_storage_switch);
@@ -188,14 +216,15 @@ public class DemoFragment extends Fragment {
         m3DSSpinner.setSelection(1);
 
         mPaymentProductsButton = (AppCompatButton) contentView.findViewById(R.id.payment_products_button);
-        mPaymentProductsButton.setOnClickListener(new View.OnClickListener()
-        {
+        mPaymentProductsButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 clickOnCategories();
             }
         });
+
+        mTimeout = contentView.findViewById(R.id.timeout_editText);
+        mTimeout.setText("604800");
 
         AppCompatSpinner colorSpinner = (AppCompatSpinner) contentView.findViewById(R.id.color_spinner);
         ArrayAdapter<CharSequence> adapterColorSpinner = ArrayAdapter.createFromResource(getActivity(),
@@ -234,14 +263,16 @@ public class DemoFragment extends Fragment {
                                 R.color.theme_green_primary,
                                 R.color.theme_green_primary_dark,
                                 R.color.theme_green_text);
-                    } break;
+                    }
+                    break;
 
                     case 3: {
                         makeCustomTheme(
                                 R.color.theme_purple_primary,
                                 R.color.theme_purple_primary_dark,
                                 R.color.theme_purple_text);
-                    } break;
+                    }
+                    break;
 
                     case 4: {
 
@@ -271,10 +302,21 @@ public class DemoFragment extends Fragment {
         return contentView;
     }
 
+    private void clickOnEnvironment() {
+
+        Fragment fragment = new EnvironmentFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.demo_container, fragment);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
     private void clickOnCategories() {
 
-        DemoActivity demoActivity = (DemoActivity)getActivity();
-        Map<String,Boolean> paymentProducts = demoActivity.getPaymentProducts();
+        DemoActivity demoActivity = (DemoActivity) getActivity();
+        Map<String, Boolean> paymentProducts = demoActivity.getPaymentProducts();
 
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -297,7 +339,7 @@ public class DemoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         DemoActivity demoActivity = (DemoActivity) getActivity();
-        mProgressBar = (ProgressBar)demoActivity.findViewById(R.id.progress);
+        mProgressBar = (ProgressBar) demoActivity.findViewById(R.id.progress);
 
         mDoneFab = (FloatingActionButton) view.findViewById(R.id.done);
         mDoneFab.setOnClickListener(new View.OnClickListener() {
@@ -311,8 +353,8 @@ public class DemoFragment extends Fragment {
                         }
 
                         removeDoneFab(new Runnable() {
-                                @Override
-                                public void run() {
+                            @Override
+                            public void run() {
 
                                 if (getActivity() != null) {
                                     requestSignature();
@@ -352,7 +394,7 @@ public class DemoFragment extends Fragment {
             }
         };
 
-        mAmount = (EditText)view.findViewById(R.id.amountEditText);
+        mAmount = (EditText) view.findViewById(R.id.amountEditText);
         mAmount.addTextChangedListener(textWatcher);
 
         mCardStorageSwitch.setChecked(ClientConfig.getInstance().isPaymentCardStorageEnabled());
@@ -364,47 +406,102 @@ public class DemoFragment extends Fragment {
 
     private void requestSignature() {
 
-        setLoadingMode(true);
-
         String amount = mAmount.getText().toString();
-        String currency = (String)mCurrencySpinner.getSelectedItem();
+        String currency = (String) mCurrencySpinner.getSelectedItem();
 
-        String url = String.format(getString(R.string.server_url), amount, currency);
-        mRequestQueue = Volley.newRequestQueue(getActivity());
+        if (Preferences.isLocalSignature(getContext())) {
+            Random random = new Random();
+            String orderId = "TEST_" + random.nextInt(100000);
 
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            String signature = getSha1Hex(orderId + amount + currency + Preferences.getLocalSignaturePassword(getContext()));
 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i(response.toString(), response.toString());
+            DemoActivity activity = (DemoActivity) getActivity();
 
-                        String orderId = null;
-                        try {
-                            orderId = response.getString("order_id");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+            final PaymentPageRequest paymentPageRequest = buildPageRequest(activity, orderId);
+
+            if (!TextUtils.isEmpty(mTimeout.getText().toString())) {
+                paymentPageRequest.setTimeout(Integer.parseInt(mTimeout.getText().toString()));
+            }
+
+            PaymentScreenActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
+            mDoneFab.hide();
+        } else {
+            setLoadingMode(true);
+
+            String url = String.format(getString(R.string.server_url), amount, currency);
+            mRequestQueue = Volley.newRequestQueue(getActivity());
+
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.i(response.toString(), response.toString());
+
+                            String orderId = null;
+                            try {
+                                orderId = response.getString("order_id");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            String signature = null;
+                            try {
+                                signature = response.getString("signature");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (getActivity() != null) {
+
+                                DemoActivity activity = (DemoActivity) getActivity();
+                                if (!TextUtils.isEmpty(orderId) && !TextUtils.isEmpty(signature)) {
+
+                                    final PaymentPageRequest paymentPageRequest = buildPageRequest(activity, orderId);
+
+                                    if (!TextUtils.isEmpty(mTimeout.getText().toString())) {
+                                        paymentPageRequest.setTimeout(Integer.parseInt(mTimeout.getText().toString()));
+                                    }
+
+                                    PaymentScreenActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
+                                    mDoneFab.hide();
+
+                                } else {
+
+                                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    };
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                    builder.setTitle(R.string.error_title_default)
+                                            .setMessage(R.string.unknown_error)
+                                            .setNegativeButton(R.string.button_ok, dialogClickListener)
+                                            .setCancelable(false)
+                                            .show();
+                                    showDoneFab();
+
+                                    //DemoActivity demoActivity = (DemoActivity) getActivity();
+                                    //ProgressBar progressBar = (ProgressBar) demoActivity.findViewById(R.id.progress);
+                                    //progressBar.setVisibility(View.GONE);
+
+                                }
+                            }
+
+                            setLoadingMode(false);
+
                         }
 
-                        String signature = null;
-                        try {
-                            signature = response.getString("signature");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    }, new Response.ErrorListener() {
 
-                        if (getActivity() != null) {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
 
-                            DemoActivity activity = (DemoActivity)getActivity();
-                            if (!TextUtils.isEmpty(orderId) && !TextUtils.isEmpty(signature) ) {
+                            if (getActivity() != null) {
 
-                                final PaymentPageRequest paymentPageRequest = buildPageRequest(activity, orderId);
-
-                                PaymentScreenActivity.start(activity, paymentPageRequest, signature, getCustomTheme());
-                                mDoneFab.hide();
-
-                            } else {
-
+                                AppCompatActivity activity = (AppCompatActivity) getActivity();
                                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -414,56 +511,39 @@ public class DemoFragment extends Fragment {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                                 builder.setTitle(R.string.error_title_default)
-                                        .setMessage(R.string.unknown_error)
-                                        .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                                        .setMessage(R.string.error_body_default)
+                                        .setNegativeButton(R.string.button_ok, dialogClickListener)
                                         .setCancelable(false)
                                         .show();
                                 showDoneFab();
 
-                                //DemoActivity demoActivity = (DemoActivity) getActivity();
-                                //ProgressBar progressBar = (ProgressBar) demoActivity.findViewById(R.id.progress);
-                                //progressBar.setVisibility(View.GONE);
 
                             }
+
+                            setLoadingMode(false);
                         }
+                    });
 
-                        setLoadingMode(false);
+            jsObjRequest.setTag(TAG);
 
-                    }
+            mRequestQueue.add(jsObjRequest);
+        }
+    }
 
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (getActivity() != null) {
-
-                            AppCompatActivity activity = (AppCompatActivity)getActivity();
-                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            };
-
-                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                            builder.setTitle(R.string.error_title_default)
-                                    .setMessage(R.string.error_body_default)
-                                    .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
-                                    .setCancelable(false)
-                                    .show();
-                            showDoneFab();
-
-
-                        }
-
-                        setLoadingMode(false);
-                    }
-                });
-
-        jsObjRequest.setTag(TAG);
-
-        mRequestQueue.add(jsObjRequest);
+    private static String getSha1Hex(String clearString) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+            messageDigest.update(clearString.getBytes("UTF-8"));
+            byte[] bytes = messageDigest.digest();
+            StringBuilder buffer = new StringBuilder();
+            for (byte b : bytes) {
+                buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+            }
+            return buffer.toString();
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -530,6 +610,9 @@ public class DemoFragment extends Fragment {
         paymentPageRequest.getCustomer().setLastname("Dupont");
         paymentPageRequest.getCustomer().setEmail("client@domain.com");
 
+        paymentPageRequest.getShippingAddress().setFirstname("Martin");
+        paymentPageRequest.getShippingAddress().setLastname("Dupont");
+
         paymentPageRequest.getCustomer().setRecipientInfo("Employee");
         paymentPageRequest.getCustomer().setStreetAddress("6 Place du Colonel Bourgoin");
         paymentPageRequest.getCustomer().setStreetAddress2("Immeuble de droite");
@@ -544,6 +627,8 @@ public class DemoFragment extends Fragment {
 
         paymentPageRequest.setPaymentCardGroupingEnabled(mGroupCardSwitch.isChecked());
 
+        fillDSP2Information(paymentPageRequest);
+
         boolean multiUse = mCardStorageSwitch.isChecked();
         paymentPageRequest.setMultiUse(multiUse);
         ClientConfig.getInstance().setPaymentCardStorageEnabled(multiUse);
@@ -553,20 +638,30 @@ public class DemoFragment extends Fragment {
 
         paymentPageRequest.setAmount(Float.parseFloat(mAmount.getText().toString()));
 
-        String selectedItem = (String)mCurrencySpinner.getSelectedItem();
+        String selectedItem = (String) mCurrencySpinner.getSelectedItem();
         paymentPageRequest.setCurrency(selectedItem);
 
-        Integer selectedItemThreeDS = (int)(long)m3DSSpinner.getSelectedItemId() - 1;
+        Integer selectedItemThreeDS = (int) (long) m3DSSpinner.getSelectedItemId() - 1;
         CardTokenPaymentMethodRequest.AuthenticationIndicator authenticationIndicator = CardTokenPaymentMethodRequest.AuthenticationIndicator.fromIntegerValue(selectedItemThreeDS);
 
         paymentPageRequest.setAuthenticationIndicator(authenticationIndicator);
 
-        DemoActivity demoActivity = (DemoActivity)activity;
+        DemoActivity demoActivity = (DemoActivity) activity;
 
         ArrayList<String> productCategories = demoActivity.getPaymentProductsAsList();
         paymentPageRequest.setPaymentProductCategoryList(productCategories);
 
         return paymentPageRequest;
+    }
+
+    private void fillDSP2Information(PaymentPageRequest paymentPageRequest) {
+        String merchantRiskStatement = "{\"email_delivery_address\": \"jane.doe@test.com\", \"delivery_time_frame\": 1, \"purchase_indicator\": 1, \"pre_order_date\": 20190925, \"reorder_indicator\": 1, \"shipping_indicator\": 1, \"gift_card\": { \"amount\": 15, \"count\": 0, \"currency\": \"EUR\" } }";
+        String previousAuthInfo = "{\"transaction_reference\" : \"800000987283\"}";
+        String accountInfo = "{\"customer\": { \"account_change\":20180507, \"opening_account_date\" : 20180507, \"password_change\": 20180507}}";
+
+        paymentPageRequest.setMerchantRiskStatement(merchantRiskStatement);
+        paymentPageRequest.setPreviousAuthInfo(previousAuthInfo);
+        paymentPageRequest.setAccountInfo(accountInfo);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

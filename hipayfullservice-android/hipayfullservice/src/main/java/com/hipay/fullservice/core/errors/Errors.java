@@ -9,18 +9,8 @@ public class Errors {
 
     public static final String HTTPOtherDescription = "An unknown error occurred while attempting to make the HTTP request.";
     public static final String HTTPNetworkUnavailableDescription = "The network is unavailable.";
-    public static final String HTTPConfigDescription = "There's a remote/local configuration error.";
-    //public static final String HTTPConnectionFailedDescription = "The request has been interrupted. The server may have received the request.";
     public static final String HTTPClientDescription = "Wrong parameters have been sent to the server.";
     public static final String HTTPServerDescription = "There's a server side error.";
-
-    //public static final String HTTPPlainResponseKey = "HPFErrorCodeHTTPPlainResponseKey";
-    //public static final String HTTPParsedResponseKey = "HPFErrorCodeHTTPParsedResponseKey";
-    //public static final String HTTPStatusCodeKey = "HPFErrorCodeHTTPStatusCodeKey";
-
-    //public static final String HPIDescriptionKey = "HPFErrorCodeAPIDescriptionKey";
-    //public static final String HPIMessageKey = "HPFErrorCodeAPIMessageKey";
-    //public static final String HPICodeKey = "HPFErrorCodeAPICodeKey";
 
     public enum Code {
 

@@ -38,6 +38,8 @@ public class PaymentPageRequest extends OrderRelatedRequest {
     public final static String PaymentPageRequestTemplateNameBasic = "basic-js";
     public final static String PaymentPageRequestTemplateNameFrame = "iframe-js";
 
+    private Integer timeout;
+
     public PaymentPageRequest() {
 
         this.setEci(Transaction.ECI.SecureECommerce);
@@ -56,6 +58,7 @@ public class PaymentPageRequest extends OrderRelatedRequest {
         ));
 
         this.setGroupedPaymentCardProductCodes(s);
+        this.setTimeout(604800); // 7 days
     }
 
     public PaymentPageRequest(PaymentPageRequest paymentPageRequest) {
@@ -172,6 +175,14 @@ public class PaymentPageRequest extends OrderRelatedRequest {
         this.paymentProductList = paymentProductList;
     }
 
+    public Integer getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(Integer timeout) {
+        this.timeout = timeout;
+    }
+
     protected static class PaymentPageRequestSerializationMapper extends AbstractSerializationMapper {
 
         protected PaymentPageRequestSerializationMapper(PaymentPageRequest request) {
@@ -247,6 +258,8 @@ public class PaymentPageRequest extends OrderRelatedRequest {
 
             paymentPageRequest.setPaymentCardGroupingEnabled(this.getBoolForKey("card_grouping"));
 
+            paymentPageRequest.setTimeout(this.getIntegerForKey("timeout"));
+
             return paymentPageRequest;
         }
 
@@ -281,6 +294,10 @@ public class PaymentPageRequest extends OrderRelatedRequest {
 
             paymentPageRequest.setCustomer(orderRelatedRequest.getCustomer());
             paymentPageRequest.setShippingAddress(orderRelatedRequest.getShippingAddress());
+
+            paymentPageRequest.setMerchantRiskStatement(orderRelatedRequest.getMerchantRiskStatement());
+            paymentPageRequest.setPreviousAuthInfo(orderRelatedRequest.getPreviousAuthInfo());
+            paymentPageRequest.setAccountInfo(orderRelatedRequest.getAccountInfo());
 
             paymentPageRequest.setCustomData(orderRelatedRequest.getCustomData());
 

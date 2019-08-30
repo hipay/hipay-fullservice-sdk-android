@@ -279,7 +279,7 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.transaction_error_declined_title)
                         .setMessage(R.string.transaction_error_declined)
-                        .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                        .setNegativeButton(R.string.button_ok, dialogClickListener)
                         .setCancelable(false)
                         .show();
 
@@ -334,7 +334,7 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.transaction_error_declined_title)
                         .setMessage(R.string.transaction_error_other)
-                        .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                        .setNegativeButton(R.string.button_ok, dialogClickListener)
                         .setCancelable(false)
                         .show();
 
@@ -390,7 +390,7 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(R.string.error_title_default)
                             .setMessage(R.string.error_body_default)
-                            .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
+                            .setNegativeButton(R.string.button_ok, dialogClickListener)
                             .setCancelable(false)
                             .show();
 
@@ -427,8 +427,8 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(R.string.error_title_connection)
                             .setMessage(R.string.error_body_default)
-                            .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
-                            .setPositiveButton(R.string.error_button_retry, dialogClickListener)
+                            .setNegativeButton(R.string.button_ok, dialogClickListener)
+                            .setPositiveButton(R.string.button_retry, dialogClickListener)
                             .setCancelable(false)
                             .show();
 
@@ -484,8 +484,8 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.error_title_default)
                 .setMessage(R.string.error_body_default)
-                .setNegativeButton(R.string.error_button_dismiss, dialogClickListener)
-                .setPositiveButton(R.string.error_button_retry, dialogClickListener)
+                .setNegativeButton(R.string.button_ok, dialogClickListener)
+                .setPositiveButton(R.string.button_retry, dialogClickListener)
                 .setCancelable(false)
                 .show();
 
