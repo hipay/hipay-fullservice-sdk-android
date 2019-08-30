@@ -1,12 +1,18 @@
 package com.hipay.fullservice.core.serialization.interfaces.order;
 
 import android.os.Bundle;
+import android.util.Log;
 
+import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.info.PersonalInfoRequest;
 import com.hipay.fullservice.core.requests.order.OrderRelatedRequest;
+import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.serialization.interfaces.AbstractSerialization;
 import com.hipay.fullservice.core.utils.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +29,7 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
     @Override
     public Map<String, String> getSerializedRequest() {
 
-        OrderRelatedRequest orderRelatedRequest = (OrderRelatedRequest)this.getModel();
+        OrderRelatedRequest orderRelatedRequest = (OrderRelatedRequest) this.getModel();
 
         Map<String, String> retMap = new HashMap<>();
 
@@ -93,8 +99,7 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
             Map<String, String> personalInfoMap = personalInfoRequest.getSerializedObject();
 
             Map<String, String> shipToPersonalInfoMap = new HashMap<>(personalInfoMap.size());
-            for (Map.Entry<String, String> entry : personalInfoMap.entrySet())
-            {
+            for (Map.Entry<String, String> entry : personalInfoMap.entrySet()) {
                 shipToPersonalInfoMap.put("shipto_" + entry.getKey(), entry.getValue());
             }
 
@@ -103,6 +108,22 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
 
         String source = Utils.mapToJson(orderRelatedRequest.getSource());
         retMap.put("source", source);
+
+        //DSP2
+        if (orderRelatedRequest instanceof OrderRequest) {
+            OrderRequest order = (OrderRequest)orderRelatedRequest;
+            PaymentProduct paymentProduct = new PaymentProduct(order.getPaymentProductCode());
+
+            if (paymentProduct.isDSP2Supported()) {
+                retMap.put("device_channel", orderRelatedRequest.getDeviceChannel().toString());
+                retMap.put("merchant_risk_statement", orderRelatedRequest.getMerchantRiskStatement());
+                retMap.put("previous_auth_info", orderRelatedRequest.getPreviousAuthInfo());
+                retMap.put("account_info", orderRelatedRequest.getAccountInfo());
+                retMap.put("browser_info", orderRelatedRequest.getBrowserInfo());
+
+                addNameIndicatorIfNeeded(retMap);
+            }
+        }
 
         while (retMap.values().remove(null));
 
@@ -114,7 +135,7 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
 
         super.getSerializedBundle();
 
-        OrderRelatedRequest orderRelatedRequest = (OrderRelatedRequest)this.getModel();
+        OrderRelatedRequest orderRelatedRequest = (OrderRelatedRequest) this.getModel();
 
         this.putStringForKey("orderid", orderRelatedRequest.getOrderId());
 
@@ -126,10 +147,10 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         this.putStringForKey("description", orderRelatedRequest.getShortDescription());
         this.putStringForKey("long_description", orderRelatedRequest.getLongDescription());
         this.putStringForKey("currency", orderRelatedRequest.getCurrency());
-        this.putFloatForKey("amount",orderRelatedRequest.getAmount());
+        this.putFloatForKey("amount", orderRelatedRequest.getAmount());
 
-        this.putFloatForKey("shipping",orderRelatedRequest.getShipping());
-        this.putFloatForKey("tax",orderRelatedRequest.getTax());
+        this.putFloatForKey("shipping", orderRelatedRequest.getShipping());
+        this.putFloatForKey("tax", orderRelatedRequest.getTax());
 
         this.putStringForKey("cid", orderRelatedRequest.getClientId());
         this.putStringForKey("ipaddr", orderRelatedRequest.getIpAddress());
@@ -144,6 +165,10 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         this.putStringForKey("pending_url", orderRelatedRequest.getPendingScheme());
         this.putStringForKey("exception_url", orderRelatedRequest.getExceptionScheme());
         this.putStringForKey("cancel_url", orderRelatedRequest.getCancelScheme());
+
+        this.putStringForKey("merchant_risk_statement", orderRelatedRequest.getMerchantRiskStatement());
+        this.putStringForKey("previous_auth_info", orderRelatedRequest.getPreviousAuthInfo());
+        this.putStringForKey("account_info", orderRelatedRequest.getAccountInfo());
 
         this.putMapJSONForKey("custom_data", orderRelatedRequest.getCustomData());
 
@@ -169,5 +194,68 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
         this.putMapJSONForKey("source", orderRelatedRequest.getSource());
 
         return this.getBundle();
+    }
+
+    private void addNameIndicatorIfNeeded(Map<String, String> map) {
+        String accountInfo = map.get("account_info");
+
+        JSONObject accountInfoJSON = null;
+        JSONObject shippingJSON = null;
+        Integer nameIndicator = null;
+
+        if (accountInfo != null) {
+            try {
+                accountInfoJSON = new JSONObject(accountInfo);
+                shippingJSON = accountInfoJSON.getJSONObject("shipping");
+
+                if (shippingJSON != null) {
+                    nameIndicator = shippingJSON.getInt("name_indicator");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (nameIndicator == null) {
+            //Customer name != Shipping name
+            nameIndicator = 2;
+
+            OrderRelatedRequest orderRelatedRequest = (OrderRelatedRequest)this.getModel();
+
+            CustomerInfoRequest customerInfoRequest = orderRelatedRequest.getCustomer();
+            PersonalInfoRequest personalInfoRequest = orderRelatedRequest.getShippingAddress();
+
+            if (customerInfoRequest != null && personalInfoRequest != null) {
+                String firstnameCustomer = customerInfoRequest.getFirstname();
+                String lastnameCustomer = customerInfoRequest.getLastname();
+
+                String firstnameShipping = personalInfoRequest.getFirstname();
+                String lastnameShipping = personalInfoRequest.getLastname();
+
+                if (!firstnameCustomer.isEmpty()
+                        && !lastnameCustomer.isEmpty()
+                        && firstnameCustomer.toLowerCase().equals(firstnameShipping.toLowerCase())
+                        && lastnameCustomer.toLowerCase().equals(lastnameShipping.toLowerCase())) {
+                    //Customer name == Shipping name
+                    nameIndicator = 1;
+                }
+            }
+
+            if (shippingJSON == null) {
+                shippingJSON = new JSONObject();
+            }
+
+            try {
+                shippingJSON.put("name_indicator", nameIndicator);
+                if (accountInfoJSON == null) {
+                    accountInfoJSON = new JSONObject();
+                }
+                accountInfoJSON.put("shipping", shippingJSON);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            map.put("account_info", accountInfoJSON.toString());
+        }
     }
 }

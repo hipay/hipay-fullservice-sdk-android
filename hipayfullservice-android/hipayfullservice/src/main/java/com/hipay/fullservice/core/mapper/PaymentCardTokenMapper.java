@@ -33,6 +33,7 @@ public class PaymentCardTokenMapper extends AbstractMapper {
         object.setIssuer(this.getStringForKey("issuer"));
         object.setCountry(this.getStringForKey("country"));
         object.setDomesticNetwork(this.getStringForKey("domesticNetwork"));
+        object.setDateAdded(this.getDateForKey("dateAdded"));
 
         return object;
     }
@@ -52,6 +53,7 @@ public class PaymentCardTokenMapper extends AbstractMapper {
         object.setIssuer(this.getStringForKey("issuer"));
         object.setCountry(this.getStringForKey("country"));
         object.setDomesticNetwork(this.getStringForKey("domesticNetwork"));
+        object.setDateAdded(this.getDateForKey("dateAdded"));
 
         return object;
     }

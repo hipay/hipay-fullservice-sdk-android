@@ -35,6 +35,15 @@ public class PaymentProduct extends AbstractModel {
 
     public PaymentProduct() {}
 
+    public boolean isDSP2Supported() {
+        return this.code.equals(PaymentProductCodeMasterCard)
+                || this.code.equals(PaymentProductCodeVisa)
+                || this.code.equals(PaymentProductCodeMaestro)
+                || this.code.equals(PaymentProductCodeCB)
+                || this.code.equals(PaymentProductCodeAmericanExpress)
+                || this.code.equals(PaymentProductCodeBCMC);
+    }
+
     public static PaymentProduct fromJSONObject(JSONObject object) {
 
         PaymentProductMapper mapper = new PaymentProductMapper(object);

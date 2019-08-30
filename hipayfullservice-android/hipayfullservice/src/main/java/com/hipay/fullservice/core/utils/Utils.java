@@ -1,6 +1,7 @@
 package com.hipay.fullservice.core.utils;
 
 import android.annotation.TargetApi;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,10 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -200,6 +198,14 @@ public class Utils {
         return date;
     }
 
+    public static int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
+
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
     public static String bundleToString(Bundle bundle) {
         if (bundle == null) {
             return null;
@@ -277,7 +283,7 @@ public class Utils {
 
         while( keys.hasNext() ){
             String key = (String)keys.next();
-            String value = jObject.getString(key);
+            String value = jObject.getString(key) == "null" ? null : jObject.getString(key);
             map.put(key, value);
         }
 
