@@ -68,7 +68,7 @@ publishing {
                     if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
                         return // ignore invalid dependencies
 
-                    final dependencyNode = dependenciesNode.appendNode('dependency')
+                    final dependencyNode = dependencesNode.appendNode('dependency')
                     dependencyNode.appendNode('groupId', dep.group)
                     dependencyNode.appendNode('artifactId', dep.name)
                     dependencyNode.appendNode('version', dep.version)
