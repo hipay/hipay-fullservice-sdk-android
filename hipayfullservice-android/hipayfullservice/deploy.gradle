@@ -1,4 +1,8 @@
 def pomConfig = {
+
+    name libraryName
+    url gitUrl
+
     licenses {
         license {
             name licenseName
@@ -53,6 +57,9 @@ publishing {
             artifact androidJavadocsJar
             artifact androidSourcesJar
 
+            groupId publishedGroupId
+            artifactId artifact
+
             pom.withXml {
                 //Packaging
                 def children = asNode().children()
@@ -60,9 +67,10 @@ publishing {
                 children.remove(versionIndex)
 
                 asNode().appendNode('packaging', 'aar')
+                asNode().appendNode('description', libraryDescription)
 
                 //Dependencies
-                final dependenciesNode = asNode().appendNode('dependencies')
+                final dependencesNode = asNode().appendNode('dependencies')
 
                 ext.addDependency = { dep, String scope ->
                     if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
@@ -89,8 +97,7 @@ publishing {
                     }
                 }
 
-                // List all "compile" dependencies (for old Gradle)
-                configurations.compile.getDependencies().each { dep -> addDependency(dep, "compile") }
+
                 // List all "api" dependencies (for new Gradle) as "compile" dependencies
                 configurations.api.getDependencies().each { dep -> addDependency(dep, "compile") }
                 // List all "implementation" dependencies (for new Gradle) as "runtime" dependencies
@@ -106,20 +113,26 @@ publishing {
 apply plugin: 'com.jfrog.bintray'
 
 version = libraryVersion
+// Group var used by Bintray for the path "com/hipay/fullservice/..."
+group = publishedGroupId
 
 bintray {
+    Properties properties = new Properties()
+    def file = project.rootProject.file('local.properties')
+    if (file.exists()) {
+        properties.load(file.newDataInputStream())
+    }
+
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    //Upload AAR file
+    configurations = ['archives']
+
+    //Upload pom + sources.jar + javadoc.jar
+    publications = ['myPublication']
+
     pkg {
-        Properties properties = new Properties()
-        def file = project.rootProject.file('local.properties')
-        if (file.exists()) {
-            properties.load(file.newDataInputStream())
-        }
-
-        user = properties.getProperty("bintray.user")
-        key = properties.getProperty("bintray.apikey")
-        publications = ['myPublication']
-
-        configurations = ['archives']
         repo = bintrayRepo
         name = bintrayName
         userOrg = properties.getProperty("bintray.org")
@@ -128,7 +141,12 @@ bintray {
         vcsUrl = gitUrl
         licenses = allLicenses
         publish = true
-        publicDownloadNumbers = true
+
+        publicDownloadNumbers = false
+
+        //Whether to override version artifacts already published
+        override = true
+
         version {
             desc = libraryDescription
             gpg {
