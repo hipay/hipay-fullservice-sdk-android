@@ -54,11 +54,13 @@ publishing {
     publications {
         myPublication(MavenPublication) {
 
-            artifact androidJavadocsJar
-            artifact androidSourcesJar
-
             groupId publishedGroupId
             artifactId artifact
+            version libraryVersion
+
+            artifact androidJavadocsJar
+            artifact androidSourcesJar
+            artifact("$buildDir/outputs/aar/" + artifact + "-release.aar")
 
             pom.withXml {
                 //Packaging
