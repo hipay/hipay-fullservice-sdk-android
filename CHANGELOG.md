@@ -1,5 +1,8 @@
 HiPay Android SDK change log and release notes
 ================================================
+1.5.1
+-----
+* Fix deployement on maven.org
 
 1.5.0
 -----
