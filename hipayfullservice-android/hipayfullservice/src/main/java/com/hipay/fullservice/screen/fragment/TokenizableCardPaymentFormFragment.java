@@ -774,15 +774,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                         mPaymentCardToken = paymentCardToken;
 
-                        CheckoutData.checkoutData.setPaymentMethod(paymentProduct.getCode());
-                        CheckoutData.checkoutData.setEvent(CheckoutData.Event.tokenize);
-
-                        Monitoring monitoring = new Monitoring();
-                        monitoring.setPayDate(new Date());
-                        CheckoutData.checkoutData.setMonitoring(monitoring);
-
-                        AsyncTask<CheckoutData, Void, Integer> task = new CheckoutDataNetwork().execute(CheckoutData.checkoutData);
-
                         //secure vault
                         cancelLoaderId(AbstractClient.RequestLoaderId.GenerateTokenReqLoaderId.getIntegerValue());
 
@@ -815,19 +806,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                                 @Override
                                 public void onSuccess(final Transaction transaction) {
-                                    //Log.i("transaction success", transaction.toString());
-
-                                    CheckoutData.checkoutData.setStatus(transaction.getStatus().getIntegerValue());
-                                    CheckoutData.checkoutData.setTransactionID(transaction.getTransactionReference());
-                                    CheckoutData.checkoutData.setEvent(CheckoutData.Event.request);
-
-                                    Monitoring monitoring = new Monitoring();
-                                    monitoring.setRequestDate(requestDate);
-                                    monitoring.setResponseDate(new Date());
-                                    CheckoutData.checkoutData.setMonitoring(monitoring);
-
-                                    AsyncTask<CheckoutData, Void, Integer> task = new CheckoutDataNetwork().execute(CheckoutData.checkoutData);
-                                    CheckoutData.checkoutData = null;
 
                                     if (mCallback != null) {
                                         cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
@@ -838,7 +816,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                                 @Override
                                 public void onError(Exception error) {
-                                    //Log.i("transaction failed", error.getLocalizedMessage());
+
                                     if (mCallback != null) {
                                         cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                                         mCallback.onCallbackOrderReceived(null, error);
