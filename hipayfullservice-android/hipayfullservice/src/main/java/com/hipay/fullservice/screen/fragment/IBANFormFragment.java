@@ -85,18 +85,6 @@ public class IBANFormFragment extends AbstractPaymentFormFragment {
                 @Override
                 public void onSuccess(final Transaction transaction) {
 
-                    CheckoutData.checkoutData.setStatus(transaction.getStatus().getIntegerValue());
-                    CheckoutData.checkoutData.setTransactionID(transaction.getTransactionReference());
-                    CheckoutData.checkoutData.setEvent(CheckoutData.Event.request);
-
-                    Monitoring monitoring = new Monitoring();
-                    monitoring.setRequestDate(requestDate);
-                    monitoring.setResponseDate(new Date());
-                    CheckoutData.checkoutData.setMonitoring(monitoring);
-
-                    AsyncTask<CheckoutData, Void, Integer> task = new CheckoutDataNetwork().execute(CheckoutData.checkoutData);
-                    CheckoutData.checkoutData = null;
-
                     if (mCallback != null) {
                         cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                         mCallback.onCallbackOrderReceived(transaction, null);

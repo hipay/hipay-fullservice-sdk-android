@@ -514,34 +514,10 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
         mGatewayClient = new GatewayClient(getActivity());
         mCurrentLoading = AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue();
 
-        final Date requestDate = new Date();
-
         mGatewayClient.requestNewOrder(orderRequest, mSignature, new OrderRequestCallback() {
 
             @Override
             public void onSuccess(final Transaction transaction) {
-                //Log.i("transaction success", transaction.toString());
-
-                if (CheckoutData.checkoutData == null) {
-                    CheckoutData.checkoutData = new CheckoutData();
-
-                    CheckoutData.checkoutData.setOrderID(transaction.getOrder().getOrderId());
-                    CheckoutData.checkoutData.setAmount(transaction.getOrder().getAmount());
-                    CheckoutData.checkoutData.setCurrency(transaction.getCurrency());
-                }
-
-                CheckoutData.checkoutData.setStatus(transaction.getStatus().getIntegerValue());
-                CheckoutData.checkoutData.setTransactionID(transaction.getTransactionReference());
-                CheckoutData.checkoutData.setEvent(CheckoutData.Event.request);
-
-                Monitoring monitoring = new Monitoring();
-                monitoring.setRequestDate(requestDate);
-                monitoring.setResponseDate(new Date());
-                CheckoutData.checkoutData.setMonitoring(monitoring);
-
-                AsyncTask<CheckoutData, Void, Integer> task = new CheckoutDataNetwork().execute(CheckoutData.checkoutData);
-                CheckoutData.checkoutData = null;
-
                 if (mCallback != null) {
                     cancelLoaderId(AbstractClient.RequestLoaderId.OrderReqLoaderId.getIntegerValue());
                     mCallback.onCallbackOrderReceived(transaction, null);
