@@ -1,0 +1,30 @@
+package com.hipay.fullservice.core.operations;
+
+import android.content.Context;
+import android.os.Bundle;
+
+/**
+ * Created by HiPay on 08/05/16.
+ */
+
+public class TransactionDetailsOperation  extends GatewayOperation {
+
+    public TransactionDetailsOperation(Context context, Bundle bundle) {
+        super(context, bundle);
+    }
+
+    @Override
+    public String concatUrl() {
+        return "transaction";
+    }
+
+    @Override
+    protected boolean isV2() {
+        return false;
+    }
+
+    @Override
+    public HttpMethod getRequestType() {
+        return HttpMethod.GET;
+    }
+}

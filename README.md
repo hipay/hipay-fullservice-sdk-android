@@ -1,8 +1,6 @@
 # HiPay SDK for Android
 
-[![Build Status](https://circleci.com/gh/hipay/hipay-fullservice-sdk-android/tree/master.svg?style=shield)](https://circleci.com/gh/hipay/hipay-fullservice-sdk-ios/tree/master) [ ![Download](https://api.bintray.com/packages/hipayandroid/maven/hipayfullservice/images/download.svg) ](https://bintray.com/hipayandroid/maven/hipayfullservice/_latestVersion)
-
-
+[![Download](https://api.bintray.com/packages/hipayandroid/maven/hipayfullservice/images/download.svg)](https://bintray.com/hipayandroid/maven/hipayfullservice/_latestVersion)
 
 The **HiPay SDK for Android** is a library that allows you to **accept payments in your Android application** by leveraging the HiPay payment platform. The library is written in Java and is based on Android framework. This repository contains the SDK as well as a demo application allowing you to generate a simple payment screen and demonstrating how to use the SDK.
 
@@ -11,6 +9,7 @@ The **HiPay SDK for Android** is a library that allows you to **accept payments 
 Read the **[project documentation][doc-home]** for comprehensive information about the requirements, general workflow and installation procedure.
 
 ## Resources
+
 - [Full project documentation][doc-home] — To have a comprehensive understanding of the workflow and get the installation procedure
 - [HiPay Support Center][hipay-help] — To get technical help from HiPay
 - [Issues][project-issues] — To report issues, submit pull requests and get involved (see [Apache 2.0 License][project-license])

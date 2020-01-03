@@ -1,0 +1,73 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+
+  desc "Runs all the tests"
+  lane :Test do
+    gradle(task: "test")
+  end
+
+  desc "Build demo"
+  lane :BuildDemo do
+    # Decode Base64 env var in HiPay.jks file used by build.gradle
+    system 'echo $KEYSTORE | base64 -d > ../Hipay.jks'
+
+    # Replace variables in credentials.xml
+    system 'sed -i -e "s/{USERNAME_API_HIPAY_STAGE}/$USERNAME_API_HIPAY_STAGE/" ../example/src/main/res/values/credentials.xml'
+    system 'sed -i -e "s/{PASSWORD_API_HIPAY_STAGE}/$PASSWORD_API_HIPAY_STAGE/" ../example/src/main/res/values/credentials.xml'
+    system 'sed -i -e "s/{USERNAME_API_HIPAY_PRODUCTION}/$USERNAME_API_HIPAY_PRODUCTION/" ../example/src/main/res/values/credentials.xml'
+    system 'sed -i -e "s/{PASSWORD_API_HIPAY_PRODUCTION}/$PASSWORD_API_HIPAY_PRODUCTION/" ../example/src/main/res/values/credentials.xml'
+
+    # Build APK
+    gradle(task: "build")
+  end
+
+  desc "Deploy a new version to AppCenter"
+  lane :DeployDemo do
+    appcenter_upload(
+      api_token: ENV['APPCENTER_TOKEN'],
+      owner_type: "organization", # organization = HiPay
+      owner_name: "hipay-com", # See "Organization URL" in appCenter settings (https://appcenter.ms/orgs/hipay-com/)
+      destinations: "*", # All distribution group
+      destination_type: "group",
+      app_os: 'Android',
+      app_platform: 'Java',
+      app_name: "DemoHiPayFullService-" + git_branch.gsub(/[^a-zA-Z0-9\-]/,""),
+      file: "example/build/outputs/apk/release/example-release.apk",
+    )
+  end
+
+  desc "Build framework"
+  lane :BuildFramework do
+    gradle(task: ":hipayfullservice:assembleRelease")
+  end
+
+  desc "Deploy framework on Bintray"
+  lane :DeployFramework do
+    # create local.properties file with all variables
+    system 'touch ../local.properties'
+    system 'echo "bintray.user=$BINTRAY_USER" >> ../local.properties'
+    system 'echo "bintray.apikey=$BINTRAY_API_KEY" >> ../local.properties'
+    system 'echo "bintray.gpg.password=$BINTRAY_GPG_PASSWORD" >> ../local.properties'
+    system 'echo "bintray.org=$BINTRAY_ORG" >> ../local.properties'
+
+    # Upload on Bintray repository
+    gradle(task: ":bintrayUpload")
+  end
+
+end
