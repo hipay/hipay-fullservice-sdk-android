@@ -20,8 +20,8 @@ public class Components {
         JSONObject jsonObject = new JSONObject();
 
         try {
-            jsonObject.put("sdk_server", this.getSdkType());
-            jsonObject.put("sdk_server_version", this.getSdkVersion());
+            jsonObject.put("sdk_client", this.getSdkType());
+            jsonObject.put("sdk_client_version", this.getSdkVersion());
             return jsonObject;
         } catch (JSONException e) {
             e.printStackTrace();

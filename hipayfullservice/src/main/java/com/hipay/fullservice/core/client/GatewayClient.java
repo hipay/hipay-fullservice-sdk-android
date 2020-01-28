@@ -30,19 +30,24 @@ public class GatewayClient extends AbstractClient  {
 
     public void requestNewOrder(final OrderRequest orderRequest, String signature, final OrderRequestCallback orderRequestCallback) {
 
-        if (CheckoutData.checkoutData == null) {
-            CheckoutData.checkoutData = new CheckoutData();
-        }
-
-        CheckoutData.checkoutData.setEvent(CheckoutData.Event.request);
-        CheckoutData.checkoutData.setAmount(orderRequest.getAmount());
-        CheckoutData.checkoutData.setCurrency(orderRequest.getCurrency());
-        CheckoutData.checkoutData.setOrderID(orderRequest.getOrderId());
-        CheckoutData.checkoutData.setPaymentMethod(orderRequest.getPaymentProductCode());
+        CheckoutData checkoutData = new CheckoutData();
+        checkoutData.setEvent(CheckoutData.Event.request);
+        checkoutData.setAmount(orderRequest.getAmount());
+        checkoutData.setCurrency(orderRequest.getCurrency());
+        checkoutData.setOrderID(orderRequest.getOrderId());
+        checkoutData.setPaymentMethod(orderRequest.getPaymentProductCode());
 
         Monitoring monitoring = new Monitoring();
         monitoring.setRequestDate(new Date());
-        CheckoutData.checkoutData.setMonitoring(monitoring);
+        checkoutData.setMonitoring(monitoring);
+
+        if (CheckoutData.checkoutData != null) {
+            checkoutData.setIdentifier(CheckoutData.checkoutData.getIdentifier());
+            checkoutData.setCardCountry(CheckoutData.checkoutData.getCardCountry());
+        }
+
+        CheckoutData.checkoutData = checkoutData;
+
 
         super.createRequest(orderRequest, signature, new OrderRequestCallback() {
             @Override
@@ -50,10 +55,10 @@ public class GatewayClient extends AbstractClient  {
 
 
                 CheckoutData.checkoutData.setTransactionID(transaction.getTransactionReference());
-                CheckoutData.checkoutData.setStatus(transaction.getStatus().getIntegerValue());
+                CheckoutData.checkoutData.setStatus(String.valueOf(transaction.getStatus().getIntegerValue()));
                 CheckoutData.checkoutData.getMonitoring().setResponseDate(new Date());
 
-                AsyncTask<CheckoutData, Void, Integer> task = new CheckoutDataNetwork().execute(CheckoutData.checkoutData);
+                new CheckoutDataNetwork().execute(CheckoutData.checkoutData);
 
                 orderRequestCallback.onSuccess(transaction);
             }
