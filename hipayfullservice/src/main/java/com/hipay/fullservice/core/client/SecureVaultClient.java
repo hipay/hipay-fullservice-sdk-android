@@ -45,19 +45,24 @@ public class SecureVaultClient extends AbstractClient {
             @Override
             public void onSuccess(PaymentCardToken paymentCardToken) {
 
-                if (CheckoutData.checkoutData == null) {
-                    CheckoutData.checkoutData = new CheckoutData();
-                }
-
-                CheckoutData.checkoutData.setEvent(CheckoutData.Event.tokenize);
-                CheckoutData.checkoutData.setPaymentMethod(paymentCardToken.getBrand().toLowerCase());
-                CheckoutData.checkoutData.setCardCountry(paymentCardToken.getCountry());
+                CheckoutData checkoutData = new CheckoutData();
+                checkoutData.setEvent(CheckoutData.Event.tokenize);
+                checkoutData.setPaymentMethod(paymentCardToken.getBrand().toLowerCase());
+                checkoutData.setCardCountry(paymentCardToken.getCountry());
 
                 Monitoring monitoring = new Monitoring();
                 monitoring.setPayDate(new Date());
-                CheckoutData.checkoutData.setMonitoring(monitoring);
+                checkoutData.setMonitoring(monitoring);
 
-                AsyncTask<CheckoutData, Void, Integer> task = new CheckoutDataNetwork().execute(CheckoutData.checkoutData);
+                if (CheckoutData.checkoutData != null) {
+                    checkoutData.setAmount(CheckoutData.checkoutData.getAmount());
+                    checkoutData.setCurrency(CheckoutData.checkoutData.getCurrency());
+                    checkoutData.setOrderID(CheckoutData.checkoutData.getOrderID());
+                    checkoutData.setIdentifier(CheckoutData.checkoutData.getIdentifier());
+                }
+
+                new CheckoutDataNetwork().execute(checkoutData);
+                CheckoutData.checkoutData = checkoutData;
 
                 callback.onSuccess(paymentCardToken);
             }

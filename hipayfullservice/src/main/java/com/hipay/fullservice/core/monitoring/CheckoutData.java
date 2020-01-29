@@ -1,5 +1,7 @@
 package com.hipay.fullservice.core.monitoring;
 
+import android.util.Log;
+
 import com.hipay.fullservice.BuildConfig;
 
 import org.json.JSONException;
@@ -12,28 +14,19 @@ import java.util.UUID;
 
 public class CheckoutData {
 
+    public static CheckoutData checkoutData;
     protected String identifier;
-    protected Integer status;
+    protected String status;
     protected String paymentMethod;
     protected String cardCountry;
     protected Float amount;
     protected String currency;
     protected String orderID;
     protected String transactionID;
-
     protected Event event;
     protected String domain;
-
     protected Monitoring monitoring;
     protected Components components;
-
-    public static CheckoutData checkoutData;
-
-    public enum Event {
-        init,
-        tokenize,
-        request
-    }
 
     public CheckoutData() {
         this.setDomain(BuildConfig.APPLICATION_ID);
@@ -45,8 +38,6 @@ public class CheckoutData {
                 this.setIdentifier(hashKey);
             }
         }
-
-        setMonitoring(new Monitoring());
         setComponents(new Components());
     }
 
@@ -59,9 +50,7 @@ public class CheckoutData {
             jsonObject.put("status", this.getStatus());
             jsonObject.put("payment_method", this.getPaymentMethod());
             jsonObject.put("card_country", this.getCardCountry());
-
             jsonObject.put("amount", this.getAmount());
-
             jsonObject.put("currency", this.getCurrency());
             jsonObject.put("order_id", this.getOrderID());
             jsonObject.put("event", this.getEvent());
@@ -76,7 +65,6 @@ public class CheckoutData {
                 jsonObject.put("components", this.getComponents().toJSONObject());
             }
 
-
             return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -84,7 +72,7 @@ public class CheckoutData {
         }
     }
 
-    private String randomIdentifier () {
+    private String randomIdentifier() {
         return UUID.randomUUID().toString();
     }
 
@@ -99,8 +87,7 @@ public class CheckoutData {
                 sb.append(String.format("%02x", b));
             }
             result = sb.toString();
-        }
-        catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
         }
 
         return result;
@@ -142,6 +129,10 @@ public class CheckoutData {
         return domain;
     }
 
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
     public Event getEvent() {
         return event;
     }
@@ -150,11 +141,11 @@ public class CheckoutData {
         this.event = event;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -164,10 +155,6 @@ public class CheckoutData {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
-    }
-
-    public void setDomain(String domain) {
-        this.domain = domain;
     }
 
     public String getCardCountry() {
@@ -200,5 +187,11 @@ public class CheckoutData {
 
     public void setOrderID(String orderID) {
         this.orderID = orderID;
+    }
+
+    public enum Event {
+        init,
+        tokenize,
+        request
     }
 }
