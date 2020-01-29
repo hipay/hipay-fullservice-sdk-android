@@ -16,6 +16,11 @@ or alternatively using `brew cask install fastlane`
 
 # Available Actions
 ## Android
+### android SetEnv
+```
+fastlane android SetEnv
+```
+Set environment variables
 ### android Test
 ```
 fastlane android Test
