@@ -17,6 +17,12 @@ default_platform(:android)
 
 platform :android do
 
+  desc "Set environment variables"
+  lane :SetEnv do
+    # Sed API Data
+    system 'sed -i -e "s#$API_DATA_URL_STAGE#$API_DATA_URL_DEV#" ../hipayfullservice/src/main/java/com/hipay/fullservice/core/monitoring/CheckoutDataNetwork.java'
+  end
+  
   desc "Runs all the tests"
   lane :Test do
     gradle(task: "test")
@@ -33,6 +39,9 @@ platform :android do
     system 'sed -i -e "s/{USERNAME_API_HIPAY_PRODUCTION}/$USERNAME_API_HIPAY_PRODUCTION/" ../example/src/main/res/values/credentials.xml'
     system 'sed -i -e "s/{PASSWORD_API_HIPAY_PRODUCTION}/$PASSWORD_API_HIPAY_PRODUCTION/" ../example/src/main/res/values/credentials.xml'
 
+    # Sed API Data
+    system 'sed -i -e "s#$API_DATA_URL_STAGE#$API_DATA_URL_QA#" ../hipayfullservice/src/main/java/com/hipay/fullservice/core/monitoring/CheckoutDataNetwork.java'
+ 
     # Build APK
     gradle(task: "build")
   end

@@ -26,7 +26,6 @@ test:
 
 build-demo:
   stage: build-demo
-  allow_failure: false
   before_script:
     - bundle check || bundle install --path vendor/bundle
   script:
@@ -38,11 +37,9 @@ build-demo:
     expire_in: 60 mins
   tags:
     - gcp-default-runner-prod
-  when: manual
 
 deploy-demo:
   stage: deploy-demo
-  allow_failure: false
   before_script:
     - bundle check || bundle install --path vendor/bundle
   script:
