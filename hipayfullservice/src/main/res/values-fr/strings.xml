@@ -24,31 +24,39 @@
 
     <string name="refresh">Actualiser</string>
 
-    <string name="transaction_error_declined_title">Transaction refusée</string>
-    <string name="transaction_error_declined">Veuillez vérifier vos informations et réessayer.</string>
-    <string name="transaction_error_declined_reset">Merci de bien vouloir utiliser un autre moyen de paiement.</string>
-
     <string name="payment_page_error_timeout">La page de paiement a expiré.</string>
-
-    <string name="alert_transaction_loading_title">Transaction en cours</string>
-    <string name="alert_transaction_loading_body">Le traitement de votre transaction est toujours en cours, êtes-vous sûr de vouloir quitter cet écran ?</string>
-    <string name="alert_transaction_loading_yes">Quitter</string>
-    <string name="alert_transaction_loading_no">Reprendre</string>
 
     <string name="button_ok">OK</string>
     <string name="button_cancel">Annuler</string>
     <string name="button_retry">Réessayer</string>
+    <string name="button_continue">Continuer</string>
 
-    <string name="transaction_error_other">Une erreur est survenue lors du traitement de la transaction.</string>
+    <string name="alert_transaction_declined_title">Transaction refusée</string>
+    <string name="alert_transaction_declined_body">Veuillez vérifier vos informations et réessayer.</string>
+    <string name="alert_transaction_error_title">Transaction refusée</string>
+    <string name="alert_transaction_loading_title">Transaction en cours</string>
+    <string name="alert_transaction_loading_body">Le traitement de votre transaction est toujours en cours, êtes-vous sûr de vouloir quitter cet écran ?</string>
+    <string name="alert_transaction_loading_yes">Quitter</string>
+    <string name="alert_transaction_loading_no">Reprendre</string>
+    <string name="alert_transaction_error_body">Une erreur est survenue lors du traitement de la transaction.</string>
+    <string name="alert_error_default_title">Une erreur est survenue</string>
+    <string name="alert_error_default_body">Votre demande n\'a pu aboutir.</string>
+    <string name="alert_error_bcmc_app_not_found_title">Une erreur est survenue</string>
+    <string name="alert_error_bcmc_app_not_found_body">L\'application Bancontact n\'a pas pu être trouvée.</string>
+    <string name="alert_error_payment_products_title">Une erreur est survenue</string>
+    <string name="alert_error_payment_products_body">Aucun moyen de paiement n\'a été trouvé.</string>
+    <string name="alert_error_connection_title">Erreur de connexion</string>
+    <string name="alert_error_connection_body">Votre demande n\'a pu aboutir.</string>
+    <string name="alert_deleting_payment_card_title">Suppression de carte</string>
+    <string name="alert_deleting_payment_card_body">Êtes-vous sûr de vouloir supprimer cette carte de paiment ?</string>
 
-    <string name="error_title_default">Une erreur est survenue</string>
-    <string name="error_body_default">Votre demande n\'a pu aboutir.</string>
-
-    <string name="error_body_bcmc_app_not_found">L\'application Bancontact n\'a pas pu être trouvée.</string>
-
-    <string name="error_body_payment_products">Aucun moyen de paiement n\'a été trouvé.</string>
-
-    <string name="error_title_connection">Erreur de connexion</string>
+    <string name="alert_certificate_error_message">Erreur de certificat.</string>
+    <string name="alert_certificate_error_title">Erreur de certificat SSL</string>
+    <string name="alert_certificate_error_untrusted_message">Le certificat est non reconnu.</string>
+    <string name="alert_certificate_error_expired_message">Le certificat est expiré.</string>
+    <string name="alert_certificate_error_mismatched_message">Les certificats ne correspondent pas.</string>
+    <string name="alert_certificate_error_not_yet_valid_message">Le certificat n\'est pas encore valide.</string>
+    <string name="alert_certificate_error_continue_message">Continuer le chargement de la page ?</string>
 
     <string name="card_expiration_placeholder">MM / YY</string>
     <string name="card_expiration_placeholder_error">MM / YY</string>
@@ -61,25 +69,11 @@
 
     <string name="card_number_placeholder_error">Numéro de carte invalide</string>
 
-    <string name="certificate_error">Erreur de certificat.</string>
-    <string name="certificate_error_title">Erreur de certificat SSL</string>
-    <string name="certificate_error_untrusted">Le certificat est non reconnu.</string>
-    <string name="certificate_error_expired">Le certificat est expiré.</string>
-    <string name="certificate_error_mismatched">Les certificats ne correspondent pas.</string>
-    <string name="certificate_error_not_yet_valid">Le certificat n\'est pas encore valide.</string>
-    <string name="certificate_error_continue">Continuer le chargement de la page ?</string>
-
-    <string name="promt_cancel">Annuler</string>
-    <string name="prompt_continue">Continuer</string>
-
     <string name="payment_product_card_description">Carte</string>
 
     <string name="card_stored_selection">Sélectionner une carte</string>
     <string name="card_stored_another_selection">Autre moyen de paiement</string>
     <string name="no_payment_card_stored">Aucune carte enregistrée</string>
-
-    <string name="alert_deleting_payment_card_title">Suppression de carte</string>
-    <string name="alert_deleting_payment_card_body">Êtes-vous sûr de vouloir supprimer cette carte de paiment ?</string>
 
     <string name="card_storage_switch_description">Enregistrer cette carte</string>
 

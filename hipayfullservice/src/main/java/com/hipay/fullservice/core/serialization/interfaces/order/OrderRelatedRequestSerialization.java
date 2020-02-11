@@ -230,7 +230,11 @@ public abstract class OrderRelatedRequestSerialization extends AbstractSerializa
                 String firstnameShipping = personalInfoRequest.getFirstname();
                 String lastnameShipping = personalInfoRequest.getLastname();
 
-                if (!firstnameCustomer.isEmpty()
+                if (firstnameCustomer != null
+                        && lastnameCustomer != null
+                        && firstnameShipping != null
+                        && lastnameShipping != null
+                        && !firstnameCustomer.isEmpty()
                         && !lastnameCustomer.isEmpty()
                         && firstnameCustomer.toLowerCase().equals(firstnameShipping.toLowerCase())
                         && lastnameCustomer.toLowerCase().equals(lastnameShipping.toLowerCase())) {

@@ -301,8 +301,8 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                     };
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle(R.string.error_title_default)
-                            .setMessage(R.string.error_body_default)
+                    builder.setTitle(R.string.alert_error_default_title)
+                            .setMessage(R.string.alert_error_default_body)
                             .setNegativeButton(R.string.button_ok, dialogClickListener)
                             .setCancelable(false)
                             .show();
@@ -341,8 +341,8 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                     };
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle(R.string.error_title_connection)
-                            .setMessage(R.string.error_body_default)
+                    builder.setTitle(R.string.alert_error_connection_title)
+                            .setMessage(R.string.alert_error_default_body)
                             .setNegativeButton(R.string.button_ok, dialogClickListener)
                             .setPositiveButton(R.string.button_retry, dialogClickListener)
                             .setCancelable(false)
@@ -391,8 +391,8 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.error_title_default)
-                .setMessage(R.string.error_body_default)
+        builder.setTitle(R.string.alert_error_default_title)
+                .setMessage(R.string.alert_error_default_body)
                 .setNegativeButton(R.string.button_ok, dialogClickListener)
                 .setPositiveButton(R.string.button_retry, dialogClickListener)
                 .setCancelable(false)
@@ -447,8 +447,8 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.transaction_error_declined_title)
-                        .setMessage(R.string.transaction_error_declined)
+                builder.setTitle(R.string.alert_transaction_declined_title)
+                        .setMessage(R.string.alert_transaction_declined_body)
                         .setNegativeButton(R.string.button_ok, dialogClickListener)
                         .setCancelable(false)
                         .show();
@@ -496,8 +496,8 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.transaction_error_declined_title)
-                        .setMessage(R.string.transaction_error_other)
+                builder.setTitle(R.string.alert_transaction_error_title)
+                        .setMessage(R.string.alert_transaction_error_body)
                         .setNegativeButton(R.string.button_ok, dialogClickListener)
                         .setCancelable(false)
                         .show();

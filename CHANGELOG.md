@@ -1,5 +1,9 @@
 HiPay Android SDK change log and release notes
 ================================================
+1.6.0
+-----
+* Fix DSP2 : Crash when customer name and shipping name are empty
+
 1.5.1
 -----
 * Fix deployement on maven.org

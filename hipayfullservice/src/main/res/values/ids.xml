@@ -18,4 +18,5 @@
   <item name="transaction_succeed" type="id" />
   <item name="transaction_failed" type="id" />
   <item name="transaction_timeout" type="id" />
+  <item name="technical_error" type="id" />
 </resources>

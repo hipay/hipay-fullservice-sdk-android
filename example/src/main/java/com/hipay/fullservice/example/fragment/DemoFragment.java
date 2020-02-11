@@ -144,6 +144,17 @@ public class DemoFragment extends Fragment {
                 snackBarView.setBackgroundColor((ContextCompat.getColor(getActivity(),
                         android.R.color.holo_red_light)));
                 snackbar.show();
+            } else if (resultCode == R.id.technical_error) {
+
+                Bundle bundle = data.getExtras();
+                String descriptionError = bundle.getString(Errors.TAG);
+
+                Snackbar snackbar = Snackbar.make(mDoneFab, getString(R.string.payment_error, descriptionError),
+                        Snackbar.LENGTH_INDEFINITE);
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackgroundColor((ContextCompat.getColor(getActivity(),
+                        android.R.color.holo_red_light)));
+                snackbar.show();
             }
         }
     }
@@ -474,7 +485,7 @@ public class DemoFragment extends Fragment {
                                     };
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                    builder.setTitle(R.string.error_title_default)
+                                    builder.setTitle(R.string.alert_error_default_title)
                                             .setMessage(R.string.unknown_error)
                                             .setNegativeButton(R.string.button_ok, dialogClickListener)
                                             .setCancelable(false)
@@ -508,8 +519,8 @@ public class DemoFragment extends Fragment {
                                 };
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                builder.setTitle(R.string.error_title_default)
-                                        .setMessage(R.string.error_body_default)
+                                builder.setTitle(R.string.alert_error_default_title)
+                                        .setMessage(R.string.alert_error_default_body)
                                         .setNegativeButton(R.string.button_ok, dialogClickListener)
                                         .setCancelable(false)
                                         .show();

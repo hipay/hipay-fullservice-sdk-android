@@ -29,30 +29,39 @@
 
     <string name="refresh">Refresh</string>
 
-    <string name="transaction_error_declined_title">Transaction declined</string>
-    <string name="transaction_error_declined">Please check your entries and try again</string>
-    <string name="transaction_error_declined_reset">Please use another payment method</string>
-
     <string name="payment_page_error_timeout">Payment page has expired</string>
 
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_retry">Retry</string>
+    <string name="button_continue">Continue</string>
+
+    <string name="alert_error_default_title">An error occurred</string>
+    <string name="alert_error_connection_title">Network error</string>
+    <string name="alert_error_connection_body">Your request could not be completed</string>
+    <string name="alert_error_default_body">Your request could not be completed</string>
+    <string name="alert_error_bcmc_app_not_found_title">An error occurred</string>
+    <string name="alert_error_bcmc_app_not_found_body">Bancontact app could not be found</string>
+    <string name="alert_deleting_payment_card_title">Deleting payment card</string>
+    <string name="alert_deleting_payment_card_body">Are you sure that you want to delete this payment card?</string>
+    <string name="alert_transaction_declined_title">Transaction declined</string>
+    <string name="alert_transaction_declined_body">Please check your entries and try again</string>
+    <string name="alert_transaction_error_title">Transaction declined</string>
+    <string name="alert_transaction_error_body">An error occurred while processing your transaction</string>
+    <string name="alert_error_payment_products_title">An error occurred</string>
+    <string name="alert_error_payment_products_body">No payment product found</string>
     <string name="alert_transaction_loading_title">Transaction in progress</string>
     <string name="alert_transaction_loading_body">Your transaction is still being processed. Are you sure that you want to leave the screen?</string>
     <string name="alert_transaction_loading_yes">Quit</string>
     <string name="alert_transaction_loading_no">Resume</string>
 
-    <string name="button_ok">OK</string>
-    <string name="button_cancel">Cancel</string>
-    <string name="button_retry">Retry</string>
-
-    <string name="transaction_error_other">An error occurred while processing your transaction</string>
-
-    <string name="error_title_default">An error occurred</string>
-    <string name="error_body_default">Your request could not be completed</string>
-
-    <string name="error_body_payment_products">No paiment product found</string>
-
-    <string name="error_body_bcmc_app_not_found">Bancontact app could not be found</string>
-    <string name="error_title_connection">Network error</string>
+    <string name="alert_certificate_error_title">SSL Certificate Error</string>
+    <string name="alert_certificate_error_message">Certificate error.</string>
+    <string name="alert_certificate_error_untrusted_message">Certificate is untrusted.</string>
+    <string name="alert_certificate_error_expired_message">Certificate has expired.</string>
+    <string name="alert_certificate_error_mismatched_message">Certificate ID is mismatched.</string>
+    <string name="alert_certificate_error_not_yet_valid_message">Certificate is not yet valid.</string>
+    <string name="alert_certificate_error_continue_message">Do you want to continue anyway?</string>
 
     <string name="card_expiration_placeholder">MM / AA</string>
     <string name="card_expiration_placeholder_error">MM / AA</string>
@@ -84,9 +93,6 @@
     <string name="card_stored_another_selection">Another payment method</string>
     <string name="no_payment_card_stored">No stored payment cards</string>
 
-    <string name="alert_deleting_payment_card_title">Deleting payment card</string>
-    <string name="alert_deleting_payment_card_body">Are you sure that you want to delete this payment card?</string>
-
     <string name="card_storage_switch_description">Store this card for future use</string>
 
     <string-array name="card_products_list" translatable="false">
@@ -96,17 +102,6 @@
         <item>maestro</item>
         <item>bcmc</item>
     </string-array>
-
-    <string name="certificate_error_title">SSL Certificate Error</string>
-    <string name="certificate_error">Certificate error.</string>
-    <string name="certificate_error_untrusted">Certificate is untrusted.</string>
-    <string name="certificate_error_expired">Certificate has expired.</string>
-    <string name="certificate_error_mismatched">Certificate ID is mismatched.</string>
-    <string name="certificate_error_not_yet_valid">Certificate is not yet valid.</string>
-    <string name="certificate_error_continue">Do you want to continue anyway?</string>
-
-    <string name="promt_cancel">Cancel</string>
-    <string name="prompt_continue">Continue</string>
 
     <string name="card_visa_info" translatable="false">
 

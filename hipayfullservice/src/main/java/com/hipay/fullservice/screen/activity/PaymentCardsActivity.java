@@ -204,20 +204,6 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
         if (formResult != null) {
 
             switch (formResult) {
-
-                // this never happens for now
-                case FormActionReset: {
-
-                    this.setLoadingMode(false);
-
-                } break;
-
-                case FormActionReload: {
-                    //this is made directly
-                    this.setLoadingMode(false);
-
-                } break;
-
                 case FormActionBackgroundReload: {
 
                     //this.setLoadingMode(true);
@@ -226,21 +212,28 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
 
                 } break;
 
-                //TODO this should not happen
-                /*
-                case FormActionForward: {
-
-                    this.setLoadingMode(false, true);
-                    //do not dismiss the loading thing now
-                } break;
-                */
-
                 case FormActionQuit: {
 
-                    //not need to stop the loading mode
-                    finish();
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    };
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(R.string.alert_error_default_title)
+                            .setMessage(R.string.alert_error_default_body)
+                            .setNegativeButton(R.string.button_ok, dialogClickListener)
+                            .setCancelable(false)
+                            .show();
+
                 } break;
 
+                // this never happens for now
+                case FormActionReset:
+                case FormActionReload:
                 default: {
                     //nothing
                     this.setLoadingMode(false);
@@ -277,8 +270,8 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.transaction_error_declined_title)
-                        .setMessage(R.string.transaction_error_declined)
+                builder.setTitle(R.string.alert_transaction_declined_title)
+                        .setMessage(R.string.alert_transaction_declined_body)
                         .setNegativeButton(R.string.button_ok, dialogClickListener)
                         .setCancelable(false)
                         .show();
@@ -286,36 +279,6 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
                 formResult = FormResult.FormActionReload;
 
             } break;
-
-
-            //TODO this won't be forwarded
-            /*
-            case TransactionStateForwarding: {
-
-                URL forwardUrl = transaction.getForwardUrl();
-
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
-                if (fragment != null) {
-
-                    TextView titleView = (TextView) findViewById(R.id.payment_product_title);
-
-                    String title = null;
-                    if (!TextUtils.isEmpty(titleView.getText())) {
-                        title = titleView.getText().toString();
-                    }
-
-                    AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
-                    abstractPaymentFormFragment.launchHostedPaymentPage(forwardUrl.toString(), title);
-                }
-
-                //dismiss the dialog before launching the forward webview
-                dismissDialogs();
-
-                //formResult = FormResult.FormActionReload;
-                formResult = FormResult.FormActionForward;
-
-            } break;
-            */
 
             case TransactionStateError: {
 
@@ -323,23 +286,17 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-
-                        //TODO this is tokenizable
-                        //if (!isPaymentTokenizable()) {
-                            //forceBackPressed();
-                        //}
                     }
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.transaction_error_declined_title)
-                        .setMessage(R.string.transaction_error_other)
+                builder.setTitle(R.string.alert_transaction_error_title)
+                        .setMessage(R.string.alert_transaction_error_body)
                         .setNegativeButton(R.string.button_ok, dialogClickListener)
                         .setCancelable(false)
                         .show();
 
                 formResult = FormResult.FormActionReload;
-                //formResult = null;
 
             } break;
         }
@@ -364,7 +321,6 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
             Intent intent = getIntent();
             intent.putExtra(Errors.TAG, apiException.toBundle());
             setResult(R.id.transaction_failed, intent);
-
             return FormResult.FormActionQuit;
         }
 
@@ -378,23 +334,10 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
 
                 if (httpStatusCode.equals(Errors.Code.HTTPClient.getIntegerValue())) {
 
-                    //we don't need to backgroundReload
-
-                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    };
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle(R.string.error_title_default)
-                            .setMessage(R.string.error_body_default)
-                            .setNegativeButton(R.string.button_ok, dialogClickListener)
-                            .setCancelable(false)
-                            .show();
-
-                    return FormResult.FormActionReload;
+                    Intent intent = getIntent();
+                    intent.putExtra(Errors.TAG, apiException.getCause().getLocalizedMessage());
+                    setResult(R.id.technical_error, intent);
+                    return FormResult.FormActionQuit;
 
                 } else if (httpStatusCode.equals(Errors.Code.HTTPNetworkUnavailable.getIntegerValue())) {
 
@@ -425,8 +368,8 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
                     };
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle(R.string.error_title_connection)
-                            .setMessage(R.string.error_body_default)
+                    builder.setTitle(R.string.alert_error_connection_title)
+                            .setMessage(R.string.alert_error_default_body)
                             .setNegativeButton(R.string.button_ok, dialogClickListener)
                             .setPositiveButton(R.string.button_retry, dialogClickListener)
                             .setCancelable(false)
@@ -482,8 +425,8 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.error_title_default)
-                .setMessage(R.string.error_body_default)
+        builder.setTitle(R.string.alert_error_default_title)
+                .setMessage(R.string.alert_error_default_body)
                 .setNegativeButton(R.string.button_ok, dialogClickListener)
                 .setPositiveButton(R.string.button_retry, dialogClickListener)
                 .setCancelable(false)

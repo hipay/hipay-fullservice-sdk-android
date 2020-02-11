@@ -27,6 +27,8 @@ import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.client.interfaces.callbacks.PaymentProductsCallback;
+import com.hipay.fullservice.core.errors.Errors;
+import com.hipay.fullservice.core.errors.exceptions.ApiException;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.monitoring.CheckoutData;
 import com.hipay.fullservice.core.monitoring.CheckoutDataNetwork;
@@ -145,21 +147,23 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
                     }
 
                 } else {
-
                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
 
                             if (getActivity() != null) {
+                                Intent intent = getActivity().getIntent();
+                                intent.putExtra(Errors.TAG, getString(R.string.alert_error_payment_products_body));
+                                getActivity().setResult(R.id.technical_error, intent);
                                 getActivity().finish();
                             }
                         }
                     };
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(R.string.error_title_default)
-                            .setMessage(R.string.error_body_payment_products)
+                    builder.setTitle(R.string.alert_error_payment_products_title)
+                            .setMessage(R.string.alert_error_payment_products_body)
                             .setNegativeButton(R.string.button_ok, dialogClickListener)
                             .setCancelable(false)
                             .show();
@@ -181,14 +185,17 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
                             dialog.dismiss();
 
                             if (getActivity() != null) {
+                                Intent intent = getActivity().getIntent();
+                                intent.putExtra(Errors.TAG, getString(R.string.alert_error_payment_products_body));
+                                getActivity().setResult(R.id.technical_error, intent);
                                 getActivity().finish();
                             }
                         }
                     };
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(R.string.error_title_default)
-                            .setMessage(R.string.error_body_default)
+                    builder.setTitle(R.string.alert_error_default_title)
+                            .setMessage(R.string.alert_error_default_body)
                             .setNegativeButton(R.string.button_ok, dialogClickListener)
                             .setCancelable(false)
                             .show();
