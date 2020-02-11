@@ -47,10 +47,6 @@ public class CardBehaviour {
 
             this.setCardBehaviour(new MastercardBehaviour());
 
-        } else if (paymentProductCode.equals(PaymentProduct.PaymentProductCodeDiners)) {
-
-            this.setCardBehaviour(new DinersBehaviour());
-
         } else if (paymentProductCode.equals(PaymentProduct.PaymentProductCodeCB)) {
 
             this.setCardBehaviour(new CBBehaviour());

@@ -307,10 +307,6 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
             {
                 return R.drawable.ic_credit_card_amex;
 
-            } else if (brand.equalsIgnoreCase(PaymentProduct.PaymentProductCodeDiners))
-            {
-                return R.drawable.ic_credit_card_diners;
-
             } else if (brand.equalsIgnoreCase(PaymentProduct.PaymentProductCodeMaestro))
             {
                 return R.drawable.ic_credit_card_maestro;

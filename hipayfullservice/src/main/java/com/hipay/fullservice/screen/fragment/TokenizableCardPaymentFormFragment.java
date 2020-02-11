@@ -664,13 +664,10 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                     mCardExpiration.requestFocus();
 
-                } else if ( !isInferedOrCardDomesticNetwork(inferedPaymentProduct) &&
+                } else if (!isInferedOrCardDomesticNetwork(inferedPaymentProduct) &&
                         FormHelper.hasValidCardLength(mCardNumber.getText().toString(), inferedPaymentProduct, getActivity())) {
-
                     putCardNumberInRed(true);
-
                 } else {
-
                     putCardNumberInRed(false);
                 }
 
@@ -774,10 +771,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
                         OrderRequest orderRequest = new OrderRequest(paymentPageRequest);
 
-                        String productCode = paymentProduct.getCode();
-                        if (productCode.equals(PaymentProduct.PaymentProductCategoryCodeCard) || !productCode.equals(inferedPaymentProduct)) {
-                            productCode = mCardBehaviour.getProductCode();
-                        }
+                        String productCode = paymentCardToken.getDomesticNetwork() != null ? paymentCardToken.getDomesticNetwork() : paymentCardToken.getBrand();
+                        productCode = productCode.replace(" ", "-"); // Product code contains no spaces
 
                         orderRequest.setPaymentProductCode(productCode);
 
@@ -1101,30 +1096,13 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                     // we do pass switchLayout as a parameter if config is enabled
                     LinearLayout switchLayout = this.isPaymentCardStorageConfigEnabled() ? mCardStorageSwitchLayout : null;
 
-                    if (isDomesticNetwork(inferedPaymentProduct)) {
-
-                        //on garde le inferedPaymentProduct (VISA) mais on met l'image et titre de CB
-                        mCallback.updatePaymentProduct(basicPaymentProduct.getPaymentProductDescription());
-                        mCardBehaviour.updatePaymentProduct(inferedPaymentProduct);
-
-                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, switchLayout, false, getActivity());
-
-                    } else {
-
-                        mCallback.updatePaymentProduct(inferedPaymentProduct);
-                        mCardBehaviour.updatePaymentProduct(inferedPaymentProduct);
-                        mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, switchLayout, false, getActivity());
-                    }
-
+                    mCallback.updatePaymentProduct(inferedPaymentProduct);
+                    mCardBehaviour.updatePaymentProduct(inferedPaymentProduct);
+                    mCardBehaviour.updateForm(mCardNumber, mCardCVV, mCardExpiration, mCardCVVLayout, mSecurityCodeInfoTextview, mSecurityCodeInfoImageview, switchLayout, false, getActivity());
 
                     this.putEverythingInRed();
-
                 }
-
-                // on va essayer d'atteindre la taille max.
-
             } else {
-
                 //textfield is empty
                 mCardStorageSwitch.setChecked(false);
             }
@@ -1137,35 +1115,8 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     private boolean isInferedOrCardDomesticNetwork(String product) {
 
         return product.equals(PaymentProduct.PaymentProductCodeCB) ||
-                product.equals(PaymentProduct.PaymentProductCodeBCMC) ||
                 product.equals(PaymentProduct.PaymentProductCategoryCodeCard);
     }
 
-    private boolean isDomesticNetwork() {
-
-        return basicPaymentProduct.getCode().equals(PaymentProduct.PaymentProductCodeCB) ||
-                basicPaymentProduct.getCode().equals(PaymentProduct.PaymentProductCodeBCMC);
-    }
-
-    private boolean isDomesticNetwork(String paymentProductCode) {
-
-        String basicProductCode = basicPaymentProduct.getCode();
-
-        if (isDomesticNetwork()) {
-
-            if (basicProductCode.equals(PaymentProduct.PaymentProductCodeBCMC)) {
-
-                return paymentProductCode.equals(PaymentProduct.PaymentProductCodeMaestro);
-
-            } else if (basicProductCode.equals(PaymentProduct.PaymentProductCodeCB)) {
-
-                return
-                        paymentProductCode.equals(PaymentProduct.PaymentProductCodeVisa) ||
-                                paymentProductCode.equals(PaymentProduct.PaymentProductCodeMasterCard);
-            }
-        }
-
-        return false;
-    }
 }
 

@@ -66,12 +66,8 @@ public class FormHelper {
 
         List<String> myArrayList = Arrays.asList(context.getResources().getStringArray(R.array.card_products_list));
 
-        outerloop:
         for (String productCode: myArrayList) {
-
-
             try {
-
                 JSONObject cardInfo = getInfoCardByProductCode(productCode, context);
 
                 JSONArray ranges = DataExtractor.getJSONArrayFromField(cardInfo, "ranges");
@@ -109,7 +105,6 @@ public class FormHelper {
 
                         if (result) {
                             set.add(productCode);
-                            break outerloop;
                         }
                     }
                 }

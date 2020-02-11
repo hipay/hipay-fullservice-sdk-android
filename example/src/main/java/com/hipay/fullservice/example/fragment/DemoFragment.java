@@ -394,6 +394,7 @@ public class DemoFragment extends Fragment {
         mAmount = (EditText) view.findViewById(R.id.amountEditText);
         mAmount.addTextChangedListener(textWatcher);
 
+        mGroupCardSwitch.setChecked(true);
         mCardStorageSwitch.setChecked(ClientConfig.getInstance().isPaymentCardStorageEnabled());
         mCardScanSwitch.setChecked(ClientConfig.getInstance().isPaymentCardScanEnabled());
         mCardNfcScanSwitch.setChecked(ClientConfig.getInstance().isPaymentCardNfcScanEnabled());

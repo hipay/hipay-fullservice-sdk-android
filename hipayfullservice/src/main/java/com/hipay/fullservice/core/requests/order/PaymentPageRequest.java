@@ -53,8 +53,7 @@ public class PaymentPageRequest extends OrderRelatedRequest {
                 PaymentProduct.PaymentProductCodeMasterCard,
                 PaymentProduct.PaymentProductCodeVisa,
                 PaymentProduct.PaymentProductCodeAmericanExpress,
-                PaymentProduct.PaymentProductCodeMaestro,
-                PaymentProduct.PaymentProductCodeDiners
+                PaymentProduct.PaymentProductCodeMaestro
         ));
 
         this.setGroupedPaymentCardProductCodes(s);
