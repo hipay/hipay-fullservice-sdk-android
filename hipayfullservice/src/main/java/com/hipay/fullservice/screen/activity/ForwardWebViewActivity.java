@@ -151,8 +151,8 @@ public class ForwardWebViewActivity extends AppCompatActivity {
                     };
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle(R.string.error_title_default)
-                            .setMessage(R.string.error_body_bcmc_app_not_found)
+                    builder.setTitle(R.string.alert_error_bcmc_app_not_found_title)
+                            .setMessage(R.string.alert_error_bcmc_app_not_found_body)
                             .setNegativeButton(R.string.button_ok, dialogClickListener)
                             .setCancelable(false)
                             .show();
@@ -274,22 +274,22 @@ public class ForwardWebViewActivity extends AppCompatActivity {
             //super.onReceivedSslError(view, handler, error);
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(ForwardWebViewActivity.this);
-            builder.setTitle(getString(R.string.certificate_error_title));
+            builder.setTitle(getString(R.string.alert_certificate_error_title));
 
             StringBuilder messageBuilder = new StringBuilder();
 
             switch (error.getPrimaryError())
             {
                 case SslError.SSL_UNTRUSTED:
-                    messageBuilder.append(getString(R.string.certificate_error_untrusted)); break;
+                    messageBuilder.append(getString(R.string.alert_certificate_error_untrusted_message)); break;
                 case SslError.SSL_EXPIRED:
-                    messageBuilder.append(getString(R.string.certificate_error_expired)); break;
+                    messageBuilder.append(getString(R.string.alert_certificate_error_expired_message)); break;
                 case SslError.SSL_IDMISMATCH:
-                    messageBuilder.append(getString(R.string.certificate_error_mismatched)); break;
+                    messageBuilder.append(getString(R.string.alert_certificate_error_mismatched_message)); break;
                 case SslError.SSL_NOTYETVALID:
-                    messageBuilder.append(getString(R.string.certificate_error_not_yet_valid)); break;
+                    messageBuilder.append(getString(R.string.alert_certificate_error_not_yet_valid_message)); break;
                 default:
-                    messageBuilder.append(getString(R.string.certificate_error)); break;
+                    messageBuilder.append(getString(R.string.alert_certificate_error_message)); break;
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -299,16 +299,16 @@ public class ForwardWebViewActivity extends AppCompatActivity {
                 messageBuilder.append(System.getProperty("line.separator"));
             }
 
-            messageBuilder.append(getString(R.string.certificate_error_continue));
+            messageBuilder.append(getString(R.string.alert_certificate_error_continue_message));
             builder.setMessage(messageBuilder.toString());
 
-            builder.setPositiveButton(getString(R.string.prompt_continue), new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(getString(R.string.button_continue), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     handler.proceed();
                 }
             });
-            builder.setNegativeButton(getString(R.string.promt_cancel), new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     handler.cancel();

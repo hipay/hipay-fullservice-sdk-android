@@ -17,9 +17,12 @@ public class ApiException extends AbstractException {
 
     private Integer apiCode;
 
-    public ApiException(String message, Integer statusCode, Integer apiCode, Throwable throwable) {
+    private String description;
+
+    public ApiException(String message, Integer statusCode, String description, Integer apiCode, Throwable throwable) {
         super(message, statusCode, throwable);
         this.apiCode = apiCode;
+        this.description = description;
     }
 
     public static ApiException fromBundle(Bundle bundle) {
@@ -90,6 +93,7 @@ public class ApiException extends AbstractException {
             ApiException object = new ApiException(
                     this.getStringForKey("message"),
                     this.getIntegerForKey("code"),
+                    this.getStringForKey("description"),
                     this.getIntegerForKey("apiCode"),
                     httpException
             );
@@ -123,6 +127,7 @@ public class ApiException extends AbstractException {
 
             this.putStringForKey("message", apiException.getMessage());
             this.putIntForKey("code", apiException.getStatusCode());
+            this.putStringForKey("description", apiException.getDescription());
             this.putIntForKey("apiCode", apiException.getApiCode());
 
             Throwable exception = apiException.getCause();
@@ -144,5 +149,9 @@ public class ApiException extends AbstractException {
 
     public Integer getApiCode() {
         return apiCode;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

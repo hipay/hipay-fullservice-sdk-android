@@ -466,6 +466,15 @@ public class Utils {
 
                 stringBuilder.append("Message: ").append(apiException.getMessage());
 
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    stringBuilder.append(System.lineSeparator());
+
+                } else {
+                    stringBuilder.append(System.getProperty("line.separator"));
+                }
+
+                stringBuilder.append("Description: ").append(apiException.getDescription());
+
             } else
 
             if (throwable instanceof HttpException)

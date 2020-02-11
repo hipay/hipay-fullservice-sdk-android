@@ -215,7 +215,7 @@ public abstract class AbstractReqHandler<T> implements IReqHandler {
 
         String code = DataExtractor.getStringFromField(jsonObject, "code");
         String message = DataExtractor.getStringFromField(jsonObject, "message");
-        //String description = DataExtractor.getStringFromField(jsonObject, "description");
+        String description = DataExtractor.getStringFromField(jsonObject, "description");
 
         Integer apiCode = null;
         if (code != null) {
@@ -226,6 +226,7 @@ public abstract class AbstractReqHandler<T> implements IReqHandler {
         return new ApiException(
                 message,
                 errorCode.getIntegerValue(),
+                description,
                 apiCode,
                 httpException);
     }
