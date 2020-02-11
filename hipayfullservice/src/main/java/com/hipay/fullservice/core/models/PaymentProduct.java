@@ -36,12 +36,12 @@ public class PaymentProduct extends AbstractModel {
     public PaymentProduct() {}
 
     public boolean isDSP2Supported() {
-        return this.code.equals(PaymentProductCodeMasterCard)
-                || this.code.equals(PaymentProductCodeVisa)
-                || this.code.equals(PaymentProductCodeMaestro)
-                || this.code.equals(PaymentProductCodeCB)
-                || this.code.equals(PaymentProductCodeAmericanExpress)
-                || this.code.equals(PaymentProductCodeBCMC);
+        return this.code.equalsIgnoreCase(PaymentProductCodeMasterCard)
+                || this.code.equalsIgnoreCase(PaymentProductCodeVisa)
+                || this.code.equalsIgnoreCase(PaymentProductCodeMaestro)
+                || this.code.equalsIgnoreCase(PaymentProductCodeCB)
+                || this.code.equalsIgnoreCase(PaymentProductCodeAmericanExpress)
+                || this.code.equalsIgnoreCase(PaymentProductCodeBCMC);
     }
 
     public static PaymentProduct fromJSONObject(JSONObject object) {
@@ -64,8 +64,7 @@ public class PaymentProduct extends AbstractModel {
     public static SecurityCodeType securityCodeTypeForPaymentProductCode(String paymentProductCode) {
 
         if (    paymentProductCode.equalsIgnoreCase(PaymentProductCodeVisa) ||
-                paymentProductCode.equalsIgnoreCase(PaymentProductCodeMasterCard) ||
-                paymentProductCode.equalsIgnoreCase(PaymentProductCodeDiners)
+                paymentProductCode.equalsIgnoreCase(PaymentProductCodeMasterCard)
                 ) {
 
             return SecurityCodeType.SecurityCodeTypeCVV;
@@ -160,7 +159,6 @@ public class PaymentProduct extends AbstractModel {
     public final static String PaymentProductCodeCobroExpress              = "cobro-express";
     public final static String PaymentProductCodeCofinoga                  = "cofinoga";
     public final static String PaymentProductCodeDexiaDirectNet            = "dexia-directnet";
-    public final static String PaymentProductCodeDiners                    = "diners";
     public final static String PaymentProductCodeEfecty                    = "efecty";
     public final static String PaymentProductCodeElo                       = "elo";
     public final static String PaymentProductCodeGiropay                   = "giropay";

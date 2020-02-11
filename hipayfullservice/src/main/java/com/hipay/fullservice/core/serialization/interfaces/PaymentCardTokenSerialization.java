@@ -37,7 +37,7 @@ public class PaymentCardTokenSerialization extends AbstractSerialization {
         this.putIntForKey("card_expiry_year", paymentCardToken.getCardExpiryYear());
         this.putStringForKey("issuer", paymentCardToken.getIssuer());
         this.putStringForKey("country", paymentCardToken.getCountry());
-        this.putStringForKey("domesticNetwork", paymentCardToken.getDomesticNetwork());
+        this.putStringForKey("domestic_network", paymentCardToken.getDomesticNetwork());
         this.putStringForKey("dateAdded", Utils.getStringFromDateISO8601(paymentCardToken.getDateAdded()));
 
         return this.getBundle();

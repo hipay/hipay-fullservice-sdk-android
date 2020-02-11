@@ -32,7 +32,7 @@ public class PaymentCardTokenMapper extends AbstractMapper {
         object.setCardExpiryYear(this.getIntegerForKey("card_expiry_year"));
         object.setIssuer(this.getStringForKey("issuer"));
         object.setCountry(this.getStringForKey("country"));
-        object.setDomesticNetwork(this.getStringForKey("domesticNetwork"));
+        object.setDomesticNetwork(this.getStringForKey("domestic_network"));
         object.setDateAdded(this.getDateForKey("dateAdded"));
 
         return object;
@@ -52,7 +52,7 @@ public class PaymentCardTokenMapper extends AbstractMapper {
         object.setCardExpiryYear(this.getIntegerForKey("card_expiry_year"));
         object.setIssuer(this.getStringForKey("issuer"));
         object.setCountry(this.getStringForKey("country"));
-        object.setDomesticNetwork(this.getStringForKey("domesticNetwork"));
+        object.setDomesticNetwork(this.getStringForKey("domestic_network"));
         object.setDateAdded(this.getDateForKey("dateAdded"));
 
         return object;

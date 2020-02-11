@@ -32,7 +32,7 @@ public class BCMCBehaviour implements ICardBehaviour {
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_DONE);
         cardNumber.setHint(context.getString(R.string.card_number_placeholder_maestro_bcmc));
 
-        //cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeAmericanExpress, context))});
+        cardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(FormHelper.getMaxCardNumberLength(PaymentProduct.PaymentProductCodeBCMC, context))});
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             cardNumber.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_credit_card_bcmc, 0);
         } else {
@@ -46,10 +46,6 @@ public class BCMCBehaviour implements ICardBehaviour {
         if (switchLayout != null) {
             switchLayout.setVisibility(isCardStorageEnabled() ? View.VISIBLE: View.GONE);
         }
-        //bcmc
-        //"6703 0000 0000 00003",
-        //cardNumber.setText("67030000000000003");
-        //cardCVV.setText("123");
     }
 
     @Override
@@ -65,7 +61,7 @@ public class BCMCBehaviour implements ICardBehaviour {
     @Override
     public boolean hasSpaceAtIndex(Integer index, Context context) {
 
-        return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeMaestro, context);
+        return FormHelper.isIndexSpace(index, PaymentProduct.PaymentProductCodeBCMC, context);
     }
 
     @Override
