@@ -1,5 +1,14 @@
 HiPay Android SDK change log and release notes
 ================================================
+1.6.0
+-----
+* minSdkVersion 14 -> 16
+* Migrating to Androidx
+* Fix DSP2 : Crash when customer name and shipping name are empty
+* Domestic network has priority over brand network
+* Add new type of error "technical_error"
+* Add new strings for alert in strings.xml
+
 1.5.1
 -----
 * Fix deployement on maven.org
