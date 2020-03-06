@@ -1,5 +1,10 @@
 HiPay Android SDK change log and release notes
 ================================================
+
+1.6.1
+-----
+* Fix Transaction State in ForwardWebViewActivity if "Feedback Parameters" disabled
+
 1.6.0
 -----
 * minSdkVersion 14 -> 16
