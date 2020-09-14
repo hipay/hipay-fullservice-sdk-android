@@ -25,10 +25,11 @@ public class UpdatePaymentCardRequestSerialization extends AbstractSerialization
 
         Map<String, String> retMap = new HashMap<>();
         retMap.put("request_id", updatePaymentCardRequest.getRequestId());
-        retMap.put("token", updatePaymentCardRequest.getToken());
+        retMap.put("card_token", updatePaymentCardRequest.getToken());
         retMap.put("card_expiry_month", updatePaymentCardRequest.getCardExpiryMonth());
         retMap.put("card_expiry_year", updatePaymentCardRequest.getCardExpiryYear());
         retMap.put("card_holder", updatePaymentCardRequest.getCardHolder());
+        retMap.put("cvc", updatePaymentCardRequest.getSecurityCode());
 
         while (retMap.values().remove(null));
 
