@@ -15,17 +15,6 @@ public class UpdatePaymentCardRequest extends AbstractRequest {
         this.setCardExpiryMonth(cardExpiryMonth);
         this.setCardExpiryYear(cardExpiryYear);
         this.setCardHolder(cardHolder);
-        this.setSecurityCode(null);
-    }
-
-    public UpdatePaymentCardRequest(String token, String requestId, String cardExpiryMonth, String cardExpiryYear, String cardHolder, String securityCode) {
-
-        this.setToken(token);
-        this.setRequestId(requestId);
-        this.setCardExpiryMonth(cardExpiryMonth);
-        this.setCardExpiryYear(cardExpiryYear);
-        this.setCardHolder(cardHolder);
-        this.setSecurityCode(securityCode);
     }
 
     protected String token;
@@ -33,7 +22,6 @@ public class UpdatePaymentCardRequest extends AbstractRequest {
     protected String cardExpiryMonth;
     protected String cardExpiryYear;
     protected String cardHolder;
-    protected String securityCode;
 
     public String getToken() {
         return token;
@@ -73,14 +61,6 @@ public class UpdatePaymentCardRequest extends AbstractRequest {
 
     public void setCardHolder(String cardHolder) {
         this.cardHolder = cardHolder;
-    }
-
-    public String getSecurityCode() {
-        return securityCode;
-    }
-
-    public void setSecurityCode(String securityCode) {
-        this.securityCode = securityCode;
     }
 
     public String getStringParameters() {
