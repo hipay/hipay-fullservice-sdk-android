@@ -80,6 +80,27 @@ public class SecureVaultClient extends AbstractClient {
                                   String cardExpiryMonth,
                                   String cardExpiryYear,
                                   String cardHolder,
+                                  String securityCode,
+                                  UpdatePaymentCardRequestCallback callback
+
+    ) {
+
+        UpdatePaymentCardRequest updatePaymentCardRequest = new UpdatePaymentCardRequest(
+                token,
+                requestId,
+                cardExpiryMonth,
+                cardExpiryYear,
+                cardHolder,
+                securityCode);
+
+        super.createRequest(updatePaymentCardRequest, callback);
+    }
+
+    public void updatePaymentCard(String token,
+                                  String requestId,
+                                  String cardExpiryMonth,
+                                  String cardExpiryYear,
+                                  String cardHolder,
                                   UpdatePaymentCardRequestCallback callback
 
     ) {
