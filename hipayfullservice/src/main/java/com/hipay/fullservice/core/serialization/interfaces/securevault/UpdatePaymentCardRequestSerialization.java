@@ -29,6 +29,7 @@ public class UpdatePaymentCardRequestSerialization extends AbstractSerialization
         retMap.put("card_expiry_month", updatePaymentCardRequest.getCardExpiryMonth());
         retMap.put("card_expiry_year", updatePaymentCardRequest.getCardExpiryYear());
         retMap.put("card_holder", updatePaymentCardRequest.getCardHolder());
+        retMap.put("cvc", updatePaymentCardRequest.getSecurityCode());
 
         while (retMap.values().remove(null));
 
