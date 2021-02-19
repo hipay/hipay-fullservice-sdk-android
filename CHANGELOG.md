@@ -1,5 +1,9 @@
 HiPay Android SDK change log and release notes
 ================================================
+1.6.3
+-----
+* Add updatePaymentCard function
+
 1.6.2
 -----
 * Fix updatePaymentCard function
