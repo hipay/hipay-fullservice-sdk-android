@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hipay_host" translatable="false">hipay-fullservice</string>
-    <string name="hipay_scheme" translatable="false">hipay</string>
-
-    <string name="content_description" translatable="false">Content description</string>
-
     <string name="payment_products_title">Pagamento</string>
     <string name="payment_cards_title">Carte di pagamento</string>
 
@@ -18,12 +13,12 @@
     <string name="pay">Paga %1$s</string>
 
     <string name="scan_card">Scansiona la tua carta</string>
-    <string name="scan_card_permission">Per scansionare la tua carta, concedi l'accesso alla fotocamera.</string>
+    <string name="scan_card_permission">Per scansionare la tua carta, concedi l\'accesso alla fotocamera.</string>
     <string name="settings">Impostazioni</string>
 
     <string name="nfc_error_io">Per favore non muovere la tua carta, riprova!</string>
     <string name="nfc_error_unknown_card">Carta EMV sconosciuta</string>
-    <string name="nfc_locked">L'NFC è bloccato sulla tua carta</string>
+    <string name="nfc_locked">L\'NFC è bloccato sulla tua carta</string>
     <string name="activate_nfc_sensor">Attiva il sensore NFC</string>
     <string name="nfc_activated">Appoggia e mantieni la tua carta contactless sul retro del tuo telefono</string>
 
@@ -41,13 +36,13 @@
     <string name="alert_error_connection_body">La tua richiesta non può essere completata</string>
     <string name="alert_error_default_body">La tua richiesta non può essere completata</string>
     <string name="alert_error_bcmc_app_not_found_title">Si è verificato un errore</string>
-    <string name="alert_error_bcmc_app_not_found_body">L'app Bancontact non può essere trovata</string>
+    <string name="alert_error_bcmc_app_not_found_body">L\'app Bancontact non può essere trovata</string>
     <string name="alert_deleting_payment_card_title">Eliminazione carta di pagamento</string>
     <string name="alert_deleting_payment_card_body">Sei sicuro di voler rimuovere questa carta di pagamento?</string>
     <string name="alert_transaction_declined_title">Transazione declinata</string>
     <string name="alert_transaction_declined_body">Per favore controlla i dati inseriti e riprova</string>
     <string name="alert_transaction_error_title">Transazione declinata</string>
-    <string name="alert_transaction_error_body">Si è verificato un errore durante l'elaborazione della tua transazione</string>
+    <string name="alert_transaction_error_body">Si è verificato un errore durante l\'elaborazione della tua transazione</string>
     <string name="alert_error_payment_products_title">Si è verificato un errore</string>
     <string name="alert_error_payment_products_body">Non è stato possibile trovare alcun prodotto di pagamento</string>
     <string name="alert_transaction_loading_title">Transazione in corso</string>
@@ -59,15 +54,12 @@
     <string name="alert_certificate_error_message">Errore di Certificato.</string>
     <string name="alert_certificate_error_untrusted_message">Il Certificato non è valido.</string>
     <string name="alert_certificate_error_expired_message">Il Certificato è scaduto.</string>
-    <string name="alert_certificate_error_mismatched_message">L'ID del Certificato non coincide.</string>
+    <string name="alert_certificate_error_mismatched_message">L\'ID del Certificato non coincide.</string>
     <string name="alert_certificate_error_not_yet_valid_message">Il Certificato non è ancora valido.</string>
     <string name="alert_certificate_error_continue_message">Desideri proseguire lo stesso?</string>
 
     <string name="card_expiration_placeholder">MM / AA</string>
     <string name="card_expiration_placeholder_error">MM / AA</string>
-
-    <string name="card_security_code_placeholder_cvv" translatable="false">123</string>
-    <string name="card_security_code_placeholder_cid" translatable="false">1234</string>
 
     <string name="card_security_code_placeholder_cvv_error">3 digits</string>
     <string name="card_security_code_placeholder_cid_error">4 digits</string>
@@ -75,12 +67,7 @@
     <string name="card_security_code_description_cvv">Il codice CVV è un numero di 3 cifre stampato sul retro della tua carta.</string>
     <string name="card_security_code_description_cid">Il codice CID è il numero di 4 cifre stampato sul fronte della tua carta American Express.</string>
 
-    <string name="card_number_placeholder_visa_mastercard" translatable="false">4321 9876 5432 1098</string>
-    <string name="card_number_placeholder_amex" translatable="false">3782 822463 10005</string>
-    <string name="card_number_placeholder_maestro_bcmc" translatable="false">6703 1233 2143 27863</string>
-
     <string name="card_number_placeholder_error">Numero di carta non valido</string>
-    <string name="card_owner_placeholder" translatable="false">Martin Dupont</string>
 
     <string name="sdd_firstname" translatable="true">Nome</string>
     <string name="sdd_lastname" translatable="true">Cognome</string>
@@ -94,275 +81,5 @@
     <string name="no_payment_card_stored">Nessuna carta memorizzata</string>
 
     <string name="card_storage_switch_description">Memorizza questa carta per usi futuri</string>
-
-    <string-array name="card_products_list" translatable="false">
-        <item>visa</item>
-        <item>mastercard</item>
-        <item>american_express</item>
-        <item>maestro</item>
-        <item>bcmc</item>
-    </string-array>
-
-    <string name="card_visa_info" translatable="false">
-
-        {
-            "ranges":[
-
-                {
-                    "first": 4,
-                    "variable": null
-                }
-            ],
-
-            "lengths": {
-                "length": 16,
-                "variable": null
-            },
-
-            "format":[4,4,4]
-        }
-
-    </string>
-
-    <string name="card_mastercard_info" translatable="false">
-        {
-            "ranges":[
-                {
-                    "first": 51,
-                    "variable": 4
-                },
-                {
-                    "first": 222,
-                    "variable": 50
-                }
-            ],
-
-            "lengths": {
-                "length": 16,
-                "variable": null
-            },
-
-            "format":[4,4,4]
-        }
-
-    </string>
-
-    <string name="card_american_express_info" translatable="false">
-
-        {
-            "ranges":[
-
-                {
-                    "first": 34,
-                    "variable": null
-                },
-
-                {
-                    "first": 37,
-                    "variable": null
-                }
-
-            ],
-
-            "lengths": {
-                "length": 15,
-                "variable": null
-            },
-
-            "format":[4,6]
-        }
-
-    </string>
-
-    <string name="card_maestro_info" translatable="false">
-
-        {
-            "ranges":[
-
-                {
-                    "first": 50,
-                    "variable": null
-                },
-                {
-                    "first": 56,
-                    "variable": null
-                },
-                {
-                    "first": 57,
-                    "variable": null
-                },
-                {
-                    "first": 58,
-                    "variable": null
-                },
-                {
-                    "first": 639,
-                    "variable": null
-                },
-                {
-                    "first": 6701,
-                    "variable": null
-                },
-                {
-                    "first": 6702,
-                    "variable": null
-                },
-                {
-                    "first": 6704,
-                    "variable": null
-                },
-                {
-                    "first": 6705,
-                    "variable": null
-                },
-                {
-                    "first": 6706,
-                    "variable": null
-                },
-                {
-                    "first": 6707,
-                    "variable": null
-                },
-                {
-                    "first": 6708,
-                    "variable": null
-                },
-                {
-                    "first": 6709,
-                    "variable": null
-                },
-                {
-                    "first": 671,
-                    "variable": null
-                },
-                {
-                    "first": 672,
-                    "variable": null
-                },
-                {
-                    "first": 673,
-                    "variable": null
-                },
-                {
-                    "first": 674,
-                    "variable": null
-                },
-                {
-                    "first": 675,
-                    "variable": null
-                },
-                {
-                    "first": 676,
-                    "variable": null
-                },
-                {
-                    "first": 677,
-                    "variable": null
-                },
-                {
-                    "first": 678,
-                    "variable": null
-                },
-                {
-                    "first": 679,
-                    "variable": null
-                }
-            ],
-
-            "lengths": {
-                "length": 12,
-                "variable": 7
-            },
-
-            "format":[4,4,4,4,3]
-        }
-
-    </string>
-
-    <string name="card_bcmc_info" translatable="false">
-
-        {
-            "ranges":[
-
-                {
-                    "first": 6703,
-                    "variable": null
-                },
-                {
-                    "first": 606005,
-                    "variable": null
-                },
-                {
-                    "first": 479658,
-                    "variable": null
-                },
-                {
-                    "first": 561358,
-                    "variable": null
-                },
-                {
-                    "first": 561359,
-                    "variable": null
-                },
-                {
-                    "first": 56136,
-                    "variable": null
-                },
-                {
-                    "first": 56137,
-                    "variable": null
-                },
-                {
-                    "first": 56138,
-                    "variable": null
-                },
-                {
-                    "first": 56139,
-                    "variable": null
-                },
-                {
-                    "first": 561400,
-                    "variable": null
-                },
-                {
-                    "first": 561401,
-                    "variable": null
-                },
-                {
-                    "first": 561402,
-                    "variable": null
-                },
-                {
-                    "first": 561403,
-                    "variable": null
-                },
-                {
-                    "first": 561404,
-                    "variable": null
-                },
-                {
-                    "first": 561405,
-                    "variable": null
-                },
-                {
-                    "first": 561406,
-                    "variable": null
-                },
-                {
-                    "first": 561407,
-                    "variable": null
-                }
-            ],
-
-            "lengths": {
-                "length": 16,
-                "variable": 3
-            },
-
-            "format":[4,4,4,4,3]
-        }
-
-
-    </string>
 
 </resources>
