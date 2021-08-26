@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="payment_products_title">Pagamento</string>
+    <string name="payment_cards_title">Carte di pagamento</string>
+
+    <string name="card_owner">Titolare carta</string>
+    <string name="card_number">Numero</string>
+    <string name="card_expiration">Data di scadenza</string>
+    <string name="card_cvv">Codice di sicurezza</string>
+
+    <string name="unknown_error">Errore sconosciuto</string>
+    <string name="pay">Paga %1$s</string>
+
+    <string name="scan_card">Scansiona la tua carta</string>
+    <string name="scan_card_permission">Per scansionare la tua carta, concedi l\'accesso alla fotocamera.</string>
+    <string name="settings">Impostazioni</string>
+
+    <string name="nfc_error_io">Per favore non muovere la tua carta, riprova!</string>
+    <string name="nfc_error_unknown_card">Carta EMV sconosciuta</string>
+    <string name="nfc_locked">L\'NFC è bloccato sulla tua carta</string>
+    <string name="activate_nfc_sensor">Attiva il sensore NFC</string>
+    <string name="nfc_activated">Appoggia e mantieni la tua carta contactless sul retro del tuo telefono</string>
+
+    <string name="refresh">Aggiorna</string>
+
+    <string name="payment_page_error_timeout">La pagina di pagamento è scaduta</string>
+
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Annulla</string>
+    <string name="button_retry">Riprova</string>
+    <string name="button_continue">Continua</string>
+
+    <string name="alert_error_default_title">Si è verificato un errore</string>
+    <string name="alert_error_connection_title">Errore di rete</string>
+    <string name="alert_error_connection_body">La tua richiesta non può essere completata</string>
+    <string name="alert_error_default_body">La tua richiesta non può essere completata</string>
+    <string name="alert_error_bcmc_app_not_found_title">Si è verificato un errore</string>
+    <string name="alert_error_bcmc_app_not_found_body">L\'app Bancontact non può essere trovata</string>
+    <string name="alert_deleting_payment_card_title">Eliminazione carta di pagamento</string>
+    <string name="alert_deleting_payment_card_body">Sei sicuro di voler rimuovere questa carta di pagamento?</string>
+    <string name="alert_transaction_declined_title">Transazione declinata</string>
+    <string name="alert_transaction_declined_body">Per favore controlla i dati inseriti e riprova</string>
+    <string name="alert_transaction_error_title">Transazione declinata</string>
+    <string name="alert_transaction_error_body">Si è verificato un errore durante l\'elaborazione della tua transazione</string>
+    <string name="alert_error_payment_products_title">Si è verificato un errore</string>
+    <string name="alert_error_payment_products_body">Non è stato possibile trovare alcun prodotto di pagamento</string>
+    <string name="alert_transaction_loading_title">Transazione in corso</string>
+    <string name="alert_transaction_loading_body">La tua transazione è ancora in fase di elaborazione. Sei sicuro di voler lasciare questa schermata?</string>
+    <string name="alert_transaction_loading_yes">Esci</string>
+    <string name="alert_transaction_loading_no">Riprendi</string>
+
+    <string name="alert_certificate_error_title">Errore di Certificato SSL</string>
+    <string name="alert_certificate_error_message">Errore di Certificato.</string>
+    <string name="alert_certificate_error_untrusted_message">Il Certificato non è valido.</string>
+    <string name="alert_certificate_error_expired_message">Il Certificato è scaduto.</string>
+    <string name="alert_certificate_error_mismatched_message">L\'ID del Certificato non coincide.</string>
+    <string name="alert_certificate_error_not_yet_valid_message">Il Certificato non è ancora valido.</string>
+    <string name="alert_certificate_error_continue_message">Desideri proseguire lo stesso?</string>
+
+    <string name="card_expiration_placeholder">MM / AA</string>
+    <string name="card_expiration_placeholder_error">MM / AA</string>
+
+    <string name="card_security_code_placeholder_cvv_error">3 digits</string>
+    <string name="card_security_code_placeholder_cid_error">4 digits</string>
+
+    <string name="card_security_code_description_cvv">Il codice CVV è un numero di 3 cifre stampato sul retro della tua carta.</string>
+    <string name="card_security_code_description_cid">Il codice CID è il numero di 4 cifre stampato sul fronte della tua carta American Express.</string>
+
+    <string name="card_number_placeholder_error">Numero di carta non valido</string>
+
+    <string name="sdd_firstname" translatable="true">Nome</string>
+    <string name="sdd_lastname" translatable="true">Cognome</string>
+    <string name="sdd_iban" translatable="true">IBAN</string>
+    <string name="sdd_iban_invalid" translatable="true">IBAN non valido</string>
+
+    <string name="payment_product_card_description">Carta</string>
+
+    <string name="card_stored_selection">Seleziona una carta di pagamento</string>
+    <string name="card_stored_another_selection">Altro metodo di pagamento</string>
+    <string name="no_payment_card_stored">Nessuna carta memorizzata</string>
+
+    <string name="card_storage_switch_description">Memorizza questa carta per usi futuri</string>
+
+</resources>
