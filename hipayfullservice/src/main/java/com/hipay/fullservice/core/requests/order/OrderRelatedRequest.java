@@ -97,7 +97,7 @@ public class OrderRelatedRequest extends AbstractRequest {
         sourceMap.put("source",  "CSDK");
         sourceMap.put("brand", "android");
         sourceMap.put("brand_version", Build.VERSION.RELEASE);
-        sourceMap.put("integration_version", BuildConfig.VERSION_NAME);
+        sourceMap.put("integration_version", "android");
 
         this.setSource(sourceMap);
 

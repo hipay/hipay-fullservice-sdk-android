@@ -29,7 +29,7 @@ public class CheckoutData {
     protected Components components;
 
     public CheckoutData() {
-        this.setDomain(BuildConfig.APPLICATION_ID);
+        this.setDomain(BuildConfig.LIBRARY_PACKAGE_NAME);
 
         String randomID = randomIdentifier();
         if (randomID != null && this.getDomain() != null) {

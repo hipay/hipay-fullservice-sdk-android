@@ -344,6 +344,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == PaymentFormActivity.SCAN_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0

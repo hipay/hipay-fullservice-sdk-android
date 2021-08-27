@@ -88,6 +88,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
         if (fragment != null) {

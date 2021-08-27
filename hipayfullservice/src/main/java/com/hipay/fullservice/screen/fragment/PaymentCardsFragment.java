@@ -412,29 +412,11 @@ public class PaymentCardsFragment extends ListFragment implements AdapterView.On
     protected void validatePayButton(boolean validate) {
 
         if (validate) {
-
             mPayButton.setTextColor(ContextCompat.getColor(getActivity(), mCustomTheme.getTextColorPrimaryId()));
             mPayButtonLayout.setEnabled(true);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                mPayButtonLayout.setBackground(makeSelector(mCustomTheme));
-
-                Drawable[] drawables = mPayButton.getCompoundDrawables();
-                Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
-                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), mCustomTheme.getTextColorPrimaryId()));
-            }
-
         } else {
-
             mPayButton.setTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
             mPayButtonLayout.setEnabled(false);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                CustomTheme greyTheme = new CustomTheme(R.color.dark_grey, R.color.dark_grey, R.color.dark_grey);
-                mPayButtonLayout.setBackground(makeSelector(greyTheme));
-
-                Drawable[] drawables = mPayButton.getCompoundDrawables();
-                Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
-                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), android.R.color.white));
-            }
         }
     }
 
