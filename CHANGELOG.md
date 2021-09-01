@@ -1,5 +1,10 @@
 HiPay Android SDK change log and release notes
 ================================================
+1.6.4
+-----
+* Add Italian
+* Remove pop-up in PaymentCardsActivity
+
 1.6.3
 -----
 * Add updatePaymentCard function
