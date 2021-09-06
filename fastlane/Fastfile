@@ -66,17 +66,12 @@ platform :android do
     gradle(task: ":hipayfullservice:assembleRelease")
   end
 
-  desc "Deploy framework on Bintray"
+  desc "Deploy framework on MavenCentral"
   lane :DeployFramework do
-    # create local.properties file with all variables
-    system 'touch ../local.properties'
-    system 'echo "bintray.user=$BINTRAY_USER" >> ../local.properties'
-    system 'echo "bintray.apikey=$BINTRAY_API_KEY" >> ../local.properties'
-    system 'echo "bintray.gpg.password=$BINTRAY_GPG_PASSWORD" >> ../local.properties'
-    system 'echo "bintray.org=$BINTRAY_ORG" >> ../local.properties'
-
-    # Upload on Bintray repository
-    gradle(task: ":bintrayUpload")
+    # Upload on Sonatype repository
+    gradle(
+      tasks: ["publishMyPublicationPublicationToSonatypeRepository", "closeAndReleaseSonatypeStagingRepository"]
+    )
   end
 
 end

@@ -1,9 +1,6 @@
 apply plugin: 'com.android.library'
 
 ext {
-    bintrayRepo = 'maven'
-    bintrayName = 'hipayfullservice'
-
     publishedGroupId = 'com.hipay.fullservice'
     libraryName = 'HiPayFullservice'
     artifact = 'hipayfullservice'
