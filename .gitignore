@@ -75,3 +75,6 @@ captures/
 
 # Fastlane
 report.xml
+
+# GPG
+*.gpg
