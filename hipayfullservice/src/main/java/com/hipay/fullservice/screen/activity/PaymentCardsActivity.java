@@ -213,22 +213,7 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
                 } break;
 
                 case FormActionQuit: {
-
-                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            finish();
-                        }
-                    };
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle(R.string.alert_error_default_title)
-                            .setMessage(R.string.alert_error_default_body)
-                            .setNegativeButton(R.string.button_ok, dialogClickListener)
-                            .setCancelable(false)
-                            .show();
-
+                    finish();
                 } break;
 
                 // this never happens for now

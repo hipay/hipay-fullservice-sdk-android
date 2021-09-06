@@ -12,7 +12,7 @@ public class Components {
 
     public Components() {
         sdkType = "android";
-        sdkVersion = BuildConfig.VERSION_NAME;
+        sdkVersion = BuildConfig.LIBRARY_PACKAGE_NAME;
     }
 
     public JSONObject toJSONObject() {
