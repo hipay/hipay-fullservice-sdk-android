@@ -1,7 +1,5 @@
 package com.hipay.fullservice.core.monitoring;
 
-import com.hipay.fullservice.BuildConfig;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,7 +25,7 @@ public class CheckoutData {
     protected Components components;
 
     public CheckoutData() {
-        this.setDomain(BuildConfig.LIBRARY_PACKAGE_NAME);
+        this.setDomain(com.hipay.fullservice.BuildConfig.LIBRARY_PACKAGE_NAME);
 
         String randomID = randomIdentifier();
         if (randomID != null && this.getDomain() != null) {

@@ -101,11 +101,6 @@ public class ViewUtils {
             super(Integer.class, name);
         }
 
-        /**
-         * A type-specific override of the {@link #set(Object, Integer)} that is faster when
-         * dealing
-         * with fields of type <code>int</code>.
-         */
         public abstract void setValue(T object, int value);
 
         @Override
@@ -121,10 +116,6 @@ public class ViewUtils {
             super(Float.class, name);
         }
 
-        /**
-         * A type-specific override of the {@link #set(Object, Float)} that is faster when dealing
-         * with fields of type <code>int</code>.
-         */
         public abstract void setValue(T object, float value);
 
         @Override
