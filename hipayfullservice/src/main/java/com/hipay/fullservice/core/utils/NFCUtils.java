@@ -40,9 +40,7 @@ public class NFCUtils {
         return false;
     }
 
-    /**
-     * Disable dispacher Remove the most important priority for foreground application
-     */
+    // Disable dispacher Remove the most important priority for foreground application
     public static void disableDispatch(Activity activity) {
 
         if (isNfcEnabled(activity)) {
@@ -52,10 +50,7 @@ public class NFCUtils {
         }
     }
 
-    /**
-     * Activate NFC dispacher to read NFC Card Set the most important priority to the foreground
-     * application
-     */
+    // Activate NFC dispatcher to read NFC Card Set the most important priority to the foreground
     public static void enableDispatch(Activity activity) {
 
         if (isNfcEnabled(activity)) {
