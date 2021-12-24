@@ -1,8 +1,8 @@
 package com.hipay.fullservice.core.network;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
+
 import androidx.loader.content.AsyncTaskLoader;
 
 import com.hipay.fullservice.core.utils.Utils;
@@ -36,10 +36,7 @@ public abstract class AbstractHttpClient<T> extends AsyncTaskLoader<T> {
 
         HttpResult httpResult = new HttpResult();
 
-        boolean isCanceled = false;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            isCanceled = this.isLoadInBackgroundCanceled();
-        }
+        boolean isCanceled = this.isLoadInBackgroundCanceled();
 
         if (!isCanceled) {
 

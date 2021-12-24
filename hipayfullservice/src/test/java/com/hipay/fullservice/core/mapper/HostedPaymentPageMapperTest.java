@@ -4,6 +4,9 @@ package com.hipay.fullservice.core.mapper;
  * Created by HiPay on 09/09/16.
  */
 
+import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
 import com.hipay.fullservice.core.models.HostedPaymentPage;
 
 import org.json.JSONObject;
@@ -15,9 +18,6 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import java.net.URL;
-
-import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 public class HostedPaymentPageMapperTest {
 

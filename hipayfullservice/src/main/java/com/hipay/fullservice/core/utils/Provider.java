@@ -72,6 +72,11 @@ public class Provider implements IProvider {
         return response;
     }
 
+    @Override
+    public byte[] getAt() {
+        return tagCom.getHistoricalBytes();
+    }
+
     public void setTagCom(final IsoDep mTagCom) {
         this.tagCom = mTagCom;
     }

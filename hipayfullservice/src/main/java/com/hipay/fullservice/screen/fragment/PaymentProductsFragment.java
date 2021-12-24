@@ -1,34 +1,31 @@
 package com.hipay.fullservice.screen.fragment;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.client.interfaces.callbacks.PaymentProductsCallback;
 import com.hipay.fullservice.core.errors.Errors;
-import com.hipay.fullservice.core.errors.exceptions.ApiException;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.monitoring.CheckoutData;
 import com.hipay.fullservice.core.monitoring.CheckoutDataNetwork;
@@ -262,19 +259,12 @@ public class PaymentProductsFragment extends Fragment implements PaymentProducts
     }
 
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mProgressBar = (ProgressBar)view.findViewById(R.id.progress);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mProgressBar.setIndeterminateTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity(), R.color.hpf_light)));
-
-        } else {
-            mProgressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.hpf_light), PorterDuff.Mode.SRC_IN);
-        }
+        mProgressBar.setIndeterminateTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity(), R.color.hpf_light)));
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.products);
         setUpProductGrid(mRecyclerView);

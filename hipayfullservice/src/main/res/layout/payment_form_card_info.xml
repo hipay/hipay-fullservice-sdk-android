@@ -16,7 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:drawableLeft="@drawable/ic_photo_camera_black"
         android:drawableStart="@drawable/ic_photo_camera_black"
 
         style="@style/PaymentScreens.ScanButton"
@@ -32,11 +31,7 @@
         android:id="@+id/scan_nfc_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:drawableLeft="@drawable/ic_settings_black"
         android:drawableStart="@drawable/ic_settings_black"
-
-        android:drawableRight="@drawable/ic_nfc_black"
         android:drawableEnd="@drawable/ic_nfc_black"
 
         style="@style/PaymentScreens.ScanButton"
@@ -63,7 +58,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_double"
-            android:layout_marginLeft="@dimen/spacing_double"
             android:src="@drawable/ic_info_nfc_black"
             android:contentDescription="@string/content_description"
             />
@@ -74,8 +68,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/spacing_double"
-            android:layout_marginLeft="@dimen/spacing_double"
-            android:layout_marginRight="@dimen/spacing_normal"
             android:layout_marginEnd="@dimen/spacing_normal"
             android:layout_marginTop="@dimen/spacing_normal"
             android:layout_marginBottom="@dimen/spacing_normal"
@@ -88,6 +80,8 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/card_owner_support"
         app:errorTextAppearance="@style/PaymentScreens.TextAppearance.ErrorSmallItem"
+        app:placeholderText="@string/card_owner_placeholder"
+        app:placeholderTextAppearance="@style/PaymentScreens.TextAppearance.Placeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
@@ -102,20 +96,19 @@
             android:layout_height="wrap_content"
             android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:drawableEnd="@drawable/ic_person_black"
-            android:drawableRight="@drawable/ic_person_black"
             android:drawablePadding="@dimen/spacing_double"
-            android:hint="@string/card_owner_placeholder"
             android:imeOptions="actionNext"
             android:inputType="textPersonName|textCapWords|textNoSuggestions"
             android:maxLength="30"
             android:maxLines="1"
-            android:textColorHint="@color/hpf_placeholder"
+            android:minHeight="48dp"
             android:textSize="@dimen/size_edit_text" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/card_number_support"
         app:errorTextAppearance="@style/PaymentScreens.TextAppearance.ErrorSmallItem"
+        app:placeholderTextAppearance="@style/PaymentScreens.TextAppearance.Placeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
@@ -128,14 +121,13 @@
             android:id="@+id/card_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
-            android:drawableRight="@drawable/ic_credit_card_black"
+            android:digits="0123456789 "
             android:drawableEnd="@drawable/ic_credit_card_black"
             android:drawablePadding="@dimen/spacing_double"
+            android:imeOptions="actionNext"
             android:inputType="number"
-            android:textColorHint="@color/hpf_placeholder"
             android:maxLength="23"
-            android:digits="0123456789 "
+            android:minHeight="48dp"
             android:textSize="@dimen/size_edit_text" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -149,6 +141,8 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/card_expiration_support"
             app:errorTextAppearance="@style/PaymentScreens.TextAppearance.ErrorSmallItem"
+            app:placeholderText="@string/card_expiration_placeholder"
+            app:placeholderTextAppearance="@style/PaymentScreens.TextAppearance.Placeholder"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -162,18 +156,18 @@
                 android:id="@+id/card_expiration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:hint="@string/card_expiration_placeholder"
-                android:inputType="number"
                 android:digits="0123456789/"
-                android:textColorHint="@color/hpf_placeholder"
+                android:imeOptions="actionNext"
+                android:inputType="number"
                 android:maxLength="5"
+                android:minHeight="48dp"
                 android:textSize="@dimen/size_edit_text" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/card_cvv_support"
             app:errorTextAppearance="@style/PaymentScreens.TextAppearance.ErrorSmallItem"
+            app:placeholderTextAppearance="@style/PaymentScreens.TextAppearance.Placeholder"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -187,11 +181,11 @@
                 android:id="@+id/card_cvv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:digits="0123456789"
                 android:imeOptions="actionDone"
                 android:inputType="number"
-                android:digits="0123456789"
-                android:textColorHint="@color/hpf_placeholder"
                 android:maxLength="3"
+                android:minHeight="48dp"
                 android:textSize="@dimen/size_edit_text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -248,7 +242,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="?android:attr/actionBarSize"
-            android:layout_marginLeft="@dimen/spacing_double"
             android:layout_marginStart="@dimen/spacing_double"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             />

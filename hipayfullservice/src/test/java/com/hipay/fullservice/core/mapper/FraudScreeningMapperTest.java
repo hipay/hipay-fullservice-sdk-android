@@ -4,6 +4,9 @@ package com.hipay.fullservice.core.mapper;
  * Created by HiPay on 09/09/16.
  */
 
+import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
 import android.text.TextUtils;
 
 import com.hipay.fullservice.core.models.FraudScreening;
@@ -20,9 +23,6 @@ import org.mockito.junit.MockitoRule;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({TextUtils.class})

@@ -1,13 +1,12 @@
 package com.hipay.fullservice.screen.widget;
 
-import android.annotation.TargetApi;
-import android.os.Build;
-import androidx.annotation.Nullable;
-import androidx.core.app.SharedElementCallback;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.SharedElementCallback;
 
 import com.hipay.fullservice.screen.helper.ViewUtils;
 
@@ -16,7 +15,6 @@ import java.util.List;
 /**
  * This callback allows a shared TextView to resize text and start padding during transition.
  */
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class TextSharedElementCallback extends SharedElementCallback {
 
     private final int mInitialPaddingStart;

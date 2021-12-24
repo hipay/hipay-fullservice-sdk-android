@@ -1,9 +1,6 @@
 package com.hipay.fullservice.screen.fragment.interfaces;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
-import com.google.android.material.textfield.TextInputLayout;
 import android.text.InputFilter;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -12,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.screen.helper.FormHelper;
@@ -21,7 +19,6 @@ import com.hipay.fullservice.screen.helper.FormHelper;
  */
 public class MaestroBehaviour implements ICardBehaviour {
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void updateForm(EditText cardNumber, EditText cardCVV, EditText cardExpiry, TextInputLayout securityCodeLayout, TextView securityCodeInfoTextview, ImageView securityCodeInfoImageview, LinearLayout switchLayout, boolean networked, Context context) {
 
@@ -32,11 +29,7 @@ public class MaestroBehaviour implements ICardBehaviour {
 
         int card = networked? R.drawable.ic_credit_card_bcmc:R.drawable.ic_credit_card_maestro;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            cardNumber.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, card, 0);
-        } else {
-            cardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, card, 0);
-        }
+        cardNumber.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, card, 0);
 
         cardExpiry.setImeOptions(EditorInfo.IME_ACTION_DONE);
 

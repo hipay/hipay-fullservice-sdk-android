@@ -1,22 +1,21 @@
 package com.hipay.fullservice.screen.activity;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Window;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.GatewayClient;
@@ -26,7 +25,6 @@ import com.hipay.fullservice.core.errors.exceptions.HttpException;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.screen.fragment.PaymentCardsFragment;
-import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
 /**
@@ -114,15 +112,11 @@ public class PaymentCardsActivity extends PaymentScreenActivity implements Payme
         //supportPostponeEnterTransition();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setUpToolbar() {
 
-        if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.LOLLIPOP)) {
-
-            Window window = getWindow();
-            window.setStatusBarColor(ContextCompat.getColor(this,
-                    this.getCustomTheme().getColorPrimaryDarkId()));
-        }
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,
+                this.getCustomTheme().getColorPrimaryDarkId()));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_payment_cards);
         toolbar.setBackgroundColor(ContextCompat.getColor(this, this.getCustomTheme().getColorPrimaryId()));

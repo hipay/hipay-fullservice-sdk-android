@@ -1,11 +1,7 @@
 package com.hipay.fullservice.core.serialization.interfaces.order;
 
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
-import com.hipay.fullservice.core.requests.order.OrderRelatedRequest;
-import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
 import com.hipay.fullservice.core.utils.Utils;
 
@@ -20,11 +16,6 @@ import org.mockito.junit.MockitoRule;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
-
-import java.util.HashMap;
-
-import static org.powermock.api.mockito.PowerMockito.mock;
 
 /**
  * Created by HiPay on 01/09/16.

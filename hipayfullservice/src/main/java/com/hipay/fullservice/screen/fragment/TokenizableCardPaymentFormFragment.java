@@ -9,17 +9,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.appcompat.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -35,6 +26,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.AbstractClient;
 import com.hipay.fullservice.core.client.GatewayClient;
@@ -214,14 +214,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             @Override
             public void onClick(View v)
             {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-                {
-                    startActivity(new Intent(android.provider.Settings.ACTION_NFC_SETTINGS));
-                }
-                else
-                {
-                    startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
-                }
+                startActivity(new Intent(android.provider.Settings.ACTION_NFC_SETTINGS));
             }
         });
 
@@ -469,26 +462,22 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
             mPayButton.setTextColor(ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
             mPayButtonLayout.setEnabled(true);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                mPayButtonLayout.setBackground(makeSelector(theme));
+            mPayButtonLayout.setBackground(makeSelector(theme));
 
-                Drawable[] drawables = mPayButton.getCompoundDrawables();
-                Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
-                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
-            }
+            Drawable[] drawables = mPayButton.getCompoundDrawables();
+            Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
+            DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), theme.getTextColorPrimaryId()));
 
         } else {
 
             mPayButton.setTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
             mPayButtonLayout.setEnabled(false);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                CustomTheme greyTheme = new CustomTheme(R.color.dark_grey, R.color.dark_grey, R.color.dark_grey);
-                mPayButtonLayout.setBackground(makeSelector(greyTheme));
+            CustomTheme greyTheme = new CustomTheme(R.color.dark_grey, R.color.dark_grey, R.color.dark_grey);
+            mPayButtonLayout.setBackground(makeSelector(greyTheme));
 
-                Drawable[] drawables = mPayButton.getCompoundDrawables();
-                Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
-                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), android.R.color.white));
-            }
+            Drawable[] drawables = mPayButton.getCompoundDrawables();
+            Drawable wrapDrawable = DrawableCompat.wrap(drawables[0]);
+            DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getActivity(), android.R.color.white));
         }
     }
 

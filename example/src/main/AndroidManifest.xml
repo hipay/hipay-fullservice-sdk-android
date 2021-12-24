@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.hipay.fullservice.example">
     <application
         android:icon="@mipmap/ic_launcher"
@@ -7,11 +8,13 @@
         android:hardwareAccelerated="true"
         android:theme="@style/AppTheme"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:allowBackup="false">
+        android:allowBackup="false"
+        tools:targetApi="n">
 
         <activity
             android:name=".DemoActivity"
             android:windowSoftInputMode="adjustPan"
+            android:exported="true"
             android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>

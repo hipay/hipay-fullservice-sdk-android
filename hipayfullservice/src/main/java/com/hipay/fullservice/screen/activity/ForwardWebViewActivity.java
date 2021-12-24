@@ -1,7 +1,6 @@
 package com.hipay.fullservice.screen.activity;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -10,15 +9,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.net.http.SslError;
-import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -27,13 +18,20 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.logging.Logger;
 import com.hipay.fullservice.core.models.Order;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.OrderRelatedRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
-import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
 import java.security.InvalidParameterException;
@@ -204,7 +202,6 @@ public class ForwardWebViewActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     @SuppressLint("SetJavaScriptEnabled")
     protected void onCreate(Bundle savedInstanceState) {
@@ -266,7 +263,6 @@ public class ForwardWebViewActivity extends AppCompatActivity {
 
         }
 
-        @TargetApi(Build.VERSION_CODES.KITKAT)
         @Override
         public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
             //super.onReceivedSslError(view, handler, error);
@@ -290,13 +286,7 @@ public class ForwardWebViewActivity extends AppCompatActivity {
                     messageBuilder.append(getString(R.string.alert_certificate_error_message)); break;
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                messageBuilder.append(System.lineSeparator());
-
-            } else {
-                messageBuilder.append(System.getProperty("line.separator"));
-            }
-
+            messageBuilder.append(System.lineSeparator());
             messageBuilder.append(getString(R.string.alert_certificate_error_continue_message));
             builder.setMessage(messageBuilder.toString());
 
@@ -318,27 +308,18 @@ public class ForwardWebViewActivity extends AppCompatActivity {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void initStatusBar(CustomTheme theme) {
 
-        if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.LOLLIPOP)) {
-
-            Window window = getWindow();
-            window.setStatusBarColor(ContextCompat.getColor(this,
-                    theme.getColorPrimaryDarkId()));
-        }
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,
+                theme.getColorPrimaryDarkId()));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, theme.getTextColorPrimaryId()));
 
         toolbar.setBackgroundColor(ContextCompat.getColor(this, theme.getColorPrimaryId()));
 
-        Drawable icon;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            icon = getResources().getDrawable(R.drawable.ic_arrow_back_black, null);
-        } else {
-            icon = getResources().getDrawable(R.drawable.ic_arrow_back_black);
-        }
+        Drawable icon = getResources().getDrawable(R.drawable.ic_arrow_back_black, null);
 
         toolbar.setNavigationIcon(setTint(icon,ContextCompat.getColor(this, theme.getTextColorPrimaryId())));
 

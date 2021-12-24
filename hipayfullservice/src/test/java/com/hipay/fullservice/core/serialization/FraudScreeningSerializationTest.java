@@ -3,6 +3,8 @@ package com.hipay.fullservice.core.serialization;
  * Created by HiPay on 08/09/16.
  */
 
+import static junit.framework.Assert.assertNull;
+
 import com.hipay.fullservice.core.models.FraudScreening;
 import com.hipay.fullservice.core.serialization.interfaces.FraudScreeningSerialization;
 
@@ -12,8 +14,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-
-import static junit.framework.Assert.assertNull;
 
 /**
  * Created by HiPay on 01/09/16.

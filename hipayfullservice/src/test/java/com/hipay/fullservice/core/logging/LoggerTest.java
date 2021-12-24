@@ -1,5 +1,7 @@
 package com.hipay.fullservice.core.logging;
 
+import static org.junit.Assert.assertEquals;
+
 import android.util.Log;
 
 import org.junit.Before;
@@ -9,8 +11,6 @@ import org.mockito.BDDMockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by HiPay on 02/09/16.

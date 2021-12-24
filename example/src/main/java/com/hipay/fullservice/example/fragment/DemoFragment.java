@@ -1,28 +1,10 @@
 package com.hipay.fullservice.example.fragment;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
-import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -37,12 +19,28 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.hipay.fullservice.core.client.config.ClientConfig;
 import com.hipay.fullservice.core.errors.Errors;
 import com.hipay.fullservice.core.errors.exceptions.ApiException;
@@ -53,7 +51,6 @@ import com.hipay.fullservice.example.DemoActivity;
 import com.hipay.fullservice.example.Preferences;
 import com.hipay.fullservice.example.R;
 import com.hipay.fullservice.screen.activity.PaymentScreenActivity;
-import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
 import org.json.JSONException;
@@ -673,24 +670,15 @@ public class DemoFragment extends Fragment {
         paymentPageRequest.setAccountInfo(accountInfo);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void switchTheme(CustomTheme customTheme) {
 
         DemoActivity demoActivity = (DemoActivity) getActivity();
 
-        if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.LOLLIPOP)) {
+        Window window = demoActivity.getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(demoActivity,
+                customTheme.getColorPrimaryDarkId()));
 
-            Window window = demoActivity.getWindow();
-            window.setStatusBarColor(ContextCompat.getColor(demoActivity,
-                    customTheme.getColorPrimaryDarkId()));
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mProgressBar.setIndeterminateTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity(), customTheme.getTextColorPrimaryId())));
-
-        } else {
-            mProgressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), customTheme.getTextColorPrimaryId()), PorterDuff.Mode.SRC_IN);
-        }
+        mProgressBar.setIndeterminateTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity(), customTheme.getTextColorPrimaryId())));
 
 
         Toolbar toolbar = (Toolbar) demoActivity.findViewById(R.id.toolbar);

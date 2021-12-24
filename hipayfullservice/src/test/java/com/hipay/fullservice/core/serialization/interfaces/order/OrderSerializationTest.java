@@ -4,6 +4,8 @@ package com.hipay.fullservice.core.serialization.interfaces.order;
  * Created by HiPay on 08/09/16.
  */
 
+import static junit.framework.Assert.assertNull;
+
 import com.hipay.fullservice.core.models.Order;
 
 import org.junit.Before;
@@ -14,8 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import static junit.framework.Assert.assertNull;
 
 /**
  * Created by HiPay on 01/09/16.

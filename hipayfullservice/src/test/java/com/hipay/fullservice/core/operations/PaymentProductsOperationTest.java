@@ -4,6 +4,8 @@ package com.hipay.fullservice.core.operations;
  * Created by HiPay on 07/09/16.
  */
 
+import static junit.framework.Assert.assertEquals;
+
 import android.content.Context;
 import android.os.Bundle;
 
@@ -15,8 +17,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-
-import static junit.framework.Assert.assertEquals;
 
 /**
  * Created by HiPay on 22/02/16.

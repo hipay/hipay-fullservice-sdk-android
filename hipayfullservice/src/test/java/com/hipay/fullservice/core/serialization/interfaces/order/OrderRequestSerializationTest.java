@@ -1,6 +1,10 @@
 package com.hipay.fullservice.core.serialization.interfaces.order;
 
 
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
+
 import android.text.TextUtils;
 
 import com.hipay.fullservice.core.requests.order.OrderRequest;
@@ -19,10 +23,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by HiPay on 01/09/16.

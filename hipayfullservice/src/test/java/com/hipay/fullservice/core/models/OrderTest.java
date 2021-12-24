@@ -1,10 +1,10 @@
 package com.hipay.fullservice.core.models;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Created by HiPay on 16/02/16.

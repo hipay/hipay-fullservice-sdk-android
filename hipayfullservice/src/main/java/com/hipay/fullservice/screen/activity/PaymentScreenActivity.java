@@ -1,6 +1,7 @@
 package com.hipay.fullservice.screen.activity;
 
 import android.app.Activity;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.hipay.fullservice.core.client.config.ClientConfig;

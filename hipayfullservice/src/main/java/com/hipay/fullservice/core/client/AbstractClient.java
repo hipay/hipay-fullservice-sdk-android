@@ -1,14 +1,13 @@
 package com.hipay.fullservice.core.client;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
-import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
 
 import com.hipay.fullservice.core.client.interfaces.IReqHandler;
 import com.hipay.fullservice.core.client.interfaces.OrderReqHandler;
@@ -72,16 +71,12 @@ public abstract class AbstractClient<T> implements LoaderManager.LoaderCallbacks
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void cancelOperation(Context context) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-
-            //it cancels the loading
-            AbstractOperation operation = this.getOperation();
-            if (operation != null) {
-                operation.cancelLoad();
-            }
+        //it cancels the loading
+        AbstractOperation operation = this.getOperation();
+        if (operation != null) {
+            operation.cancelLoad();
         }
 
         //...and it actually brutally destroys the loader

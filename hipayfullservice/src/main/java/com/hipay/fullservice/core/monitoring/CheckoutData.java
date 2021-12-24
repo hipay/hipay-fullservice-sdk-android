@@ -1,7 +1,5 @@
 package com.hipay.fullservice.core.monitoring;
 
-import android.util.Log;
-
 import com.hipay.fullservice.BuildConfig;
 
 import org.json.JSONException;
