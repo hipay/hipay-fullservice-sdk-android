@@ -1,26 +1,14 @@
 package com.hipay.fullservice.screen.activity;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -28,8 +16,17 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.fragment.app.Fragment;
+
 import com.github.devnied.emvnfccard.model.EmvCard;
-import com.github.devnied.emvnfccard.parser.EmvParser;
+import com.github.devnied.emvnfccard.parser.EmvTemplate;
+import com.google.android.material.snackbar.Snackbar;
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.errors.Errors;
@@ -42,7 +39,6 @@ import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.utils.Provider;
 import com.hipay.fullservice.screen.fragment.AbstractPaymentFormFragment;
 import com.hipay.fullservice.screen.fragment.TokenizableCardPaymentFormFragment;
-import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 import com.hipay.fullservice.screen.widget.TextSharedElementCallback;
 
@@ -67,8 +63,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     private ImageButton mToolbarBack;
     private AlertDialog mDialog;
     private ProgressBar mProgressBar;
-
-    private List<PaymentMethod> history;
 
     public static Intent getStartIntent(Context context, Bundle paymentPageRequestBundle, Bundle themeBundle, PaymentProduct paymentProduct, String signature) {
 
@@ -174,8 +168,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         } else if (exception != null) {
             formResult = this.manageTransactionError(exception);
 
-        } else {
-            //no-op
         }
 
         if (formResult != null) {
@@ -604,13 +596,9 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
         PaymentProduct paymentProduct = PaymentProduct.fromBundle(paymentProductBundle);
         initToolbar(paymentProduct);
 
-        mProgressBar = (ProgressBar) findViewById(R.id.progress);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mProgressBar.setIndeterminateTintList(ColorStateList.valueOf(ContextCompat.getColor(this, customTheme.getTextColorPrimaryId())));
+        mProgressBar = findViewById(R.id.progress);
+        mProgressBar.setIndeterminateTintList(ColorStateList.valueOf(ContextCompat.getColor(this, customTheme.getTextColorPrimaryId())));
 
-        } else {
-            mProgressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, customTheme.getTextColorPrimaryId()), PorterDuff.Mode.SRC_IN);
-        }
 
         int categoryNameTextSize = getResources()
                 .getDimensionPixelSize(R.dimen.payment_product_item_text_size);
@@ -660,7 +648,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     protected void onNewIntent(final Intent intent) {
         super.onNewIntent(intent);
 
-        if (intent != null && intent.getAction().equalsIgnoreCase(NfcAdapter.ACTION_TECH_DISCOVERED)) {
+        if (intent != null && intent.getAction() != null && intent.getAction().equalsIgnoreCase(NfcAdapter.ACTION_TECH_DISCOVERED)) {
 
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             IsoDep isoDep = IsoDep.get(tag);
@@ -693,7 +681,11 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                 Provider mProvider = new Provider(isoDep);
                 mProvider.setTagCom(isoDep);
 
-                EmvParser parser = new EmvParser(mProvider, true);
+                // Create Parser
+                EmvTemplate parser = EmvTemplate.Builder() //
+                        .setProvider(mProvider) // Define provider
+                        .build();
+
                 EmvCard card = parser.readEmvCard();
                 if (card == null) {
                     card = new EmvCard();
@@ -730,9 +722,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                             String cardNumber = card.getCardNumber();
                             formFragment.fillCardNumber(cardNumber, card.getExpireDate());
 
-                        } else if (card.isNfcLocked())
-                        {
-                            snackbar = Snackbar.make(formFragment.getView(), getString(R.string.nfc_locked), Snackbar.LENGTH_LONG);
                         } else
                         {
                             snackbar = Snackbar.make(formFragment.getView(), getString(R.string.nfc_error_unknown_card), Snackbar.LENGTH_LONG);
@@ -756,22 +745,18 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     }
 
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void initToolbar(PaymentProduct paymentProduct) {
 
-        if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.LOLLIPOP)) {
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,
+                this.getCustomTheme().getColorPrimaryDarkId()));
 
-            Window window = getWindow();
-            window.setStatusBarColor(ContextCompat.getColor(this,
-                    this.getCustomTheme().getColorPrimaryDarkId()));
-        }
-
-        mToolbarBack = (ImageButton) findViewById(R.id.back);
+        mToolbarBack = findViewById(R.id.back);
         mToolbarBack.setColorFilter((ContextCompat.getColor(this,
                 getCustomTheme().getTextColorPrimaryId())));
 
         mToolbarBack.setOnClickListener(mOnClickListener);
-        TextView titleView = (TextView) findViewById(R.id.payment_product_title);
+        TextView titleView = findViewById(R.id.payment_product_title);
 
         titleView.setText(paymentProduct.getPaymentProductDescription());
         titleView.setTextColor(ContextCompat.getColor(this,
@@ -783,12 +768,9 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
     }
 
 
-    @SuppressLint("NewApi")
     public void setToolbarElevation(boolean shouldElevate) {
-        if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.LOLLIPOP)) {
-            mToolbarBack.setElevation(shouldElevate ?
-                    getResources().getDimension(R.dimen.elevation_header) : 0);
-        }
+        mToolbarBack.setElevation(shouldElevate ?
+                getResources().getDimension(R.dimen.elevation_header) : 0);
     }
 
     @Override
@@ -833,7 +815,7 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
             AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
 
             boolean loadingMode = abstractPaymentFormFragment.getLoadingMode();
-            if (loadingMode == true) {
+            if (loadingMode) {
 
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override

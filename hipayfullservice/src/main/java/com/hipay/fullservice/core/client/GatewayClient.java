@@ -1,7 +1,6 @@
 package com.hipay.fullservice.core.client;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 import com.hipay.fullservice.core.client.interfaces.callbacks.OrderRequestCallback;
 import com.hipay.fullservice.core.client.interfaces.callbacks.PaymentPageRequestCallback;

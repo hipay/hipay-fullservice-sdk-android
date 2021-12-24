@@ -278,13 +278,6 @@ public class FormHelper {
         return year;
     }
 
-    /**
-     * Get resource for product code and context
-     *
-     * @param productCode
-     * @param context
-     * @return JSONObject
-     */
     public static JSONObject getInfoCardByProductCode(String productCode, Context context) throws JSONException {
         String cardInfoString = FormHelper.getStringResourceByName("card_" + productCode + "_info", context);
         return new JSONObject(cardInfoString);

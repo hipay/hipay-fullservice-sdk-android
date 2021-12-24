@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.hipay.fullservice">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Permission to vibrate - recommended, allows vibration feedback on scan -->
@@ -11,43 +13,59 @@
     <uses-permission android:name="android.permission.NFC" />
 
     <!-- Camera features - recommended -->
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
-    <uses-feature android:name="android.hardware.camera.flash" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
 
     <application>
 
-        <activity android:name=".screen.activity.PaymentProductsActivity"
-            android:theme="@style/PaymentScreens.PaymentProductsActivity"
-            />
+        <activity
+            android:name=".screen.activity.PaymentProductsActivity"
+            android:exported="false"
+            android:theme="@style/PaymentScreens.PaymentProductsActivity" />
 
-        <activity android:name=".screen.activity.PaymentCardsActivity"
-            android:theme="@style/PaymentScreens.PaymentCardsActivity"
-            />
+        <activity
+            android:name=".screen.activity.PaymentCardsActivity"
+            android:exported="false"
+            android:theme="@style/PaymentScreens.PaymentCardsActivity" />
 
-        <activity android:name=".screen.activity.PaymentFormActivity"
+        <activity
+            android:name=".screen.activity.PaymentFormActivity"
+            android:exported="false"
             android:theme="@style/PaymentScreens.PaymentFormActivity"
             android:windowSoftInputMode="adjustPan">
 
         </activity>
 
-        <activity android:name=".screen.activity.ForwardWebViewActivity"
-            android:theme="@style/PaymentScreens.ForwardWebViewActivity"
+        <activity
+            android:name=".screen.activity.ForwardWebViewActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
             android:launchMode="singleTop"
-            android:configChanges="orientation|screenSize">
+            android:theme="@style/PaymentScreens.ForwardWebViewActivity"
+            tools:ignore="AppLinkUrlError">
 
-            <intent-filter>
-            <data android:scheme="bepgenapp"
-                />
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <data android:scheme="bepgenapp" />
                 <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
 
         </activity>
 
-        <activity android:name="io.card.payment.CardIOActivity" android:configChanges="keyboardHidden|orientation"
-            android:hardwareAccelerated="true"/>
+        <activity
+            android:name="io.card.payment.CardIOActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:hardwareAccelerated="true" />
 
     </application>
 

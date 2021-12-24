@@ -3,13 +3,14 @@ package com.hipay.fullservice.screen.helper;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import androidx.core.view.ViewCompat;
 import android.transition.ChangeBounds;
 import android.util.Property;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import androidx.core.view.ViewCompat;
 
 public class ViewUtils {
 
@@ -100,11 +101,6 @@ public class ViewUtils {
             super(Integer.class, name);
         }
 
-        /**
-         * A type-specific override of the {@link #set(Object, Integer)} that is faster when
-         * dealing
-         * with fields of type <code>int</code>.
-         */
         public abstract void setValue(T object, int value);
 
         @Override
@@ -120,10 +116,6 @@ public class ViewUtils {
             super(Float.class, name);
         }
 
-        /**
-         * A type-specific override of the {@link #set(Object, Float)} that is faster when dealing
-         * with fields of type <code>int</code>.
-         */
         public abstract void setValue(T object, float value);
 
         @Override

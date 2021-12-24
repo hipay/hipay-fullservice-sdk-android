@@ -1,7 +1,7 @@
 image: $REGISTRY_CI/gitlab-ci-base-android
 
 variables:
-  ANDROID_COMPILE_SDK: '30'
+  ANDROID_COMPILE_SDK: '31'
   ANDROID_BUILD_TOOLS: '30.0.3'
 
 stages:

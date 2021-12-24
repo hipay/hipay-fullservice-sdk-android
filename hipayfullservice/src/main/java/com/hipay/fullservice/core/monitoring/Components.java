@@ -1,7 +1,5 @@
 package com.hipay.fullservice.core.monitoring;
 
-import com.hipay.fullservice.BuildConfig;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,7 +10,7 @@ public class Components {
 
     public Components() {
         sdkType = "android";
-        sdkVersion = BuildConfig.LIBRARY_PACKAGE_NAME;
+        sdkVersion = com.hipay.fullservice.BuildConfig.LIBRARY_PACKAGE_NAME;
     }
 
     public JSONObject toJSONObject() {

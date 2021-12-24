@@ -2,10 +2,11 @@ package com.hipay.fullservice.example;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
+import android.text.TextUtils;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.text.TextUtils;
+import androidx.fragment.app.Fragment;
 
 import com.hipay.fullservice.core.client.config.ClientConfig;
 import com.hipay.fullservice.core.models.PaymentProduct;

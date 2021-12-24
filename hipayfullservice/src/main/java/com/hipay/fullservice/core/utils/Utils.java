@@ -1,8 +1,6 @@
 package com.hipay.fullservice.core.utils;
 
-import android.annotation.TargetApi;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 
@@ -67,7 +65,6 @@ public class Utils {
         return newUri.toURL();
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String queryStringFromMap(Map<String, String> map) {
 
         if (map == null || map.isEmpty()) return null;
@@ -81,16 +78,8 @@ public class Utils {
                 String encodedKey;
                 String encodedValue;
 
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT){
-                    // Do something for lollipop and above versions
-                    encodedKey = URLEncoder.encode(entry.getKey(),StandardCharsets.UTF_8.name()).replaceAll("\\+", "%20");
-                    encodedValue = URLEncoder.encode(entry.getValue(),StandardCharsets.UTF_8.name()).replaceAll("\\+", "%20");
-
-                } else {
-
-                    encodedKey = URLEncoder.encode(entry.getKey(),"UTF-8").replaceAll("\\+", "%20");
-                    encodedValue = URLEncoder.encode(entry.getValue(), "UTF-8").replaceAll("\\+", "%20");
-                }
+                encodedKey = URLEncoder.encode(entry.getKey(),StandardCharsets.UTF_8.name()).replaceAll("\\+", "%20");
+                encodedValue = URLEncoder.encode(entry.getValue(),StandardCharsets.UTF_8.name()).replaceAll("\\+", "%20");
 
                 String part = new StringBuilder(encodedKey).append("=").append(encodedValue).toString();
 
@@ -306,18 +295,13 @@ public class Utils {
         return null;
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     private static JSONObject fromBundleToJSON(Bundle bundle) {
 
         JSONObject json = new JSONObject();
         Set<String> keys = bundle.keySet();
         for (String key : keys) {
             try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    json.put(key, JSONObject.wrap(bundle.get(key)));
-                } else {
-                    json.put(key, bundle.get(key));
-                }
+                json.put(key, JSONObject.wrap(bundle.get(key)));
             } catch(JSONException e) {
                 //Handle exception here
                 json = null;
@@ -419,7 +403,6 @@ public class Utils {
         return sb.toString();
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void logFromException(Exception exception, String client) {
 
         Throwable throwable = exception;
@@ -435,43 +418,20 @@ public class Utils {
                 stringBuilder = new StringBuilder("Error:");
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                stringBuilder.append(System.lineSeparator());
-
-            } else {
-                stringBuilder.append(System.getProperty("line.separator"));
-            }
+            stringBuilder.append(System.lineSeparator());
 
             if (throwable instanceof ApiException)
             {
                 ApiException apiException = (ApiException) throwable;
 
                 stringBuilder.append("API code: ").append(apiException.getApiCode());
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    stringBuilder.append(System.lineSeparator());
-
-                } else {
-                    stringBuilder.append(System.getProperty("line.separator"));
-                }
+                stringBuilder.append(System.lineSeparator());
 
                 stringBuilder.append("Status code: ").append(apiException.getStatusCode());
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    stringBuilder.append(System.lineSeparator());
-
-                } else {
-                    stringBuilder.append(System.getProperty("line.separator"));
-                }
+                stringBuilder.append(System.lineSeparator());
 
                 stringBuilder.append("Message: ").append(apiException.getMessage());
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    stringBuilder.append(System.lineSeparator());
-
-                } else {
-                    stringBuilder.append(System.getProperty("line.separator"));
-                }
+                stringBuilder.append(System.lineSeparator());
 
                 stringBuilder.append("Description: ").append(apiException.getDescription());
 
@@ -482,13 +442,7 @@ public class Utils {
                 HttpException httpException = (HttpException) throwable;
                 stringBuilder.append("Status code: ").append(httpException.getStatusCode());
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    stringBuilder.append(System.lineSeparator());
-
-                } else {
-                    stringBuilder.append(System.getProperty("line.separator"));
-                }
-
+                stringBuilder.append(System.lineSeparator());
                 stringBuilder.append("Message: ").append(httpException.getMessage());
             }
 

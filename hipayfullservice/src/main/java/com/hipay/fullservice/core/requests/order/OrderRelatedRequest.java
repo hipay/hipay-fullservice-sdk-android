@@ -3,7 +3,6 @@ package com.hipay.fullservice.core.requests.order;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.hipay.fullservice.BuildConfig;
 import com.hipay.fullservice.core.client.config.ClientConfig;
 import com.hipay.fullservice.core.mapper.AbstractMapper;
 import com.hipay.fullservice.core.mapper.interfaces.BundleMapper;

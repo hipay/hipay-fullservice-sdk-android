@@ -3,14 +3,15 @@ package com.hipay.fullservice.screen.adapter;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
-import androidx.annotation.ColorRes;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.ColorRes;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.models.PaymentProduct;

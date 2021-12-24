@@ -1,5 +1,12 @@
 HiPay Android SDK change log and release notes
 ================================================
+
+1.7.0
+-----
+* ⚠️ Drop support Android SDK version (minSdkVersion = 21)
+* Target API 31
+* Fix Overflow placeholder in TextInput
+
 1.6.4
 -----
 * Add Italian

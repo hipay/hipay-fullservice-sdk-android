@@ -7,7 +7,7 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" } // used by gradle-nexus:publish-plugin
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:7.0.4'
     }
 }
 
@@ -21,8 +21,8 @@ apply plugin: "io.github.gradle-nexus.publish-plugin"
 allprojects {
     repositories {
         mavenCentral()
-        google()
         maven { url "https://plugins.gradle.org/m2/" } // used by gradle-nexus:publish-plugin
+        google()
     }
 }
 
@@ -32,7 +32,7 @@ task clean(type: Delete) {
 }
 
 group = "com.hipay.fullservice"
-version = "1.6.4"
+version = "1.7.0"
 
 try {
     // Load local.properties file

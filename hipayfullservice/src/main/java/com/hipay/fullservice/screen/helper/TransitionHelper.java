@@ -3,13 +3,13 @@ package com.hipay.fullservice.screen.helper;
 /**
  * Created by HiPay on 29/02/16.
  */
-import android.annotation.TargetApi;
+
 import android.app.Activity;
-import android.os.Build;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,16 +24,6 @@ public class TransitionHelper {
         //no instance
     }
 
-    /**
-     * Create the transition participants required during a activity transition while
-     * avoiding glitches with the system UI.
-     *
-     * @param activity         The activity used as start for the transition.
-     * @param includeStatusBar If false, the status bar will not be added as the transition
-     *                         participant.
-     * @return All transition participants.
-     */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static Pair<View, String>[] createSafeTransitionParticipants(@NonNull Activity activity,
                                                                         boolean includeStatusBar,
                                                                         @Nullable Pair... otherParticipants) {
@@ -59,7 +49,6 @@ public class TransitionHelper {
         return participants.toArray(new Pair[participants.size()]);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private static void addNonNullViewToTransitionParticipants(View view, List<Pair> participants) {
         if (view == null) {
             return;

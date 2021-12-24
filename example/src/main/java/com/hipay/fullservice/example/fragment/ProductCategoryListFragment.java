@@ -1,13 +1,8 @@
 package com.hipay.fullservice.example.fragment;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import androidx.fragment.app.ListFragment;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +14,13 @@ import android.widget.CheckedTextView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.ListFragment;
+
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.example.DemoActivity;
 import com.hipay.fullservice.example.R;
-import com.hipay.fullservice.screen.helper.ApiLevelHelper;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
 import java.util.Arrays;
@@ -117,7 +115,6 @@ public class ProductCategoryListFragment extends ListFragment implements Adapter
 
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -131,12 +128,9 @@ public class ProductCategoryListFragment extends ListFragment implements Adapter
 
         DemoActivity demoActivity = (DemoActivity) getActivity();
 
-        if (ApiLevelHelper.isAtLeast(Build.VERSION_CODES.LOLLIPOP)) {
-
-            Window window = demoActivity.getWindow();
-            window.setStatusBarColor(ContextCompat.getColor(demoActivity,
-                    customTheme.getColorPrimaryDarkId()));
-        }
+        Window window = demoActivity.getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(demoActivity,
+                customTheme.getColorPrimaryDarkId()));
 
         Toolbar toolbar = (Toolbar) demoActivity.findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryId()));

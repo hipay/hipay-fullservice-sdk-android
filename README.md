@@ -25,7 +25,7 @@ Read the **[project documentation][doc-home]** for comprehensive information abo
 
 The **HiPay SDK for Android** is available under the **Apache 2.0 License**. Check out the [license file][project-license] for more information.
 
-[doc-home]: https://developer.hipay.com/doc/hipay-fullservice-sdk-android/
+[doc-home]: https://developer.hipay.com/mobile-payments/android/android-fundamentals
 
 [hipay-help]: https://support.hipay.com/hc/fr
 

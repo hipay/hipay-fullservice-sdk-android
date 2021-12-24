@@ -1,5 +1,10 @@
 package com.hipay.fullservice.core.serialization.interfaces.securevault;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.when;
+
 import android.text.TextUtils;
 
 import com.hipay.fullservice.core.requests.securevault.GenerateTokenRequest;
@@ -22,11 +27,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.when;
 
 
 /**

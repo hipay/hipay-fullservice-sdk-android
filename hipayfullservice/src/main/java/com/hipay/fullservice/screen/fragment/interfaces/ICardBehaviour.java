@@ -1,11 +1,12 @@
 package com.hipay.fullservice.screen.fragment.interfaces;
 
 import android.content.Context;
-import com.google.android.material.textfield.TextInputLayout;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * Created by HiPay on 20/05/16.

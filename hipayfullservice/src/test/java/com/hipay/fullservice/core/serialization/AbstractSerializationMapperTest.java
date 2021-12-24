@@ -1,8 +1,10 @@
 package com.hipay.fullservice.core.serialization;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
 import com.hipay.fullservice.core.models.AbstractModel;
 import com.hipay.fullservice.core.requests.AbstractRequest;
-import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,8 +12,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.HashMap;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Created by HiPay on 31/08/16.

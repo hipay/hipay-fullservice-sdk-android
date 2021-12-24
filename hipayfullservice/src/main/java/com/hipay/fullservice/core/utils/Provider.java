@@ -7,7 +7,6 @@ import com.github.devnied.emvnfccard.enums.SwEnum;
 import com.github.devnied.emvnfccard.exception.CommunicationException;
 import com.github.devnied.emvnfccard.parser.IProvider;
 import com.github.devnied.emvnfccard.utils.TlvUtil;
-import com.hipay.fullservice.BuildConfig;
 
 import java.io.IOException;
 
@@ -42,7 +41,7 @@ public class Provider implements IProvider {
 
     @Override
     public byte[] transceive(final byte[] pCommand) throws CommunicationException {
-        if (BuildConfig.DEBUG) {
+        if (com.hipay.fullservice.BuildConfig.DEBUG) {
             Log.d(TAG, "send: " + BytesUtils.bytesToString(pCommand));
         }
         log.append("=================<br/>");
@@ -70,6 +69,11 @@ public class Provider implements IProvider {
         }
 
         return response;
+    }
+
+    @Override
+    public byte[] getAt() {
+        return tagCom.getHistoricalBytes();
     }
 
     public void setTagCom(final IsoDep mTagCom) {

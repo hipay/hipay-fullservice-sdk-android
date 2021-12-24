@@ -4,10 +4,7 @@ package com.hipay.fullservice.screen.widget;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
-import androidx.core.view.ViewCompat;
 import android.transition.Transition;
 import android.transition.TransitionValues;
 import android.util.AttributeSet;
@@ -15,12 +12,13 @@ import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.core.view.ViewCompat;
+
 import com.hipay.fullservice.screen.helper.ViewUtils;
 
 /**
  * A transition that resizes text of a TextView.
  */
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class TextResizeTransition extends Transition {
 
     private static final String PROPERTY_NAME_TEXT_RESIZE =

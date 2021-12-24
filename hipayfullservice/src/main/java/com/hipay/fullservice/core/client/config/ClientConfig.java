@@ -81,9 +81,6 @@ public class ClientConfig {
         this.setUserAgent(null);
     }
 
-    /**
-     * @deprecated use {@link #setConfig(Environment, String, String)} instead.
-     */
     @Deprecated
     public void setConfig(Environment environment, String username, String password, boolean paymentCardStorageEnabled) {
 
