@@ -4,10 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.IsoDep;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -24,9 +20,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 
-import com.github.devnied.emvnfccard.model.EmvCard;
-import com.github.devnied.emvnfccard.parser.EmvTemplate;
-import com.google.android.material.snackbar.Snackbar;
 import com.hipay.fullservice.R;
 import com.hipay.fullservice.core.client.GatewayClient;
 import com.hipay.fullservice.core.errors.Errors;
@@ -36,17 +29,14 @@ import com.hipay.fullservice.core.models.PaymentMethod;
 import com.hipay.fullservice.core.models.PaymentProduct;
 import com.hipay.fullservice.core.models.Transaction;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
-import com.hipay.fullservice.core.utils.Provider;
 import com.hipay.fullservice.screen.fragment.AbstractPaymentFormFragment;
 import com.hipay.fullservice.screen.fragment.TokenizableCardPaymentFormFragment;
 import com.hipay.fullservice.screen.model.CustomTheme;
 import com.hipay.fullservice.screen.widget.TextSharedElementCallback;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.IOException;
 import java.net.URL;
+import java.security.Provider;
 import java.util.List;
 import java.util.Locale;
 
@@ -642,106 +632,6 @@ public class PaymentFormActivity extends AppCompatActivity implements AbstractPa
                     .replace(R.id.form_fragment_container, AbstractPaymentFormFragment.newInstance(paymentPageRequestBundle, paymentProduct, signature, customThemeBundle)).commit();
         }
 
-    }
-
-    @Override
-    protected void onNewIntent(final Intent intent) {
-        super.onNewIntent(intent);
-
-        if (intent != null && intent.getAction() != null && intent.getAction().equalsIgnoreCase(NfcAdapter.ACTION_TECH_DISCOVERED)) {
-
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            IsoDep isoDep = IsoDep.get(tag);
-
-            if (isoDep != null) {
-
-                new NFCAsyncTask().execute(isoDep);
-            }
-        }
-    }
-
-    private class NFCAsyncTask extends AsyncTask<IsoDep, Void, EmvCard> {
-
-        @Override
-        protected void onPreExecute() {
-
-            mProgressBar.setVisibility(View.VISIBLE);
-
-        }
-
-        @Override
-        protected EmvCard doInBackground(IsoDep... params) {
-
-            IsoDep isoDep = params[0];
-
-            try {
-                // Open connection
-                isoDep.connect();
-
-                Provider mProvider = new Provider(isoDep);
-                mProvider.setTagCom(isoDep);
-
-                // Create Parser
-                EmvTemplate parser = EmvTemplate.Builder() //
-                        .setProvider(mProvider) // Define provider
-                        .build();
-
-                EmvCard card = parser.readEmvCard();
-                if (card == null) {
-                    card = new EmvCard();
-                }
-                return card;
-
-            } catch (IOException e)
-            {
-                return null;
-
-            } finally
-            {
-                IOUtils.closeQuietly(isoDep);
-            }
-        }
-
-        @Override
-        protected void onPostExecute(EmvCard card) {
-
-            mProgressBar.setVisibility(View.GONE);
-
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.form_fragment_container);
-            if (fragment != null) {
-
-                AbstractPaymentFormFragment abstractPaymentFormFragment = (AbstractPaymentFormFragment)fragment;
-                if ( (abstractPaymentFormFragment instanceof TokenizableCardPaymentFormFragment)) {
-                    TokenizableCardPaymentFormFragment formFragment = (TokenizableCardPaymentFormFragment) abstractPaymentFormFragment;
-
-                    Snackbar snackbar = null;
-
-                    if (card != null) {
-                        if (StringUtils.isNotBlank(card.getCardNumber()))
-                        {
-                            String cardNumber = card.getCardNumber();
-                            formFragment.fillCardNumber(cardNumber, card.getExpireDate());
-
-                        } else
-                        {
-                            snackbar = Snackbar.make(formFragment.getView(), getString(R.string.nfc_error_unknown_card), Snackbar.LENGTH_LONG);
-                        }
-
-                    } else
-                    {
-                        snackbar = Snackbar.make(formFragment.getView(), getString(R.string.nfc_error_io), Snackbar.LENGTH_LONG);
-                    }
-
-                    if (snackbar != null) {
-                        snackbar.show();
-                    }
-                }
-            }
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {}
     }
 
 

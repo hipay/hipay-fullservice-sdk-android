@@ -10,8 +10,6 @@
     <!-- Permission to use camera - required -->
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-permission android:name="android.permission.NFC" />
-
     <!-- Camera features - recommended -->
     <uses-feature
         android:name="android.hardware.camera"
