@@ -50,7 +50,6 @@ import com.hipay.fullservice.core.requests.info.CustomerInfoRequest;
 import com.hipay.fullservice.core.requests.order.OrderRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.core.requests.payment.CardTokenPaymentMethodRequest;
-import com.hipay.fullservice.core.utils.NFCUtils;
 import com.hipay.fullservice.core.utils.PaymentCardTokenDatabase;
 import com.hipay.fullservice.core.utils.Utils;
 import com.hipay.fullservice.screen.activity.PaymentFormActivity;
@@ -73,8 +72,6 @@ import io.card.payment.CreditCard;
 public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragment {
 
     private Button mScanButton;
-    private Button mScanNfcButton;
-    private LinearLayout mScanNfcInfoLayout;
 
     private Button mPayButton;
     private FrameLayout mPayButtonLayout;
@@ -103,54 +100,24 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        //button to enable NFC on the device
-        boolean isPaymentCardNfcScanButtonVisible = this.isPaymentCardNfcScanConfigEnabled() && this.isPaymentCardNfcScanAvailable() && !this.isPaymentCardNfcScanEnabled();
-        mScanNfcButton.setVisibility(isPaymentCardNfcScanButtonVisible ? View.VISIBLE : View.GONE);
-
-        boolean isPaymentCardNfcScanInfoVisible = this.isPaymentCardNfcScanConfigEnabled() && this.isPaymentCardNfcScanAvailable() && this.isPaymentCardNfcScanEnabled();
-        mScanNfcInfoLayout.setVisibility(isPaymentCardNfcScanInfoVisible ? View.VISIBLE : View.GONE);
-
-        if (isPaymentCardNfcScanInfoVisible) {
-            NFCUtils.enableDispatch(getActivity());
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        NFCUtils.disableDispatch(getActivity());
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PaymentFormActivity.SCAN_REQUEST_CODE) {
-
-            if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
+        if (requestCode == PaymentFormActivity.SCAN_REQUEST_CODE && data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                 CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
+                if (scanResult != null) {
+                    mCardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(Integer.MAX_VALUE)});
+                    mCardNumber.setText(scanResult.getFormattedCardNumber());
 
-                mCardNumber.setFilters( new InputFilter[] { new InputFilter.LengthFilter(Integer.MAX_VALUE)});
-                mCardNumber.setText(scanResult.getFormattedCardNumber());
-
-                if (scanResult.isExpiryValid()) {
-
-                    String expiryYear = String.valueOf(scanResult.expiryYear);
-                    if (expiryYear.length() == 4 && TextUtils.isDigitsOnly(expiryYear)) {
-
-                        mCardExpiration.setText(scanResult.expiryMonth + "/" + expiryYear.substring(2,4));
+                    if (scanResult.isExpiryValid()) {
+                        String expiryYear = String.valueOf(scanResult.expiryYear);
+                        if (expiryYear.length() == 4 && TextUtils.isDigitsOnly(expiryYear)) {
+                            mCardExpiration.setText(scanResult.expiryMonth + "/" + expiryYear.substring(2,4));
+                        }
                     }
-                }
-            }
-            else {
 
-                //no-op, scan was canceled.
-            }
+                }
         }
     }
 
@@ -159,8 +126,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         super.initContentViews(view);
 
         mScanButton = (Button) view.findViewById(R.id.scan_button);
-        mScanNfcButton = (Button) view.findViewById(R.id.scan_nfc_button);
-        mScanNfcInfoLayout = (LinearLayout) view.findViewById(R.id.scan_nfc_info);
 
         mPayButton = (Button) view.findViewById(R.id.pay_button);
         mPayButtonLayout = (FrameLayout) view.findViewById(R.id.pay_button_layout);
@@ -175,8 +140,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         Bundle args = getArguments();
         final PaymentPageRequest paymentPageRequest = PaymentPageRequest.fromBundle(args.getBundle(PaymentPageRequest.TAG));
-
-
 
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
         Currency c = Currency.getInstance(paymentPageRequest.getCurrency());
@@ -208,22 +171,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         boolean isPaymentCardScanButtonVisible = this.isPaymentCardScanConfigEnabled();
         mScanButton.setVisibility(isPaymentCardScanButtonVisible ? View.VISIBLE : View.GONE);
-
-        mScanNfcButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v)
-            {
-                startActivity(new Intent(android.provider.Settings.ACTION_NFC_SETTINGS));
-            }
-        });
-
-        //button to enable NFC on the device
-        boolean isPaymentCardNfcScanButtonVisible = this.isPaymentCardNfcScanConfigEnabled() && this.isPaymentCardNfcScanAvailable() && !this.isPaymentCardNfcScanEnabled();
-        mScanNfcButton.setVisibility(isPaymentCardNfcScanButtonVisible ? View.VISIBLE : View.GONE);
-
-        boolean isPaymentCardNfcScanInfoVisible = this.isPaymentCardNfcScanConfigEnabled() && this.isPaymentCardNfcScanAvailable() && this.isPaymentCardNfcScanEnabled();
-        mScanNfcInfoLayout.setVisibility(isPaymentCardNfcScanInfoVisible ? View.VISIBLE : View.GONE);
 
         View.OnFocusChangeListener focusChangeListener = this.focusChangeListener();
 
@@ -289,7 +236,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
         validatePayButton(isInputDataValid());
 
         validateScanButton(true);
-        validateNfcScanButton(true);
 
         putEverythingInRed();
 
@@ -412,7 +358,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
             }
 
             validateScanButton(!loadingMode);
-            validateNfcScanButton(!loadingMode);
         }
 
         mLoadingMode = loadingMode;
@@ -420,35 +365,32 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
     private View.OnFocusChangeListener focusChangeListener() {
 
-        return new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
+        return (v, hasFocus) -> {
 
-                int i = v.getId();
+            int i = v.getId();
 
-                if (i == R.id.card_owner) {
+            if (i == R.id.card_owner) {
 
-                    putCardOwnerInRed(hasFocus);
+                putCardOwnerInRed(hasFocus);
 
-                } else if (i == R.id.card_cvv) {
+            } else if (i == R.id.card_cvv) {
 
-                    putCVVInRed(!hasFocus);
+                putCVVInRed(!hasFocus);
 
-                    mSecurityCodeInfoLayout.setVisibility(hasFocus? View.VISIBLE : View.GONE);
+                mSecurityCodeInfoLayout.setVisibility(hasFocus? View.VISIBLE : View.GONE);
 
-                } else if (i == R.id.card_expiration) {
+            } else if (i == R.id.card_expiration) {
 
-                    putExpiryDateInRed(!hasFocus);
+                putExpiryDateInRed(!hasFocus);
 
-                } else if (i == R.id.card_number) {
+            } else if (i == R.id.card_number) {
 
-                    putCardNumberInRed(!hasFocus);
+                putCardNumberInRed(!hasFocus);
 
-                } else {
-                    throw new UnsupportedOperationException(
-                            "onFocusChange has not been implemented for " + getResources().
-                                    getResourceName(v.getId()));
-                }
+            } else {
+                throw new UnsupportedOperationException(
+                        "onFocusChange has not been implemented for " + getResources().
+                                getResourceName(v.getId()));
             }
         };
     }
@@ -498,16 +440,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
 
         } else {
             mScanButton.setEnabled(false);
-        }
-    }
-
-    protected void validateNfcScanButton(boolean validate) {
-
-        if (validate) {
-            mScanNfcButton.setEnabled(true);
-
-        } else {
-            mScanNfcButton.setEnabled(false);
         }
     }
 
@@ -940,21 +872,6 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
     {
         return ClientConfig.getInstance().isPaymentCardScanEnabled() && CardIOActivity.canReadCardWithCamera();
 
-    }
-
-    private boolean isPaymentCardNfcScanConfigEnabled()
-    {
-        return ClientConfig.getInstance().isPaymentCardNfcScanEnabled();
-    }
-
-    private boolean isPaymentCardNfcScanEnabled()
-    {
-        return NFCUtils.isNfcEnabled(getActivity());
-    }
-
-    private boolean isPaymentCardNfcScanAvailable()
-    {
-        return NFCUtils.isNfcAvailable(getActivity());
     }
 
     private boolean isPaymentCardStorageConfigEnabled()

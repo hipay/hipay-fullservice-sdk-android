@@ -10,7 +10,6 @@
     <string name="group_cards">Regrouper les cartes</string>
     <string name="card_storage">Enregistrement de carte</string>
     <string name="card_scan">Scan de carte</string>
-    <string name="card_nfc_scan">Scan de carte NFC</string>
 
     <string name="three_ds">3DS Authentification</string>
     <string name="color">Couleur</string>

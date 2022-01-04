@@ -16,12 +16,6 @@
     <string name="scan_card_permission">Per scansionare la tua carta, concedi l\'accesso alla fotocamera.</string>
     <string name="settings">Impostazioni</string>
 
-    <string name="nfc_error_io">Per favore non muovere la tua carta, riprova!</string>
-    <string name="nfc_error_unknown_card">Carta EMV sconosciuta</string>
-    <string name="nfc_locked">L\'NFC è bloccato sulla tua carta</string>
-    <string name="activate_nfc_sensor">Attiva il sensore NFC</string>
-    <string name="nfc_activated">Appoggia e mantieni la tua carta contactless sul retro del tuo telefono</string>
-
     <string name="refresh">Aggiorna</string>
 
     <string name="payment_page_error_timeout">La pagina di pagamento è scaduta</string>

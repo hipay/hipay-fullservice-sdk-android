@@ -83,7 +83,6 @@ public class DemoFragment extends Fragment {
     private SwitchCompat mGroupCardSwitch;
     private SwitchCompat mCardStorageSwitch;
     private SwitchCompat mCardScanSwitch;
-    private SwitchCompat mCardNfcScanSwitch;
 
     private AppCompatSpinner mCurrencySpinner;
     private AppCompatSpinner m3DSSpinner;
@@ -200,12 +199,10 @@ public class DemoFragment extends Fragment {
         mGroupCardSwitch = (SwitchCompat) contentView.findViewById(R.id.group_card_switch);
         mCardStorageSwitch = (SwitchCompat) contentView.findViewById(R.id.card_storage_switch);
         mCardScanSwitch = (SwitchCompat) contentView.findViewById(R.id.card_scan_switch);
-        mCardNfcScanSwitch = (SwitchCompat) contentView.findViewById(R.id.card_nfc_scan_switch);
 
         mGroupCardSwitch.setTextColor(ContextCompat.getColor(getActivity(), customTheme.getColorPrimaryDarkId()));
         mCardStorageSwitch.setTextColor(ContextCompat.getColor(getActivity(), customTheme.getColorPrimaryDarkId()));
         mCardScanSwitch.setTextColor(ContextCompat.getColor(getActivity(), customTheme.getColorPrimaryDarkId()));
-        mCardNfcScanSwitch.setTextColor(ContextCompat.getColor(getActivity(), customTheme.getColorPrimaryDarkId()));
 
         mCurrencySpinner = (AppCompatSpinner) contentView.findViewById(R.id.currency_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
@@ -405,7 +402,6 @@ public class DemoFragment extends Fragment {
         mGroupCardSwitch.setChecked(true);
         mCardStorageSwitch.setChecked(ClientConfig.getInstance().isPaymentCardStorageEnabled());
         mCardScanSwitch.setChecked(ClientConfig.getInstance().isPaymentCardScanEnabled());
-        mCardNfcScanSwitch.setChecked(ClientConfig.getInstance().isPaymentCardNfcScanEnabled());
 
         switchTheme(this.getCustomTheme());
     }
@@ -640,7 +636,6 @@ public class DemoFragment extends Fragment {
         ClientConfig.getInstance().setPaymentCardStorageEnabled(multiUse);
 
         ClientConfig.getInstance().setPaymentCardScanEnabled(mCardScanSwitch.isChecked());
-        ClientConfig.getInstance().setPaymentCardNfcScanEnabled(mCardNfcScanSwitch.isChecked());
 
         paymentPageRequest.setAmount(Float.parseFloat(mAmount.getText().toString()));
 
@@ -693,7 +688,6 @@ public class DemoFragment extends Fragment {
         mGroupCardSwitch.setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
         mCardStorageSwitch.setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
         mCardScanSwitch.setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
-        mCardNfcScanSwitch.setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
         mPaymentProductsButton.setTextColor(ContextCompat.getColor(demoActivity, customTheme.getColorPrimaryDarkId()));
 
     }

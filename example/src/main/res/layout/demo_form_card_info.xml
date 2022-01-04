@@ -110,17 +110,6 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:textColor="@color/colorPrimaryDark" />
 
-    <androidx.appcompat.widget.SwitchCompat
-
-        android:id="@+id/card_nfc_scan_switch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="?android:attr/actionBarSize"
-        android:text="@string/card_nfc_scan"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        android:textColor="@color/colorPrimaryDark" />
-    <!--
-    -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/payment_products_button"
         style="?attr/borderlessButtonStyle"
