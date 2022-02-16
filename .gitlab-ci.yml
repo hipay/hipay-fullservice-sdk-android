@@ -22,7 +22,7 @@ test:
   script:
     - bundle exec fastlane Test
   tags:
-    - gcp-default-runner-prod
+    - small
 
 build-demo:
   stage: build-demo
@@ -36,7 +36,7 @@ build-demo:
       - example/build/outputs/apk/release/example-release.apk
     expire_in: 60 mins
   tags:
-    - gcp-default-runner-prod
+    - small
 
 deploy-demo:
   stage: deploy-demo
@@ -45,7 +45,7 @@ deploy-demo:
   script:
     - bundle exec fastlane DeployDemo
   tags:
-    - gcp-default-runner-prod
+    - small
 
 # build-framework:
 #   stage: build-framework
@@ -60,7 +60,7 @@ deploy-demo:
 #       - hipayfullservice/build/outputs/aar/hipayfullservice-release.aar
 #     expire_in: 60 mins
 #   tags:
-#     - gcp-default-runner-prod
+#     - small
 #   when: manual
 
 # deploy-framework:
@@ -71,4 +71,4 @@ deploy-demo:
 #   script:
 #     - bundle exec fastlane DeployFramework
 #   tags:
-#     - gcp-default-runner-prod
+#     - small
