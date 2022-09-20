@@ -46,21 +46,21 @@ jobs:
           name: example-release.apk
           path: example/build/outputs/apk/release/example-release.apk
 
-  deploy_demo:
-    needs: build_demo
-    runs-on: ubuntu-latest
-    environment: stage
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
+  # deploy_demo:
+  #   needs: build_demo
+  #   runs-on: ubuntu-latest
+  #   environment: stage
+  #   steps:
+  #     - name: Checkout Repo
+  #       uses: actions/checkout@v3
 
-      - name: Set up Ruby
-        uses: actions/setup-ruby@v1
-        with:
-          ruby-version: '3'
+  #     - name: Set up Ruby
+  #       uses: actions/setup-ruby@v1
+  #       with:
+  #         ruby-version: '3'
 
-      - name: Install Dependencies
-        run: gem install bundler && bundle install
+  #     - name: Install Dependencies
+  #       run: gem install bundler && bundle install
 
-      - name: Deploy-demo
-        run: fastlane DeployDemo
+  #     - name: Deploy-demo
+  #       run: fastlane DeployDemo
