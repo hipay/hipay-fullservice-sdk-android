@@ -31,25 +31,21 @@ platform :android do
   desc "Build demo"
   lane :BuildDemo do
     # Decode Base64 env var in Hipay.jks file used by build.gradle
-    system 'echo "<<<<"'
-    system "echo $TEST_KEY | sed 's/./& /g'"
-    system 'echo $TEST_KEY | base64 -d > ../Hipay.jks'
-    system "echo ../Hipay.jks "
-    system 'echo ">>>>"'
+    system 'echo $KEYSTORE | base64 -d > ../Hipay.jks'
 
-    # # Replace variables in credentials.xml
-    # system 'sed -i -e "s/{USERNAME_API_HIPAY_STAGE}/$USERNAME_API_HIPAY_STAGE/" ../example/src/main/res/values/credentials.xml'
-    # system 'sed -i -e "s/{PASSWORD_API_HIPAY_STAGE}/$PASSWORD_API_HIPAY_STAGE/" ../example/src/main/res/values/credentials.xml'
-    # system 'sed -i -e "s/{USERNAME_API_HIPAY_PRODUCTION}/$USERNAME_API_HIPAY_PRODUCTION/" ../example/src/main/res/values/credentials.xml'
-    # system 'sed -i -e "s/{PASSWORD_API_HIPAY_PRODUCTION}/$PASSWORD_API_HIPAY_PRODUCTION/" ../example/src/main/res/values/credentials.xml'
+    # Replace variables in credentials.xml
+    system 'sed -i -e "s/{USERNAME_API_HIPAY_STAGE}/$USERNAME_API_HIPAY_STAGE/" ../example/src/main/res/values/credentials.xml'
+    system 'sed -i -e "s/{PASSWORD_API_HIPAY_STAGE}/$PASSWORD_API_HIPAY_STAGE/" ../example/src/main/res/values/credentials.xml'
+    system 'sed -i -e "s/{USERNAME_API_HIPAY_PRODUCTION}/$USERNAME_API_HIPAY_PRODUCTION/" ../example/src/main/res/values/credentials.xml'
+    system 'sed -i -e "s/{PASSWORD_API_HIPAY_PRODUCTION}/$PASSWORD_API_HIPAY_PRODUCTION/" ../example/src/main/res/values/credentials.xml'
 
-    # system 'rm ../example/src/main/res/values/credentials.xml-e'
+    system 'rm ../example/src/main/res/values/credentials.xml-e'
 
-    # # Sed API Data
-    # system 'sed -i -e "s#$API_DATA_URL_STAGE#$API_DATA_URL_QA#" ../hipayfullservice/src/main/java/com/hipay/fullservice/core/monitoring/CheckoutDataNetwork.java'
+    # Sed API Data
+    system 'sed -i -e "s#$API_DATA_URL_STAGE#$API_DATA_URL_QA#" ../hipayfullservice/src/main/java/com/hipay/fullservice/core/monitoring/CheckoutDataNetwork.java'
  
-    # # Build APK
-    # gradle(task: "build")
+    # Build APK
+    gradle(task: "build")
   end
 
   desc "Deploy a new version to AppCenter"
