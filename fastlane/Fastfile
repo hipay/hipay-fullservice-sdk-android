@@ -59,7 +59,7 @@ platform :android do
       app_os: 'Android',
       app_platform: 'Java',
       app_name: "DemoHiPayFullService-" + git_branch.gsub(/[^a-zA-Z0-9\-]/,""),
-      file: "example/build/outputs/apk/release/example-release.apk",
+      file: "example-release.apk",
     )
   end
 
