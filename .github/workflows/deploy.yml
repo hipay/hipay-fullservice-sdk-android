@@ -27,6 +27,15 @@ jobs:
     environment: stage
     env:
       KEYSTORE: ${{ secrets.KEYSTORE }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      USERNAME_API_HIPAY_STAGE: ${{ secrets.USERNAME_API_HIPAY_STAGE }}
+      PASSWORD_API_HIPAY_STAGE: ${{ secrets.PASSWORD_API_HIPAY_STAGE }}
+      USERNAME_API_HIPAY_PRODUCTION: ${{ secrets.USERNAME_API_HIPAY_PRODUCTION }}
+      PASSWORD_API_HIPAY_PRODUCTION: ${{ secrets.PASSWORD_API_HIPAY_PRODUCTION }}
+      API_DATA_URL_QA: ${{ secrets.API_DATA_URL_QA }}
+      API_DATA_URL_STAGE: ${{ secrets.API_DATA_URL_STAGE }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -48,21 +57,23 @@ jobs:
           name: example-release.apk
           path: example/build/outputs/apk/release/example-release.apk
 
-  # deploy_demo:
-  #   needs: build_demo
-  #   runs-on: ubuntu-latest
-  #   environment: stage
-  #   steps:
-  #     - name: Checkout Repo
-  #       uses: actions/checkout@v3
+  deploy_demo:
+    needs: build_demo
+    runs-on: ubuntu-latest
+    environment: stage
+    env:
+      APPCENTER_TOKEN: ${{ secrets.APPCENTER_TOKEN }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
 
-  #     - name: Set up Ruby
-  #       uses: actions/setup-ruby@v1
-  #       with:
-  #         ruby-version: '3'
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '3'
 
-  #     - name: Install Dependencies
-  #       run: gem install bundler && bundle install
+      - name: Install Dependencies
+        run: gem install bundler && bundle install
 
-  #     - name: Deploy-demo
-  #       run: fastlane DeployDemo
+      - name: Deploy-demo
+        run: fastlane DeployDemo
