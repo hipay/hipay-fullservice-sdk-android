@@ -34,8 +34,8 @@ platform :android do
     system 'ls'
     # Decode Base64 env var in HiPay.jks file used by build.gradle
     system 'echo $KEYSTORE | base64 -d > ../Hipay.jks'
-    system 'cd ../'
-    system 'ls'
+    system 'ls ../'
+
     # # Replace variables in credentials.xml
     # system 'sed -i -e "s/{USERNAME_API_HIPAY_STAGE}/$USERNAME_API_HIPAY_STAGE/" ../example/src/main/res/values/credentials.xml'
     # system 'sed -i -e "s/{PASSWORD_API_HIPAY_STAGE}/$PASSWORD_API_HIPAY_STAGE/" ../example/src/main/res/values/credentials.xml'
