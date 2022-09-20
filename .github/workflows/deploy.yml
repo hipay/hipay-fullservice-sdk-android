@@ -25,6 +25,8 @@ jobs:
     # needs: tests
     runs-on: ubuntu-latest
     environment: stage
+    env:
+      TEST_KEY: ${{ secrets.TEST_KEY }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -40,11 +42,11 @@ jobs:
       - name: Build-demo
         run: fastlane BuildDemo
 
-      - name: Save .apk in artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: example-release.apk
-          path: example/build/outputs/apk/release/example-release.apk
+      # - name: Save .apk in artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: example-release.apk
+      #     path: example/build/outputs/apk/release/example-release.apk
 
   # deploy_demo:
   #   needs: build_demo
