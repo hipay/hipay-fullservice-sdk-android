@@ -1,7 +1,9 @@
 name: Android Pipeline
 
+on: [push]
+
 jobs:
-  compile:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -10,16 +12,43 @@ jobs:
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
         with:
-          ruby-version: '3.1.2'
+          ruby-version: '3'
 
       - name: Install Dependencies
         run: gem install bundler && bundle install
 
-      - name: Test
-        run: fastlane Test
+  build_demo:
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '3'
+
+      - name: Install Dependencies
+        run: gem install bundler && bundle install
 
       - name: Build-demo
         run: fastlane BuildDemo
+
+  deploy_demo:
+    needs: build_demo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '3'
+
+      - name: Install Dependencies
+        run: gem install bundler && bundle install
 
       - name: Deploy-demo
         run: fastlane DeployDemo
