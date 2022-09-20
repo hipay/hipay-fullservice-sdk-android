@@ -5,6 +5,7 @@ on: [push]
 jobs:
   tests:
     runs-on: ubuntu-latest
+    environment: stage
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -23,6 +24,7 @@ jobs:
   build_demo:
     needs: tests
     runs-on: ubuntu-latest
+    environment: stage
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -38,9 +40,16 @@ jobs:
       - name: Build-demo
         run: fastlane BuildDemo
 
+      - name: Save .apk in artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: example-release.apk
+          path: example/build/outputs/apk/release/example-release.apk
+
   deploy_demo:
     needs: build_demo
     runs-on: ubuntu-latest
+    environment: stage
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
