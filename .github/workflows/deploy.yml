@@ -3,26 +3,26 @@ name: Android Pipeline
 on: [push]
 
 jobs:
-  # tests:
-  #   runs-on: ubuntu-latest
-  #   environment: stage
-  #   steps:
-  #     - name: Checkout Repo
-  #       uses: actions/checkout@v3
+  tests:
+    runs-on: ubuntu-latest
+    environment: stage
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
 
-  #     - name: Set up Ruby
-  #       uses: actions/setup-ruby@v1
-  #       with:
-  #         ruby-version: '3'
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '3'
 
-  #     - name: Install Dependencies
-  #       run: gem install bundler && bundle install
+      - name: Install Dependencies
+        run: gem install bundler && bundle install
 
-  #     - name: Tests
-  #       run: fastlane Test
+      - name: Tests
+        run: fastlane Test
 
   build_demo:
-    # needs: tests
+    needs: tests
     runs-on: ubuntu-latest
     environment: stage
     env:
