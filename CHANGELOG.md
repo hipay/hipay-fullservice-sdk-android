@@ -1,8 +1,15 @@
 HiPay Android SDK change log and release notes
 ================================================
 
+2.1.0
+-----
+
+* Target API 33
+* ⚠️ Drop support Android SDK version (minSdkVersion = 23)
+
 2.0.0
 -----
+
 * Remove `com.github.devnied.emvnfccard` library
 
 1.7.0
