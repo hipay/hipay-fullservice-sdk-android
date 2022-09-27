@@ -30,7 +30,7 @@ platform :android do
 
   desc "Build demo"
   lane :BuildDemo do
-    # Decode Base64 env var in HiPay.jks file used by build.gradle
+    # Decode Base64 env var in Hipay.jks file used by build.gradle
     system 'echo $KEYSTORE | base64 -d > ../Hipay.jks'
 
     # Replace variables in credentials.xml
@@ -38,6 +38,8 @@ platform :android do
     system 'sed -i -e "s/{PASSWORD_API_HIPAY_STAGE}/$PASSWORD_API_HIPAY_STAGE/" ../example/src/main/res/values/credentials.xml'
     system 'sed -i -e "s/{USERNAME_API_HIPAY_PRODUCTION}/$USERNAME_API_HIPAY_PRODUCTION/" ../example/src/main/res/values/credentials.xml'
     system 'sed -i -e "s/{PASSWORD_API_HIPAY_PRODUCTION}/$PASSWORD_API_HIPAY_PRODUCTION/" ../example/src/main/res/values/credentials.xml'
+
+    system 'rm ../example/src/main/res/values/credentials.xml-e'
 
     # Sed API Data
     system 'sed -i -e "s#$API_DATA_URL_STAGE#$API_DATA_URL_QA#" ../hipayfullservice/src/main/java/com/hipay/fullservice/core/monitoring/CheckoutDataNetwork.java'
@@ -57,7 +59,7 @@ platform :android do
       app_os: 'Android',
       app_platform: 'Java',
       app_name: "DemoHiPayFullService-" + git_branch.gsub(/[^a-zA-Z0-9\-]/,""),
-      file: "example/build/outputs/apk/release/example-release.apk",
+      file: "example-release.apk",
     )
   end
 
