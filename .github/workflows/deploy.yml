@@ -3,7 +3,7 @@ name: Android Pipeline
 on:
   push:
     branches:
-      - 'releases/**'
+      - 'release/**'
 
 jobs:
   tests:
