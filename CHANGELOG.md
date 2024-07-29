@@ -1,7 +1,7 @@
 HiPay Android SDK change log and release notes
 ================================================
 
-Unreleased - 2.1.1
+2.1.1
 -----
 
 * Fixed `language` parameter on OrderRequest
