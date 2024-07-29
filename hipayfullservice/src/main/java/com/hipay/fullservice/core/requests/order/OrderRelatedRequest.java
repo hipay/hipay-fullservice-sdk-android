@@ -84,7 +84,7 @@ public class OrderRelatedRequest extends AbstractRequest {
 
     public OrderRelatedRequest() {
 
-        this.setLanguage(Locale.getDefault().toString());
+        this.setLanguage(Locale.getDefault().getLanguage());
         this.setHTTPUserAgent(ClientConfig.getInstance().getUserAgent());
 
         this.setCustomer(new CustomerInfoRequest());
@@ -121,7 +121,7 @@ public class OrderRelatedRequest extends AbstractRequest {
 
     public OrderRelatedRequest(OrderRelatedRequest orderRelatedRequest) {
 
-        this.setLanguage(Locale.getDefault().toString());
+        this.setLanguage(Locale.getDefault().getLanguage());
         this.setHTTPUserAgent(ClientConfig.getInstance().getUserAgent());
 
         this.setCustomer(new CustomerInfoRequest());
@@ -544,12 +544,7 @@ public class OrderRelatedRequest extends AbstractRequest {
 
         @Override
         protected boolean isValid() {
-
-            if (this.getBehaviour() instanceof BundleMapper) {
-                return true;
-            }
-
-            return false;
+            return this.getBehaviour() instanceof BundleMapper;
         }
 
         @Override
