@@ -10,7 +10,7 @@ ext {
     siteUrl = 'https://github.com/hipay/hipay-fullservice-sdk-android'
     gitUrl = 'https://github.com/hipay/hipay-fullservice-sdk-android.git'
 
-    libraryVersion = '2.1.0'
+    libraryVersion = '2.1.1'
 
     developerId = 'hipayandroid'
     developerName = 'Pi Ecommerce'
