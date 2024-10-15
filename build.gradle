@@ -44,8 +44,8 @@ try {
         repositories {
             sonatype {
                 stagingProfileId = "23ef5e345adb76"
-                username = properties.getProperty("ossrhUsername")
-                password = properties.getProperty("ossrhPassword")
+                username = properties.getProperty("ossrhToken")
+                password = properties.getProperty("ossrhTokenPassword")
             }
         }
     }
