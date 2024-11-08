@@ -22,12 +22,11 @@ ext {
 }
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion "30.0.3"
+    compileSdk 34
 
     defaultConfig {
-        minSdkVersion 23
-        targetSdkVersion 33
+        minSdk 24
+        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

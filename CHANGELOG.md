@@ -1,6 +1,13 @@
 HiPay Android SDK change log and release notes
 ================================================
 
+Unreleased
+-----
+
+* Fixed Intent redirection vulnerability by Google (cf [documentation](https://support.google.com/faqs/answer/9267555))
+* Target API 34
+* ⚠️ Drop support Android SDK version (minSdkVersion = 24)
+
 2.1.1
 -----
 

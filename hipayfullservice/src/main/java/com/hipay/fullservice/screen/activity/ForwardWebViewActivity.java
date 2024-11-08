@@ -34,7 +34,10 @@ import com.hipay.fullservice.core.requests.order.OrderRelatedRequest;
 import com.hipay.fullservice.core.requests.order.PaymentPageRequest;
 import com.hipay.fullservice.screen.model.CustomTheme;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.InvalidParameterException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,29 +47,33 @@ import java.util.Map;
  */
 public class ForwardWebViewActivity extends AppCompatActivity {
 
+    private static final List<String> hipayDomains = Arrays.asList("pay.hipay.com", "stage-pay.hipay.com");
+
     public static void start(Activity activity, String forwardURLString, String title, Bundle theme) {
         Intent starter = getStartIntent(activity, forwardURLString, title, theme);
 
-        ActivityOptionsCompat activityOptions = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(activity);
+        ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(activity);
 
         ActivityCompat.startActivityForResult(activity, starter, PaymentPageRequest.REQUEST_ORDER, activityOptions.toBundle());
     }
 
     public static Intent getStartIntent(Context context, String forwardURLString, String title, Bundle theme) {
+        try {
+            URL forwardURL = new URL(forwardURLString);
+            String host = forwardURL.getHost();
 
-        if (forwardURLString != null) {
-
-            Intent starter = new Intent(context, ForwardWebViewActivity.class);
-            starter.putExtra("forwardUrl", forwardURLString);
-            starter.putExtra("title", title);
-            starter.putExtra(CustomTheme.TAG, theme);
-            return starter;
-
-        } else {
-
-            throw new InvalidParameterException();
+            if(!hipayDomains.contains(host)) {
+                throw new InvalidParameterException("Forbidden URL");
+            }
+        } catch(MalformedURLException e) {
+            throw new InvalidParameterException("Invalid URL");
         }
+
+        Intent starter = new Intent(context, ForwardWebViewActivity.class);
+        starter.putExtra("forwardUrl", forwardURLString);
+        starter.putExtra("title", title);
+        starter.putExtra(CustomTheme.TAG, theme);
+        return starter;
     }
 
 
