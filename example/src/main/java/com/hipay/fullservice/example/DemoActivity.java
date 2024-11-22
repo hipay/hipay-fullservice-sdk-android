@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -29,7 +28,7 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         setContentView(R.layout.activity_demo);
 
         //easier to customize a toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.mcommence_demo));
         setSupportActionBar(toolbar);
 
@@ -40,6 +39,7 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
         if (Preferences.isStageEnvironment(getBaseContext())) {
             username = getString(R.string.username_stage);
             password = getString(R.string.password_stage);
+            environment = ClientConfig.Environment.Stage;
         }
         else if (Preferences.isProductionEnvironment(getBaseContext())) {
             username = getString(R.string.username_production);
@@ -99,13 +99,13 @@ public class DemoActivity extends AppCompatActivity implements ProductCategoryLi
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeCreditCard, Boolean.TRUE.equals(paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeCreditCard)));
-        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeDebitCard, Boolean.TRUE.equals(paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeDebitCard)));
-        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeEWallet, Boolean.TRUE.equals(paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeEWallet)));
-        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking, Boolean.TRUE.equals(paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking)));
+        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeCreditCard, paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeCreditCard));
+        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeDebitCard, paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeDebitCard));
+        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeEWallet, paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeEWallet));
+        outState.putBoolean(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking, paymentProducts.get(PaymentProduct.PaymentProductCategoryCodeRealtimeBanking));
     }
 
     @Override
