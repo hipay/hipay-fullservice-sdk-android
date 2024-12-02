@@ -4,9 +4,10 @@ HiPay Android SDK change log and release notes
 Unreleased
 -----
 
+* ⚠️ Dropped support with **Bancontact Mobile** when paying via **Payconiq by Bancontact** mobile application
 * Fixed Intent redirection vulnerability by Google (cf [documentation](https://support.google.com/faqs/answer/9267555))
-* Target API 34
-* ⚠️ Drop support Android SDK version (minSdkVersion = 24)
+* Target API 35
+* ⚠️ Dropped support Android SDK version (minSdkVersion = 25)
 
 2.1.1
 -----

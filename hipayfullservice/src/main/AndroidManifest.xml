@@ -48,13 +48,13 @@
             android:theme="@style/PaymentScreens.ForwardWebViewActivity"
             tools:ignore="AppLinkUrlError">
 
-            <intent-filter tools:ignore="AppLinkUrlError">
+            <!-- <intent-filter tools:ignore="AppLinkUrlError">
                 <data android:scheme="bepgenapp" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
+            </intent-filter> -->
 
         </activity>
 
