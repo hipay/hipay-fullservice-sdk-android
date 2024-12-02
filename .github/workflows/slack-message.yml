@@ -32,7 +32,7 @@ jobs:
           const { tickets } = require('./artifact.json');
 
           (async () => {
-            const project = "HiPay Enterprise SDK Magento2";
+            const project = "HiPay Enterprise SDK Android";
             const payload = {
               channel: "${{ vars.SLACK_CHANNEL_ID }}",
               blocks: [
