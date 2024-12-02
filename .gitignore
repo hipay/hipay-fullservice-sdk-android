@@ -78,3 +78,6 @@ report.xml
 
 # GPG
 *.gpg
+
+# env files
+.env

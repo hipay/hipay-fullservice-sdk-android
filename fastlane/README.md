@@ -1,21 +1,16 @@
-fastlane documentation
-----
+# Fastlane documentation
 
-# Installation
+## Installation
 
-Make sure you have the latest version of the Xcode command line tools installed:
+Copy the file `fastlane/.env.sample` in order to create a `fastlane/.env` file.
 
-```sh
-xcode-select --install
-```
+Complete the following variables `KEYSTORE`, `KEYSTORE_PASSWORD` and `KEY_PASSWORD` using your password vault.
 
-For _fastlane_ installation instructions, see [Installing _fastlane_](https://docs.fastlane.tools/#installing-fastlane)
+## Available Actions
 
-# Available Actions
+### Android
 
-## Android
-
-### android SetEnv
+#### android SetEnv
 
 ```sh
 [bundle exec] fastlane android SetEnv
@@ -23,7 +18,7 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Set environment variables
 
-### android Test
+#### android Test
 
 ```sh
 [bundle exec] fastlane android Test
@@ -31,7 +26,7 @@ Set environment variables
 
 Runs all the tests
 
-### android BuildDemo
+#### android BuildDemo
 
 ```sh
 [bundle exec] fastlane android BuildDemo
@@ -39,7 +34,7 @@ Runs all the tests
 
 Build demo
 
-### android DeployDemo
+#### android DeployDemo
 
 ```sh
 [bundle exec] fastlane android DeployDemo
@@ -47,7 +42,7 @@ Build demo
 
 Deploy a new version to AppCenter
 
-### android BuildFramework
+#### android BuildFramework
 
 ```sh
 [bundle exec] fastlane android BuildFramework
@@ -55,7 +50,7 @@ Deploy a new version to AppCenter
 
 Build framework
 
-### android DeployFramework
+#### android DeployFramework
 
 ```sh
 [bundle exec] fastlane android DeployFramework
