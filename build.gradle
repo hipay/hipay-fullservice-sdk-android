@@ -32,7 +32,7 @@ tasks.register('clean', Delete) {
 }
 
 group = "com.hipay.fullservice"
-version = "2.1.1"
+version = "2.2.0"
 
 try {
     // Load local.properties file
