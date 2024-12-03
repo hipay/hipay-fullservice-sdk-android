@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 2.2.0
 
 * ⚠️ Dropped support with **Bancontact Mobile** when paying via **Payconiq by Bancontact** mobile application
 * Fixed Intent redirection vulnerability by Google (cf [documentation](https://support.google.com/faqs/answer/9267555))
