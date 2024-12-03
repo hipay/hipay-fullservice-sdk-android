@@ -84,7 +84,7 @@ public class OrderRelatedRequest extends AbstractRequest {
 
     public OrderRelatedRequest() {
 
-        this.setLanguage(Locale.getDefault().getLanguage());
+        this.setLanguage(Locale.getDefault().toLanguageTag().replace('-', '_'));
         this.setHTTPUserAgent(ClientConfig.getInstance().getUserAgent());
 
         this.setCustomer(new CustomerInfoRequest());

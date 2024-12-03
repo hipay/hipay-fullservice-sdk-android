@@ -1,6 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.hipay.fullservice">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -49,13 +48,13 @@
             android:theme="@style/PaymentScreens.ForwardWebViewActivity"
             tools:ignore="AppLinkUrlError">
 
-            <intent-filter tools:ignore="AppLinkUrlError">
+            <!-- <intent-filter tools:ignore="AppLinkUrlError">
                 <data android:scheme="bepgenapp" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
+            </intent-filter> -->
 
         </activity>
 

@@ -28,23 +28,44 @@ def pomConfig = {
 }
 
 
-task androidJavadocs(type: Javadoc) {
+tasks.register('androidJavadocs', Javadoc) {
+    // Sources configuration
     source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    android.libraryVariants.all { variant ->
+
+    // Path resolving towards android.jar
+    def sdkDir = android.sdkDirectory
+    def compileSdkVersion = android.compileSdkVersion
+    def androidJarPath = "$sdkDir/platforms/$compileSdkVersion/android.jar"
+
+    if (!file(androidJarPath).exists()) {
+        throw new GradleException("android.jar introuvable pour compileSdkVersion $compileSdkVersion dans $androidJarPath")
+    }
+
+    // Convert list to FileCollection
+    def bootClasspath = project.files(android.getBootClasspath())
+    def androidJar = project.files(androidJarPath)
+
+    // Add necessary paths to classpath
+    classpath = androidJar + bootClasspath
+    android.libraryVariants.configureEach { variant ->
         if (variant.name == 'release') {
-            owner.classpath += variant.javaCompileProvider.get().classpath
+            def javaCompileClasspath = variant.javaCompileProvider.get().classpath
+            classpath += javaCompileClasspath
         }
     }
+
+    // Exclude useless files
     exclude '**/R.html', '**/R.*.html', '**/index.html'
 }
 
-task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+
+tasks.register('androidJavadocsJar', Jar) {
+    dependsOn androidJavadocs
     archiveClassifier.set('javadoc')
     from androidJavadocs.destinationDir
 }
 
-task androidSourcesJar(type: Jar) {
+tasks.register('androidSourcesJar', Jar) {
     archiveClassifier.set('sources')
     from android.sourceSets.main.java.srcDirs
 }
