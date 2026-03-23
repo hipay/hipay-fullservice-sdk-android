@@ -517,7 +517,7 @@ public class TokenizableCardPaymentFormFragment extends AbstractPaymentFormFragm
                     int newLength = version.length();
                     int oldLength = newLength + posDifflength;
 
-                    if (newLength <= 2 && oldLength > 2) {
+                    if (newLength <= 2 && oldLength > 2 && editable.length() > 0) {
                         editable.delete(editable.length()-1, editable.length());
                     }
 
